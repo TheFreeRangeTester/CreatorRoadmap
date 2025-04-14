@@ -29,6 +29,16 @@ export const votes = pgTable("votes", {
   votedAt: timestamp("voted_at").notNull().defaultNow(),
 });
 
+// Table for public leaderboard links
+export const publicLinks = pgTable("public_links", {
+  id: serial("id").primaryKey(),
+  token: text("token").notNull().unique(), // The unique token for the public URL
+  creatorId: integer("creator_id").notNull().references(() => users.id),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+  isActive: boolean("is_active").notNull().default(true),
+  expiresAt: timestamp("expires_at"), // Optional expiration date
+});
+
 // User schemas
 export const insertUserSchema = createInsertSchema(users).pick({
   username: true,
@@ -68,9 +78,27 @@ export const ideaResponseSchema = z.object({
 // Vote schema
 export const insertVoteSchema = createInsertSchema(votes).pick({
   ideaId: true,
-}).omit({
-  userId: true,
-  sessionId: true,
+});
+
+// Public link schemas
+export const insertPublicLinkSchema = createInsertSchema(publicLinks)
+  .omit({ 
+    id: true, 
+    creatorId: true, 
+    createdAt: true, 
+    token: true, 
+    isActive: true 
+  })
+  .partial();
+
+export const publicLinkResponseSchema = z.object({
+  id: z.number(),
+  token: z.string(),
+  creatorId: z.number(),
+  createdAt: z.date(),
+  isActive: z.boolean(),
+  expiresAt: z.date().nullable(),
+  url: z.string(), // Full shareable URL 
 });
 
 // Types
@@ -85,3 +113,7 @@ export type IdeaResponse = z.infer<typeof ideaResponseSchema>;
 
 export type InsertVote = z.infer<typeof insertVoteSchema>;
 export type Vote = typeof votes.$inferSelect;
+
+export type InsertPublicLink = z.infer<typeof insertPublicLinkSchema>;
+export type PublicLink = typeof publicLinks.$inferSelect;
+export type PublicLinkResponse = z.infer<typeof publicLinkResponseSchema>;
