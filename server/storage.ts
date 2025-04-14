@@ -1,6 +1,9 @@
-import { ideas as ideasTable, users, votes as votesTable, type User, type InsertUser, type Idea, type InsertIdea, type UpdateIdea, type Vote, type InsertVote } from "@shared/schema";
+import { ideas as ideasTable, users, votes as votesTable, publicLinks as publicLinksTable, 
+  type User, type InsertUser, type Idea, type InsertIdea, type UpdateIdea, 
+  type Vote, type InsertVote, type PublicLink, type InsertPublicLink, type PublicLinkResponse } from "@shared/schema";
 import session from "express-session";
 import createMemoryStore from "memorystore";
+import { randomBytes } from "crypto";
 
 const MemoryStore = createMemoryStore(session);
 
@@ -26,8 +29,15 @@ export interface IStorage {
   // Position operations
   updatePositions(): Promise<void>;
   
+  // Public link operations
+  createPublicLink(creatorId: number, options?: InsertPublicLink): Promise<PublicLinkResponse>;
+  getPublicLinkByToken(token: string): Promise<PublicLink | undefined>;
+  getUserPublicLinks(creatorId: number): Promise<PublicLinkResponse[]>;
+  togglePublicLinkStatus(id: number, isActive: boolean): Promise<PublicLink | undefined>;
+  deletePublicLink(id: number): Promise<void>;
+  
   // Session store
-  sessionStore: session.SessionStore;
+  sessionStore: any;
 }
 
 export interface IdeaWithPosition {
@@ -49,18 +59,22 @@ export class MemStorage implements IStorage {
   private users: Map<number, User>;
   private ideas: Map<number, Idea>;
   private votes: Map<number, Vote>;
+  private publicLinks: Map<number, PublicLink>;
   currentUserId: number;
   currentIdeaId: number;
   currentVoteId: number;
-  sessionStore: session.SessionStore;
+  currentPublicLinkId: number;
+  sessionStore: any;
 
   constructor() {
     this.users = new Map();
     this.ideas = new Map();
     this.votes = new Map();
+    this.publicLinks = new Map();
     this.currentUserId = 1;
     this.currentIdeaId = 1;
     this.currentVoteId = 1;
+    this.currentPublicLinkId = 1;
     this.sessionStore = new MemoryStore({
       checkPeriod: 86400000, // Prune expired entries every 24h
     });
@@ -220,11 +234,77 @@ export class MemStorage implements IStorage {
       position: {
         current: idea.currentPosition,
         previous: idea.previousPosition,
-        change: idea.previousPosition 
+        change: idea.previousPosition && idea.currentPosition
           ? idea.previousPosition - idea.currentPosition 
           : null
       }
     }));
+  }
+
+  // Public link methods
+  async createPublicLink(creatorId: number, options?: InsertPublicLink): Promise<PublicLinkResponse> {
+    // Generate a secure random token (16 bytes in hex = 32 characters)
+    const token = randomBytes(16).toString('hex');
+    const id = this.currentPublicLinkId++;
+    const now = new Date();
+
+    let expiresAt = null;
+    if (options?.expiresAt) {
+      expiresAt = new Date(options.expiresAt);
+    }
+    
+    const publicLink: PublicLink = {
+      id,
+      token,
+      creatorId,
+      createdAt: now,
+      isActive: true,
+      expiresAt
+    };
+    
+    this.publicLinks.set(id, publicLink);
+    
+    // Create the full URL for sharing
+    const baseUrl = process.env.BASE_URL || 'http://localhost:5000';
+    const url = `${baseUrl}/l/${token}`;
+    
+    return {
+      ...publicLink,
+      url
+    };
+  }
+  
+  async getPublicLinkByToken(token: string): Promise<PublicLink | undefined> {
+    return Array.from(this.publicLinks.values()).find(link => link.token === token);
+  }
+  
+  async getUserPublicLinks(creatorId: number): Promise<PublicLinkResponse[]> {
+    const userLinks = Array.from(this.publicLinks.values())
+      .filter(link => link.creatorId === creatorId);
+    
+    const baseUrl = process.env.BASE_URL || 'http://localhost:5000';
+    
+    return userLinks.map(link => ({
+      ...link,
+      url: `${baseUrl}/l/${link.token}`
+    }));
+  }
+  
+  async togglePublicLinkStatus(id: number, isActive: boolean): Promise<PublicLink | undefined> {
+    const link = this.publicLinks.get(id);
+    if (!link) return undefined;
+    
+    const updatedLink: PublicLink = {
+      ...link,
+      isActive
+    };
+    
+    this.publicLinks.set(id, updatedLink);
+    return updatedLink;
+  }
+  
+  async deletePublicLink(id: number): Promise<void> {
+    this.publicLinks.delete(id);
   }
 }
 

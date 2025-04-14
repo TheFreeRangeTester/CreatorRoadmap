@@ -1,0 +1,56 @@
+7. Visualización de Leaderboard Público
+	•	Descripción: Permite a cualquier persona acceder a un leaderboard de ideas compartido por un creador, sin necesidad de registrarse.
+	•	Accesible por: Visitantes / Seguidores
+	•	Flujo de interacción:
+	1.	El creador genera un enlace público al leaderboard.
+	2.	El seguidor abre el enlace desde cualquier dispositivo.
+	3.	Se cargan todas las tarjetas de ideas ordenadas por votos.
+	•	Datos requeridos/generados:
+	•	Entrada: ID del leaderboard o token de acceso público.
+	•	Generado: registros de vistas anónimas (opcional).
+	•	Comportamientos esperados / errores:
+	•	Si el enlace no existe o fue desactivado: mensaje de error “Leaderboard no disponible”.
+	•	Si está disponible: render del leaderboard en modo lectura.
+
+⸻
+
+8. Votación Pública por Idea
+	•	Descripción: Permite a los seguidores votar por las ideas que les gustaría que el creador desarrolle primero.
+	•	Accesible por: Visitantes (con límites) o usuarios registrados (si se habilita esa opción en el futuro)
+	•	Flujo de interacción:
+	1.	El visitante ve la tarjeta de una idea.
+	2.	Hace clic en el botón “Votar”.
+	3.	El voto se registra localmente (ej. en localStorage) o se asocia con un token de sesión.
+	•	Datos requeridos/generados:
+	•	Requiere: ID de la idea, identificador anónimo (cookie/localStorage).
+	•	Generado: incremento en el conteo de votos.
+	•	Comportamientos esperados / errores:
+	•	Se puede votar solo una vez por idea desde el mismo dispositivo/navegador.
+	•	Se desactiva el botón o cambia a “Votado” una vez usado.
+	•	Si ya votó y refresca la página, se conserva el estado visual.
+	•	Error: Si se manipula el frontend para votar más de una vez, debe haber validación en backend o almacenamiento para bloquearlo.
+
+⸻
+
+9. Generación y Gestión del Enlace Público
+	•	Descripción: Permite al creador generar un enlace público para compartir su leaderboard, y desactivarlo si lo desea.
+	•	Accesible por: Usuario registrado (creador)
+	•	Flujo de interacción:
+	1.	El creador entra a su panel.
+	2.	Hace clic en “Compartir Leaderboard”.
+	3.	Se genera un enlace con una URL única (ej: https://app.socialmantis.com/l/abc123)
+	4.	Puede copiar el enlace o desactivarlo cuando quiera.
+	•	Datos requeridos/generados:
+	•	Generado: token único, timestamp de creación.
+	•	Comportamientos esperados / errores:
+	•	Enlace puede caducar si así se configura.
+	•	Si se desactiva, ya no es accesible públicamente.
+
+⸻
+
+📋 Requisitos No Funcionales Adicionales
+	•	Privacidad: El leaderboard público no debe exponer datos del creador (salvo nombre público).
+	•	Seguridad: Tokens de enlace público deben ser suficientemente aleatorios para evitar ataques de descubrimiento.
+	•	Persistencia local: Los votos deben almacenarse en localStorage para evitar duplicación en la misma sesión.
+	•	Escalabilidad: Debe soportar miles de visitas concurrentes sin afectar el rendimiento del leaderboard.
+	•	SEO-friendly (opcional): Las páginas públicas podrían estar indexadas (si el creador lo habilita).
