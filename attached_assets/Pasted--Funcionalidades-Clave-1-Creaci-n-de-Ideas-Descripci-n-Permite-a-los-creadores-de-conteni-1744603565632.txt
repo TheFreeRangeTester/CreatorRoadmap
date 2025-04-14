@@ -1,0 +1,116 @@
+🧩 Funcionalidades Clave
+
+⸻
+
+1. Creación de Ideas
+	•	Descripción: Permite a los creadores de contenido agregar nuevas ideas al leaderboard, cada una con un título y una breve descripción.
+	•	Accesible por: Usuario registrado (creador de contenido)
+	•	Flujo de interacción:
+	1.	El creador accede al panel principal.
+	2.	Hace clic en “Agregar nueva idea”.
+	3.	Completa los campos: título y descripción corta.
+	4.	Confirma con un botón de “Crear”.
+	•	Datos requeridos/generados:
+	•	Entrada: título (texto corto), descripción (máx. 280 caracteres).
+	•	Generado: ID único, fecha de creación, votos iniciales (0).
+	•	Comportamientos esperados / errores:
+	•	Se valida que el título no esté vacío.
+	•	Mensaje de error si hay un título duplicado.
+	•	La nueva idea aparece en el leaderboard con 0 votos.
+
+⸻
+
+2. Edición de Ideas
+	•	Descripción: Permite a los creadores modificar el contenido de una idea ya creada.
+	•	Accesible por: Usuario registrado (creador de contenido)
+	•	Flujo de interacción:
+	1.	Desde la tarjeta de una idea, hace clic en “Editar”.
+	2.	Modifica el título y/o la descripción.
+	3.	Guarda los cambios.
+	•	Datos requeridos/generados:
+	•	Entrada: nuevo título o descripción.
+	•	Generado: fecha de última edición.
+	•	Comportamientos esperados / errores:
+	•	Se bloquea la edición si la idea ya ha recibido más de X votos (opcional).
+	•	Validaciones igual que en la creación.
+	•	Los cambios se reflejan de inmediato en el leaderboard.
+
+⸻
+
+3. Eliminación de Ideas
+	•	Descripción: Permite eliminar una idea del leaderboard.
+	•	Accesible por: Usuario registrado (creador de contenido)
+	•	Flujo de interacción:
+	1.	El creador hace clic en “Eliminar” en una tarjeta.
+	2.	Confirma en un modal o alerta.
+	3.	La tarjeta desaparece del leaderboard.
+	•	Datos requeridos/generados:
+	•	Se requiere el ID de la idea.
+	•	Comportamientos esperados / errores:
+	•	Confirmación antes de borrar.
+	•	El voto acumulado se pierde (no se redistribuye).
+	•	No se puede deshacer la eliminación.
+
+⸻
+
+4. Visualización del Leaderboard
+	•	Descripción: Muestra todas las ideas en forma de tarjetas ordenadas de mayor a menor cantidad de votos.
+	•	Accesible por: Todos los usuarios (visitantes y registrados)
+	•	Flujo de interacción:
+	1.	El usuario abre la app.
+	2.	Se cargan las tarjetas ordenadas por votos.
+	3.	Cada tarjeta muestra: título, descripción, cantidad de votos, cambio de posición (verde ↑, rojo ↓, azul →).
+	•	Datos requeridos/generados:
+	•	Fuente: lista de ideas, votos acumulados, historial semanal de posiciones.
+	•	Comportamientos esperados / errores:
+	•	Si no hay ideas, se muestra un mensaje vacío.
+	•	El orden se recalcula automáticamente cuando alguien vota.
+
+⸻
+
+5. Votación de Ideas
+	•	Descripción: Permite a los visitantes o suscriptores votar por las ideas que más les interesan.
+	•	Accesible por: Visitantes (limitado) y usuarios registrados (completo)
+	•	Flujo de interacción:
+	1.	El usuario ve una tarjeta.
+	2.	Hace clic en el botón “Votar”.
+	3.	El contador de votos se actualiza inmediatamente.
+	•	Datos requeridos/generados:
+	•	Requiere: ID de idea, ID o hash de usuario (para prevenir votos repetidos).
+	•	Genera: incremento en el conteo de votos.
+	•	Comportamientos esperados / errores:
+	•	Los visitantes pueden votar 1 vez por sesión/localStorage.
+	•	Los usuarios registrados pueden votar múltiples veces según configuración.
+	•	El botón se desactiva si ya se votó (o muestra “Votado”).
+
+⸻
+
+6. Cambio de Posiciones Semanal
+	•	Descripción: Muestra visualmente cómo ha cambiado la posición de cada idea desde la semana anterior.
+	•	Accesible por: Todos los usuarios.
+	•	Flujo de interacción:
+	1.	Cada tarjeta tiene un ícono de cambio de posición.
+	2.	El color indica la dirección del cambio.
+	•	Datos requeridos/generados:
+	•	Requiere: posición actual vs. posición anterior.
+	•	Comportamientos esperados / errores:
+	•	Se recalcula cada semana.
+	•	En ausencia de datos previos, se marca como “nuevo”.
+
+⸻
+
+📋 Requisitos No Funcionales
+	•	Rendimiento: Carga del leaderboard debe completarse en menos de 1 segundo con hasta 100 ideas.
+	•	Seguridad: Validar entrada de usuarios para prevenir inyecciones. Los votos no deben ser manipulables desde el frontend.
+	•	Accesibilidad: Compatible con lectores de pantalla y navegación por teclado.
+	•	Responsive: Debe funcionar sin problemas tanto en escritorio como en móviles.
+	•	Persistencia: En el MVP los votos pueden almacenarse en localStorage, con posibilidad de integrar backend más adelante.
+
+⸻
+
+🔍 Supuestos y Limitaciones Iniciales
+	•	No se requiere login para los votantes en el MVP, pero sí para los creadores.
+	•	Cada visitante solo puede votar una vez por idea (a través de localStorage).
+	•	El sistema no soporta comentarios ni interacción entre usuarios por ahora.
+	•	No se permite editar una idea luego de cierto número de votos para evitar manipulación.
+	•	No hay sistema de notificaciones ni recordatorios aún.
