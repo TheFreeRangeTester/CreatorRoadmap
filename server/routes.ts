@@ -2,7 +2,7 @@ import type { Express, Request, Response } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import { setupAuth } from "./auth";
-import { insertIdeaSchema, updateIdeaSchema, insertVoteSchema } from "@shared/schema";
+import { insertIdeaSchema, updateIdeaSchema, insertVoteSchema, insertPublicLinkSchema } from "@shared/schema";
 import { ZodError } from "zod";
 import { fromZodError } from "zod-validation-error";
 
@@ -183,6 +183,193 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.status(201).json(updatedIdea);
     } catch (error) {
       console.error("Error voting for idea:", error);
+      res.status(500).json({ message: "Failed to register vote" });
+    }
+  });
+
+  // Public link API routes
+  // Create a new public link
+  app.post("/api/public-links", async (req: Request, res: Response) => {
+    try {
+      if (!req.isAuthenticated()) {
+        return res.status(401).json({ message: "Authentication required to create public links" });
+      }
+
+      const validatedData = insertPublicLinkSchema.parse(req.body);
+      const creatorId = req.user!.id;
+      
+      const publicLink = await storage.createPublicLink(creatorId, validatedData);
+      res.status(201).json(publicLink);
+    } catch (error) {
+      if (error instanceof ZodError) {
+        const validationError = fromZodError(error);
+        return res.status(400).json({ message: validationError.message });
+      }
+      console.error("Error creating public link:", error);
+      res.status(500).json({ message: "Failed to create public link" });
+    }
+  });
+
+  // Get all public links for the authenticated user
+  app.get("/api/public-links", async (req: Request, res: Response) => {
+    try {
+      if (!req.isAuthenticated()) {
+        return res.status(401).json({ message: "Authentication required to get public links" });
+      }
+
+      const creatorId = req.user!.id;
+      const publicLinks = await storage.getUserPublicLinks(creatorId);
+      res.json(publicLinks);
+    } catch (error) {
+      console.error("Error fetching public links:", error);
+      res.status(500).json({ message: "Failed to fetch public links" });
+    }
+  });
+
+  // Toggle public link active status
+  app.patch("/api/public-links/:id", async (req: Request, res: Response) => {
+    try {
+      if (!req.isAuthenticated()) {
+        return res.status(401).json({ message: "Authentication required to update public links" });
+      }
+
+      const id = Number(req.params.id);
+      if (isNaN(id)) {
+        return res.status(400).json({ message: "Invalid link ID" });
+      }
+
+      const { isActive } = req.body;
+      if (typeof isActive !== 'boolean') {
+        return res.status(400).json({ message: "isActive must be a boolean value" });
+      }
+
+      const publicLink = await storage.togglePublicLinkStatus(id, isActive);
+      if (!publicLink) {
+        return res.status(404).json({ message: "Public link not found" });
+      }
+
+      // Create the full URL for sharing
+      const baseUrl = process.env.BASE_URL || 'http://localhost:5000';
+      const url = `${baseUrl}/l/${publicLink.token}`;
+      
+      res.json({
+        ...publicLink,
+        url
+      });
+    } catch (error) {
+      console.error("Error updating public link:", error);
+      res.status(500).json({ message: "Failed to update public link" });
+    }
+  });
+
+  // Delete public link
+  app.delete("/api/public-links/:id", async (req: Request, res: Response) => {
+    try {
+      if (!req.isAuthenticated()) {
+        return res.status(401).json({ message: "Authentication required to delete public links" });
+      }
+
+      const id = Number(req.params.id);
+      if (isNaN(id)) {
+        return res.status(400).json({ message: "Invalid link ID" });
+      }
+
+      await storage.deletePublicLink(id);
+      res.status(204).send();
+    } catch (error) {
+      console.error("Error deleting public link:", error);
+      res.status(500).json({ message: "Failed to delete public link" });
+    }
+  });
+
+  // Public leaderboard routes
+  app.get("/api/l/:token", async (req: Request, res: Response) => {
+    try {
+      const { token } = req.params;
+      
+      // Get the public link by token
+      const publicLink = await storage.getPublicLinkByToken(token);
+      if (!publicLink) {
+        return res.status(404).json({ message: "Public leaderboard not found" });
+      }
+
+      // Check if the link is active
+      if (!publicLink.isActive) {
+        return res.status(403).json({ message: "This leaderboard is currently inactive" });
+      }
+
+      // Check if the link has expired
+      if (publicLink.expiresAt && new Date() > publicLink.expiresAt) {
+        return res.status(403).json({ message: "This leaderboard link has expired" });
+      }
+
+      // Get the ideas with positions
+      const ideas = await storage.getIdeasWithPositions();
+      
+      res.json({
+        ideas,
+        publicLink: {
+          ...publicLink,
+          url: `${process.env.BASE_URL || 'http://localhost:5000'}/l/${token}`
+        }
+      });
+    } catch (error) {
+      console.error("Error fetching public leaderboard:", error);
+      res.status(500).json({ message: "Failed to fetch public leaderboard" });
+    }
+  });
+
+  // Vote on a public leaderboard
+  app.post("/api/l/:token/ideas/:ideaId/vote", async (req: Request, res: Response) => {
+    try {
+      const { token, ideaId: ideaIdString } = req.params;
+      const ideaId = Number(ideaIdString);
+      
+      if (isNaN(ideaId)) {
+        return res.status(400).json({ message: "Invalid idea ID" });
+      }
+
+      // Get the public link by token
+      const publicLink = await storage.getPublicLinkByToken(token);
+      if (!publicLink) {
+        return res.status(404).json({ message: "Public leaderboard not found" });
+      }
+
+      // Check if the link is active
+      if (!publicLink.isActive) {
+        return res.status(403).json({ message: "This leaderboard is currently inactive" });
+      }
+
+      // Check if the link has expired
+      if (publicLink.expiresAt && new Date() > publicLink.expiresAt) {
+        return res.status(403).json({ message: "This leaderboard link has expired" });
+      }
+
+      // Check if the idea exists
+      const idea = await storage.getIdea(ideaId);
+      if (!idea) {
+        return res.status(404).json({ message: "Idea not found" });
+      }
+
+      const userId = req.isAuthenticated() ? req.user!.id : undefined;
+      const sessionId = req.sessionID;
+
+      // Check if this user/session has already voted for this idea
+      const existingVote = await storage.getVoteByUserOrSession(ideaId, userId, sessionId);
+      if (existingVote) {
+        return res.status(400).json({ message: "You have already voted for this idea" });
+      }
+
+      // Create the vote
+      await storage.createVote({ ideaId }, userId, sessionId);
+
+      // Get the updated idea with its new position
+      const ideasWithPositions = await storage.getIdeasWithPositions();
+      const updatedIdea = ideasWithPositions.find(i => i.id === ideaId);
+
+      res.status(201).json(updatedIdea);
+    } catch (error) {
+      console.error("Error voting for idea on public leaderboard:", error);
       res.status(500).json({ message: "Failed to register vote" });
     }
   });

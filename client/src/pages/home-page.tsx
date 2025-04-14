@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useQuery, useMutation } from "@tanstack/react-query";
-import { Loader2, CloudLightning } from "lucide-react";
+import { Loader2, CloudLightning, Link as LinkIcon, Settings } from "lucide-react";
 import { useAuth } from "@/hooks/use-auth";
 import { useToast } from "@/hooks/use-toast";
 import { queryClient, apiRequest } from "@/lib/queryClient";
@@ -10,8 +10,10 @@ import DeleteConfirmation from "@/components/delete-confirmation";
 import CreatorControls from "@/components/creator-controls";
 import LeaderboardInfo from "@/components/leaderboard-info";
 import EmptyState from "@/components/empty-state";
+import PublicLinksManager from "@/components/public-links-manager";
 import { Link } from "wouter";
 import { IdeaResponse } from "@shared/schema";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 export default function HomePage() {
   const { user, logoutMutation } = useAuth();
@@ -132,39 +134,89 @@ export default function HomePage() {
       </header>
 
       <main className="container mx-auto px-4 sm:px-6 lg:px-8 py-6">
-        <div className="mb-8">
-          {/* Creator Controls */}
-          {user && <CreatorControls onAddIdea={handleAddIdea} />}
+        {/* Creator Controls (outside of tabs, always visible when logged in) */}
+        {user && <CreatorControls onAddIdea={handleAddIdea} />}
+        
+        {/* Tabs appear for authenticated users */}
+        {user ? (
+          <Tabs defaultValue="leaderboard" className="mt-6">
+            <TabsList className="grid w-full max-w-md grid-cols-2 mb-6">
+              <TabsTrigger value="leaderboard" className="flex items-center gap-2">
+                <CloudLightning className="h-4 w-4" />
+                Leaderboard
+              </TabsTrigger>
+              <TabsTrigger value="public-links" className="flex items-center gap-2">
+                <LinkIcon className="h-4 w-4" />
+                Public Links
+              </TabsTrigger>
+            </TabsList>
+            
+            <TabsContent value="leaderboard" className="space-y-4">
+              {/* Leaderboard Info */}
+              <LeaderboardInfo />
 
-          {/* Leaderboard Info */}
-          <LeaderboardInfo />
+              {/* Content */}
+              {isLoading ? (
+                <div className="flex justify-center py-10">
+                  <Loader2 className="h-8 w-8 animate-spin text-primary" />
+                </div>
+              ) : isError ? (
+                <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded">
+                  Failed to load ideas. Please try again.
+                </div>
+              ) : ideas && ideas.length > 0 ? (
+                <div className="grid gap-6 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+                  {ideas.map((idea) => (
+                    <IdeaCard
+                      key={idea.id}
+                      idea={idea}
+                      onVote={handleVote}
+                      onEdit={user && idea.creatorId === user.id ? handleEditIdea : undefined}
+                      onDelete={user && idea.creatorId === user.id ? handleDeleteIdea : undefined}
+                      isVoting={voteMutation.isPending}
+                    />
+                  ))}
+                </div>
+              ) : (
+                <EmptyState onAddIdea={user ? handleAddIdea : undefined} />
+              )}
+            </TabsContent>
+            
+            <TabsContent value="public-links">
+              <PublicLinksManager />
+            </TabsContent>
+          </Tabs>
+        ) : (
+          // For non-authenticated users, show just the leaderboard
+          <div className="mb-8">
+            {/* Leaderboard Info */}
+            <LeaderboardInfo />
 
-          {/* Content */}
-          {isLoading ? (
-            <div className="flex justify-center py-10">
-              <Loader2 className="h-8 w-8 animate-spin text-primary" />
-            </div>
-          ) : isError ? (
-            <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded">
-              Failed to load ideas. Please try again.
-            </div>
-          ) : ideas && ideas.length > 0 ? (
-            <div className="grid gap-6 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
-              {ideas.map((idea) => (
-                <IdeaCard
-                  key={idea.id}
-                  idea={idea}
-                  onVote={handleVote}
-                  onEdit={user && idea.creatorId === user.id ? handleEditIdea : undefined}
-                  onDelete={user && idea.creatorId === user.id ? handleDeleteIdea : undefined}
-                  isVoting={voteMutation.isPending}
-                />
-              ))}
-            </div>
-          ) : (
-            <EmptyState onAddIdea={user ? handleAddIdea : undefined} />
-          )}
-        </div>
+            {/* Content */}
+            {isLoading ? (
+              <div className="flex justify-center py-10">
+                <Loader2 className="h-8 w-8 animate-spin text-primary" />
+              </div>
+            ) : isError ? (
+              <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded">
+                Failed to load ideas. Please try again.
+              </div>
+            ) : ideas && ideas.length > 0 ? (
+              <div className="grid gap-6 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+                {ideas.map((idea) => (
+                  <IdeaCard
+                    key={idea.id}
+                    idea={idea}
+                    onVote={handleVote}
+                    isVoting={voteMutation.isPending}
+                  />
+                ))}
+              </div>
+            ) : (
+              <EmptyState />
+            )}
+          </div>
+        )}
       </main>
 
       {/* Modals */}
