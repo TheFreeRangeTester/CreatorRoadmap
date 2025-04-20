@@ -256,7 +256,7 @@ export default function IdeaCard({ idea, onVote, onEdit, onDelete, isVoting }: I
                 }
                 key={`${idea.id}-${idea.votes}`} // Para que se anime cuando cambia el número de votos
               >
-                {idea.votes} {idea.votes === 1 ? "vote" : "votes"}
+                {idea.votes} {idea.votes === 1 ? t('badges.vote') : t('badges.votes')}
               </motion.span>
             </div>
             
