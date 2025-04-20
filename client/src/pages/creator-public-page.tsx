@@ -203,10 +203,10 @@ export default function CreatorPublicPage() {
           </h1>
           <div className="flex flex-col space-y-1">
             <p className="text-xl font-medium text-gray-700 dark:text-gray-300">
-              Roadmap de Contenido
+              {t('homepage.title')}
             </p>
             <p className="text-muted-foreground dark:text-gray-400">
-              Vota por el contenido que quieres ver próximamente
+              {t('homepage.subtitle')}
             </p>
           </div>
         </div>
@@ -276,7 +276,7 @@ export default function CreatorPublicPage() {
       <div className="flex flex-col lg:flex-row gap-4 mb-8">
         <div className="bg-gradient-to-r from-primary/10 to-blue-500/10 dark:from-primary/5 dark:to-blue-500/5 p-4 rounded-lg flex-1">
           <p className="text-sm text-gray-700 dark:text-gray-300">
-            Este roadmap muestra las ideas ordenadas por votos. Tu opinión ayuda a determinar qué contenido se creará primero.
+            {t('creator.roadmapDescription')}
           </p>
         </div>
         
@@ -287,9 +287,9 @@ export default function CreatorPublicPage() {
 
       {ideas.length === 0 ? (
         <div className="text-center py-12">
-          <h2 className="text-2xl font-semibold dark:text-white">Sin ideas todavía</h2>
+          <h2 className="text-2xl font-semibold dark:text-white">{t('creator.noIdeasYet')}</h2>
           <p className="text-muted-foreground dark:text-gray-400 mt-2">
-            Este creador aún no ha agregado ideas de contenido.
+            {t('creator.noIdeasDescription')}
           </p>
         </div>
       ) : (
@@ -374,7 +374,7 @@ export default function CreatorPublicPage() {
                     <div className="bg-muted/30 dark:bg-gray-700/50 rounded-full px-3 py-1 flex items-center transition-all duration-300 group-hover:shadow-md group-hover:bg-muted/60 dark:group-hover:bg-gray-700/80">
                       <ThumbsUp className="h-4 w-4 text-primary dark:text-primary-400 mr-2 transition-transform duration-300 group-hover:scale-110 group-hover:text-primary-600 dark:group-hover:text-primary-300" />
                       <span className="text-sm font-medium dark:text-gray-300 transition-all duration-300 group-hover:font-semibold">
-                        <span className="transition-all duration-300 group-hover:text-primary dark:group-hover:text-primary-300">{idea.votes}</span> votos
+                        <span className="transition-all duration-300 group-hover:text-primary dark:group-hover:text-primary-300">{idea.votes}</span> {t('common.votes')}
                       </span>
                     </div>
                   </div>
@@ -396,7 +396,7 @@ export default function CreatorPublicPage() {
                           >
                             <ThumbsUp className="h-4 w-4 text-white" />
                           </motion.span>
-                          Votado
+                          {t('creator.voted')}
                         </Button>
                       </motion.div>
                     ) : (
@@ -418,7 +418,7 @@ export default function CreatorPublicPage() {
                           {isVoting[idea.id] ? (
                             <>
                               <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                              Votando...
+                              {t('common.voting')}
                             </>
                           ) : successVote === idea.id ? (
                             <motion.div 
@@ -437,7 +437,7 @@ export default function CreatorPublicPage() {
                               >
                                 <ThumbsUp className="h-4 w-4" />
                               </motion.div>
-                              <span>¡Votado!</span>
+                              <span>{t('creator.votedSuccess')}</span>
                             </motion.div>
                           ) : (
                             <div className="flex items-center">
@@ -448,7 +448,7 @@ export default function CreatorPublicPage() {
                               >
                                 <ThumbsUp className="h-4 w-4" />
                               </motion.div>
-                              <span>Votar</span>
+                              <span>{t('common.vote')}</span>
                             </div>
                           )}
                         </Button>
@@ -500,7 +500,7 @@ export default function CreatorPublicPage() {
                           className="w-full border-dashed bg-muted/50 hover:bg-muted hover:border-primary/50 transition-all duration-300 hover:shadow-sm dark:hover:border-primary-400/50"
                         >
                           <UserPlus className="h-3.5 w-3.5 mr-1.5 text-gray-500 dark:text-gray-400 transition-all duration-300 group-hover:text-primary dark:group-hover:text-primary-400" />
-                          <span className="text-xs text-gray-600 dark:text-gray-400 transition-all duration-300 group-hover:text-primary/80 dark:group-hover:text-primary-400/80">Inicia sesión para votar</span>
+                          <span className="text-xs text-gray-600 dark:text-gray-400 transition-all duration-300 group-hover:text-primary/80 dark:group-hover:text-primary-400/80">{t('login.requiredToVote')}</span>
                         </Button>
                       </motion.div>
                     </Link>
