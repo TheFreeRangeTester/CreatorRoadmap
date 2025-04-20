@@ -115,17 +115,7 @@ export default function IdeaForm({ isOpen, idea, onClose }: IdeaFormProps) {
           </DialogDescription>
         </DialogHeader>
         
-        <div className="absolute right-4 top-4">
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={onClose}
-            className="h-6 w-6"
-            aria-label="Close"
-          >
-            <X className="h-4 w-4" />
-          </Button>
-        </div>
+        {/* El modal ya tiene su propio botón de cierre integrado */}
 
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
