@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useParams, useLocation, Link } from "wouter";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { motion, AnimatePresence } from "framer-motion";
+import { useTranslation } from "react-i18next";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/hooks/use-auth";
 import { IdeaResponse } from "@shared/schema";
@@ -9,6 +10,7 @@ import { apiRequest } from "@/lib/queryClient";
 import { Share2, RefreshCcw, ThumbsUp, Loader2, UserPlus, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "@/components/theme-toggle";
+import { LanguageToggle } from "@/components/language-toggle";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
@@ -31,6 +33,7 @@ export default function CreatorPublicPage() {
   const [votedIdeas, setVotedIdeas] = useState<Set<number>>(new Set());
   const { toast } = useToast();
   const { user } = useAuth();
+  const { t } = useTranslation();
 
   const { data, isLoading, error, refetch } = useQuery<CreatorPublicPageResponse>({
     queryKey: [`/api/creators/${username}`],
@@ -250,10 +253,11 @@ export default function CreatorPublicPage() {
               >
                 <Share2 className="h-4 w-4" />
               </motion.span>
-              Compartir
+              {t('common.share')}
             </Button>
           </motion.div>
           <ThemeToggle />
+          <LanguageToggle />
           {user ? (
             <Badge variant="outline" className="bg-blue-50 text-blue-700 border-blue-200 dark:bg-blue-900/20 dark:text-blue-300 dark:border-blue-800/50 px-3 py-1 transition-all duration-300 hover:shadow-md hover:-translate-y-0.5">
               <User className="h-3.5 w-3.5 mr-1.5 text-blue-500 dark:text-blue-400" />
@@ -262,7 +266,7 @@ export default function CreatorPublicPage() {
           ) : (
             <Link href="/auth">
               <Button size="sm" variant="default" className="text-xs">
-                Iniciar sesión
+                {t('common.login')}
               </Button>
             </Link>
           )}
