@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
-import { ArrowUp, ArrowDown, Minus, Plus, Pencil, Trash2, ThumbsUp, Loader2 } from "lucide-react";
+import { ArrowUp, ArrowDown, Minus, Plus, Pencil, Trash2, ThumbsUp, Loader2, User } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
 import { IdeaResponse } from "@shared/schema";
 
 interface IdeaCardProps {
@@ -85,6 +86,16 @@ export default function IdeaCard({ idea, onVote, onEdit, onDelete, isVoting }: I
           </span>
         </div>
         <p className="text-neutral-600 dark:text-neutral-300 text-sm mb-4">{idea.description}</p>
+        
+        {/* Mostrar badge si la idea fue sugerida por otro usuario */}
+        {idea.suggestedByUsername && (
+          <div className="mb-4">
+            <Badge variant="outline" className="bg-amber-50 border-amber-200 text-amber-700 dark:bg-amber-900/30 dark:border-amber-800 dark:text-amber-300 flex items-center gap-1">
+              <User className="h-3 w-3" />
+              Sugerido por {idea.suggestedByUsername}
+            </Badge>
+          </div>
+        )}
         <div className="flex justify-between items-center">
           <div className="flex items-center">
             {/* Solo mostrar el botón de voto cuando NO estamos en el dashboard del creador */}
