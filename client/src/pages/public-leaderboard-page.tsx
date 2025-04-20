@@ -23,7 +23,7 @@ export default function PublicLeaderboardPage() {
   const [isVoting, setIsVoting] = useState<{[key: number]: boolean}>({});
 
   const { data, isLoading, error, refetch } = useQuery<PublicLeaderboardResponse>({
-    queryKey: [`/api/l/${token}`],
+    queryKey: [`/api/public/${token}`],
     enabled: !!token,
   });
 
@@ -56,7 +56,7 @@ export default function PublicLeaderboardPage() {
     try {
       setIsVoting(prev => ({ ...prev, [ideaId]: true }));
       
-      const endpoint = `/api/l/${token}/ideas/${ideaId}/vote`;
+      const endpoint = `/api/public/${token}/ideas/${ideaId}/vote`;
       console.log("Voting with endpoint:", endpoint);
       
       const response = await apiRequest("POST", endpoint);
