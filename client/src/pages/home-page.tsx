@@ -189,7 +189,7 @@ export default function HomePage() {
                       onVote={handleVote}
                       onEdit={user && idea.creatorId === user.id ? handleEditIdea : undefined}
                       onDelete={user && idea.creatorId === user.id ? handleDeleteIdea : undefined}
-                      isVoting={voteMutation.isPending}
+                      isVoting={votingIdeaIds.has(idea.id)}
                     />
                   ))}
                 </div>
@@ -224,7 +224,7 @@ export default function HomePage() {
                     key={idea.id}
                     idea={idea}
                     onVote={handleVote}
-                    isVoting={voteMutation.isPending}
+                    isVoting={votingIdeaIds.has(idea.id)}
                   />
                 ))}
               </div>

@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { AlertTriangle } from "lucide-react";
+import { AlertTriangle, Loader2 } from "lucide-react";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -41,9 +41,14 @@ export default function DeleteConfirmation({
           <AlertDialogAction 
             onClick={onConfirm} 
             disabled={isDeleting}
-            className="bg-red-500 hover:bg-red-600"
+            className="bg-red-500 hover:bg-red-600 min-w-[100px]"
           >
-            {isDeleting ? "Deleting..." : "Delete"}
+            {isDeleting ? (
+              <span className="flex items-center justify-center">
+                <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                Deleting...
+              </span>
+            ) : "Delete"}
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
