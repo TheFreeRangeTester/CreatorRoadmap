@@ -254,7 +254,7 @@ export default function CreatorPublicPage() {
           {ideas.map((idea, index) => (
             <Card 
               key={idea.id} 
-              className={`overflow-hidden border-l-4 ${
+              className={`overflow-hidden border-l-4 group cursor-pointer ${
                 idea.position.current === 1 
                   ? "border-l-yellow-400 dark:border-l-yellow-600" 
                   : idea.position.current === 2
@@ -262,23 +262,25 @@ export default function CreatorPublicPage() {
                     : idea.position.current === 3
                       ? "border-l-amber-600 dark:border-l-amber-700"
                       : "border-l-transparent"
-              } dark:bg-gray-800/90 dark:border-gray-700 transition-all duration-300 hover:shadow-xl hover:-translate-y-1`}
+              } dark:bg-gray-800/90 dark:border-gray-700 transition-all duration-300 hover:shadow-xl hover:-translate-y-1 hover:bg-gray-50/50 dark:hover:bg-gray-700/70`}
             >
               <CardHeader className="bg-muted/20 dark:bg-gray-800/50 pb-2 border-b border-gray-100 dark:border-gray-700">
                 <div className="flex justify-between items-start">
                   <div className="flex items-center">
                     {idea.position.current && idea.position.current <= 3 && (
-                      <div className={`w-6 h-6 rounded-full flex items-center justify-center mr-3 text-xs font-bold ${
-                        idea.position.current === 1 
-                          ? "bg-yellow-400 text-yellow-900 dark:bg-yellow-600 dark:text-yellow-100" 
-                          : idea.position.current === 2
-                            ? "bg-gray-400 text-gray-900 dark:bg-gray-500 dark:text-gray-100"
-                            : "bg-amber-600 text-amber-100 dark:bg-amber-700"
-                      }`}>
+                      <div 
+                        className={`w-6 h-6 rounded-full flex items-center justify-center mr-3 text-xs font-bold transform transition-all duration-300 shadow-md group-hover:scale-110 ${
+                          idea.position.current === 1 
+                            ? "bg-yellow-400 text-yellow-900 dark:bg-yellow-600 dark:text-yellow-100 group-hover:shadow-yellow-300/50 dark:group-hover:shadow-yellow-500/30 group-hover:rotate-3" 
+                            : idea.position.current === 2
+                              ? "bg-gray-400 text-gray-900 dark:bg-gray-500 dark:text-gray-100 group-hover:shadow-gray-300/50 dark:group-hover:shadow-gray-400/30 group-hover:-rotate-3"
+                              : "bg-amber-600 text-amber-100 dark:bg-amber-700 group-hover:shadow-amber-300/50 dark:group-hover:shadow-amber-600/30 group-hover:rotate-3"
+                        }`}
+                      >
                         {idea.position.current}
                       </div>
                     )}
-                    <CardTitle className="dark:text-white">{idea.title}</CardTitle>
+                    <CardTitle className="dark:text-white transition-all duration-300 group-hover:text-primary group-hover:translate-x-0.5">{idea.title}</CardTitle>
                   </div>
                   <div className="flex items-center gap-2">
                     {idea.position.current && idea.position.current > 3 && (
@@ -323,12 +325,14 @@ export default function CreatorPublicPage() {
                 </div>
               </CardHeader>
               <CardContent className="pt-4">
-                <p className="text-sm text-gray-600 dark:text-gray-300 mb-4">{idea.description}</p>
+                <p className="text-sm text-gray-600 dark:text-gray-300 mb-4 transition-all duration-300 group-hover:text-gray-800 dark:group-hover:text-gray-200">{idea.description}</p>
                 <div className="flex justify-between items-center mt-4">
                   <div className="flex items-center gap-2">
-                    <div className="bg-muted/30 dark:bg-gray-700/50 rounded-full px-3 py-1 flex items-center">
-                      <ThumbsUp className="h-4 w-4 text-primary dark:text-primary-400 mr-2" />
-                      <span className="text-sm font-medium dark:text-gray-300">{idea.votes} votos</span>
+                    <div className="bg-muted/30 dark:bg-gray-700/50 rounded-full px-3 py-1 flex items-center transition-all duration-300 group-hover:shadow-md group-hover:bg-muted/60 dark:group-hover:bg-gray-700/80">
+                      <ThumbsUp className="h-4 w-4 text-primary dark:text-primary-400 mr-2 transition-transform duration-300 group-hover:scale-110 group-hover:text-primary-600 dark:group-hover:text-primary-300" />
+                      <span className="text-sm font-medium dark:text-gray-300 transition-all duration-300 group-hover:font-semibold">
+                        <span className="transition-all duration-300 group-hover:text-primary dark:group-hover:text-primary-300">{idea.votes}</span> votos
+                      </span>
                     </div>
                   </div>
                   {user ? (
@@ -336,9 +340,9 @@ export default function CreatorPublicPage() {
                       <Button 
                         size="sm" 
                         disabled={true}
-                        className="bg-green-500 dark:bg-green-600 hover:bg-green-500 dark:hover:bg-green-600 dark:text-white transition-all duration-300"
+                        className="bg-green-500 dark:bg-green-600 hover:bg-green-500 dark:hover:bg-green-600 dark:text-white transition-all duration-300 opacity-90 hover:opacity-100 shadow-sm hover:shadow-md group-hover:shadow-green-400/20"
                       >
-                        <ThumbsUp className="h-4 w-4 mr-2" />
+                        <ThumbsUp className="h-4 w-4 mr-2 transition-transform duration-300 transform group-hover:scale-110" />
                         Votado
                       </Button>
                     ) : (
@@ -346,10 +350,10 @@ export default function CreatorPublicPage() {
                         size="sm" 
                         onClick={() => handleVote(idea.id)}
                         disabled={isVoting[idea.id] || successVote === idea.id}
-                        className={`transition-all duration-300 ${
+                        className={`transition-all duration-300 shadow-sm hover:shadow-md ${
                           successVote === idea.id 
-                            ? "bg-green-500 hover:bg-green-600 dark:text-white animate-pulse transform scale-105" 
-                            : "bg-gradient-to-r from-primary to-blue-600 hover:from-primary/90 hover:to-blue-700 dark:text-white"
+                            ? "bg-green-500 hover:bg-green-600 dark:text-white animate-pulse transform scale-105 shadow-green-400/20" 
+                            : "bg-gradient-to-r from-primary to-blue-600 hover:from-primary/90 hover:to-blue-700 dark:text-white hover:shadow-primary/20 hover:-translate-y-0.5 active:translate-y-0"
                         }`}
                       >
                         {isVoting[idea.id] ? (
@@ -372,9 +376,10 @@ export default function CreatorPublicPage() {
                       <Button 
                         variant="outline"
                         size="sm"
-                        className="w-full border-dashed bg-muted/50 hover:bg-muted"
+                        className="w-full border-dashed bg-muted/50 hover:bg-muted hover:border-primary/50 transition-all duration-300 hover:shadow-sm dark:hover:border-primary-400/50 hover:-translate-y-0.5 active:translate-y-0"
                       >
-                        <span className="text-xs text-gray-600 dark:text-gray-400">Inicia sesión para votar</span>
+                        <UserPlus className="h-3.5 w-3.5 mr-1.5 text-gray-500 dark:text-gray-400 transition-all duration-300 group-hover:text-primary dark:group-hover:text-primary-400" />
+                        <span className="text-xs text-gray-600 dark:text-gray-400 transition-all duration-300 group-hover:text-primary/80 dark:group-hover:text-primary-400/80">Inicia sesión para votar</span>
                       </Button>
                     </Link>
                   )}
