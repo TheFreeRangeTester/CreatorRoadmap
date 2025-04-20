@@ -178,7 +178,7 @@ export default function LandingPage() {
               </div>
               <ThemeToggle />
               {user ? (
-                <Button onClick={() => navigate("/")}>
+                <Button onClick={() => navigate("/dashboard")}>
                   Ir al Dashboard
                 </Button>
               ) : (
@@ -230,12 +230,23 @@ export default function LandingPage() {
               variants={fadeIn}
               className="flex flex-col sm:flex-row gap-4 justify-center"
             >
-              <Link href="/auth">
-                <Button size="lg" className="font-medium text-base bg-gradient-to-r from-primary to-blue-600 hover:from-primary/90 hover:to-blue-700 text-white">
-                  Comenzar gratis
+              {user ? (
+                <Button 
+                  size="lg" 
+                  className="font-medium text-base bg-gradient-to-r from-primary to-blue-600 hover:from-primary/90 hover:to-blue-700 text-white"
+                  onClick={() => navigate("/dashboard")}
+                >
+                  Ir al Dashboard
                   <ArrowRight className="h-4 w-4 ml-2" />
                 </Button>
-              </Link>
+              ) : (
+                <Link href="/auth">
+                  <Button size="lg" className="font-medium text-base bg-gradient-to-r from-primary to-blue-600 hover:from-primary/90 hover:to-blue-700 text-white">
+                    Comenzar gratis
+                    <ArrowRight className="h-4 w-4 ml-2" />
+                  </Button>
+                </Link>
+              )}
               <Button size="lg" variant="outline" className="font-medium text-base">
                 Ver demo
               </Button>
@@ -511,12 +522,23 @@ export default function LandingPage() {
               Únete a miles de creadores que ya están usando IdeaVote para crear contenido más relevante y aumentar su engagement.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Link href="/auth">
-                <Button size="lg" className="font-medium text-base bg-gradient-to-r from-primary to-blue-600 hover:from-primary/90 hover:to-blue-700 text-white">
-                  Comenzar gratis
+              {user ? (
+                <Button 
+                  size="lg" 
+                  className="font-medium text-base bg-gradient-to-r from-primary to-blue-600 hover:from-primary/90 hover:to-blue-700 text-white"
+                  onClick={() => navigate("/dashboard")}
+                >
+                  Ir al Dashboard
                   <ArrowRight className="h-4 w-4 ml-2" />
                 </Button>
-              </Link>
+              ) : (
+                <Link href="/auth">
+                  <Button size="lg" className="font-medium text-base bg-gradient-to-r from-primary to-blue-600 hover:from-primary/90 hover:to-blue-700 text-white">
+                    Comenzar gratis
+                    <ArrowRight className="h-4 w-4 ml-2" />
+                  </Button>
+                </Link>
+              )}
               <Button size="lg" variant="outline" className="font-medium text-base">
                 Ver demo
               </Button>
