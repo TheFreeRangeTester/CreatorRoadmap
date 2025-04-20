@@ -382,11 +382,14 @@ function SuggestIdeaDialog({ username, refetch }: SuggestIdeaDialogProps) {
   
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
-      <div>
+      <DialogTrigger asChild>
         <Button 
           variant="secondary" 
           className="h-full shadow-sm flex items-center gap-2"
-          onClick={() => {
+          onClick={(e) => {
+            // Prevenir la apertura automática del diálogo
+            e.preventDefault();
+            
             // Solo abre el diálogo si el usuario está autenticado
             if (user) {
               setIsOpen(true);
@@ -404,7 +407,7 @@ function SuggestIdeaDialog({ username, refetch }: SuggestIdeaDialogProps) {
           <Lightbulb className="h-4 w-4" />
           <span>Sugerir idea</span>
         </Button>
-      </div>
+      </DialogTrigger>
       
       <DialogContent className="sm:max-w-[500px]">
         <DialogHeader>
