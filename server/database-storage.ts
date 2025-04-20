@@ -98,20 +98,12 @@ export class DatabaseStorage implements IStorage {
 
   // Vote methods
   async getVoteByUserOrSession(ideaId: number, userId?: number, sessionId?: string): Promise<Vote | undefined> {
+    // Ahora únicamente verificamos por userId, ya que todos los votos requieren autenticación
     if (userId) {
       const [vote] = await db
         .select()
         .from(votes)
         .where(and(eq(votes.ideaId, ideaId), eq(votes.userId, userId)));
-      
-      if (vote) return vote;
-    }
-    
-    if (sessionId) {
-      const [vote] = await db
-        .select()
-        .from(votes)
-        .where(and(eq(votes.ideaId, ideaId), eq(votes.sessionId, sessionId)));
       
       return vote;
     }
@@ -120,12 +112,17 @@ export class DatabaseStorage implements IStorage {
   }
 
   async createVote(vote: InsertVote, userId?: number, sessionId?: string): Promise<Vote> {
+    // Ahora requerimos un userId para todos los votos
+    if (!userId) {
+      throw new Error("User ID is required to vote");
+    }
+    
     const [newVote] = await db
       .insert(votes)
       .values({
         ...vote,
-        userId: userId || null,
-        sessionId: sessionId || null,
+        userId: userId,
+        sessionId: null, // Ya no usamos sessión para votar
         votedAt: new Date(),
       })
       .returning();
