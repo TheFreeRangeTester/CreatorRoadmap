@@ -203,7 +203,7 @@ export default function PublicLeaderboardPage() {
                 <div className="flex justify-between items-center mt-4">
                   <div className="flex items-center gap-2">
                     <ThumbsUp className="h-4 w-4 text-muted-foreground dark:text-gray-400" />
-                    <span className="text-sm font-medium dark:text-gray-300">{idea.votes} {t('publicLeaderboard.votes')}</span>
+                    <span className="text-sm font-medium dark:text-gray-300">{idea.votes} {t('badges.votes')}</span>
                   </div>
                   {user ? (
                     <Button 

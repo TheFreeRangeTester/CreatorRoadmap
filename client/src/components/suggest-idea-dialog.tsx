@@ -12,6 +12,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogClose } from "@/components/ui/dialog";
+import { useTranslation } from "react-i18next";
 
 interface SuggestIdeaDialogProps {
   username: string;
@@ -22,6 +23,7 @@ export default function SuggestIdeaDialog({ username, refetch }: SuggestIdeaDial
   const [isOpen, setIsOpen] = useState(false);
   const { toast } = useToast();
   const { user } = useAuth();
+  const { t } = useTranslation();
   
   // Definir esquema de validación
   const formSchema = z.object({
@@ -72,8 +74,8 @@ export default function SuggestIdeaDialog({ username, refetch }: SuggestIdeaDial
       setTimeout(() => {
         // Mostrar mensaje de éxito
         toast({
-          title: "Gracias por tu sugerencia",
-          description: "Tu idea ha sido enviada al creador para su aprobación.",
+          title: t('suggestIdea.thankYou'),
+          description: t('suggestIdea.thankYouDesc'),
           className: "bg-gradient-to-r from-green-50 to-emerald-50 border-green-200 dark:from-green-900/30 dark:to-emerald-900/30 dark:border-green-800",
         });
         

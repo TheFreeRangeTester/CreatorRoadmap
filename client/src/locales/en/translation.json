@@ -74,5 +74,26 @@
     "submitIdea": "Submit Idea",
     "titlePlaceholder": "Enter a title for your idea",
     "descriptionPlaceholder": "Describe your idea in detail"
+  },
+  "suggestIdea": {
+    "button": "Suggest idea",
+    "title": "Suggest idea to {{username}}",
+    "titleLabel": "Idea title",
+    "titlePlaceholder": "Write a concise title",
+    "descriptionLabel": "Description",
+    "descriptionPlaceholder": "Describe your idea in detail for the creator",
+    "cancel": "Cancel",
+    "submit": "Submit suggestion",
+    "sending": "Sending...",
+    "loginRequired": "Login to suggest ideas",
+    "loginRequiredDesc": "You need an account to suggest ideas to this creator.",
+    "incompleteFields": "Incomplete fields",
+    "incompleteFieldsDesc": "Please complete all fields in the form.",
+    "invalidFields": "Invalid fields",
+    "invalidFieldsDesc": "Please correctly complete all fields in the form.",
+    "thankYou": "Thank you for your suggestion",
+    "thankYouDesc": "Your idea has been sent to the creator for approval.",
+    "error": "Error submitting suggestion",
+    "errorDesc": "An error occurred while sending your suggestion. Check your connection and try again."
   }
 }
