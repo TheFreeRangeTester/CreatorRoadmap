@@ -56,7 +56,11 @@ export default function PublicLeaderboardPage() {
     try {
       setIsVoting(prev => ({ ...prev, [ideaId]: true }));
       
-      await apiRequest("POST", `/api/l/${token}/ideas/${ideaId}/vote`);
+      const endpoint = `/api/l/${token}/ideas/${ideaId}/vote`;
+      console.log("Voting with endpoint:", endpoint);
+      
+      const response = await apiRequest("POST", endpoint);
+      console.log("Vote response:", response);
       
       // Refetch data to update UI
       await refetch();
@@ -67,6 +71,7 @@ export default function PublicLeaderboardPage() {
       });
       
     } catch (error) {
+      console.error("Vote error details:", error);
       toast({
         title: "Vote failed",
         description: (error as Error).message || "Failed to record your vote",

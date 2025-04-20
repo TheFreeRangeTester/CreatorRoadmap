@@ -12,7 +12,19 @@ export async function apiRequest(
   url: string,
   data?: unknown | undefined,
 ): Promise<Response> {
-  const res = await fetch(url, {
+  // Para debugging
+  console.log(`API Request: ${method} ${url}`);
+  
+  // Asegurarse que solo hay un /api al principio de la URL
+  const apiUrl = url.startsWith('/api/') 
+    ? url 
+    : url.startsWith('/') 
+      ? `/api${url}` 
+      : `/api/${url}`;
+  
+  console.log(`Normalized URL: ${apiUrl}`);
+  
+  const res = await fetch(apiUrl, {
     method,
     headers: data ? { "Content-Type": "application/json" } : {},
     body: data ? JSON.stringify(data) : undefined,
