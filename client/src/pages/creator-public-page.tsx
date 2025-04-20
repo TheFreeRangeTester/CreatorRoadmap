@@ -114,12 +114,17 @@ export default function CreatorPublicPage() {
     <div className="container px-4 mx-auto py-8 dark:bg-gray-950 min-h-screen">
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
         <div>
-          <h1 className="text-3xl font-bold mb-2 text-transparent bg-clip-text bg-gradient-to-r from-primary to-blue-600 dark:from-primary dark:to-blue-400">
-            {creator.username}'s Content Roadmap
+          <h1 className="text-4xl font-bold mb-2 text-transparent bg-clip-text bg-gradient-to-r from-primary to-blue-600 dark:from-primary dark:to-blue-400">
+            {creator.username}
           </h1>
-          <p className="text-muted-foreground dark:text-gray-400">
-            Vote for what content you want to see next from this creator!
-          </p>
+          <div className="flex flex-col space-y-1">
+            <p className="text-xl font-medium text-gray-700 dark:text-gray-300">
+              Roadmap de Contenido
+            </p>
+            <p className="text-muted-foreground dark:text-gray-400">
+              Vota por el contenido que quieres ver próximamente
+            </p>
+          </div>
         </div>
         <div className="flex items-center gap-2">
           <ThemeToggle />
@@ -128,9 +133,15 @@ export default function CreatorPublicPage() {
           </Button>
           <Button onClick={handleShare} variant="outline" className="flex items-center gap-2 dark:text-gray-300 dark:border-gray-700 dark:hover:text-white">
             <Share2 className="h-4 w-4" />
-            Share
+            Compartir
           </Button>
         </div>
+      </div>
+      
+      <div className="bg-gradient-to-r from-primary/10 to-blue-500/10 dark:from-primary/5 dark:to-blue-500/5 p-4 rounded-lg mb-8">
+        <p className="text-sm text-gray-700 dark:text-gray-300">
+          Este roadmap muestra las ideas ordenadas por votos. Tu opinión ayuda a determinar qué contenido se creará primero.
+        </p>
       </div>
 
       {ideas.length === 0 ? (
@@ -142,17 +153,41 @@ export default function CreatorPublicPage() {
         </div>
       ) : (
         <div className="grid grid-cols-1 gap-6">
-          {ideas.map((idea) => (
-            <Card key={idea.id} className="overflow-hidden dark:bg-gray-800 dark:border-gray-700 transition-all duration-300 hover:shadow-lg">
-              <CardHeader className="bg-muted/30 dark:bg-gray-800/80 pb-2">
+          {ideas.map((idea, index) => (
+            <Card 
+              key={idea.id} 
+              className={`overflow-hidden border-l-4 ${
+                idea.position.current === 1 
+                  ? "border-l-yellow-400 dark:border-l-yellow-600" 
+                  : idea.position.current === 2
+                    ? "border-l-gray-400 dark:border-l-gray-500"
+                    : idea.position.current === 3
+                      ? "border-l-amber-600 dark:border-l-amber-700"
+                      : "border-l-transparent"
+              } dark:bg-gray-800/90 dark:border-gray-700 transition-all duration-300 hover:shadow-xl hover:-translate-y-1`}
+            >
+              <CardHeader className="bg-muted/20 dark:bg-gray-800/50 pb-2 border-b border-gray-100 dark:border-gray-700">
                 <div className="flex justify-between items-start">
-                  <div>
+                  <div className="flex items-center">
+                    {idea.position.current && idea.position.current <= 3 && (
+                      <div className={`w-6 h-6 rounded-full flex items-center justify-center mr-3 text-xs font-bold ${
+                        idea.position.current === 1 
+                          ? "bg-yellow-400 text-yellow-900 dark:bg-yellow-600 dark:text-yellow-100" 
+                          : idea.position.current === 2
+                            ? "bg-gray-400 text-gray-900 dark:bg-gray-500 dark:text-gray-100"
+                            : "bg-amber-600 text-amber-100 dark:bg-amber-700"
+                      }`}>
+                        {idea.position.current}
+                      </div>
+                    )}
                     <CardTitle className="dark:text-white">{idea.title}</CardTitle>
                   </div>
                   <div className="flex items-center gap-2">
-                    <Badge variant="outline" className="text-xs dark:border-gray-600 dark:text-gray-300">
-                      Rank: {idea.position.current || "N/A"}
-                    </Badge>
+                    {idea.position.current > 3 && (
+                      <Badge variant="outline" className="text-xs dark:border-gray-600 dark:text-gray-300">
+                        #{idea.position.current}
+                      </Badge>
+                    )}
                     {(() => {
                       const { previous, change } = idea.position;
                       
@@ -169,9 +204,9 @@ export default function CreatorPublicPage() {
                       }
                       
                       // Determinar el texto a mostrar
-                      let badgeText = "Same";
+                      let badgeText = "Igual";
                       if (previous === null) {
-                        badgeText = "New";
+                        badgeText = "Nuevo";
                       } else if (change !== null) {
                         if (change > 0) {
                           badgeText = `▲ ${change}`;
@@ -193,22 +228,33 @@ export default function CreatorPublicPage() {
                 <p className="text-sm text-gray-600 dark:text-gray-300 mb-4">{idea.description}</p>
                 <div className="flex justify-between items-center mt-4">
                   <div className="flex items-center gap-2">
-                    <ThumbsUp className="h-4 w-4 text-muted-foreground dark:text-gray-400" />
-                    <span className="text-sm font-medium dark:text-gray-300">{idea.votes} votes</span>
+                    <div className="bg-muted/30 dark:bg-gray-700/50 rounded-full px-3 py-1 flex items-center">
+                      <ThumbsUp className="h-4 w-4 text-primary dark:text-primary-400 mr-2" />
+                      <span className="text-sm font-medium dark:text-gray-300">{idea.votes} votos</span>
+                    </div>
                   </div>
                   <Button 
                     size="sm" 
                     onClick={() => handleVote(idea.id)}
-                    disabled={isVoting[idea.id]}
-                    className="bg-gradient-to-r from-primary to-blue-600 hover:from-primary/90 hover:to-blue-700 dark:text-white transition-all duration-300"
+                    disabled={isVoting[idea.id] || successVote === idea.id}
+                    className={`transition-all duration-300 ${
+                      successVote === idea.id 
+                        ? "bg-green-500 hover:bg-green-600 dark:text-white animate-pulse transform scale-105" 
+                        : "bg-gradient-to-r from-primary to-blue-600 hover:from-primary/90 hover:to-blue-700 dark:text-white"
+                    }`}
                   >
                     {isVoting[idea.id] ? (
                       <>
                         <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                        Voting...
+                        Votando...
+                      </>
+                    ) : successVote === idea.id ? (
+                      <>
+                        <ThumbsUp className="h-4 w-4 mr-2 animate-bounce" />
+                        ¡Votado!
                       </>
                     ) : (
-                      <>Vote</>
+                      <>Votar</>
                     )}
                   </Button>
                 </div>
