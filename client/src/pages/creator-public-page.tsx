@@ -318,12 +318,17 @@ function SuggestIdeaDialog({ username, refetch }: SuggestIdeaDialogProps) {
   // Crear mutation para enviar sugerencia
   const suggestMutation = useMutation({
     mutationFn: async (data: { title: string; description: string }) => {
-      const response = await apiRequest(
-        "POST", 
-        `/api/creators/${username}/suggest`,
-        data
-      );
-      return await response.json();
+      try {
+        const response = await apiRequest(
+          "POST", 
+          `/api/creators/${username}/suggest`,
+          data
+        );
+        return await response.json();
+      } catch (error) {
+        console.error("Error al sugerir idea:", error);
+        throw error;
+      }
     },
     onSuccess: () => {
       // Cerrar el diálogo
