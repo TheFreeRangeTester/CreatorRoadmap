@@ -8,6 +8,7 @@ import IdeaCard from "@/components/idea-card";
 import IdeaForm from "@/components/idea-form";
 import DeleteConfirmation from "@/components/delete-confirmation";
 import CreatorControls from "@/components/creator-controls";
+import { ThemeToggle } from "@/components/theme-toggle";
 import LeaderboardInfo from "@/components/leaderboard-info";
 import EmptyState from "@/components/empty-state";
 import PublicLinksManager from "@/components/public-links-manager";
@@ -113,36 +114,42 @@ export default function HomePage() {
   };
 
   return (
-    <div className="bg-gray-50 min-h-screen">
+    <div className="bg-gray-50 dark:bg-gray-950 min-h-screen">
       {/* Header */}
-      <header className="bg-white border-b border-gray-200 sticky top-0 z-10">
+      <header className="bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800 sticky top-0 z-10">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             <div className="flex items-center">
               <CloudLightning className="h-8 w-8 text-primary" />
-              <h1 className="ml-2 text-xl font-bold text-neutral-800">
+              <h1 className="ml-2 text-xl font-bold text-neutral-800 dark:text-white">
                 Idea Leaderboard
               </h1>
             </div>
-            <div>
+            <div className="flex items-center gap-4">
               {user ? (
-                <div className="flex items-center gap-4">
-                  <span className="text-sm text-neutral-600">
+                <>
+                  <span className="text-sm text-neutral-600 dark:text-neutral-300">
                     Hello, {user.username}
                   </span>
-                  <button
-                    onClick={handleLogout}
-                    className="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary"
-                  >
-                    Log out
-                  </button>
-                </div>
+                  <div className="flex items-center gap-2">
+                    <ThemeToggle />
+                    <button
+                      onClick={handleLogout}
+                      className="inline-flex items-center px-4 py-2 border border-gray-300 dark:border-gray-700 rounded-md shadow-sm text-sm font-medium text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary dark:focus:ring-offset-gray-900"
+                    >
+                      Log out
+                    </button>
+                  </div>
+                </>
               ) : (
-                <Link href="/auth">
-                  <button className="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-primary hover:bg-primary-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary">
-                    Log in
-                  </button>
-                </Link>
+                <div className="flex items-center gap-2">
+                  <ThemeToggle />
+                  <Link href="/auth">
+                    <button className="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-primary hover:bg-primary-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary dark:focus:ring-offset-gray-900">
+                      Log in
+                    </button>
+                  </Link>
+                </div>
               )}
             </div>
           </div>

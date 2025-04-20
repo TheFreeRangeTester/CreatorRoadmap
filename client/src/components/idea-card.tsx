@@ -40,7 +40,7 @@ export default function IdeaCard({ idea, onVote, onEdit, onDelete, isVoting }: I
     // Si no hay posición previa, es una idea nueva
     if (previous === null) {
       return {
-        className: "bg-primary-50 text-primary",
+        className: "bg-primary-50 dark:bg-primary-900/50 text-primary dark:text-primary-300",
         icon: <Plus className="w-3 h-3 mr-1" />,
         text: "New",
       };
@@ -49,7 +49,7 @@ export default function IdeaCard({ idea, onVote, onEdit, onDelete, isVoting }: I
     // Si el cambio es positivo (subió de posición)
     if (change !== null && change > 0) {
       return {
-        className: "bg-green-50 text-green-600",
+        className: "bg-green-50 dark:bg-green-900/30 text-green-600 dark:text-green-400",
         icon: <ArrowUp className="w-3 h-3 mr-1" />,
         text: change.toString(),
       };
@@ -58,7 +58,7 @@ export default function IdeaCard({ idea, onVote, onEdit, onDelete, isVoting }: I
     // Si el cambio es negativo (bajó de posición)
     if (change !== null && change < 0) {
       return {
-        className: "bg-red-50 text-red-600",
+        className: "bg-red-50 dark:bg-red-900/30 text-red-600 dark:text-red-400",
         icon: <ArrowDown className="w-3 h-3 mr-1" />,
         text: Math.abs(change).toString(),
       };
@@ -66,7 +66,7 @@ export default function IdeaCard({ idea, onVote, onEdit, onDelete, isVoting }: I
     
     // Si no cambió de posición o el cambio es 0
     return {
-      className: "bg-gray-50 text-gray-600",
+      className: "bg-gray-50 dark:bg-gray-800 text-gray-600 dark:text-gray-400",
       icon: <Minus className="w-3 h-3 mr-1" />,
       text: "Same",
     };
@@ -75,23 +75,23 @@ export default function IdeaCard({ idea, onVote, onEdit, onDelete, isVoting }: I
   const position = getPositionIndicator();
 
   return (
-    <Card className="idea-card transition-all hover:shadow-md hover:-translate-y-1">
+    <Card className="idea-card transition-all hover:shadow-md hover:-translate-y-1 dark:bg-gray-800 dark:border-gray-700">
       <CardContent className="p-6">
         <div className="flex justify-between items-start mb-4">
-          <h3 className="text-lg font-semibold text-neutral-800">{idea.title}</h3>
+          <h3 className="text-lg font-semibold text-neutral-800 dark:text-white">{idea.title}</h3>
           <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-semibold ${position.className}`}>
             {position.icon}
             {position.text}
           </span>
         </div>
-        <p className="text-neutral-600 text-sm mb-4">{idea.description}</p>
+        <p className="text-neutral-600 dark:text-neutral-300 text-sm mb-4">{idea.description}</p>
         <div className="flex justify-between items-center">
           <div className="flex items-center">
             <button
-              className={`flex items-center px-3 py-1 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-1 min-w-[70px] transition-all ${
+              className={`flex items-center px-3 py-1 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-1 dark:focus:ring-offset-gray-800 min-w-[70px] transition-all ${
                 hasVoted
-                  ? "bg-neutral-100 text-neutral-400 cursor-not-allowed"
-                  : "bg-primary-50 text-primary hover:bg-primary-100"
+                  ? "bg-neutral-100 dark:bg-gray-700 text-neutral-400 dark:text-neutral-500 cursor-not-allowed"
+                  : "bg-primary-50 dark:bg-primary-900/50 text-primary dark:text-primary-300 hover:bg-primary-100 dark:hover:bg-primary-800/70"
               }`}
               onClick={handleVote}
               disabled={hasVoted || isVoting}
@@ -108,7 +108,7 @@ export default function IdeaCard({ idea, onVote, onEdit, onDelete, isVoting }: I
                 </>
               )}
             </button>
-            <span className="ml-2 text-sm font-semibold text-neutral-700">
+            <span className="ml-2 text-sm font-semibold text-neutral-700 dark:text-neutral-300">
               {idea.votes} {idea.votes === 1 ? "vote" : "votes"}
             </span>
           </div>
@@ -119,7 +119,7 @@ export default function IdeaCard({ idea, onVote, onEdit, onDelete, isVoting }: I
               {onEdit && (
                 <button
                   onClick={() => onEdit(idea)}
-                  className="p-1 text-neutral-400 hover:text-neutral-500"
+                  className="p-1 text-neutral-400 hover:text-neutral-500 dark:text-neutral-400 dark:hover:text-neutral-300"
                   aria-label="Edit idea"
                 >
                   <Pencil className="w-5 h-5" />
@@ -128,7 +128,7 @@ export default function IdeaCard({ idea, onVote, onEdit, onDelete, isVoting }: I
               {onDelete && (
                 <button
                   onClick={() => onDelete(idea.id)}
-                  className="p-1 text-neutral-400 hover:text-red-500"
+                  className="p-1 text-neutral-400 hover:text-red-500 dark:text-neutral-400 dark:hover:text-red-400"
                   aria-label="Delete idea"
                 >
                   <Trash2 className="w-5 h-5" />
