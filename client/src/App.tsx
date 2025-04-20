@@ -5,9 +5,15 @@ import AuthPage from "@/pages/auth-page";
 import PublicLeaderboardPage from "@/pages/public-leaderboard-page";
 import { ProtectedRoute } from "./lib/protected-route";
 
+import { ThemeToggle } from "./components/theme-toggle"
+
 function App() {
   return (
-    <Switch>
+    <>
+      <div className="fixed top-4 right-4">
+        <ThemeToggle />
+      </div>
+      <Switch>
       <Route path="/" component={HomePage} />
       <Route path="/auth" component={AuthPage} />
       <ProtectedRoute path="/creator" component={HomePage} />
