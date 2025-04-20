@@ -111,9 +111,7 @@ export class MemStorage implements IStorage {
     const id = this.currentIdeaId++;
     const now = new Date();
     
-    // Get the current count of ideas for positioning
-    const ideasCount = this.ideas.size;
-    
+    // Nueva idea con posiciones en null inicialmente
     const idea: Idea = {
       ...insertIdea,
       id,
@@ -121,16 +119,18 @@ export class MemStorage implements IStorage {
       createdAt: now,
       creatorId,
       lastPositionUpdate: now,
-      currentPosition: ideasCount + 1, // New idea starts at the bottom
-      previousPosition: null, // No previous position for new ideas
+      currentPosition: null,  // Inicialmente null
+      previousPosition: null, // Siempre null para ideas nuevas
     };
     
+    // Insertar la idea con posiciones en null
     this.ideas.set(id, idea);
     
-    // Update positions after adding a new idea
+    // Actualizar posiciones de todas las ideas, incluida la nueva
     await this.updatePositions();
     
-    return idea;
+    // Obtener la idea actualizada con la nueva posición
+    return this.ideas.get(id)!;
   }
 
   async updateIdea(id: number, updateData: UpdateIdea): Promise<Idea | undefined> {

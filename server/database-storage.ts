@@ -49,26 +49,27 @@ export class DatabaseStorage implements IStorage {
   async createIdea(insertIdea: InsertIdea, creatorId: number): Promise<Idea> {
     const now = new Date();
     
-    // Count existing ideas for positioning
-    const result = await db.select({ count: sql<number>`count(*)` }).from(ideas);
-    const ideasCount = result[0].count;
-    
+    // Nueva idea con 0 votos y posiciones en null inicialmente
     const ideaToInsert = {
       ...insertIdea,
       votes: 0,
       creatorId,
       createdAt: now,
       lastPositionUpdate: now,
-      currentPosition: ideasCount + 1,
-      previousPosition: null,
+      currentPosition: null,  // Inicialmente null
+      previousPosition: null, // Siempre null para ideas nuevas
     };
     
+    // Insertar la idea con posiciones en null
     const [idea] = await db.insert(ideas).values(ideaToInsert).returning();
     
-    // Update positions after adding new idea
+    // Actualizar posiciones de todas las ideas, incluida la nueva
     await this.updatePositions();
     
-    return idea;
+    // Obtener la idea actualizada para devolverla
+    const [updatedIdea] = await db.select().from(ideas).where(eq(ideas.id, idea.id));
+    
+    return updatedIdea;
   }
 
   async updateIdea(id: number, updateData: UpdateIdea): Promise<Idea | undefined> {
