@@ -35,7 +35,9 @@
     "noIdeasYet": "No ideas yet",
     "noIdeasDescription": "This creator hasn't added any content ideas yet.",
     "voteError": "Could not register your vote",
-    "voteErrorDesc": "An error occurred while processing your vote"
+    "voteErrorDesc": "An error occurred while processing your vote",
+    "voteSuccess": "Thank you for your vote!",
+    "voteSuccessDesc": "Your opinion is important to the creator."
   },
   "login": {
     "requiredToVote": "Login to vote"
