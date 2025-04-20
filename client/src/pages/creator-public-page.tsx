@@ -172,8 +172,8 @@ export default function CreatorPublicPage() {
     
     if (navigator.share) {
       navigator.share({
-        title: `Roadmap de Contenido de ${creator.username}`,
-        text: `¡Echa un vistazo al roadmap de contenido de ${creator.username} y vota por lo que quieres ver próximamente!`,
+        title: t('share.title', { username: creator.username }),
+        text: t('share.text', { username: creator.username }),
         url: shareUrl,
       }).catch((error) => {
         console.error("Error sharing:", error);
@@ -189,8 +189,8 @@ export default function CreatorPublicPage() {
     const shareUrl = `${window.location.origin}/${creator.username}`;
     navigator.clipboard.writeText(shareUrl);
     toast({
-      title: "Enlace copiado",
-      description: `Enlace compartible: ${shareUrl}`,
+      title: t('common.copySuccess'),
+      description: t('common.copyDesc', { url: shareUrl }),
     });
   };
 

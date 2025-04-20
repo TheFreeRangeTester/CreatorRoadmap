@@ -40,6 +40,20 @@
   "login": {
     "requiredToVote": "Login to vote"
   },
+  "share": {
+    "title": "Content Roadmap by {{username}}",
+    "text": "Check out {{username}}'s content roadmap and vote for what you'd like to see next!"
+  },
+  "publicLeaderboard": {
+    "title": "Public Leaderboard",
+    "description": "This leaderboard is publicly accessible. You can vote for your favorite ideas!",
+    "noIdeasYet": "No ideas yet",
+    "noIdeasDescription": "There are no ideas in this leaderboard yet.",
+    "errorLoading": "Failed to load leaderboard",
+    "rank": "Rank",
+    "na": "N/A",
+    "votes": "votes"
+  },
   "badges": {
     "new": "New",
     "equal": "Same",
