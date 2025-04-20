@@ -156,6 +156,8 @@ export default function LandingPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white dark:from-gray-950 dark:to-gray-900">
+      {/* Modal de demostración */}
+      <DemoDialog open={isDemoOpen} onOpenChange={setIsDemoOpen} />
       {/* Header */}
       <header className="fixed w-full bg-white/80 dark:bg-gray-900/80 backdrop-blur-md border-b border-gray-200 dark:border-gray-800 z-50">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
@@ -270,7 +272,13 @@ export default function LandingPage() {
                 <div className="absolute inset-0 flex items-center justify-center">
                   <div className="text-center">
                     <p className="text-lg font-medium text-gray-800 dark:text-white mb-2">Vista previa del leaderboard</p>
-                    <Button variant="secondary" size="sm">Ver demo interactiva</Button>
+                    <Button 
+                      variant="secondary" 
+                      size="sm" 
+                      onClick={() => setIsDemoOpen(true)}
+                    >
+                      Ver demo interactiva
+                    </Button>
                   </div>
                 </div>
               </div>
