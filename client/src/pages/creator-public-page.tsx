@@ -1,10 +1,11 @@
 import { useState, useEffect } from "react";
-import { useParams, useLocation } from "wouter";
+import { useParams, useLocation, Link } from "wouter";
 import { useQuery } from "@tanstack/react-query";
 import { useToast } from "@/hooks/use-toast";
+import { useAuth } from "@/hooks/use-auth";
 import { IdeaResponse } from "@shared/schema";
 import { apiRequest } from "@/lib/queryClient";
-import { Share2, RefreshCcw, ThumbsUp, Loader2 } from "lucide-react";
+import { Share2, RefreshCcw, ThumbsUp, Loader2, UserPlus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -26,6 +27,7 @@ export default function CreatorPublicPage() {
   const [isVoting, setIsVoting] = useState<{[key: number]: boolean}>({});
   const [successVote, setSuccessVote] = useState<number | null>(null);
   const { toast } = useToast();
+  const { user } = useAuth();
 
   const { data, isLoading, error, refetch } = useQuery<CreatorPublicPageResponse>({
     queryKey: [`/api/creators/${username}`],
@@ -237,30 +239,42 @@ export default function CreatorPublicPage() {
                       <span className="text-sm font-medium dark:text-gray-300">{idea.votes} votos</span>
                     </div>
                   </div>
-                  <Button 
-                    size="sm" 
-                    onClick={() => handleVote(idea.id)}
-                    disabled={isVoting[idea.id] || successVote === idea.id}
-                    className={`transition-all duration-300 ${
-                      successVote === idea.id 
-                        ? "bg-green-500 hover:bg-green-600 dark:text-white animate-pulse transform scale-105" 
-                        : "bg-gradient-to-r from-primary to-blue-600 hover:from-primary/90 hover:to-blue-700 dark:text-white"
-                    }`}
-                  >
-                    {isVoting[idea.id] ? (
-                      <>
-                        <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                        Votando...
-                      </>
-                    ) : successVote === idea.id ? (
-                      <>
-                        <ThumbsUp className="h-4 w-4 mr-2 animate-bounce" />
-                        ¡Votado!
-                      </>
-                    ) : (
-                      <>Votar</>
-                    )}
-                  </Button>
+                  {user ? (
+                    <Button 
+                      size="sm" 
+                      onClick={() => handleVote(idea.id)}
+                      disabled={isVoting[idea.id] || successVote === idea.id}
+                      className={`transition-all duration-300 ${
+                        successVote === idea.id 
+                          ? "bg-green-500 hover:bg-green-600 dark:text-white animate-pulse transform scale-105" 
+                          : "bg-gradient-to-r from-primary to-blue-600 hover:from-primary/90 hover:to-blue-700 dark:text-white"
+                      }`}
+                    >
+                      {isVoting[idea.id] ? (
+                        <>
+                          <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                          Votando...
+                        </>
+                      ) : successVote === idea.id ? (
+                        <>
+                          <ThumbsUp className="h-4 w-4 mr-2 animate-bounce" />
+                          ¡Votado!
+                        </>
+                      ) : (
+                        <>Votar</>
+                      )}
+                    </Button>
+                  ) : (
+                    <Link href="/auth">
+                      <Button 
+                        variant="outline"
+                        size="sm"
+                        className="w-full border-dashed bg-muted/50 hover:bg-muted"
+                      >
+                        <span className="text-xs text-gray-600 dark:text-gray-400">Inicia sesión para votar</span>
+                      </Button>
+                    </Link>
+                  )}
                 </div>
               </CardContent>
             </Card>
