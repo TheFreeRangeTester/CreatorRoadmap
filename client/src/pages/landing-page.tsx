@@ -251,7 +251,7 @@ export default function LandingPage() {
                   </Button>
                 </Link>
               )}
-              <Button size="lg" variant="outline" className="font-medium text-base">
+              <Button onClick={() => setIsDemoOpen(true)} size="lg" variant="outline" className="font-medium text-base">
                 Ver demo
               </Button>
             </motion.div>
@@ -549,7 +549,7 @@ export default function LandingPage() {
                   </Button>
                 </Link>
               )}
-              <Button size="lg" variant="outline" className="font-medium text-base">
+              <Button onClick={() => setIsDemoOpen(true)} size="lg" variant="outline" className="font-medium text-base">
                 Ver demo
               </Button>
             </div>
