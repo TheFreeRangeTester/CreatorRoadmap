@@ -28,10 +28,26 @@ export default function HomePage() {
     queryKey: ["/api/ideas"],
   });
 
+  // State to track which ideas are being voted on
+  const [votingIdeaIds, setVotingIdeaIds] = useState<Set<number>>(new Set());
+
   // Vote mutation
   const voteMutation = useMutation({
     mutationFn: async (ideaId: number) => {
-      await apiRequest("POST", `/api/ideas/${ideaId}/vote`);
+      // Add ideaId to the set of ideas being voted on
+      setVotingIdeaIds(prev => new Set(prev).add(ideaId));
+      try {
+        await apiRequest("POST", `/api/ideas/${ideaId}/vote`);
+      } finally {
+        // Remove ideaId from the set when done (success or error)
+        setTimeout(() => {
+          setVotingIdeaIds(prev => {
+            const newSet = new Set(prev);
+            newSet.delete(ideaId);
+            return newSet;
+          });
+        }, 500); // Small delay for better UX
+      }
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/ideas"] });

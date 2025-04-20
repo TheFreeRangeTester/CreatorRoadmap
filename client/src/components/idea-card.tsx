@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { ArrowUp, ArrowDown, Minus, Plus, Pencil, Trash2, ThumbsUp } from "lucide-react";
+import { ArrowUp, ArrowDown, Minus, Plus, Pencil, Trash2, ThumbsUp, Loader2 } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { IdeaResponse } from "@shared/schema";
 
@@ -88,7 +88,7 @@ export default function IdeaCard({ idea, onVote, onEdit, onDelete, isVoting }: I
         <div className="flex justify-between items-center">
           <div className="flex items-center">
             <button
-              className={`flex items-center px-3 py-1 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-1 ${
+              className={`flex items-center px-3 py-1 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-1 min-w-[70px] transition-all ${
                 hasVoted
                   ? "bg-neutral-100 text-neutral-400 cursor-not-allowed"
                   : "bg-primary-50 text-primary hover:bg-primary-100"
@@ -96,8 +96,17 @@ export default function IdeaCard({ idea, onVote, onEdit, onDelete, isVoting }: I
               onClick={handleVote}
               disabled={hasVoted || isVoting}
             >
-              <ThumbsUp className="w-4 h-4 mr-1" />
-              {hasVoted ? "Voted" : "Vote"}
+              {isVoting ? (
+                <span className="flex items-center justify-center">
+                  <Loader2 className="w-4 h-4 mr-1 animate-spin" />
+                  <span>Voting</span>
+                </span>
+              ) : (
+                <>
+                  <ThumbsUp className="w-4 h-4 mr-1" />
+                  {hasVoted ? "Voted" : "Vote"}
+                </>
+              )}
             </button>
             <span className="ml-2 text-sm font-semibold text-neutral-700">
               {idea.votes} {idea.votes === 1 ? "vote" : "votes"}

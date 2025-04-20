@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { useMutation } from "@tanstack/react-query";
-import { X } from "lucide-react";
+import { Loader2 } from "lucide-react";
 import { insertIdeaSchema, IdeaResponse } from "@shared/schema";
 import { apiRequest, queryClient } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
@@ -170,8 +170,14 @@ export default function IdeaForm({ isOpen, idea, onClose }: IdeaFormProps) {
               <Button 
                 type="submit" 
                 disabled={createMutation.isPending || updateMutation.isPending}
+                className="min-w-[100px]"
               >
-                {createMutation.isPending || updateMutation.isPending ? "Saving..." : "Save idea"}
+                {createMutation.isPending || updateMutation.isPending ? (
+                  <span className="flex items-center justify-center">
+                    <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                    Saving...
+                  </span>
+                ) : "Save idea"}
               </Button>
             </div>
           </form>
