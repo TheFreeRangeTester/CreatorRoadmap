@@ -1,5 +1,5 @@
 import { ideas, users, votes, publicLinks, 
-  type User, type InsertUser, type Idea, type InsertIdea, type UpdateIdea, 
+  type User, type InsertUser, type Idea, type InsertIdea, type UpdateIdea, type SuggestIdea,
   type Vote, type InsertVote, type PublicLink, type InsertPublicLink, type PublicLinkResponse } from "@shared/schema";
 import session from "express-session";
 import connectPg from "connect-pg-simple";
@@ -58,6 +58,8 @@ export class DatabaseStorage implements IStorage {
       lastPositionUpdate: now,
       currentPosition: null,  // Inicialmente null
       previousPosition: null, // Siempre null para ideas nuevas
+      status: 'approved',     // Por defecto las ideas creadas por el creador están aprobadas
+      suggestedBy: null       // No es una idea sugerida
     };
     
     // Insertar la idea con posiciones en null
@@ -70,6 +72,60 @@ export class DatabaseStorage implements IStorage {
     const [updatedIdea] = await db.select().from(ideas).where(eq(ideas.id, idea.id));
     
     return updatedIdea;
+  }
+  
+  async suggestIdea(suggestion: SuggestIdea, suggestedBy: number): Promise<Idea> {
+    const now = new Date();
+    
+    // Nueva idea sugerida con 0 votos, estado pendiente y usuario que la sugiere
+    const ideaToInsert = {
+      title: suggestion.title,
+      description: suggestion.description,
+      votes: 0,
+      creatorId: suggestion.creatorId,  // ID del creador a quien se le sugiere
+      createdAt: now,
+      lastPositionUpdate: now,
+      currentPosition: null,
+      previousPosition: null,
+      status: 'pending',      // Las ideas sugeridas inician como pendientes
+      suggestedBy: suggestedBy // ID del usuario que la sugirió
+    };
+    
+    // Insertar la idea sugerida
+    const [idea] = await db.insert(ideas).values(ideaToInsert).returning();
+    
+    return idea;
+  }
+  
+  async approveIdea(id: number): Promise<Idea | undefined> {
+    // Actualizar el estado de la idea a 'approved'
+    const [idea] = await db
+      .update(ideas)
+      .set({ status: 'approved' })
+      .where(eq(ideas.id, id))
+      .returning();
+    
+    if (idea) {
+      // Después de aprobar, actualizar posiciones
+      await this.updatePositions();
+      
+      // Obtener la idea actualizada
+      const [updatedIdea] = await db.select().from(ideas).where(eq(ideas.id, id));
+      return updatedIdea;
+    }
+    
+    return undefined;
+  }
+  
+  async getPendingIdeas(creatorId: number): Promise<Idea[]> {
+    // Obtener todas las ideas pendientes para un creador
+    return db
+      .select()
+      .from(ideas)
+      .where(and(
+        eq(ideas.creatorId, creatorId),
+        eq(ideas.status, 'pending')
+      ));
   }
 
   async updateIdea(id: number, updateData: UpdateIdea): Promise<Idea | undefined> {
