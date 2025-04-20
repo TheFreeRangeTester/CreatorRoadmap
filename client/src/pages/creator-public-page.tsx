@@ -87,8 +87,8 @@ export default function CreatorPublicPage() {
   };
 
   const handleShare = () => {
-    // Construct the URL with the new format /u/:username
-    const shareUrl = `${window.location.origin}/u/${creator.username}`;
+    // Construct the URL with the new format /:username
+    const shareUrl = `${window.location.origin}/${creator.username}`;
     
     if (navigator.share) {
       navigator.share({
@@ -105,12 +105,12 @@ export default function CreatorPublicPage() {
   };
 
   const copyToClipboard = () => {
-    // Construct the URL with the new format /u/:username
-    const shareUrl = `${window.location.origin}/u/${creator.username}`;
+    // Construct the URL with the new format /:username (sin /u/)
+    const shareUrl = `${window.location.origin}/${creator.username}`;
     navigator.clipboard.writeText(shareUrl);
     toast({
       title: "Enlace copiado",
-      description: "Enlace del perfil del creador copiado al portapapeles",
+      description: `Enlace compartible: ${shareUrl}`,
     });
   };
 
