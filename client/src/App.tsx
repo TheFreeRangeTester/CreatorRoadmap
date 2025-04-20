@@ -3,6 +3,7 @@ import NotFound from "@/pages/not-found";
 import HomePage from "@/pages/home-page";
 import AuthPage from "@/pages/auth-page";
 import PublicLeaderboardPage from "@/pages/public-leaderboard-page";
+import CreatorPublicPage from "@/pages/creator-public-page";
 import { ProtectedRoute } from "./lib/protected-route";
 import { ThemeToggle } from "./components/theme-toggle";
 
@@ -17,6 +18,7 @@ function App() {
         <Route path="/auth" component={AuthPage} />
         <ProtectedRoute path="/creator" component={HomePage} />
         <Route path="/public/:token" component={PublicLeaderboardPage} />
+        <Route path="/@:username" component={CreatorPublicPage} />
         <Route component={NotFound} />
       </Switch>
     </>
