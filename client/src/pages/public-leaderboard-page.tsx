@@ -127,26 +127,39 @@ export default function PublicLeaderboardPage() {
                     <Badge variant="outline" className="text-xs">
                       Rank: {idea.position.current || "N/A"}
                     </Badge>
-                    <Badge 
-                      className={cn(
-                        "text-xs",
-                        idea.position.previous === null
-                          ? "bg-primary-100 text-primary-800 hover:bg-primary-100 hover:text-primary-800"
-                          : idea.position.change > 0 
-                          ? "bg-green-100 text-green-800 hover:bg-green-100 hover:text-green-800" 
-                          : idea.position.change < 0 
-                          ? "bg-red-100 text-red-800 hover:bg-red-100 hover:text-red-800" 
-                          : "bg-gray-100 text-gray-800 hover:bg-gray-100 hover:text-gray-800"
-                      )}
-                    >
-                      {idea.position.previous === null
-                        ? "New"
-                        : idea.position.change > 0 
-                        ? `▲ ${idea.position.change}` 
-                        : idea.position.change < 0 
-                        ? `▼ ${Math.abs(idea.position.change)}` 
-                        : "Same"}
-                    </Badge>
+                    {(() => {
+                      const { previous, change } = idea.position;
+                      
+                      // Determinar la clase de estilo
+                      let badgeClass = "text-xs ";
+                      if (previous === null) {
+                        badgeClass += "bg-primary-100 text-primary-800 hover:bg-primary-100 hover:text-primary-800";
+                      } else if (change !== null && change > 0) {
+                        badgeClass += "bg-green-100 text-green-800 hover:bg-green-100 hover:text-green-800";
+                      } else if (change !== null && change < 0) {
+                        badgeClass += "bg-red-100 text-red-800 hover:bg-red-100 hover:text-red-800";
+                      } else {
+                        badgeClass += "bg-gray-100 text-gray-800 hover:bg-gray-100 hover:text-gray-800";
+                      }
+                      
+                      // Determinar el texto a mostrar
+                      let badgeText = "Same";
+                      if (previous === null) {
+                        badgeText = "New";
+                      } else if (change !== null) {
+                        if (change > 0) {
+                          badgeText = `▲ ${change}`;
+                        } else if (change < 0) {
+                          badgeText = `▼ ${Math.abs(change)}`;
+                        }
+                      }
+                      
+                      return (
+                        <Badge className={cn(badgeClass)}>
+                          {badgeText}
+                        </Badge>
+                      );
+                    })()}
                   </div>
                 </div>
               </CardHeader>
