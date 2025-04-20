@@ -62,6 +62,18 @@ export default function CreatorPublicPage() {
   const { ideas, creator } = data;
 
   const handleVote = async (ideaId: number) => {
+    // Si el usuario no está autenticado, mostrar un mensaje y redireccionar a la página de login
+    if (!user) {
+      toast({
+        title: "Inicia sesión para votar",
+        description: "Necesitas una cuenta para poder votar por ideas.",
+        variant: "destructive",
+      });
+      // Opcionalmente podríamos redirigir al usuario a la página de login
+      // navigate("/auth");
+      return;
+    }
+    
     try {
       setIsVoting(prev => ({ ...prev, [ideaId]: true }));
       
