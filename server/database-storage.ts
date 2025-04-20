@@ -232,22 +232,43 @@ export class DatabaseStorage implements IStorage {
       .from(ideas)
       .orderBy(desc(ideas.votes), asc(ideas.createdAt));
     
-    return allIdeas.map(idea => ({
-      id: idea.id,
-      title: idea.title,
-      description: idea.description,
-      votes: idea.votes,
-      createdAt: idea.createdAt,
-      creatorId: idea.creatorId,
-      position: {
-        current: idea.currentPosition,
-        previous: idea.previousPosition,
-        // Si no hay posición previa o es igual a la actual, el cambio es 0 (sin cambio)
-        change: idea.previousPosition && idea.currentPosition && idea.previousPosition !== idea.currentPosition
-          ? idea.previousPosition - idea.currentPosition 
-          : 0
+    // Convertir ideas a IdeaWithPosition con información del sugeridor
+    const ideasWithPosition = await Promise.all(allIdeas.map(async idea => {
+      // Obtener el nombre de usuario del que sugirió la idea, si existe
+      let suggestedByUsername = undefined;
+      if (idea.suggestedBy) {
+        const [suggester] = await db
+          .select()
+          .from(users)
+          .where(eq(users.id, idea.suggestedBy));
+        
+        if (suggester) {
+          suggestedByUsername = suggester.username;
+        }
       }
+      
+      return {
+        id: idea.id,
+        title: idea.title,
+        description: idea.description,
+        votes: idea.votes,
+        createdAt: idea.createdAt,
+        creatorId: idea.creatorId,
+        status: idea.status,
+        suggestedBy: idea.suggestedBy,
+        suggestedByUsername,
+        position: {
+          current: idea.currentPosition,
+          previous: idea.previousPosition,
+          // Si no hay posición previa o es igual a la actual, el cambio es 0 (sin cambio)
+          change: idea.previousPosition && idea.currentPosition && idea.previousPosition !== idea.currentPosition
+            ? idea.previousPosition - idea.currentPosition 
+            : 0
+        }
+      };
     }));
+    
+    return ideasWithPosition;
   }
 
   // Public link methods
