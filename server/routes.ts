@@ -250,7 +250,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       // Create the full URL for sharing
       const baseUrl = process.env.BASE_URL || 'http://localhost:5000';
-      const url = `${baseUrl}/l/${publicLink.token}`;
+      const url = `${baseUrl}/public/${publicLink.token}`;
       
       res.json({
         ...publicLink,
@@ -310,7 +310,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         ideas,
         publicLink: {
           ...publicLink,
-          url: `${process.env.REPL_SLUG ? `${process.env.NODE_ENV === 'production' ? 'https://' : 'http://'}${process.env.REPL_SLUG}.${process.env.REPL_OWNER}.repl.co` : 'http://localhost:5000'}/l/${token}`
+          url: `${process.env.REPL_SLUG ? `${process.env.NODE_ENV === 'production' ? 'https://' : 'http://'}${process.env.REPL_SLUG}.${process.env.REPL_OWNER}.repl.co` : 'http://localhost:5000'}/public/${token}`
         }
       });
     } catch (error) {
