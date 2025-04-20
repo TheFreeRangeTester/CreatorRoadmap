@@ -456,6 +456,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       const { username, ideaId: ideaIdString } = req.params;
       const ideaId = Number(ideaIdString);
+      const checkOnly = req.query.check_only === 'true';
       
       if (isNaN(ideaId)) {
         return res.status(400).json({ message: "Invalid idea ID" });
@@ -483,6 +484,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const existingVote = await storage.getVoteByUserOrSession(ideaId, userId);
       if (existingVote) {
         return res.status(400).json({ message: "Ya has votado por esta idea" });
+      }
+      
+      // Si es solo verificación, no creamos el voto
+      if (checkOnly) {
+        return res.status(200).json({ message: "No has votado por esta idea" });
       }
 
       // Create the vote
@@ -546,6 +552,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       const { token, ideaId: ideaIdString } = req.params;
       const ideaId = Number(ideaIdString);
+      const checkOnly = req.query.check_only === 'true';
       
       if (isNaN(ideaId)) {
         return res.status(400).json({ message: "Invalid idea ID" });
@@ -579,6 +586,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const existingVote = await storage.getVoteByUserOrSession(ideaId, userId);
       if (existingVote) {
         return res.status(400).json({ message: "Ya has votado por esta idea" });
+      }
+      
+      // Si es solo verificación, no creamos el voto
+      if (checkOnly) {
+        return res.status(200).json({ message: "No has votado por esta idea" });
       }
 
       // Create the vote

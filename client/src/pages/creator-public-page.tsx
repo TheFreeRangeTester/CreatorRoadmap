@@ -27,6 +27,7 @@ export default function CreatorPublicPage() {
   const username = params?.username;
   const [isVoting, setIsVoting] = useState<{[key: number]: boolean}>({});
   const [successVote, setSuccessVote] = useState<number | null>(null);
+  const [votedIdeas, setVotedIdeas] = useState<Set<number>>(new Set());
   const { toast } = useToast();
   const { user } = useAuth();
 
@@ -45,6 +46,38 @@ export default function CreatorPublicPage() {
       navigate("/");
     }
   }, [error, navigate, toast]);
+  
+  // Efecto para verificar ideas ya votadas por el usuario cuando se carga la página
+  useEffect(() => {
+    if (user && data?.ideas) {
+      // Función para verificar si el usuario ya ha votado por cada idea
+      const checkVotedIdeas = async () => {
+        try {
+          const votedSet = new Set<number>();
+          
+          // Para cada idea, hacer una llamada silenciosa de verificación
+          for (const idea of data.ideas) {
+            try {
+              // Intentar votar para verificar (modo silencioso, solo para verificación)
+              await apiRequest("POST", `/api/creators/${username}/ideas/${idea.id}/vote?check_only=true`);
+            } catch (error) {
+              // Si devuelve error de "ya votado", registrar esta idea como votada
+              if ((error as Error).message?.includes("Ya has votado")) {
+                votedSet.add(idea.id);
+              }
+            }
+          }
+          
+          // Actualizar el conjunto de ideas votadas
+          setVotedIdeas(votedSet);
+        } catch (error) {
+          console.error("Error al verificar ideas votadas:", error);
+        }
+      };
+      
+      checkVotedIdeas();
+    }
+  }, [user, data?.ideas, username]);
 
   if (isLoading || !data) {
     return (
@@ -69,12 +102,29 @@ export default function CreatorPublicPage() {
       return;
     }
     
+    // Si ya votamos por esta idea, no hacer nada
+    if (votedIdeas.has(ideaId)) {
+      toast({
+        title: "Ya has votado",
+        description: "Ya has registrado tu voto para esta idea.",
+        variant: "default",
+      });
+      return;
+    }
+    
     try {
       setIsVoting(prev => ({ ...prev, [ideaId]: true }));
       
       const endpoint = `/api/creators/${username}/ideas/${ideaId}/vote`;
       
       const response = await apiRequest("POST", endpoint);
+      
+      // Actualizar el estado local de votaciones
+      setVotedIdeas(prev => {
+        const newSet = new Set(prev);
+        newSet.add(ideaId);
+        return newSet;
+      });
       
       // Mostrar animación de éxito
       setSuccessVote(ideaId);
@@ -91,11 +141,22 @@ export default function CreatorPublicPage() {
       
     } catch (error) {
       console.error("Vote error details:", error);
-      toast({
-        title: "No se pudo registrar tu voto",
-        description: (error as Error).message || "Ocurrió un error al procesar tu voto",
-        variant: "destructive",
-      });
+      
+      // Si el error es porque ya votó, actualizamos el estado local
+      if ((error as Error).message?.includes("Ya has votado")) {
+        setVotedIdeas(prev => {
+          const newSet = new Set(prev);
+          newSet.add(ideaId);
+          return newSet;
+        });
+      } else {
+        // Otros errores
+        toast({
+          title: "No se pudo registrar tu voto",
+          description: (error as Error).message || "Ocurrió un error al procesar tu voto",
+          variant: "destructive",
+        });
+      }
     } finally {
       setIsVoting(prev => ({ ...prev, [ideaId]: false }));
     }
@@ -271,30 +332,41 @@ export default function CreatorPublicPage() {
                     </div>
                   </div>
                   {user ? (
-                    <Button 
-                      size="sm" 
-                      onClick={() => handleVote(idea.id)}
-                      disabled={isVoting[idea.id] || successVote === idea.id}
-                      className={`transition-all duration-300 ${
-                        successVote === idea.id 
-                          ? "bg-green-500 hover:bg-green-600 dark:text-white animate-pulse transform scale-105" 
-                          : "bg-gradient-to-r from-primary to-blue-600 hover:from-primary/90 hover:to-blue-700 dark:text-white"
-                      }`}
-                    >
-                      {isVoting[idea.id] ? (
-                        <>
-                          <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                          Votando...
-                        </>
-                      ) : successVote === idea.id ? (
-                        <>
-                          <ThumbsUp className="h-4 w-4 mr-2 animate-bounce" />
-                          ¡Votado!
-                        </>
-                      ) : (
-                        <>Votar</>
-                      )}
-                    </Button>
+                    votedIdeas.has(idea.id) ? (
+                      <Button 
+                        size="sm" 
+                        disabled={true}
+                        className="bg-green-500 dark:bg-green-600 hover:bg-green-500 dark:hover:bg-green-600 dark:text-white transition-all duration-300"
+                      >
+                        <ThumbsUp className="h-4 w-4 mr-2" />
+                        Votado
+                      </Button>
+                    ) : (
+                      <Button 
+                        size="sm" 
+                        onClick={() => handleVote(idea.id)}
+                        disabled={isVoting[idea.id] || successVote === idea.id}
+                        className={`transition-all duration-300 ${
+                          successVote === idea.id 
+                            ? "bg-green-500 hover:bg-green-600 dark:text-white animate-pulse transform scale-105" 
+                            : "bg-gradient-to-r from-primary to-blue-600 hover:from-primary/90 hover:to-blue-700 dark:text-white"
+                        }`}
+                      >
+                        {isVoting[idea.id] ? (
+                          <>
+                            <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                            Votando...
+                          </>
+                        ) : successVote === idea.id ? (
+                          <>
+                            <ThumbsUp className="h-4 w-4 mr-2 animate-bounce" />
+                            ¡Votado!
+                          </>
+                        ) : (
+                          <>Votar</>
+                        )}
+                      </Button>
+                    )
                   ) : (
                     <Link href="/auth">
                       <Button 
