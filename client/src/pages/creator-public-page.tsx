@@ -5,7 +5,7 @@ import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/hooks/use-auth";
 import { IdeaResponse } from "@shared/schema";
 import { apiRequest } from "@/lib/queryClient";
-import { Share2, RefreshCcw, ThumbsUp, Loader2, UserPlus } from "lucide-react";
+import { Share2, RefreshCcw, ThumbsUp, Loader2, UserPlus, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -216,9 +216,9 @@ export default function CreatorPublicPage() {
           </Button>
           <ThemeToggle />
           {user ? (
-            <Badge variant="outline" className="bg-green-50 text-green-700 border-green-200 dark:bg-green-900/30 dark:text-green-300 dark:border-green-800">
-              <UserPlus className="h-3 w-3 mr-1" />
-              Conectado
+            <Badge variant="outline" className="bg-blue-50 text-blue-700 border-blue-200 dark:bg-blue-900/20 dark:text-blue-300 dark:border-blue-800/50 px-3 py-1 transition-all duration-300 hover:shadow-md hover:-translate-y-0.5">
+              <User className="h-3.5 w-3.5 mr-1.5 text-blue-500 dark:text-blue-400" />
+              <span className="font-medium">{user.username}</span>
             </Badge>
           ) : (
             <Link href="/auth">
