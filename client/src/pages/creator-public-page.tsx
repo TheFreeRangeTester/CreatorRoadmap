@@ -344,18 +344,22 @@ function SuggestIdeaDialog({ username, refetch }: SuggestIdeaDialogProps) {
   const suggestMutation = useMutation({
     mutationFn: async (data: { title: string; description: string }) => {
       try {
+        console.log("Enviando sugerencia:", data);
         const response = await apiRequest(
           "POST", 
           `/api/creators/${username}/suggest`,
           data
         );
-        return await response.json();
+        const result = await response.json();
+        console.log("Respuesta API:", result);
+        return result;
       } catch (error) {
         console.error("Error al sugerir idea:", error);
         throw error;
       }
     },
     onSuccess: () => {
+      console.log("Sugerencia enviada con éxito");
       // Cerrar el diálogo
       setIsOpen(false);
       // Mostrar mensaje de éxito
@@ -368,6 +372,7 @@ function SuggestIdeaDialog({ username, refetch }: SuggestIdeaDialogProps) {
       form.reset();
     },
     onError: (error: Error) => {
+      console.error("Error en mutación:", error);
       toast({
         title: "Error al enviar sugerencia",
         description: error.message || "Ocurrió un error al enviar tu sugerencia",
@@ -377,6 +382,16 @@ function SuggestIdeaDialog({ username, refetch }: SuggestIdeaDialogProps) {
   });
   
   function onSubmit(values: { title: string; description: string }) {
+    console.log("Función onSubmit llamada con:", values);
+    if (!values.title || !values.description) {
+      toast({
+        title: "Campos incompletos",
+        description: "Por favor completa todos los campos del formulario.",
+        variant: "destructive",
+      });
+      return;
+    }
+    
     suggestMutation.mutate(values);
   }
   
@@ -418,7 +433,13 @@ function SuggestIdeaDialog({ username, refetch }: SuggestIdeaDialogProps) {
         </DialogHeader>
         
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 mt-4">
+          <form 
+            onSubmit={(e) => {
+              e.preventDefault();
+              console.log('Formulario enviado, datos:', form.getValues());
+              form.handleSubmit(onSubmit)(e);
+            }} 
+            className="space-y-4 mt-4">
             <FormField
               control={form.control}
               name="title"
@@ -463,9 +484,22 @@ function SuggestIdeaDialog({ username, refetch }: SuggestIdeaDialogProps) {
                 </Button>
               </DialogClose>
               <Button 
-                type="submit" 
+                type="button" 
                 className="bg-gradient-to-r from-primary to-blue-600 hover:from-primary/90 hover:to-blue-700"
                 disabled={suggestMutation.isPending}
+                onClick={() => {
+                  console.log("Botón de envío clickeado");
+                  const values = form.getValues();
+                  console.log("Valores del formulario:", values);
+                  
+                  if (form.formState.isValid) {
+                    onSubmit(values as { title: string; description: string });
+                  } else {
+                    // Activar la validación del formulario para mostrar errores
+                    form.trigger();
+                    console.log("Errores de validación:", form.formState.errors);
+                  }
+                }}
               >
                 {suggestMutation.isPending ? (
                   <>
