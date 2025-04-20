@@ -74,5 +74,26 @@
     "submitIdea": "Enviar idea",
     "titlePlaceholder": "Ingresa un título para tu idea",
     "descriptionPlaceholder": "Describe tu idea en detalle"
+  },
+  "suggestIdea": {
+    "button": "Sugerir idea",
+    "title": "Sugerir idea a {{username}}",
+    "titleLabel": "Título de la idea",
+    "titlePlaceholder": "Escribe un título conciso",
+    "descriptionLabel": "Descripción",
+    "descriptionPlaceholder": "Describe con detalle tu idea para el creador",
+    "cancel": "Cancelar",
+    "submit": "Enviar sugerencia",
+    "sending": "Enviando...",
+    "loginRequired": "Inicia sesión para sugerir ideas",
+    "loginRequiredDesc": "Necesitas una cuenta para poder sugerir ideas a este creador.",
+    "incompleteFields": "Campos incompletos",
+    "incompleteFieldsDesc": "Por favor completa todos los campos del formulario.",
+    "invalidFields": "Campos inválidos",
+    "invalidFieldsDesc": "Por favor completa correctamente todos los campos del formulario.",
+    "thankYou": "Gracias por tu sugerencia",
+    "thankYouDesc": "Tu idea ha sido enviada al creador para su aprobación.",
+    "error": "Error al enviar sugerencia",
+    "errorDesc": "Ocurrió un error al enviar tu sugerencia. Verifica tu conexión e inténtalo de nuevo."
   }
 }
