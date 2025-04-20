@@ -41,7 +41,7 @@ export default function PublicLeaderboardPage() {
         description: (error as Error).message || "Failed to load leaderboard",
         variant: "destructive",
       });
-      navigate("/");
+      navigate("/dashboard");
     }
   }, [error, navigate]);
 

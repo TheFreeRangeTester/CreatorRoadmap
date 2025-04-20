@@ -43,7 +43,7 @@ export default function CreatorPublicPage() {
         description: (error as Error).message || "Failed to load creator page",
         variant: "destructive",
       });
-      navigate("/");
+      navigate("/dashboard");
     }
   }, [error, navigate, toast]);
   
