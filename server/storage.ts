@@ -1,5 +1,5 @@
 import { ideas as ideasTable, users, votes as votesTable, publicLinks as publicLinksTable, 
-  type User, type InsertUser, type Idea, type InsertIdea, type UpdateIdea, 
+  type User, type InsertUser, type Idea, type InsertIdea, type UpdateIdea, type SuggestIdea,
   type Vote, type InsertVote, type PublicLink, type InsertPublicLink, type PublicLinkResponse } from "@shared/schema";
 import session from "express-session";
 import createMemoryStore from "memorystore";
@@ -20,6 +20,11 @@ export interface IStorage {
   createIdea(idea: InsertIdea, creatorId: number): Promise<Idea>;
   updateIdea(id: number, idea: UpdateIdea): Promise<Idea | undefined>;
   deleteIdea(id: number): Promise<void>;
+  
+  // Idea suggestion operations
+  suggestIdea(suggestion: SuggestIdea, suggestedBy: number): Promise<Idea>;
+  approveIdea(id: number): Promise<Idea | undefined>;
+  getPendingIdeas(creatorId: number): Promise<Idea[]>;
   
   // Vote operations
   getVoteByUserOrSession(ideaId: number, userId?: number, sessionId?: string): Promise<Vote | undefined>;
@@ -121,6 +126,8 @@ export class MemStorage implements IStorage {
       lastPositionUpdate: now,
       currentPosition: null,  // Inicialmente null
       previousPosition: null, // Siempre null para ideas nuevas
+      status: 'approved',     // Por defecto las ideas creadas por el creador están aprobadas
+      suggestedBy: null       // No es una idea sugerida
     };
     
     // Insertar la idea con posiciones en null
@@ -159,6 +166,52 @@ export class MemStorage implements IStorage {
     
     // Update positions after deleting an idea
     await this.updatePositions();
+  }
+  
+  // Idea suggestion methods
+  async suggestIdea(suggestion: SuggestIdea, suggestedBy: number): Promise<Idea> {
+    const id = this.currentIdeaId++;
+    const now = new Date();
+    
+    // Nueva idea sugerida
+    const idea: Idea = {
+      id,
+      title: suggestion.title,
+      description: suggestion.description,
+      votes: 0,
+      creatorId: suggestion.creatorId,
+      createdAt: now,
+      lastPositionUpdate: now,
+      currentPosition: null,
+      previousPosition: null,
+      status: 'pending',
+      suggestedBy: suggestedBy
+    };
+    
+    this.ideas.set(id, idea);
+    return idea;
+  }
+  
+  async approveIdea(id: number): Promise<Idea | undefined> {
+    const idea = this.ideas.get(id);
+    if (!idea) return undefined;
+    
+    const updatedIdea: Idea = {
+      ...idea,
+      status: 'approved'
+    };
+    
+    this.ideas.set(id, updatedIdea);
+    
+    // Actualizar posiciones después de aprobar
+    await this.updatePositions();
+    
+    return updatedIdea;
+  }
+  
+  async getPendingIdeas(creatorId: number): Promise<Idea[]> {
+    return Array.from(this.ideas.values())
+      .filter(idea => idea.creatorId === creatorId && idea.status === 'pending');
   }
 
   // Vote methods
