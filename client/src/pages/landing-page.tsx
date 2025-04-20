@@ -9,6 +9,7 @@ import { ThemeToggle } from "@/components/theme-toggle";
 import { useAuth } from "@/hooks/use-auth";
 import { useIsMobile } from "@/hooks/use-mobile";
 import DemoDialog from "@/components/demo-dialog";
+import demoGifPath from "@assets/DemoGIF.gif";
 
 const fadeIn = {
   hidden: { opacity: 0, y: 20 },
@@ -265,19 +266,25 @@ export default function LandingPage() {
             
             <motion.div 
               variants={fadeIn}
-              className="mt-16 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl shadow-xl overflow-hidden"
+              className="mt-16 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl shadow-xl overflow-hidden cursor-pointer"
+              onClick={() => setIsDemoOpen(true)}
             >
               <div className="relative aspect-video overflow-hidden">
-                <div className="absolute inset-0 bg-gradient-to-r from-primary to-blue-600 opacity-20"></div>
+                <img 
+                  src={demoGifPath} 
+                  alt="Demostración de IdeaVote" 
+                  className="w-full h-full object-cover"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
                 <div className="absolute inset-0 flex items-center justify-center">
                   <div className="text-center">
-                    <p className="text-lg font-medium text-gray-800 dark:text-white mb-2">Vista previa del leaderboard</p>
+                    <p className="text-lg font-medium text-white mb-2 drop-shadow-md">Vista previa del leaderboard</p>
                     <Button 
                       variant="secondary" 
                       size="sm" 
-                      onClick={() => setIsDemoOpen(true)}
+                      className="backdrop-blur-sm"
                     >
-                      Ver demo interactiva
+                      Ver demo completa
                     </Button>
                   </div>
                 </div>
