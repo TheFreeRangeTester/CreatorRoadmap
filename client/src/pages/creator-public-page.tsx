@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useParams, useLocation, Link } from "wouter";
 import { useQuery, useMutation } from "@tanstack/react-query";
+import { motion } from "framer-motion";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/hooks/use-auth";
 import { IdeaResponse } from "@shared/schema";
@@ -337,50 +338,132 @@ export default function CreatorPublicPage() {
                   </div>
                   {user ? (
                     votedIdeas.has(idea.id) ? (
-                      <Button 
-                        size="sm" 
-                        disabled={true}
-                        className="bg-green-500 dark:bg-green-600 hover:bg-green-500 dark:hover:bg-green-600 dark:text-white transition-all duration-300 opacity-90 hover:opacity-100 shadow-sm hover:shadow-md group-hover:shadow-green-400/20"
+                      <motion.div
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.95 }}
+                        className="relative"
                       >
-                        <ThumbsUp className="h-4 w-4 mr-2 transition-transform duration-300 transform group-hover:scale-110" />
-                        Votado
-                      </Button>
+                        <Button 
+                          size="sm" 
+                          disabled={true}
+                          className="bg-green-500 dark:bg-green-600 hover:bg-green-500 dark:hover:bg-green-600 dark:text-white transition-all duration-300 opacity-90 hover:opacity-100 shadow-sm hover:shadow-md group-hover:shadow-green-400/20"
+                        >
+                          <motion.div
+                            initial={{ rotate: 0 }}
+                            whileHover={{ rotate: [0, -10, 10, -5, 0], transition: { duration: 0.5 } }}
+                            className="mr-2"
+                          >
+                            <ThumbsUp className="h-4 w-4 text-white" />
+                          </motion.div>
+                          Votado
+                        </Button>
+                      </motion.div>
                     ) : (
-                      <Button 
-                        size="sm" 
-                        onClick={() => handleVote(idea.id)}
-                        disabled={isVoting[idea.id] || successVote === idea.id}
-                        className={`transition-all duration-300 shadow-sm hover:shadow-md ${
-                          successVote === idea.id 
-                            ? "bg-green-500 hover:bg-green-600 dark:text-white animate-pulse transform scale-105 shadow-green-400/20" 
-                            : "bg-gradient-to-r from-primary to-blue-600 hover:from-primary/90 hover:to-blue-700 dark:text-white hover:shadow-primary/20 hover:-translate-y-0.5 active:translate-y-0"
-                        }`}
+                      <motion.div
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.95 }}
+                        className="relative"
                       >
-                        {isVoting[idea.id] ? (
-                          <>
-                            <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                            Votando...
-                          </>
-                        ) : successVote === idea.id ? (
-                          <>
-                            <ThumbsUp className="h-4 w-4 mr-2 animate-bounce" />
-                            ¡Votado!
-                          </>
-                        ) : (
-                          <>Votar</>
-                        )}
-                      </Button>
+                        <Button 
+                          size="sm" 
+                          onClick={() => handleVote(idea.id)}
+                          disabled={isVoting[idea.id] || successVote === idea.id}
+                          className={`transition-all duration-300 shadow-sm hover:shadow-md ${
+                            successVote === idea.id 
+                              ? "bg-green-500 hover:bg-green-600 dark:text-white shadow-green-400/20" 
+                              : "bg-gradient-to-r from-primary to-blue-600 hover:from-primary/90 hover:to-blue-700 dark:text-white hover:shadow-primary/20 active:translate-y-0"
+                          }`}
+                        >
+                          {isVoting[idea.id] ? (
+                            <>
+                              <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                              Votando...
+                            </>
+                          ) : successVote === idea.id ? (
+                            <motion.div 
+                              className="flex items-center"
+                              animate={{ 
+                                scale: [1, 1.2, 1],
+                                transition: { duration: 0.5, repeat: 2 }
+                              }}
+                            >
+                              <motion.div
+                                animate={{ 
+                                  rotate: [0, 10, 0, -10, 0],
+                                  transition: { duration: 0.5, repeat: 3 }
+                                }}
+                                className="mr-2"
+                              >
+                                <ThumbsUp className="h-4 w-4" />
+                              </motion.div>
+                              <span>¡Votado!</span>
+                            </motion.div>
+                          ) : (
+                            <div className="flex items-center">
+                              <motion.div
+                                whileHover={{ rotate: 15, scale: 1.2 }}
+                                transition={{ type: "spring", stiffness: 300 }}
+                                className="mr-2"
+                              >
+                                <ThumbsUp className="h-4 w-4" />
+                              </motion.div>
+                              <span>Votar</span>
+                            </div>
+                          )}
+                        </Button>
+                        
+                        {/* Confetti animation when voting success */}
+                        <AnimatePresence>
+                          {successVote === idea.id && (
+                            <motion.div 
+                              className="absolute inset-0 pointer-events-none overflow-hidden"
+                              initial={{ opacity: 0 }}
+                              animate={{ opacity: 1 }}
+                              exit={{ opacity: 0 }}
+                            >
+                              {[...Array(12)].map((_, i) => (
+                                <motion.div
+                                  key={i}
+                                  className={`absolute rounded-full h-1.5 w-1.5 opacity-80 ${
+                                    ['bg-primary', 'bg-blue-400', 'bg-green-400', 'bg-yellow-400', 'bg-pink-400'][i % 5]
+                                  }`}
+                                  initial={{ 
+                                    x: "50%", 
+                                    y: "50%",
+                                    scale: 0
+                                  }}
+                                  animate={{ 
+                                    x: `${50 + (Math.random() * 80 - 40)}%`, 
+                                    y: `${50 + (Math.random() * 80 - 40)}%`,
+                                    scale: [0, 1, 0.5],
+                                    opacity: [0, 1, 0]
+                                  }}
+                                  transition={{
+                                    duration: 0.6 + Math.random() * 0.2,
+                                    ease: [0.23, 1, 0.32, 1]
+                                  }}
+                                />
+                              ))}
+                            </motion.div>
+                          )}
+                        </AnimatePresence>
+                      </motion.div>
                     )
                   ) : (
                     <Link href="/auth">
-                      <Button 
-                        variant="outline"
-                        size="sm"
-                        className="w-full border-dashed bg-muted/50 hover:bg-muted hover:border-primary/50 transition-all duration-300 hover:shadow-sm dark:hover:border-primary-400/50 hover:-translate-y-0.5 active:translate-y-0"
+                      <motion.div
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.95 }}
                       >
-                        <UserPlus className="h-3.5 w-3.5 mr-1.5 text-gray-500 dark:text-gray-400 transition-all duration-300 group-hover:text-primary dark:group-hover:text-primary-400" />
-                        <span className="text-xs text-gray-600 dark:text-gray-400 transition-all duration-300 group-hover:text-primary/80 dark:group-hover:text-primary-400/80">Inicia sesión para votar</span>
-                      </Button>
+                        <Button 
+                          variant="outline"
+                          size="sm"
+                          className="w-full border-dashed bg-muted/50 hover:bg-muted hover:border-primary/50 transition-all duration-300 hover:shadow-sm dark:hover:border-primary-400/50"
+                        >
+                          <UserPlus className="h-3.5 w-3.5 mr-1.5 text-gray-500 dark:text-gray-400 transition-all duration-300 group-hover:text-primary dark:group-hover:text-primary-400" />
+                          <span className="text-xs text-gray-600 dark:text-gray-400 transition-all duration-300 group-hover:text-primary/80 dark:group-hover:text-primary-400/80">Inicia sesión para votar</span>
+                        </Button>
+                      </motion.div>
                     </Link>
                   )}
                 </div>
