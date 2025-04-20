@@ -150,10 +150,16 @@ export default function CreatorPublicPage() {
         </div>
       </div>
       
-      <div className="bg-gradient-to-r from-primary/10 to-blue-500/10 dark:from-primary/5 dark:to-blue-500/5 p-4 rounded-lg mb-8">
-        <p className="text-sm text-gray-700 dark:text-gray-300">
-          Este roadmap muestra las ideas ordenadas por votos. Tu opinión ayuda a determinar qué contenido se creará primero.
-        </p>
+      <div className="flex flex-col lg:flex-row gap-4 mb-8">
+        <div className="bg-gradient-to-r from-primary/10 to-blue-500/10 dark:from-primary/5 dark:to-blue-500/5 p-4 rounded-lg flex-1">
+          <p className="text-sm text-gray-700 dark:text-gray-300">
+            Este roadmap muestra las ideas ordenadas por votos. Tu opinión ayuda a determinar qué contenido se creará primero.
+          </p>
+        </div>
+        
+        {user && (
+          <SuggestIdeaDialog username={creator.username} refetch={refetch} />
+        )}
       </div>
 
       {ideas.length === 0 ? (
@@ -288,5 +294,142 @@ export default function CreatorPublicPage() {
         </div>
       )}
     </div>
+  );
+}
+
+interface SuggestIdeaDialogProps {
+  username: string;
+  refetch: () => Promise<any>;
+}
+
+function SuggestIdeaDialog({ username, refetch }: SuggestIdeaDialogProps) {
+  const [isOpen, setIsOpen] = useState(false);
+  const { toast } = useToast();
+  
+  // Crear formulario
+  const form = useForm({
+    resolver: zodResolver(suggestIdeaSchema),
+    defaultValues: {
+      title: "",
+      description: ""
+    }
+  });
+  
+  // Crear mutation para enviar sugerencia
+  const suggestMutation = useMutation({
+    mutationFn: async (data: { title: string; description: string }) => {
+      const response = await apiRequest(
+        "POST", 
+        `/api/creators/${username}/suggest`,
+        data
+      );
+      return await response.json();
+    },
+    onSuccess: () => {
+      // Cerrar el diálogo
+      setIsOpen(false);
+      // Mostrar mensaje de éxito
+      toast({
+        title: "Gracias por tu sugerencia",
+        description: "Tu idea ha sido enviada al creador para su aprobación.",
+        className: "bg-gradient-to-r from-green-50 to-emerald-50 border-green-200 dark:from-green-900/30 dark:to-emerald-900/30 dark:border-green-800",
+      });
+      // Resetear el formulario
+      form.reset();
+    },
+    onError: (error: Error) => {
+      toast({
+        title: "Error al enviar sugerencia",
+        description: error.message || "Ocurrió un error al enviar tu sugerencia",
+        variant: "destructive",
+      });
+    }
+  });
+  
+  function onSubmit(values: { title: string; description: string }) {
+    suggestMutation.mutate(values);
+  }
+  
+  return (
+    <Dialog open={isOpen} onOpenChange={setIsOpen}>
+      <DialogTrigger asChild>
+        <Button variant="secondary" className="h-full shadow-sm flex items-center gap-2">
+          <Lightbulb className="h-4 w-4" />
+          <span>Sugerir idea</span>
+        </Button>
+      </DialogTrigger>
+      
+      <DialogContent className="sm:max-w-[500px]">
+        <DialogHeader>
+          <DialogTitle className="text-xl font-semibold flex items-center gap-2">
+            <Lightbulb className="h-5 w-5 text-amber-500" />
+            Sugerir idea a {username}
+          </DialogTitle>
+        </DialogHeader>
+        
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 mt-4">
+            <FormField
+              control={form.control}
+              name="title"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Título de la idea</FormLabel>
+                  <FormControl>
+                    <Input 
+                      placeholder="Escribe un título conciso" 
+                      {...field} 
+                      className="dark:bg-gray-800"
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            
+            <FormField
+              control={form.control}
+              name="description"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Descripción</FormLabel>
+                  <FormControl>
+                    <Textarea 
+                      placeholder="Describe con detalle tu idea para el creador"
+                      {...field}
+                      rows={4}
+                      className="resize-none dark:bg-gray-800"
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            
+            <div className="flex justify-end gap-2 pt-2">
+              <DialogClose asChild>
+                <Button type="button" variant="outline" disabled={suggestMutation.isPending}>
+                  Cancelar
+                </Button>
+              </DialogClose>
+              <Button 
+                type="submit" 
+                className="bg-gradient-to-r from-primary to-blue-600 hover:from-primary/90 hover:to-blue-700"
+                disabled={suggestMutation.isPending}
+              >
+                {suggestMutation.isPending ? (
+                  <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    Enviando...
+                  </>
+                ) : (
+                  "Enviar sugerencia"
+                )}
+              </Button>
+            </div>
+          </form>
+        </Form>
+      </DialogContent>
+    </Dialog>
   );
 }
