@@ -188,9 +188,10 @@ export class DatabaseStorage implements IStorage {
       position: {
         current: idea.currentPosition,
         previous: idea.previousPosition,
-        change: idea.previousPosition && idea.currentPosition
+        // Si no hay posición previa o es igual a la actual, el cambio es 0 (sin cambio)
+        change: idea.previousPosition && idea.currentPosition && idea.previousPosition !== idea.currentPosition
           ? idea.previousPosition - idea.currentPosition 
-          : null
+          : 0
       }
     }));
   }

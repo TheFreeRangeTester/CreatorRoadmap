@@ -35,31 +35,41 @@ export default function IdeaCard({ idea, onVote, onEdit, onDelete, isVoting }: I
 
   // Determine position indicator style and icon
   const getPositionIndicator = () => {
-    if (idea.position.change === null) {
+    const { current, previous, change } = idea.position;
+    
+    // Si no hay posición previa, es una idea nueva
+    if (previous === null) {
       return {
         className: "bg-primary-50 text-primary",
         icon: <Plus className="w-3 h-3 mr-1" />,
         text: "New",
       };
-    } else if (idea.position.change > 0) {
+    } 
+    
+    // Si el cambio es positivo (subió de posición)
+    if (change !== null && change > 0) {
       return {
         className: "bg-green-50 text-green-600",
         icon: <ArrowUp className="w-3 h-3 mr-1" />,
-        text: idea.position.change,
+        text: change.toString(),
       };
-    } else if (idea.position.change < 0) {
+    } 
+    
+    // Si el cambio es negativo (bajó de posición)
+    if (change !== null && change < 0) {
       return {
         className: "bg-red-50 text-red-600",
         icon: <ArrowDown className="w-3 h-3 mr-1" />,
-        text: Math.abs(idea.position.change),
+        text: Math.abs(change).toString(),
       };
-    } else {
-      return {
-        className: "bg-gray-50 text-gray-600",
-        icon: <Minus className="w-3 h-3 mr-1" />,
-        text: "0",
-      };
-    }
+    } 
+    
+    // Si no cambió de posición o el cambio es 0
+    return {
+      className: "bg-gray-50 text-gray-600",
+      icon: <Minus className="w-3 h-3 mr-1" />,
+      text: "Same",
+    };
   };
 
   const position = getPositionIndicator();
