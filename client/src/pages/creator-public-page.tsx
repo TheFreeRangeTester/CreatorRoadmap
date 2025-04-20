@@ -347,14 +347,14 @@ export default function CreatorPublicPage() {
                       }
                       
                       // Determinar el texto a mostrar
-                      let badgeText = "Igual";
+                      let badgeText = t('badges.same');
                       if (previous === null) {
-                        badgeText = "Nuevo";
+                        badgeText = t('badges.new');
                       } else if (change !== null) {
                         if (change > 0) {
-                          badgeText = `▲ ${change}`;
+                          badgeText = t('badges.up', { change });
                         } else if (change < 0) {
-                          badgeText = `▼ ${Math.abs(change)}`;
+                          badgeText = t('badges.down', { change: Math.abs(change) });
                         }
                       }
                       
