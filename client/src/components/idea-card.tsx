@@ -87,28 +87,31 @@ export default function IdeaCard({ idea, onVote, onEdit, onDelete, isVoting }: I
         <p className="text-neutral-600 dark:text-neutral-300 text-sm mb-4">{idea.description}</p>
         <div className="flex justify-between items-center">
           <div className="flex items-center">
-            <button
-              className={`flex items-center px-3 py-1 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-1 dark:focus:ring-offset-gray-800 min-w-[70px] transition-all ${
-                hasVoted
-                  ? "bg-neutral-100 dark:bg-gray-700 text-neutral-400 dark:text-neutral-500 cursor-not-allowed"
-                  : "bg-primary-50 dark:bg-primary-900/50 text-primary dark:text-primary-300 hover:bg-primary-100 dark:hover:bg-primary-800/70"
-              }`}
-              onClick={handleVote}
-              disabled={hasVoted || isVoting}
-            >
-              {isVoting ? (
-                <span className="flex items-center justify-center">
-                  <Loader2 className="w-4 h-4 mr-1 animate-spin" />
-                  <span>Voting</span>
-                </span>
-              ) : (
-                <>
-                  <ThumbsUp className="w-4 h-4 mr-1" />
-                  {hasVoted ? "Voted" : "Vote"}
-                </>
-              )}
-            </button>
-            <span className="ml-2 text-sm font-semibold text-neutral-700 dark:text-neutral-300">
+            {/* Solo mostrar el botón de voto cuando NO estamos en el dashboard del creador */}
+            {!onEdit && !onDelete && (
+              <button
+                className={`flex items-center px-3 py-1 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-1 dark:focus:ring-offset-gray-800 min-w-[70px] transition-all ${
+                  hasVoted
+                    ? "bg-neutral-100 dark:bg-gray-700 text-neutral-400 dark:text-neutral-500 cursor-not-allowed"
+                    : "bg-primary-50 dark:bg-primary-900/50 text-primary dark:text-primary-300 hover:bg-primary-100 dark:hover:bg-primary-800/70"
+                }`}
+                onClick={handleVote}
+                disabled={hasVoted || isVoting}
+              >
+                {isVoting ? (
+                  <span className="flex items-center justify-center">
+                    <Loader2 className="w-4 h-4 mr-1 animate-spin" />
+                    <span>Voting</span>
+                  </span>
+                ) : (
+                  <>
+                    <ThumbsUp className="w-4 h-4 mr-1" />
+                    {hasVoted ? "Voted" : "Vote"}
+                  </>
+                )}
+              </button>
+            )}
+            <span className={`${!onEdit && !onDelete ? 'ml-2' : ''} text-sm font-semibold text-neutral-700 dark:text-neutral-300`}>
               {idea.votes} {idea.votes === 1 ? "vote" : "votes"}
             </span>
           </div>
