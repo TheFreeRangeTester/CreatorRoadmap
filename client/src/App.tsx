@@ -19,7 +19,7 @@ function App() {
         <Route path="/auth" component={AuthPage} />
         <ProtectedRoute path="/creator" component={HomePage} />
         <Route path="/public/:token" component={PublicLeaderboardPage} />
-        <Route path="/@:username" component={CreatorPublicPage} />
+        <Route path="/u/:username" component={CreatorPublicPage} />
         <Route component={NotFound} />
       </Switch>
     </>

@@ -24,6 +24,7 @@ export default function CreatorPublicPage() {
   const [, navigate] = useLocation();
   const username = params?.username;
   const [isVoting, setIsVoting] = useState<{[key: number]: boolean}>({});
+  const [successVote, setSuccessVote] = useState<number | null>(null);
   const { toast } = useToast();
 
   const { data, isLoading, error, refetch } = useQuery<CreatorPublicPageResponse>({
@@ -51,8 +52,6 @@ export default function CreatorPublicPage() {
   }
 
   const { ideas, creator } = data;
-
-  const [successVote, setSuccessVote] = useState<number | null>(null);
 
   const handleVote = async (ideaId: number) => {
     try {
@@ -88,11 +87,14 @@ export default function CreatorPublicPage() {
   };
 
   const handleShare = () => {
+    // Construct the URL with the new format /u/:username
+    const shareUrl = `${window.location.origin}/u/${creator.username}`;
+    
     if (navigator.share) {
       navigator.share({
-        title: `${creator.username}'s Content Roadmap`,
-        text: `Check out ${creator.username}'s content roadmap and vote for what you want to see next!`,
-        url: window.location.href,
+        title: `Roadmap de Contenido de ${creator.username}`,
+        text: `¡Echa un vistazo al roadmap de contenido de ${creator.username} y vota por lo que quieres ver próximamente!`,
+        url: shareUrl,
       }).catch((error) => {
         console.error("Error sharing:", error);
         copyToClipboard();
@@ -103,10 +105,12 @@ export default function CreatorPublicPage() {
   };
 
   const copyToClipboard = () => {
-    navigator.clipboard.writeText(window.location.href);
+    // Construct the URL with the new format /u/:username
+    const shareUrl = `${window.location.origin}/u/${creator.username}`;
+    navigator.clipboard.writeText(shareUrl);
     toast({
-      title: "Link copied",
-      description: "Creator page link copied to clipboard",
+      title: "Enlace copiado",
+      description: "Enlace del perfil del creador copiado al portapapeles",
     });
   };
 
@@ -146,9 +150,9 @@ export default function CreatorPublicPage() {
 
       {ideas.length === 0 ? (
         <div className="text-center py-12">
-          <h2 className="text-2xl font-semibold dark:text-white">No ideas yet</h2>
+          <h2 className="text-2xl font-semibold dark:text-white">Sin ideas todavía</h2>
           <p className="text-muted-foreground dark:text-gray-400 mt-2">
-            This creator hasn't added any content ideas yet.
+            Este creador aún no ha agregado ideas de contenido.
           </p>
         </div>
       ) : (
@@ -183,7 +187,7 @@ export default function CreatorPublicPage() {
                     <CardTitle className="dark:text-white">{idea.title}</CardTitle>
                   </div>
                   <div className="flex items-center gap-2">
-                    {idea.position.current > 3 && (
+                    {idea.position.current && idea.position.current > 3 && (
                       <Badge variant="outline" className="text-xs dark:border-gray-600 dark:text-gray-300">
                         #{idea.position.current}
                       </Badge>
