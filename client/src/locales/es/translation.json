@@ -35,7 +35,9 @@
     "noIdeasYet": "Sin ideas todavía",
     "noIdeasDescription": "Este creador aún no ha agregado ideas de contenido.",
     "voteError": "No se pudo registrar tu voto",
-    "voteErrorDesc": "Ocurrió un error al procesar tu voto"
+    "voteErrorDesc": "Ocurrió un error al procesar tu voto",
+    "voteSuccess": "¡Gracias por tu voto!",
+    "voteSuccessDesc": "Tu opinión es importante para el creador."
   },
   "login": {
     "requiredToVote": "Inicia sesión para votar"

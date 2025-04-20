@@ -74,16 +74,16 @@ export default function PublicLeaderboardPage() {
       await refetch();
       
       toast({
-        title: "¡Gracias por tu voto!",
-        description: "Tu opinión es importante para el creador.",
+        title: t('creator.voteSuccess'),
+        description: t('creator.voteSuccessDesc'),
         className: "bg-gradient-to-r from-green-50 to-emerald-50 border-green-200 dark:from-green-900/30 dark:to-emerald-900/30 dark:border-green-800",
       });
       
     } catch (error) {
       console.error("Vote error details:", error);
       toast({
-        title: "No se pudo registrar tu voto",
-        description: (error as Error).message || "Ocurrió un error al procesar tu voto",
+        title: t('creator.voteError'),
+        description: (error as Error).message || t('creator.voteErrorDesc'),
         variant: "destructive",
       });
     } finally {
@@ -94,8 +94,8 @@ export default function PublicLeaderboardPage() {
   const handleShare = () => {
     if (navigator.share) {
       navigator.share({
-        title: "Content Creator Leaderboard",
-        text: "Check out this content creator leaderboard!",
+        title: t('publicLeaderboard.title'),
+        text: t('publicLeaderboard.description'),
         url: window.location.href,
       }).catch((error) => {
         console.error("Error sharing:", error);
@@ -109,8 +109,8 @@ export default function PublicLeaderboardPage() {
   const copyToClipboard = () => {
     navigator.clipboard.writeText(window.location.href);
     toast({
-      title: "Link copied",
-      description: "Leaderboard link copied to clipboard",
+      title: t('common.copySuccess'),
+      description: t('common.copyDesc', { url: window.location.href }),
     });
   };
 
@@ -118,9 +118,9 @@ export default function PublicLeaderboardPage() {
     <div className="container px-4 mx-auto py-8 dark:bg-gray-950 min-h-screen">
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
         <div>
-          <h1 className="text-3xl font-bold mb-2 dark:text-white">Public Leaderboard</h1>
+          <h1 className="text-3xl font-bold mb-2 dark:text-white">{t('publicLeaderboard.title')}</h1>
           <p className="text-muted-foreground dark:text-gray-400">
-            This leaderboard is publicly accessible. You can vote for your favorite ideas!
+            {t('publicLeaderboard.description')}
           </p>
         </div>
         <div className="flex items-center gap-2">
@@ -131,21 +131,22 @@ export default function PublicLeaderboardPage() {
             </Badge>
           )}
           <ThemeToggle />
+          <LanguageToggle />
           <Button variant="ghost" onClick={() => refetch()} aria-label="Refresh leaderboard" className="flex items-center dark:text-gray-300 dark:hover:text-white">
             <RefreshCcw className="h-4 w-4" />
           </Button>
           <Button onClick={handleShare} variant="outline" className="flex items-center gap-2 dark:text-gray-300 dark:border-gray-700 dark:hover:text-white">
             <Share2 className="h-4 w-4" />
-            Share
+            {t('common.share')}
           </Button>
         </div>
       </div>
 
       {ideas.length === 0 ? (
         <div className="text-center py-12">
-          <h2 className="text-2xl font-semibold dark:text-white">No ideas yet</h2>
+          <h2 className="text-2xl font-semibold dark:text-white">{t('publicLeaderboard.noIdeasYet')}</h2>
           <p className="text-muted-foreground dark:text-gray-400 mt-2">
-            There are no ideas in this leaderboard yet.
+            {t('publicLeaderboard.noIdeasDescription')}
           </p>
         </div>
       ) : (
@@ -159,7 +160,7 @@ export default function PublicLeaderboardPage() {
                   </div>
                   <div className="flex items-center gap-2">
                     <Badge variant="outline" className="text-xs dark:border-gray-600 dark:text-gray-300">
-                      Rank: {idea.position.current || "N/A"}
+                      {t('publicLeaderboard.rank')}: {idea.position.current || t('publicLeaderboard.na')}
                     </Badge>
                     {(() => {
                       const { previous, change } = idea.position;
@@ -177,9 +178,9 @@ export default function PublicLeaderboardPage() {
                       }
                       
                       // Determinar el texto a mostrar
-                      let badgeText = "Same";
+                      let badgeText = t('badges.equal');
                       if (previous === null) {
-                        badgeText = "New";
+                        badgeText = t('badges.new');
                       } else if (change !== null) {
                         if (change > 0) {
                           badgeText = `▲ ${change}`;
@@ -202,7 +203,7 @@ export default function PublicLeaderboardPage() {
                 <div className="flex justify-between items-center mt-4">
                   <div className="flex items-center gap-2">
                     <ThumbsUp className="h-4 w-4 text-muted-foreground dark:text-gray-400" />
-                    <span className="text-sm font-medium dark:text-gray-300">{idea.votes} votes</span>
+                    <span className="text-sm font-medium dark:text-gray-300">{idea.votes} {t('publicLeaderboard.votes')}</span>
                   </div>
                   {user ? (
                     <Button 
@@ -218,15 +219,15 @@ export default function PublicLeaderboardPage() {
                       {isVoting[idea.id] ? (
                         <>
                           <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                          Votando...
+                          {t('common.voting')}
                         </>
                       ) : successVote === idea.id ? (
                         <>
                           <ThumbsUp className="h-4 w-4 mr-2 animate-bounce" />
-                          ¡Votado!
+                          {t('common.voted')}
                         </>
                       ) : (
-                        <>Votar</>
+                        <>{t('common.vote')}</>
                       )}
                     </Button>
                   ) : (
@@ -236,7 +237,7 @@ export default function PublicLeaderboardPage() {
                         size="sm"
                         className="w-full border-dashed bg-muted/50 hover:bg-muted"
                       >
-                        <span className="text-xs text-gray-600 dark:text-gray-400">Inicia sesión para votar</span>
+                        <span className="text-xs text-gray-600 dark:text-gray-400">{t('login.requiredToVote')}</span>
                       </Button>
                     </Link>
                   )}
