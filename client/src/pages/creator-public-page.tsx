@@ -139,7 +139,6 @@ export default function CreatorPublicPage() {
           </div>
         </div>
         <div className="flex items-center gap-2">
-          <ThemeToggle />
           <Button variant="ghost" onClick={() => refetch()} aria-label="Refresh leaderboard" className="flex items-center dark:text-gray-300 dark:hover:text-white">
             <RefreshCcw className="h-4 w-4" />
           </Button>
@@ -147,6 +146,19 @@ export default function CreatorPublicPage() {
             <Share2 className="h-4 w-4" />
             Compartir
           </Button>
+          <ThemeToggle />
+          {user ? (
+            <Badge variant="outline" className="bg-green-50 text-green-700 border-green-200 dark:bg-green-900/30 dark:text-green-300 dark:border-green-800">
+              <UserPlus className="h-3 w-3 mr-1" />
+              Conectado
+            </Badge>
+          ) : (
+            <Link href="/auth">
+              <Button size="sm" variant="default" className="text-xs">
+                Iniciar sesión
+              </Button>
+            </Link>
+          )}
         </div>
       </div>
       
@@ -305,6 +317,7 @@ interface SuggestIdeaDialogProps {
 function SuggestIdeaDialog({ username, refetch }: SuggestIdeaDialogProps) {
   const [isOpen, setIsOpen] = useState(false);
   const { toast } = useToast();
+  const { user } = useAuth();
   
   // Crear formulario
   const form = useForm({
