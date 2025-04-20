@@ -357,12 +357,29 @@ function SuggestIdeaDialog({ username, refetch }: SuggestIdeaDialogProps) {
   
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
-      <DialogTrigger asChild>
-        <Button variant="secondary" className="h-full shadow-sm flex items-center gap-2">
+      <div>
+        <Button 
+          variant="secondary" 
+          className="h-full shadow-sm flex items-center gap-2"
+          onClick={() => {
+            // Solo abre el diálogo si el usuario está autenticado
+            if (user) {
+              setIsOpen(true);
+            } else {
+              toast({
+                title: "Inicia sesión para sugerir ideas",
+                description: "Necesitas una cuenta para poder sugerir ideas a este creador.",
+                variant: "destructive",
+              });
+              // Opcionalmente podríamos redirigir al usuario a la página de login
+              // navigate("/auth");
+            }
+          }}
+        >
           <Lightbulb className="h-4 w-4" />
           <span>Sugerir idea</span>
         </Button>
-      </DialogTrigger>
+      </div>
       
       <DialogContent className="sm:max-w-[500px]">
         <DialogHeader>
