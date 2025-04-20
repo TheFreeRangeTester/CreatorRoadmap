@@ -310,7 +310,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         ideas,
         publicLink: {
           ...publicLink,
-          url: `${process.env.BASE_URL || 'http://localhost:5000'}/l/${token}`
+          url: `${process.env.REPL_SLUG ? `${process.env.NODE_ENV === 'production' ? 'https://' : 'http://'}${process.env.REPL_SLUG}.${process.env.REPL_OWNER}.repl.co` : 'http://localhost:5000'}/l/${token}`
         }
       });
     } catch (error) {
