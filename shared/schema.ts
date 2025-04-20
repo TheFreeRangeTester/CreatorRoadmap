@@ -18,6 +18,8 @@ export const ideas = pgTable("ideas", {
   lastPositionUpdate: timestamp("last_position_update").notNull().defaultNow(),
   currentPosition: integer("current_position"),
   previousPosition: integer("previous_position"),
+  status: text("status").notNull().default('approved'), // 'approved', 'pending'
+  suggestedBy: integer("suggested_by").references(() => users.id), // ID del usuario que sugirió la idea
 });
 
 // A table to track votes to prevent multiple votes
@@ -59,6 +61,16 @@ export const insertIdeaSchema = createInsertSchema(ideas).pick({
   description: z.string().max(280, { message: "Description must be 280 characters or less" }),
 });
 
+// Schema específico para sugerir ideas a un creador
+export const suggestIdeaSchema = createInsertSchema(ideas).pick({
+  title: true,
+  description: true,
+}).extend({
+  title: z.string().min(1, { message: "Title is required" }).max(100, { message: "Title must be 100 characters or less" }),
+  description: z.string().max(280, { message: "Description must be 280 characters or less" }),
+  creatorId: z.number(), // ID del creador a quien se sugiere la idea
+});
+
 export const updateIdeaSchema = insertIdeaSchema;
 
 export const ideaResponseSchema = z.object({
@@ -73,6 +85,9 @@ export const ideaResponseSchema = z.object({
     previous: z.number().nullable(),
     change: z.number().nullable(),
   }),
+  status: z.enum(['approved', 'pending']).default('approved'),
+  suggestedBy: z.number().nullable(),
+  suggestedByUsername: z.string().optional(), // Nombre del usuario que sugirió la idea (para mostrar en la UI)
 });
 
 // Vote schema
@@ -111,6 +126,7 @@ export type User = typeof users.$inferSelect;
 export type UserResponse = z.infer<typeof userResponseSchema>;
 
 export type InsertIdea = z.infer<typeof insertIdeaSchema>;
+export type SuggestIdea = z.infer<typeof suggestIdeaSchema>;
 export type UpdateIdea = z.infer<typeof updateIdeaSchema>;
 export type Idea = typeof ideas.$inferSelect;
 export type IdeaResponse = z.infer<typeof ideaResponseSchema>;
