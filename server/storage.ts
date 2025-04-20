@@ -52,6 +52,9 @@ export interface IdeaWithPosition {
   votes: number;
   createdAt: Date;
   creatorId: number;
+  status: string;
+  suggestedBy: number | null;
+  suggestedByUsername?: string;
   position: {
     current: number | null;
     previous: number | null;
@@ -277,22 +280,38 @@ export class MemStorage implements IStorage {
     const ideas = await this.getIdeas();
     const sortedIdeas = ideas.sort((a, b) => b.votes - a.votes);
     
-    return sortedIdeas.map(idea => ({
-      id: idea.id,
-      title: idea.title,
-      description: idea.description,
-      votes: idea.votes,
-      createdAt: idea.createdAt,
-      creatorId: idea.creatorId,
-      position: {
-        current: idea.currentPosition,
-        previous: idea.previousPosition,
-        // Si no hay posición previa o es igual a la actual, el cambio es 0 (sin cambio)
-        change: idea.previousPosition && idea.currentPosition && idea.previousPosition !== idea.currentPosition
-          ? idea.previousPosition - idea.currentPosition 
-          : 0
+    const ideasWithPosition = await Promise.all(sortedIdeas.map(async idea => {
+      // Obtener el nombre de usuario del que sugirió la idea, si existe
+      let suggestedByUsername = undefined;
+      if (idea.suggestedBy) {
+        const suggester = await this.getUser(idea.suggestedBy);
+        if (suggester) {
+          suggestedByUsername = suggester.username;
+        }
       }
+      
+      return {
+        id: idea.id,
+        title: idea.title,
+        description: idea.description,
+        votes: idea.votes,
+        createdAt: idea.createdAt,
+        creatorId: idea.creatorId,
+        status: idea.status,
+        suggestedBy: idea.suggestedBy,
+        suggestedByUsername,
+        position: {
+          current: idea.currentPosition,
+          previous: idea.previousPosition,
+          // Si no hay posición previa o es igual a la actual, el cambio es 0 (sin cambio)
+          change: idea.previousPosition && idea.currentPosition && idea.previousPosition !== idea.currentPosition
+            ? idea.previousPosition - idea.currentPosition 
+            : 0
+        }
+      };
     }));
+    
+    return ideasWithPosition;
   }
 
   // Public link methods

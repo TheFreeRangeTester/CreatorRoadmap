@@ -2,7 +2,7 @@ import type { Express, Request, Response } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import { setupAuth } from "./auth";
-import { insertIdeaSchema, updateIdeaSchema, insertVoteSchema, insertPublicLinkSchema } from "@shared/schema";
+import { insertIdeaSchema, updateIdeaSchema, insertVoteSchema, insertPublicLinkSchema, suggestIdeaSchema } from "@shared/schema";
 import { ZodError } from "zod";
 import { fromZodError } from "zod-validation-error";
 
@@ -14,7 +14,17 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Get all ideas
   app.get("/api/ideas", async (req: Request, res: Response) => {
     try {
-      const ideas = await storage.getIdeasWithPositions();
+      // Obtener todas las ideas con posiciones
+      const allIdeas = await storage.getIdeasWithPositions();
+      
+      // Si el usuario está autenticado y solicita incluir ideas pendientes, incluirlas
+      const includePending = req.query.include_pending === 'true' && req.isAuthenticated();
+      
+      // Filtrar solo ideas aprobadas a menos que el usuario solicite incluir pendientes
+      const ideas = includePending 
+        ? allIdeas 
+        : allIdeas.filter(idea => idea.status === 'approved');
+        
       res.json(ideas);
     } catch (error) {
       console.error("Error fetching ideas:", error);
@@ -297,9 +307,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(404).json({ message: "Creator not found" });
       }
       
-      // Get the ideas with positions for this creator
+      // Get the ideas with positions for this creator - only approved ideas
       const ideas = await storage.getIdeasWithPositions().then(ideas => 
-        ideas.filter(idea => idea.creatorId === creator.id)
+        ideas.filter(idea => idea.creatorId === creator.id && idea.status === 'approved')
       );
       
       res.json({
@@ -312,6 +322,127 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       console.error("Error fetching creator page:", error);
       res.status(500).json({ message: "Failed to fetch creator page" });
+    }
+  });
+  
+  // Suggest an idea to a creator
+  app.post("/api/creators/:username/suggest", async (req: Request, res: Response) => {
+    try {
+      if (!req.isAuthenticated()) {
+        return res.status(401).json({ message: "Authentication required to suggest ideas" });
+      }
+      
+      const { username } = req.params;
+      
+      // Find the creator by username
+      const creator = await storage.getUserByUsername(username);
+      if (!creator) {
+        return res.status(404).json({ message: "Creator not found" });
+      }
+      
+      // Parse and validate the idea data
+      const validatedData = suggestIdeaSchema.parse({
+        ...req.body,
+        creatorId: creator.id
+      });
+      
+      // Store the suggested idea with pending status
+      const idea = await storage.suggestIdea(validatedData, req.user!.id);
+      
+      // Get the username of the suggester for the response
+      const suggester = await storage.getUser(req.user!.id);
+      
+      res.status(201).json({
+        ...idea,
+        suggestedByUsername: suggester!.username,
+        position: { current: null, previous: null, change: null }
+      });
+    } catch (error) {
+      if (error instanceof ZodError) {
+        const validationError = fromZodError(error);
+        return res.status(400).json({ message: validationError.message });
+      }
+      console.error("Error suggesting idea:", error);
+      res.status(500).json({ message: "Failed to suggest idea" });
+    }
+  });
+  
+  // Get pending ideas for the authenticated creator
+  app.get("/api/pending-ideas", async (req: Request, res: Response) => {
+    try {
+      if (!req.isAuthenticated()) {
+        return res.status(401).json({ message: "Authentication required to view pending ideas" });
+      }
+      
+      const creatorId = req.user!.id;
+      
+      // Get all pending ideas for this creator
+      const pendingIdeas = await storage.getPendingIdeas(creatorId);
+      
+      // Get the username for each suggester
+      const pendingIdeasWithSuggester = await Promise.all(
+        pendingIdeas.map(async (idea) => {
+          let suggestedByUsername = null;
+          
+          if (idea.suggestedBy) {
+            const suggester = await storage.getUser(idea.suggestedBy);
+            suggestedByUsername = suggester ? suggester.username : null;
+          }
+          
+          return {
+            ...idea,
+            suggestedByUsername,
+            position: { current: null, previous: null, change: null }
+          };
+        })
+      );
+      
+      res.json(pendingIdeasWithSuggester);
+    } catch (error) {
+      console.error("Error fetching pending ideas:", error);
+      res.status(500).json({ message: "Failed to fetch pending ideas" });
+    }
+  });
+  
+  // Approve or reject a pending idea
+  app.patch("/api/ideas/:id/approve", async (req: Request, res: Response) => {
+    try {
+      if (!req.isAuthenticated()) {
+        return res.status(401).json({ message: "Authentication required to approve ideas" });
+      }
+      
+      const id = Number(req.params.id);
+      if (isNaN(id)) {
+        return res.status(400).json({ message: "Invalid idea ID" });
+      }
+      
+      // Check if the idea exists
+      const idea = await storage.getIdea(id);
+      if (!idea) {
+        return res.status(404).json({ message: "Idea not found" });
+      }
+      
+      // Check if the user is the creator of the idea (the one who can approve it)
+      if (idea.creatorId !== req.user!.id) {
+        return res.status(403).json({ message: "You can only approve ideas suggested to you" });
+      }
+      
+      // Check if the idea is pending
+      if (idea.status !== 'pending') {
+        return res.status(400).json({ message: "Only pending ideas can be approved" });
+      }
+      
+      // Approve the idea
+      const approvedIdea = await storage.approveIdea(id);
+      
+      // Get the approved idea with updated position 
+      const ideasWithPositions = await storage.getIdeasWithPositions();
+      const updatedIdeaWithPosition = ideasWithPositions.find(i => i.id === approvedIdea!.id);
+      
+      res.json(updatedIdeaWithPosition);
+    } catch (error) {
+      console.error("Error approving idea:", error);
+      res.status(500).json({ message: "Failed to approve idea" });
     }
   });
 

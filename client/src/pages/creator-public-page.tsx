@@ -1,15 +1,21 @@
 import { useState, useEffect } from "react";
 import { useParams, useLocation, Link } from "wouter";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation } from "@tanstack/react-query";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/hooks/use-auth";
-import { IdeaResponse } from "@shared/schema";
-import { apiRequest } from "@/lib/queryClient";
-import { Share2, RefreshCcw, ThumbsUp, Loader2, UserPlus } from "lucide-react";
+import { IdeaResponse, suggestIdeaSchema } from "@shared/schema";
+import { apiRequest, queryClient } from "@/lib/queryClient";
+import { Share2, RefreshCcw, ThumbsUp, Loader2, UserPlus, PlusCircle, Lightbulb, XCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "@/components/theme-toggle";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogClose } from "@/components/ui/dialog";
 import { cn } from "@/lib/utils";
 
 interface CreatorPublicPageResponse {
