@@ -22,11 +22,23 @@
   },
   "homepage": {
     "title": "Roadmap de Contenido",
-    "description": "Vota por el contenido que quieres ver próximamente",
+    "subtitle": "Vota por el contenido que quieres ver próximamente",
     "info": "Este roadmap muestra las ideas ordenadas por votos. Tu opinión ayuda a determinar qué contenido se creará primero.",
     "suggestIdea": "Sugerir una idea",
     "noIdeasYet": "Sin ideas todavía",
     "noIdeasDesc": "Este creador aún no ha agregado ideas de contenido."
+  },
+  "creator": {
+    "voted": "Votado",
+    "votedSuccess": "¡Votado!",
+    "roadmapDescription": "Este roadmap muestra las ideas ordenadas por votos. Tu opinión ayuda a determinar qué contenido se creará primero.",
+    "noIdeasYet": "Sin ideas todavía",
+    "noIdeasDescription": "Este creador aún no ha agregado ideas de contenido.",
+    "voteError": "No se pudo registrar tu voto",
+    "voteErrorDesc": "Ocurrió un error al procesar tu voto"
+  },
+  "login": {
+    "requiredToVote": "Inicia sesión para votar"
   },
   "badges": {
     "new": "Nuevo",
