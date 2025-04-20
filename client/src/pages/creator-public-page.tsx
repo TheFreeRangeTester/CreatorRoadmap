@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useParams, useLocation, Link } from "wouter";
 import { useQuery, useMutation } from "@tanstack/react-query";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/hooks/use-auth";
 import { IdeaResponse } from "@shared/schema";
@@ -208,13 +208,51 @@ export default function CreatorPublicPage() {
           </div>
         </div>
         <div className="flex items-center gap-2">
-          <Button variant="ghost" onClick={() => refetch()} aria-label="Refresh leaderboard" className="flex items-center dark:text-gray-300 dark:hover:text-white">
-            <RefreshCcw className="h-4 w-4" />
-          </Button>
-          <Button onClick={handleShare} variant="outline" className="flex items-center gap-2 dark:text-gray-300 dark:border-gray-700 dark:hover:text-white">
-            <Share2 className="h-4 w-4" />
-            Compartir
-          </Button>
+          <motion.div
+            whileHover={{ scale: 1.1, rotate: 15 }}
+            whileTap={{ scale: 0.9 }}
+          >
+            <Button 
+              variant="ghost" 
+              onClick={() => refetch()} 
+              aria-label="Refresh leaderboard" 
+              className="flex items-center dark:text-gray-300 dark:hover:text-white"
+            >
+              <motion.span
+                animate={{ rotate: 360 }}
+                transition={{ 
+                  duration: 1, 
+                  ease: "linear", 
+                  repeat: 0
+                }}
+                className="inline-block"
+              >
+                <RefreshCcw className="h-4 w-4" />
+              </motion.span>
+            </Button>
+          </motion.div>
+          
+          <motion.div
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+          >
+            <Button 
+              onClick={handleShare} 
+              variant="outline" 
+              className="flex items-center gap-2 dark:text-gray-300 dark:border-gray-700 dark:hover:text-white"
+            >
+              <motion.span
+                whileHover={{ 
+                  rotate: [0, 15, -15, 0],
+                  transition: { duration: 0.5 }
+                }}
+                className="inline-block"
+              >
+                <Share2 className="h-4 w-4" />
+              </motion.span>
+              Compartir
+            </Button>
+          </motion.div>
           <ThemeToggle />
           {user ? (
             <Badge variant="outline" className="bg-blue-50 text-blue-700 border-blue-200 dark:bg-blue-900/20 dark:text-blue-300 dark:border-blue-800/50 px-3 py-1 transition-all duration-300 hover:shadow-md hover:-translate-y-0.5">
@@ -348,13 +386,12 @@ export default function CreatorPublicPage() {
                           disabled={true}
                           className="bg-green-500 dark:bg-green-600 hover:bg-green-500 dark:hover:bg-green-600 dark:text-white transition-all duration-300 opacity-90 hover:opacity-100 shadow-sm hover:shadow-md group-hover:shadow-green-400/20"
                         >
-                          <motion.div
-                            initial={{ rotate: 0 }}
-                            whileHover={{ rotate: [0, -10, 10, -5, 0], transition: { duration: 0.5 } }}
-                            className="mr-2"
+                          <motion.span
+                            whileHover={{ rotate: 15 }}
+                            className="inline-block mr-2"
                           >
                             <ThumbsUp className="h-4 w-4 text-white" />
-                          </motion.div>
+                          </motion.span>
                           Votado
                         </Button>
                       </motion.div>
@@ -413,40 +450,38 @@ export default function CreatorPublicPage() {
                         </Button>
                         
                         {/* Confetti animation when voting success */}
-                        <AnimatePresence>
-                          {successVote === idea.id && (
-                            <motion.div 
-                              className="absolute inset-0 pointer-events-none overflow-hidden"
-                              initial={{ opacity: 0 }}
-                              animate={{ opacity: 1 }}
-                              exit={{ opacity: 0 }}
-                            >
-                              {[...Array(12)].map((_, i) => (
-                                <motion.div
-                                  key={i}
-                                  className={`absolute rounded-full h-1.5 w-1.5 opacity-80 ${
-                                    ['bg-primary', 'bg-blue-400', 'bg-green-400', 'bg-yellow-400', 'bg-pink-400'][i % 5]
-                                  }`}
-                                  initial={{ 
-                                    x: "50%", 
-                                    y: "50%",
-                                    scale: 0
-                                  }}
-                                  animate={{ 
-                                    x: `${50 + (Math.random() * 80 - 40)}%`, 
-                                    y: `${50 + (Math.random() * 80 - 40)}%`,
-                                    scale: [0, 1, 0.5],
-                                    opacity: [0, 1, 0]
-                                  }}
-                                  transition={{
-                                    duration: 0.6 + Math.random() * 0.2,
-                                    ease: [0.23, 1, 0.32, 1]
-                                  }}
-                                />
-                              ))}
-                            </motion.div>
-                          )}
-                        </AnimatePresence>
+                        {successVote === idea.id && (
+                          <motion.div 
+                            className="absolute inset-0 pointer-events-none overflow-hidden"
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            exit={{ opacity: 0 }}
+                          >
+                            {[...Array(12)].map((_, i) => (
+                              <motion.div
+                                key={i}
+                                className={`absolute rounded-full h-1.5 w-1.5 opacity-80 ${
+                                  ['bg-primary', 'bg-blue-400', 'bg-green-400', 'bg-yellow-400', 'bg-pink-400'][i % 5]
+                                }`}
+                                initial={{ 
+                                  x: "50%", 
+                                  y: "50%",
+                                  scale: 0
+                                }}
+                                animate={{ 
+                                  x: `${50 + (Math.random() * 80 - 40)}%`, 
+                                  y: `${50 + (Math.random() * 80 - 40)}%`,
+                                  scale: [0, 1, 0.5],
+                                  opacity: [0, 1, 0]
+                                }}
+                                transition={{
+                                  duration: 0.6 + Math.random() * 0.2,
+                                  ease: [0.23, 1, 0.32, 1]
+                                }}
+                              />
+                            ))}
+                          </motion.div>
+                        )}
                       </motion.div>
                     )
                   ) : (
