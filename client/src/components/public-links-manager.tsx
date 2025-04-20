@@ -8,7 +8,8 @@ import {
   Share2, 
   Trash, 
   ToggleLeft, 
-  ToggleRight
+  ToggleRight, 
+  Eye
 } from "lucide-react";
 import { format } from "date-fns";
 import { Button } from "@/components/ui/button";
@@ -130,6 +131,16 @@ export default function PublicLinksManager() {
       handleCopyLink(url);
     }
   };
+  
+  const handlePreview = (url: string) => {
+    // Abre el enlace en una nueva pestaña
+    window.open(url, '_blank');
+    
+    toast({
+      title: "Preview opened",
+      description: "Public leaderboard preview opened in a new tab",
+    });
+  };
 
   if (isLoading) {
     return (
@@ -250,6 +261,9 @@ export default function PublicLinksManager() {
                   <Button variant="ghost" size="icon" onClick={() => handleShare(link.url)}>
                     <Share2 className="h-4 w-4" />
                   </Button>
+                  <Button variant="ghost" size="icon" onClick={() => handlePreview(link.url)} className="text-blue-600 dark:text-blue-500">
+                    <Eye className="h-4 w-4" />
+                  </Button>
                 </div>
                 {link.expiresAt && (
                   <p className="text-xs text-amber-600 mt-2">
@@ -257,7 +271,16 @@ export default function PublicLinksManager() {
                   </p>
                 )}
               </CardContent>
-              <CardFooter className="pt-0 flex justify-end">
+              <CardFooter className="pt-0 flex justify-between">
+                <Button 
+                  variant="outline" 
+                  size="sm"
+                  onClick={() => handlePreview(link.url)}
+                  className="text-blue-600 dark:text-blue-500"
+                >
+                  <Eye className="h-4 w-4 mr-2" />
+                  Preview
+                </Button>
                 <AlertDialog>
                   <AlertDialogTrigger asChild>
                     <Button variant="outline" size="sm" className="text-destructive">
