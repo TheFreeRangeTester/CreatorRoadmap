@@ -283,7 +283,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Public leaderboard routes
-  app.get("/api/l/:token", async (req: Request, res: Response) => {
+  app.get("/api/public/:token", async (req: Request, res: Response) => {
     try {
       const { token } = req.params;
       
@@ -320,7 +320,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Vote on a public leaderboard
-  app.post("/api/l/:token/ideas/:ideaId/vote", async (req: Request, res: Response) => {
+  app.post("/api/public/:token/ideas/:ideaId/vote", async (req: Request, res: Response) => {
     try {
       const { token, ideaId: ideaIdString } = req.params;
       const ideaId = Number(ideaIdString);
