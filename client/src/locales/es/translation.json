@@ -1,0 +1,50 @@
+{
+  "common": {
+    "login": "Iniciar sesión",
+    "register": "Registrarse",
+    "logout": "Cerrar sesión",
+    "username": "Nombre de usuario",
+    "password": "Contraseña",
+    "share": "Compartir",
+    "vote": "Votar",
+    "voted": "Votado",
+    "voting": "Votando...",
+    "loginToVote": "Inicia sesión para votar",
+    "thankYou": "¡Gracias por tu voto!",
+    "yourOpinionMatters": "Tu opinión es importante para el creador.",
+    "alreadyVoted": "Ya has votado",
+    "alreadyVotedDesc": "Ya has registrado tu voto para esta idea.",
+    "loginRequired": "Inicio de sesión requerido",
+    "loginRequiredDesc": "Necesitas una cuenta para poder votar por ideas.",
+    "copySuccess": "Enlace copiado",
+    "copyDesc": "Enlace compartible: {{url}}",
+    "refresh": "Actualizar"
+  },
+  "homepage": {
+    "title": "Roadmap de Contenido",
+    "description": "Vota por el contenido que quieres ver próximamente",
+    "info": "Este roadmap muestra las ideas ordenadas por votos. Tu opinión ayuda a determinar qué contenido se creará primero.",
+    "suggestIdea": "Sugerir una idea",
+    "noIdeasYet": "Sin ideas todavía",
+    "noIdeasDesc": "Este creador aún no ha agregado ideas de contenido."
+  },
+  "badges": {
+    "new": "Nuevo",
+    "equal": "Igual",
+    "votes": "votos"
+  },
+  "auth": {
+    "welcome": "Bienvenido a la plataforma",
+    "registerInfo": "Regístrate para hacer seguimiento de tus votos y sugerir nuevas ideas a creadores",
+    "loginInfo": "Inicia sesión para continuar tu experiencia",
+    "registerCta": "Crear cuenta",
+    "loginCta": "Iniciar sesión"
+  },
+  "ideaForm": {
+    "title": "Título",
+    "description": "Descripción",
+    "submitIdea": "Enviar idea",
+    "titlePlaceholder": "Ingresa un título para tu idea",
+    "descriptionPlaceholder": "Describe tu idea en detalle"
+  }
+}

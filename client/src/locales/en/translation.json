@@ -1,0 +1,50 @@
+{
+  "common": {
+    "login": "Login",
+    "register": "Register",
+    "logout": "Logout",
+    "username": "Username",
+    "password": "Password",
+    "share": "Share",
+    "vote": "Vote",
+    "voted": "Voted",
+    "voting": "Voting...",
+    "loginToVote": "Login to vote",
+    "thankYou": "Thank you for your vote!",
+    "yourOpinionMatters": "Your opinion is important to the creator.",
+    "alreadyVoted": "You have already voted",
+    "alreadyVotedDesc": "You have already registered your vote for this idea.",
+    "loginRequired": "Login required",
+    "loginRequiredDesc": "You need an account to vote for ideas.",
+    "copySuccess": "Link copied",
+    "copyDesc": "Shareable link: {{url}}",
+    "refresh": "Refresh"
+  },
+  "homepage": {
+    "title": "Content Roadmap",
+    "description": "Vote for the content you want to see next",
+    "info": "This roadmap shows ideas ordered by votes. Your opinion helps determine which content will be created first.",
+    "suggestIdea": "Suggest an idea",
+    "noIdeasYet": "No ideas yet",
+    "noIdeasDesc": "This creator hasn't added any content ideas yet."
+  },
+  "badges": {
+    "new": "New",
+    "equal": "Same",
+    "votes": "votes"
+  },
+  "auth": {
+    "welcome": "Welcome to the platform",
+    "registerInfo": "Register to keep track of your votes and suggest new ideas to creators",
+    "loginInfo": "Login to continue your experience",
+    "registerCta": "Create account",
+    "loginCta": "Sign in"
+  },
+  "ideaForm": {
+    "title": "Title",
+    "description": "Description",
+    "submitIdea": "Submit Idea",
+    "titlePlaceholder": "Enter a title for your idea",
+    "descriptionPlaceholder": "Describe your idea in detail"
+  }
+}
