@@ -41,37 +41,54 @@ export default function SuggestIdeaDialog({ username, refetch }: SuggestIdeaDial
   // Mutation para enviar la sugerencia
   const suggestMutation = useMutation({
     mutationFn: async (data: z.infer<typeof formSchema>) => {
-      console.log("Enviando sugerencia:", data, "a creador:", username);
-      const response = await apiRequest(
-        "POST", 
-        `/api/creators/${username}/suggest`,
-        data
-      );
-      const result = await response.json();
-      console.log("Respuesta de la API:", result);
-      return result;
+      try {
+        console.log("Enviando sugerencia:", data, "a creador:", username);
+        const response = await apiRequest(
+          "POST", 
+          `/api/creators/${username}/suggest`,
+          data
+        );
+        
+        if (!response.ok) {
+          // Si la respuesta no es exitosa, extraer el mensaje de error
+          const errorData = await response.json();
+          throw new Error(errorData.message || "Error al enviar la sugerencia");
+        }
+        
+        const result = await response.json();
+        console.log("Respuesta de la API:", result);
+        return result;
+      } catch (error) {
+        console.error("Error en la mutación:", error);
+        throw error;
+      }
     },
     onSuccess: () => {
-      // Cerrar el diálogo
+      console.log("Sugerencia enviada con éxito");
+      // Cerrar el diálogo de inmediato
       setIsOpen(false);
       
-      // Mostrar mensaje de éxito
-      toast({
-        title: "Gracias por tu sugerencia",
-        description: "Tu idea ha sido enviada al creador para su aprobación.",
-        className: "bg-gradient-to-r from-green-50 to-emerald-50 border-green-200 dark:from-green-900/30 dark:to-emerald-900/30 dark:border-green-800",
-      });
-      
-      // Resetear el formulario
-      form.reset();
-      
-      // Refrescar la página para mostrar cambios
-      refetch();
+      // Pequeña pausa antes de mostrar el toast para asegurar que el diálogo se cerró
+      setTimeout(() => {
+        // Mostrar mensaje de éxito
+        toast({
+          title: "Gracias por tu sugerencia",
+          description: "Tu idea ha sido enviada al creador para su aprobación.",
+          className: "bg-gradient-to-r from-green-50 to-emerald-50 border-green-200 dark:from-green-900/30 dark:to-emerald-900/30 dark:border-green-800",
+        });
+        
+        // Resetear el formulario
+        form.reset();
+        
+        // Refrescar la página para mostrar cambios
+        refetch();
+      }, 100);
     },
     onError: (error: Error) => {
+      console.error("Error en la mutación:", error);
       toast({
         title: "Error al enviar sugerencia",
-        description: error.message || "Ocurrió un error al enviar tu sugerencia",
+        description: error.message || "Ocurrió un error al enviar tu sugerencia. Verifica tu conexión e inténtalo de nuevo.",
         variant: "destructive",
       });
     }
@@ -138,7 +155,13 @@ export default function SuggestIdeaDialog({ username, refetch }: SuggestIdeaDial
         </DialogHeader>
         
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 mt-4">
+          <form 
+            onSubmit={(e) => {
+              // Prevenir el comportamiento predeterminado para manejar manualmente
+              e.preventDefault();
+              console.log("Formulario envió evento submit");
+            }}
+            className="space-y-4 mt-4">
             <FormField
               control={form.control}
               name="title"
@@ -183,9 +206,30 @@ export default function SuggestIdeaDialog({ username, refetch }: SuggestIdeaDial
                 </Button>
               </DialogClose>
               <Button 
-                type="submit" 
+                type="button" 
                 className="bg-gradient-to-r from-primary to-blue-600 hover:from-primary/90 hover:to-blue-700"
                 disabled={suggestMutation.isPending}
+                onClick={async () => {
+                  console.log("Botón de envío clickeado");
+                  const values = form.getValues();
+                  console.log("Valores del formulario:", values);
+                  
+                  // Realizar validación manual
+                  const isValid = await form.trigger();
+                  console.log("¿Formulario válido?", isValid);
+                  
+                  if (isValid) {
+                    console.log("Enviando formulario...");
+                    onSubmit(values as z.infer<typeof formSchema>);
+                  } else {
+                    console.log("Formulario no válido:", form.formState.errors);
+                    toast({
+                      title: "Campos invalidos",
+                      description: "Por favor completa correctamente todos los campos del formulario.",
+                      variant: "destructive",
+                    });
+                  }
+                }}
               >
                 {suggestMutation.isPending ? (
                   <>
