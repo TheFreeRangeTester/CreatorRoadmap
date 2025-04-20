@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useLocation, useRoute, Link } from "wouter";
-import { Loader2, Share2, ThumbsUp, RefreshCcw, UserPlus } from "lucide-react";
+import { Loader2, Share2, ThumbsUp, RefreshCcw, UserPlus, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
