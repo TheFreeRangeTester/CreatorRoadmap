@@ -8,6 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { useAuth } from "@/hooks/use-auth";
 import { useIsMobile } from "@/hooks/use-mobile";
+import DemoDialog from "@/components/demo-dialog";
 
 const fadeIn = {
   hidden: { opacity: 0, y: 20 },
@@ -151,6 +152,7 @@ export default function LandingPage() {
   const { user } = useAuth();
   const isMobile = useIsMobile();
   const [, navigate] = useLocation();
+  const [isDemoOpen, setIsDemoOpen] = useState(false);
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white dark:from-gray-950 dark:to-gray-900">
