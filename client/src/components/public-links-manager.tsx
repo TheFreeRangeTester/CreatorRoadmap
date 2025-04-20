@@ -34,9 +34,12 @@ export default function PublicLinksManager() {
 
   const createMutation = useMutation({
     mutationFn: async (expiresAt?: Date) => {
-      const res = await apiRequest("POST", "/api/public-links", 
-        expiresAt ? { expiresAt } : {}
-      );
+      // Si tenemos una fecha, la convertimos a un string ISO para enviarla
+      const payload = expiresAt 
+        ? { expiresAt: expiresAt.toISOString() }
+        : {};
+        
+      const res = await apiRequest("POST", "/api/public-links", payload);
       return await res.json();
     },
     onSuccess: () => {

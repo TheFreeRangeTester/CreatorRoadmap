@@ -89,7 +89,11 @@ export const insertPublicLinkSchema = createInsertSchema(publicLinks)
     token: true, 
     isActive: true 
   })
-  .partial();
+  .partial()
+  .extend({
+    // Acepta tanto un Date como un string ISO que se convertirá a Date
+    expiresAt: z.string().datetime().optional().transform(val => val ? new Date(val) : null)
+  });
 
 export const publicLinkResponseSchema = z.object({
   id: z.number(),
