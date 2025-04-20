@@ -97,8 +97,8 @@ export default function CreatorPublicPage() {
     // Si el usuario no está autenticado, mostrar un mensaje y redireccionar a la página de login
     if (!user) {
       toast({
-        title: "Inicia sesión para votar",
-        description: "Necesitas una cuenta para poder votar por ideas.",
+        title: t('common.loginRequired'),
+        description: t('common.loginRequiredDesc'),
         variant: "destructive",
       });
       // Opcionalmente podríamos redirigir al usuario a la página de login
@@ -109,8 +109,8 @@ export default function CreatorPublicPage() {
     // Si ya votamos por esta idea, no hacer nada
     if (votedIdeas.has(ideaId)) {
       toast({
-        title: "Ya has votado",
-        description: "Ya has registrado tu voto para esta idea.",
+        title: t('common.alreadyVoted'),
+        description: t('common.alreadyVotedDesc'),
         variant: "default",
       });
       return;
@@ -138,8 +138,8 @@ export default function CreatorPublicPage() {
       await refetch();
       
       toast({
-        title: "¡Gracias por tu voto!",
-        description: "Tu opinión es importante para el creador.",
+        title: t('common.thankYou'),
+        description: t('common.yourOpinionMatters'),
         className: "bg-gradient-to-r from-green-50 to-emerald-50 border-green-200 dark:from-green-900/30 dark:to-emerald-900/30 dark:border-green-800",
       });
       
@@ -156,8 +156,8 @@ export default function CreatorPublicPage() {
       } else {
         // Otros errores
         toast({
-          title: "No se pudo registrar tu voto",
-          description: (error as Error).message || "Ocurrió un error al procesar tu voto",
+          title: t('creator.voteError'),
+          description: (error as Error).message || t('creator.voteErrorDesc'),
           variant: "destructive",
         });
       }
