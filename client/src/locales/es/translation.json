@@ -18,7 +18,8 @@
     "loginRequiredDesc": "Necesitas una cuenta para poder votar por ideas.",
     "copySuccess": "Enlace copiado",
     "copyDesc": "Enlace compartible: {{url}}",
-    "refresh": "Actualizar"
+    "refresh": "Actualizar",
+    "votes": "votos"
   },
   "homepage": {
     "title": "Roadmap de Contenido",

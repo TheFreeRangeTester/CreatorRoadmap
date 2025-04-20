@@ -18,7 +18,8 @@
     "loginRequiredDesc": "You need an account to vote for ideas.",
     "copySuccess": "Link copied",
     "copyDesc": "Shareable link: {{url}}",
-    "refresh": "Refresh"
+    "refresh": "Refresh",
+    "votes": "votes"
   },
   "homepage": {
     "title": "Content Roadmap",
