@@ -95,5 +95,21 @@
     "thankYouDesc": "Your idea has been sent to the creator for approval.",
     "error": "Error submitting suggestion",
     "errorDesc": "An error occurred while sending your suggestion. Check your connection and try again."
+  },
+  "ideaPosition": {
+    "new": "New",
+    "same": "Same",
+    "suggestedBy": "Suggested by {{username}}",
+    "voting": "Voting",
+    "voted": "Voted",
+    "vote": "Vote"
+  },
+  "badges": {
+    "votes": "votes",
+    "vote": "vote",
+    "new": "New",
+    "same": "Same",
+    "up": "▲ {{change}}",
+    "down": "▼ {{change}}"
   }
 }
