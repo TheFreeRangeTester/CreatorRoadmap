@@ -220,7 +220,8 @@ export class DatabaseStorage implements IStorage {
       .returning();
     
     // Create the full URL for sharing
-    const baseUrl = process.env.BASE_URL || 'http://localhost:5000';
+    const protocol = process.env.NODE_ENV === 'production' ? 'https://' : 'http://';
+    const baseUrl = process.env.REPL_SLUG ? `${protocol}${process.env.REPL_SLUG}.${process.env.REPL_OWNER}.repl.co` : 'http://localhost:5000';
     const url = `${baseUrl}/l/${token}`;
     
     return {
