@@ -3,9 +3,10 @@ import NotFound from "@/pages/not-found";
 import HomePage from "@/pages/home-page";
 import AuthPage from "@/pages/auth-page";
 import PublicLeaderboardPage from "@/pages/public-leaderboard-page";
-import CreatorPublicPage from "@/pages/creator-public-page";
 import { ProtectedRoute } from "./lib/protected-route";
 import { ThemeToggle } from "./components/theme-toggle";
+// Importación directa sin usar alias @
+import CreatorPublicPage from "./pages/creator-public-page";
 
 function App() {
   return (
