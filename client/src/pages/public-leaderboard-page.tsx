@@ -195,21 +195,42 @@ export default function PublicLeaderboardPage() {
                     <ThumbsUp className="h-4 w-4 text-muted-foreground dark:text-gray-400" />
                     <span className="text-sm font-medium dark:text-gray-300">{idea.votes} votes</span>
                   </div>
-                  <Button 
-                    size="sm" 
-                    onClick={() => handleVote(idea.id)}
-                    disabled={isVoting[idea.id]}
-                    className="dark:text-white"
-                  >
-                    {isVoting[idea.id] ? (
-                      <>
-                        <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                        Voting...
-                      </>
-                    ) : (
-                      <>Vote</>
-                    )}
-                  </Button>
+                  {user ? (
+                    <Button 
+                      size="sm" 
+                      onClick={() => handleVote(idea.id)}
+                      disabled={isVoting[idea.id] || successVote === idea.id}
+                      className={`transition-all duration-300 ${
+                        successVote === idea.id 
+                          ? "bg-green-500 hover:bg-green-600 dark:text-white animate-pulse transform scale-105" 
+                          : "bg-gradient-to-r from-primary to-blue-600 hover:from-primary/90 hover:to-blue-700 dark:text-white"
+                      }`}
+                    >
+                      {isVoting[idea.id] ? (
+                        <>
+                          <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                          Votando...
+                        </>
+                      ) : successVote === idea.id ? (
+                        <>
+                          <ThumbsUp className="h-4 w-4 mr-2 animate-bounce" />
+                          ¡Votado!
+                        </>
+                      ) : (
+                        <>Votar</>
+                      )}
+                    </Button>
+                  ) : (
+                    <Link href="/auth">
+                      <Button 
+                        variant="outline"
+                        size="sm"
+                        className="w-full border-dashed bg-muted/50 hover:bg-muted"
+                      >
+                        <span className="text-xs text-gray-600 dark:text-gray-400">Inicia sesión para votar</span>
+                      </Button>
+                    </Link>
+                  )}
                 </div>
               </CardContent>
             </Card>

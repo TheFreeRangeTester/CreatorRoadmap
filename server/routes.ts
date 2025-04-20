@@ -153,6 +153,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Vote for an idea
   app.post("/api/ideas/:id/vote", async (req: Request, res: Response) => {
     try {
+      // Require authentication to vote
+      if (!req.isAuthenticated()) {
+        return res.status(401).json({ message: "Authentication required to vote" });
+      }
+
       const ideaId = Number(req.params.id);
       if (isNaN(ideaId)) {
         return res.status(400).json({ message: "Invalid idea ID" });
@@ -164,17 +169,16 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(404).json({ message: "Idea not found" });
       }
 
-      const userId = req.isAuthenticated() ? req.user!.id : undefined;
-      const sessionId = req.sessionID;
+      const userId = req.user!.id;
 
-      // Check if this user/session has already voted for this idea
-      const existingVote = await storage.getVoteByUserOrSession(ideaId, userId, sessionId);
+      // Check if this user has already voted for this idea
+      const existingVote = await storage.getVoteByUserOrSession(ideaId, userId);
       if (existingVote) {
-        return res.status(400).json({ message: "You have already voted for this idea" });
+        return res.status(400).json({ message: "Ya has votado por esta idea" });
       }
 
       // Create the vote
-      await storage.createVote({ ideaId }, userId, sessionId);
+      await storage.createVote({ ideaId }, userId);
 
       // Get the updated idea with its new position
       const ideasWithPositions = await storage.getIdeasWithPositions();
@@ -314,6 +318,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Vote on a creator's idea
   app.post("/api/creators/:username/ideas/:ideaId/vote", async (req: Request, res: Response) => {
     try {
+      // Require authentication to vote
+      if (!req.isAuthenticated()) {
+        return res.status(401).json({ message: "Authentication required to vote" });
+      }
+
       const { username, ideaId: ideaIdString } = req.params;
       const ideaId = Number(ideaIdString);
       
@@ -337,17 +346,16 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(403).json({ message: "This idea does not belong to the specified creator" });
       }
 
-      const userId = req.isAuthenticated() ? req.user!.id : undefined;
-      const sessionId = req.sessionID;
+      const userId = req.user!.id;
 
-      // Check if this user/session has already voted for this idea
-      const existingVote = await storage.getVoteByUserOrSession(ideaId, userId, sessionId);
+      // Check if this user has already voted for this idea
+      const existingVote = await storage.getVoteByUserOrSession(ideaId, userId);
       if (existingVote) {
-        return res.status(400).json({ message: "You have already voted for this idea" });
+        return res.status(400).json({ message: "Ya has votado por esta idea" });
       }
 
       // Create the vote
-      await storage.createVote({ ideaId }, userId, sessionId);
+      await storage.createVote({ ideaId }, userId);
 
       // Get the updated idea with its new position
       const ideasWithPositions = await storage.getIdeasWithPositions();
@@ -400,6 +408,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Vote on a public leaderboard
   app.post("/api/public/:token/ideas/:ideaId/vote", async (req: Request, res: Response) => {
     try {
+      // Require authentication to vote
+      if (!req.isAuthenticated()) {
+        return res.status(401).json({ message: "Authentication required to vote" });
+      }
+
       const { token, ideaId: ideaIdString } = req.params;
       const ideaId = Number(ideaIdString);
       
@@ -429,17 +442,16 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(404).json({ message: "Idea not found" });
       }
 
-      const userId = req.isAuthenticated() ? req.user!.id : undefined;
-      const sessionId = req.sessionID;
+      const userId = req.user!.id;
 
-      // Check if this user/session has already voted for this idea
-      const existingVote = await storage.getVoteByUserOrSession(ideaId, userId, sessionId);
+      // Check if this user has already voted for this idea
+      const existingVote = await storage.getVoteByUserOrSession(ideaId, userId);
       if (existingVote) {
-        return res.status(400).json({ message: "You have already voted for this idea" });
+        return res.status(400).json({ message: "Ya has votado por esta idea" });
       }
 
       // Create the vote
-      await storage.createVote({ ideaId }, userId, sessionId);
+      await storage.createVote({ ideaId }, userId);
 
       // Get the updated idea with its new position
       const ideasWithPositions = await storage.getIdeasWithPositions();
