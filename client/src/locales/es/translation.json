@@ -40,6 +40,20 @@
   "login": {
     "requiredToVote": "Inicia sesión para votar"
   },
+  "share": {
+    "title": "Roadmap de Contenido de {{username}}",
+    "text": "¡Echa un vistazo al roadmap de contenido de {{username}} y vota por lo que quieres ver próximamente!"
+  },
+  "publicLeaderboard": {
+    "title": "Leaderboard Público",
+    "description": "Este leaderboard es accesible públicamente. ¡Puedes votar por tus ideas favoritas!",
+    "noIdeasYet": "Sin ideas todavía",
+    "noIdeasDescription": "No hay ideas en este leaderboard todavía.",
+    "errorLoading": "No se pudo cargar el leaderboard",
+    "rank": "Posición",
+    "na": "N/A",
+    "votes": "votos"
+  },
   "badges": {
     "new": "Nuevo",
     "equal": "Igual",

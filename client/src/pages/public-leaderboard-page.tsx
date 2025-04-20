@@ -11,6 +11,8 @@ import { apiRequest } from "@/lib/queryClient";
 import { IdeaResponse, PublicLinkResponse } from "@shared/schema";
 import { cn } from "@/lib/utils";
 import { ThemeToggle } from "@/components/theme-toggle";
+import { LanguageToggle } from "@/components/language-toggle";
+import { useTranslation } from "react-i18next";
 
 interface PublicLeaderboardResponse {
   ideas: IdeaResponse[];
@@ -24,6 +26,7 @@ export default function PublicLeaderboardPage() {
   const [isVoting, setIsVoting] = useState<{[key: number]: boolean}>({});
   const [successVote, setSuccessVote] = useState<number | null>(null);
   const { user } = useAuth();
+  const { t } = useTranslation();
 
   const { data, isLoading, error, refetch } = useQuery<PublicLeaderboardResponse>({
     queryKey: [`/api/public/${token}`],
@@ -38,7 +41,7 @@ export default function PublicLeaderboardPage() {
     if (error) {
       toast({
         title: "Error",
-        description: (error as Error).message || "Failed to load leaderboard",
+        description: (error as Error).message || t('publicLeaderboard.errorLoading'),
         variant: "destructive",
       });
       navigate("/dashboard");
