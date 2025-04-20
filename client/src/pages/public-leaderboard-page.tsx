@@ -121,6 +121,12 @@ export default function PublicLeaderboardPage() {
           </p>
         </div>
         <div className="flex items-center gap-2">
+          {user && (
+            <Badge variant="outline" className="bg-blue-50 text-blue-700 border-blue-200 dark:bg-blue-900/20 dark:text-blue-300 dark:border-blue-800/50 px-3 py-1 transition-all duration-300 hover:shadow-md hover:-translate-y-0.5">
+              <User className="h-3.5 w-3.5 mr-1.5 text-blue-500 dark:text-blue-400" />
+              <span className="font-medium">{user.username}</span>
+            </Badge>
+          )}
           <ThemeToggle />
           <Button variant="ghost" onClick={() => refetch()} aria-label="Refresh leaderboard" className="flex items-center dark:text-gray-300 dark:hover:text-white">
             <RefreshCcw className="h-4 w-4" />
