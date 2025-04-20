@@ -95,5 +95,21 @@
     "thankYouDesc": "Tu idea ha sido enviada al creador para su aprobación.",
     "error": "Error al enviar sugerencia",
     "errorDesc": "Ocurrió un error al enviar tu sugerencia. Verifica tu conexión e inténtalo de nuevo."
+  },
+  "ideaPosition": {
+    "new": "Nuevo",
+    "same": "Igual",
+    "suggestedBy": "Sugerido por {{username}}",
+    "voting": "Votando",
+    "voted": "Votado",
+    "vote": "Votar"
+  },
+  "badges": {
+    "votes": "votos",
+    "vote": "voto",
+    "new": "Nuevo",
+    "same": "Igual",
+    "up": "▲ {{change}}",
+    "down": "▼ {{change}}"
   }
 }

@@ -4,6 +4,7 @@ import { ArrowUp, ArrowDown, Minus, Plus, Pencil, Trash2, ThumbsUp, Loader2, Use
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { IdeaResponse } from "@shared/schema";
+import { useTranslation } from "react-i18next";
 
 interface IdeaCardProps {
   idea: IdeaResponse;
@@ -16,7 +17,8 @@ interface IdeaCardProps {
 export default function IdeaCard({ idea, onVote, onEdit, onDelete, isVoting }: IdeaCardProps) {
   // Check if user has already voted for this idea
   const [hasVoted, setHasVoted] = useState(false);
-
+  const { t } = useTranslation();
+  
   // Load voting state from localStorage
   useEffect(() => {
     const votedIdeas = JSON.parse(localStorage.getItem("votedIdeas") || "[]");
@@ -57,7 +59,7 @@ export default function IdeaCard({ idea, onVote, onEdit, onDelete, isVoting }: I
       return {
         className: "bg-primary-50 dark:bg-primary-900/50 text-primary dark:text-primary-300",
         icon: <Plus className="w-3 h-3 mr-1" />,
-        text: "New",
+        text: t('ideaPosition.new'),
       };
     } 
     
@@ -83,7 +85,7 @@ export default function IdeaCard({ idea, onVote, onEdit, onDelete, isVoting }: I
     return {
       className: "bg-gray-50 dark:bg-gray-800 text-gray-600 dark:text-gray-400",
       icon: <Minus className="w-3 h-3 mr-1" />,
-      text: "Same",
+      text: t('ideaPosition.same'),
     };
   };
 
@@ -201,7 +203,7 @@ export default function IdeaCard({ idea, onVote, onEdit, onDelete, isVoting }: I
               >
                 <Badge variant="outline" className="bg-amber-50 border-amber-200 text-amber-700 dark:bg-amber-900/30 dark:border-amber-800 dark:text-amber-300 flex items-center gap-1">
                   <User className="h-3 w-3" />
-                  Sugerido por {idea.suggestedByUsername}
+                  {t('ideaPosition.suggestedBy', { username: idea.suggestedByUsername })}
                 </Badge>
               </motion.div>
             )}
@@ -226,14 +228,14 @@ export default function IdeaCard({ idea, onVote, onEdit, onDelete, isVoting }: I
                   {isVoting ? (
                     <span className="flex items-center justify-center">
                       <Loader2 className="w-4 h-4 mr-1 animate-spin" />
-                      <span>Voting</span>
+                      <span>{t('ideaPosition.voting')}</span>
                     </span>
                   ) : (
                     <>
                       <motion.div variants={iconVariants}>
                         <ThumbsUp className="w-4 h-4 mr-1" />
                       </motion.div>
-                      {hasVoted ? "Voted" : "Vote"}
+                      {hasVoted ? t('ideaPosition.voted') : t('ideaPosition.vote')}
                     </>
                   )}
                 </motion.button>
