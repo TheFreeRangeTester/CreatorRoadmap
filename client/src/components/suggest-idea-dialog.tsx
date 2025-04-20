@@ -89,8 +89,8 @@ export default function SuggestIdeaDialog({ username, refetch }: SuggestIdeaDial
     onError: (error: Error) => {
       console.error("Error en la mutación:", error);
       toast({
-        title: "Error al enviar sugerencia",
-        description: error.message || "Ocurrió un error al enviar tu sugerencia. Verifica tu conexión e inténtalo de nuevo.",
+        title: t('suggestIdea.error'),
+        description: error.message || t('suggestIdea.errorDesc'),
         variant: "destructive",
       });
     }
@@ -103,8 +103,8 @@ export default function SuggestIdeaDialog({ username, refetch }: SuggestIdeaDial
     // Verificar que el usuario esté autenticado
     if (!user) {
       toast({
-        title: "Necesitas iniciar sesión",
-        description: "Debes tener una cuenta para poder sugerir ideas.",
+        title: t('suggestIdea.loginRequired'),
+        description: t('suggestIdea.loginRequiredDesc'),
         variant: "destructive",
       });
       setIsOpen(false);
@@ -114,8 +114,8 @@ export default function SuggestIdeaDialog({ username, refetch }: SuggestIdeaDial
     // Verificar campos vacíos por seguridad adicional
     if (!values.title || !values.description) {
       toast({
-        title: "Campos incompletos",
-        description: "Por favor completa todos los campos del formulario.",
+        title: t('suggestIdea.incompleteFields'),
+        description: t('suggestIdea.incompleteFieldsDesc'),
         variant: "destructive",
       });
       return;
@@ -136,15 +136,15 @@ export default function SuggestIdeaDialog({ username, refetch }: SuggestIdeaDial
             if (!user) {
               e.preventDefault();
               toast({
-                title: "Inicia sesión para sugerir ideas",
-                description: "Necesitas una cuenta para poder sugerir ideas a este creador.",
+                title: t('suggestIdea.loginRequired'),
+                description: t('suggestIdea.loginRequiredDesc'),
                 variant: "destructive",
               });
             }
           }}
         >
           <Lightbulb className="h-4 w-4" />
-          <span>Sugerir idea</span>
+          <span>{t('suggestIdea.button')}</span>
         </Button>
       </DialogTrigger>
       
@@ -152,7 +152,7 @@ export default function SuggestIdeaDialog({ username, refetch }: SuggestIdeaDial
         <DialogHeader>
           <DialogTitle className="text-xl font-semibold flex items-center gap-2">
             <Lightbulb className="h-5 w-5 text-amber-500" />
-            Sugerir idea a {username}
+            {t('suggestIdea.title', {username})}
           </DialogTitle>
         </DialogHeader>
         
@@ -169,10 +169,10 @@ export default function SuggestIdeaDialog({ username, refetch }: SuggestIdeaDial
               name="title"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Título de la idea</FormLabel>
+                  <FormLabel>{t('suggestIdea.titleLabel')}</FormLabel>
                   <FormControl>
                     <Input 
-                      placeholder="Escribe un título conciso" 
+                      placeholder={t('suggestIdea.titlePlaceholder')}
                       {...field} 
                       className="dark:bg-gray-800"
                     />
@@ -187,10 +187,10 @@ export default function SuggestIdeaDialog({ username, refetch }: SuggestIdeaDial
               name="description"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Descripción</FormLabel>
+                  <FormLabel>{t('suggestIdea.descriptionLabel')}</FormLabel>
                   <FormControl>
                     <Textarea 
-                      placeholder="Describe con detalle tu idea para el creador"
+                      placeholder={t('suggestIdea.descriptionPlaceholder')}
                       {...field}
                       rows={4}
                       className="resize-none dark:bg-gray-800"
@@ -204,7 +204,7 @@ export default function SuggestIdeaDialog({ username, refetch }: SuggestIdeaDial
             <div className="flex justify-end gap-2 pt-2">
               <DialogClose asChild>
                 <Button type="button" variant="outline" disabled={suggestMutation.isPending}>
-                  Cancelar
+                  {t('suggestIdea.cancel')}
                 </Button>
               </DialogClose>
               <Button 
@@ -226,8 +226,8 @@ export default function SuggestIdeaDialog({ username, refetch }: SuggestIdeaDial
                   } else {
                     console.log("Formulario no válido:", form.formState.errors);
                     toast({
-                      title: "Campos invalidos",
-                      description: "Por favor completa correctamente todos los campos del formulario.",
+                      title: t('suggestIdea.invalidFields'),
+                      description: t('suggestIdea.invalidFieldsDesc'),
                       variant: "destructive",
                     });
                   }
@@ -236,10 +236,10 @@ export default function SuggestIdeaDialog({ username, refetch }: SuggestIdeaDial
                 {suggestMutation.isPending ? (
                   <>
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    Enviando...
+                    {t('suggestIdea.sending')}
                   </>
                 ) : (
-                  "Enviar sugerencia"
+                  t('suggestIdea.submit')
                 )}
               </Button>
             </div>
