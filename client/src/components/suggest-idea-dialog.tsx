@@ -5,6 +5,7 @@ import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useToast } from "@/hooks/use-toast";
+import { useAuth } from "@/hooks/use-auth";
 import { apiRequest } from "@/lib/queryClient";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -20,6 +21,7 @@ interface SuggestIdeaDialogProps {
 export default function SuggestIdeaDialog({ username, refetch }: SuggestIdeaDialogProps) {
   const [isOpen, setIsOpen] = useState(false);
   const { toast } = useToast();
+  const { user } = useAuth();
   
   // Definir esquema de validación
   const formSchema = z.object({
@@ -39,12 +41,15 @@ export default function SuggestIdeaDialog({ username, refetch }: SuggestIdeaDial
   // Mutation para enviar la sugerencia
   const suggestMutation = useMutation({
     mutationFn: async (data: z.infer<typeof formSchema>) => {
+      console.log("Enviando sugerencia:", data, "a creador:", username);
       const response = await apiRequest(
         "POST", 
         `/api/creators/${username}/suggest`,
         data
       );
-      return await response.json();
+      const result = await response.json();
+      console.log("Respuesta de la API:", result);
+      return result;
     },
     onSuccess: () => {
       // Cerrar el diálogo
@@ -74,13 +79,51 @@ export default function SuggestIdeaDialog({ username, refetch }: SuggestIdeaDial
   
   // Manejar envío del formulario
   const onSubmit = (values: z.infer<typeof formSchema>) => {
+    console.log("Función onSubmit llamada con:", values);
+    
+    // Verificar que el usuario esté autenticado
+    if (!user) {
+      toast({
+        title: "Necesitas iniciar sesión",
+        description: "Debes tener una cuenta para poder sugerir ideas.",
+        variant: "destructive",
+      });
+      setIsOpen(false);
+      return;
+    }
+    
+    // Verificar campos vacíos por seguridad adicional
+    if (!values.title || !values.description) {
+      toast({
+        title: "Campos incompletos",
+        description: "Por favor completa todos los campos del formulario.",
+        variant: "destructive",
+      });
+      return;
+    }
+    
+    // Enviar la sugerencia a través de la mutación
     suggestMutation.mutate(values);
   };
   
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
-        <Button variant="secondary" className="h-full shadow-sm flex items-center gap-2">
+        <Button 
+          variant="secondary" 
+          className="h-full shadow-sm flex items-center gap-2"
+          onClick={(e) => {
+            // Prevenir apertura automática para verificar autenticación
+            if (!user) {
+              e.preventDefault();
+              toast({
+                title: "Inicia sesión para sugerir ideas",
+                description: "Necesitas una cuenta para poder sugerir ideas a este creador.",
+                variant: "destructive",
+              });
+            }
+          }}
+        >
           <Lightbulb className="h-4 w-4" />
           <span>Sugerir idea</span>
         </Button>
