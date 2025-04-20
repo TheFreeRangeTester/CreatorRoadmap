@@ -282,6 +282,84 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Creator public page by username
+  app.get("/api/creators/:username", async (req: Request, res: Response) => {
+    try {
+      const { username } = req.params;
+      
+      // Find the creator by username
+      const creator = await storage.getUserByUsername(username);
+      if (!creator) {
+        return res.status(404).json({ message: "Creator not found" });
+      }
+      
+      // Get the ideas with positions for this creator
+      const ideas = await storage.getIdeasWithPositions().then(ideas => 
+        ideas.filter(idea => idea.creatorId === creator.id)
+      );
+      
+      res.json({
+        ideas,
+        creator: {
+          id: creator.id,
+          username: creator.username
+        }
+      });
+    } catch (error) {
+      console.error("Error fetching creator page:", error);
+      res.status(500).json({ message: "Failed to fetch creator page" });
+    }
+  });
+
+  // Vote on a creator's idea
+  app.post("/api/creators/:username/ideas/:ideaId/vote", async (req: Request, res: Response) => {
+    try {
+      const { username, ideaId: ideaIdString } = req.params;
+      const ideaId = Number(ideaIdString);
+      
+      if (isNaN(ideaId)) {
+        return res.status(400).json({ message: "Invalid idea ID" });
+      }
+
+      // Find the creator by username
+      const creator = await storage.getUserByUsername(username);
+      if (!creator) {
+        return res.status(404).json({ message: "Creator not found" });
+      }
+
+      // Check if the idea exists and belongs to this creator
+      const idea = await storage.getIdea(ideaId);
+      if (!idea) {
+        return res.status(404).json({ message: "Idea not found" });
+      }
+      
+      if (idea.creatorId !== creator.id) {
+        return res.status(403).json({ message: "This idea does not belong to the specified creator" });
+      }
+
+      const userId = req.isAuthenticated() ? req.user!.id : undefined;
+      const sessionId = req.sessionID;
+
+      // Check if this user/session has already voted for this idea
+      const existingVote = await storage.getVoteByUserOrSession(ideaId, userId, sessionId);
+      if (existingVote) {
+        return res.status(400).json({ message: "You have already voted for this idea" });
+      }
+
+      // Create the vote
+      await storage.createVote({ ideaId }, userId, sessionId);
+
+      // Get the updated idea with its new position
+      const ideasWithPositions = await storage.getIdeasWithPositions();
+      const updatedIdea = ideasWithPositions.find(i => i.id === ideaId);
+
+      res.status(201).json(updatedIdea);
+    } catch (error) {
+      console.error("Error voting for idea:", error);
+      res.status(500).json({ message: "Failed to register vote" });
+    }
+  });
+
   // Public leaderboard routes
   app.get("/api/public/:token", async (req: Request, res: Response) => {
     try {
