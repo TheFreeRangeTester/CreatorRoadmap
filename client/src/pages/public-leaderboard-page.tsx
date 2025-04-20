@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useLocation, useRoute } from "wouter";
-import { Loader2, Share2, ThumbsUp } from "lucide-react";
+import { Loader2, Share2, ThumbsUp, RefreshCcw } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -21,10 +21,14 @@ export default function PublicLeaderboardPage() {
   const token = params?.token;
   const [isVoting, setIsVoting] = useState<{[key: number]: boolean}>({});
 
-  const { data, isLoading, error } = useQuery<PublicLeaderboardResponse>({
+  const { data, isLoading, error, refetch } = useQuery<PublicLeaderboardResponse>({
     queryKey: [`/api/l/${token}`],
     enabled: !!token,
   });
+
+  console.log("PublicLeaderboardPage rendered with token:", token);
+  console.log("Data:", data);
+  console.log("Error:", error);
 
   useEffect(() => {
     if (error) {
@@ -52,6 +56,9 @@ export default function PublicLeaderboardPage() {
       setIsVoting(prev => ({ ...prev, [ideaId]: true }));
       
       await apiRequest("POST", `/api/l/${token}/ideas/${ideaId}/vote`);
+      
+      // Refetch data to update UI
+      await refetch();
       
       toast({
         title: "Vote recorded",
@@ -101,10 +108,15 @@ export default function PublicLeaderboardPage() {
             This leaderboard is publicly accessible. You can vote for your favorite ideas!
           </p>
         </div>
-        <Button onClick={handleShare} variant="outline" className="flex items-center gap-2">
-          <Share2 className="h-4 w-4" />
-          Share
-        </Button>
+        <div className="flex items-center gap-2">
+          <Button variant="ghost" onClick={() => refetch()} aria-label="Refresh leaderboard" className="flex items-center">
+            <RefreshCcw className="h-4 w-4" />
+          </Button>
+          <Button onClick={handleShare} variant="outline" className="flex items-center gap-2">
+            <Share2 className="h-4 w-4" />
+            Share
+          </Button>
+        </div>
       </div>
 
       {ideas.length === 0 ? (
