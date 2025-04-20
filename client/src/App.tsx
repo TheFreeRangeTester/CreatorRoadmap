@@ -16,7 +16,7 @@ function App() {
         <Route path="/" component={HomePage} />
         <Route path="/auth" component={AuthPage} />
         <ProtectedRoute path="/creator" component={HomePage} />
-        <Route path="/l/:token" component={PublicLeaderboardPage} />
+        <Route path="/public/:token" component={PublicLeaderboardPage} />
         <Route component={NotFound} />
       </Switch>
     </>

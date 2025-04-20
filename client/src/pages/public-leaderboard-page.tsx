@@ -17,7 +17,7 @@ interface PublicLeaderboardResponse {
 }
 
 export default function PublicLeaderboardPage() {
-  const [, params] = useRoute("/l/:token");
+  const [, params] = useRoute("/public/:token");
   const [, navigate] = useLocation();
   const token = params?.token;
   const [isVoting, setIsVoting] = useState<{[key: number]: boolean}>({});
