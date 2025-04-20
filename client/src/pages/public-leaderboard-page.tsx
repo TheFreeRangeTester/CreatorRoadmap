@@ -1,11 +1,12 @@
 import { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { useLocation, useRoute } from "wouter";
-import { Loader2, Share2, ThumbsUp, RefreshCcw } from "lucide-react";
+import { useLocation, useRoute, Link } from "wouter";
+import { Loader2, Share2, ThumbsUp, RefreshCcw, UserPlus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "@/hooks/use-toast";
+import { useAuth } from "@/hooks/use-auth";
 import { apiRequest } from "@/lib/queryClient";
 import { IdeaResponse, PublicLinkResponse } from "@shared/schema";
 import { cn } from "@/lib/utils";
@@ -21,6 +22,8 @@ export default function PublicLeaderboardPage() {
   const [, navigate] = useLocation();
   const token = params?.token;
   const [isVoting, setIsVoting] = useState<{[key: number]: boolean}>({});
+  const [successVote, setSuccessVote] = useState<number | null>(null);
+  const { user } = useAuth();
 
   const { data, isLoading, error, refetch } = useQuery<PublicLeaderboardResponse>({
     queryKey: [`/api/public/${token}`],
@@ -57,24 +60,27 @@ export default function PublicLeaderboardPage() {
       setIsVoting(prev => ({ ...prev, [ideaId]: true }));
       
       const endpoint = `/api/public/${token}/ideas/${ideaId}/vote`;
-      console.log("Voting with endpoint:", endpoint);
       
       const response = await apiRequest("POST", endpoint);
-      console.log("Vote response:", response);
+      
+      // Mostrar animación de éxito
+      setSuccessVote(ideaId);
+      setTimeout(() => setSuccessVote(null), 2000);
       
       // Refetch data to update UI
       await refetch();
       
       toast({
-        title: "Vote recorded",
-        description: "Your vote has been successfully recorded.",
+        title: "¡Gracias por tu voto!",
+        description: "Tu opinión es importante para el creador.",
+        className: "bg-gradient-to-r from-green-50 to-emerald-50 border-green-200 dark:from-green-900/30 dark:to-emerald-900/30 dark:border-green-800",
       });
       
     } catch (error) {
       console.error("Vote error details:", error);
       toast({
-        title: "Vote failed",
-        description: (error as Error).message || "Failed to record your vote",
+        title: "No se pudo registrar tu voto",
+        description: (error as Error).message || "Ocurrió un error al procesar tu voto",
         variant: "destructive",
       });
     } finally {
