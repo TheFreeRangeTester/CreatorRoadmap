@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useQuery, useMutation } from "@tanstack/react-query";
-import { Loader2, CloudLightning, Share2 } from "lucide-react";
+import { Loader2, CloudLightning, Share2, CheckCircle, XCircle, Lightbulb, Clock, ChevronRight } from "lucide-react";
 import { useAuth } from "@/hooks/use-auth";
 import { useToast } from "@/hooks/use-toast";
 import { queryClient, apiRequest } from "@/lib/queryClient";
@@ -12,8 +12,171 @@ import { ThemeToggle } from "@/components/theme-toggle";
 import LeaderboardInfo from "@/components/leaderboard-info";
 import EmptyState from "@/components/empty-state";
 import ShareProfile from "@/components/share-profile";
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { Badge } from "@/components/ui/badge";
 import { Link } from "wouter";
 import { IdeaResponse } from "@shared/schema";
+
+function PendingIdeasPanel() {
+  const { user } = useAuth();
+  const { toast } = useToast();
+  const [processingIdea, setProcessingIdea] = useState<number | null>(null);
+
+  // Fetch pending ideas
+  const { data: pendingIdeas, isLoading, refetch } = useQuery<IdeaResponse[]>({
+    queryKey: ["/api/pending-ideas"],
+    enabled: !!user,
+  });
+
+  // Approve idea mutation
+  const approveMutation = useMutation({
+    mutationFn: async (ideaId: number) => {
+      setProcessingIdea(ideaId);
+      const response = await apiRequest("PATCH", `/api/ideas/${ideaId}/approve`);
+      return await response.json();
+    },
+    onSuccess: () => {
+      toast({
+        title: "Idea aprobada",
+        description: "La idea ha sido publicada en tu leaderboard.",
+        className: "bg-gradient-to-r from-green-50 to-emerald-50 border-green-200 dark:from-green-900/30 dark:to-emerald-900/30 dark:border-green-800",
+      });
+      // Refrescar la lista de ideas pendientes y aprobadas
+      refetch();
+      queryClient.invalidateQueries({ queryKey: ["/api/ideas"] });
+    },
+    onError: (error: Error) => {
+      toast({
+        title: "Error al aprobar la idea",
+        description: error.message || "No se pudo aprobar la idea. Inténtalo de nuevo.",
+        variant: "destructive",
+      });
+    },
+    onSettled: () => {
+      setProcessingIdea(null);
+    }
+  });
+
+  // Delete idea mutation (rechazar)
+  const rejectMutation = useMutation({
+    mutationFn: async (ideaId: number) => {
+      setProcessingIdea(ideaId);
+      await apiRequest("DELETE", `/api/ideas/${ideaId}`);
+    },
+    onSuccess: () => {
+      toast({
+        title: "Idea rechazada",
+        description: "La idea ha sido eliminada.",
+      });
+      // Refrescar la lista de ideas pendientes
+      refetch();
+    },
+    onError: (error: Error) => {
+      toast({
+        title: "Error al rechazar la idea",
+        description: error.message || "No se pudo rechazar la idea. Inténtalo de nuevo.",
+        variant: "destructive",
+      });
+    },
+    onSettled: () => {
+      setProcessingIdea(null);
+    }
+  });
+
+  // Handle approve idea
+  const handleApprove = (ideaId: number) => {
+    approveMutation.mutate(ideaId);
+  };
+
+  // Handle reject idea
+  const handleReject = (ideaId: number) => {
+    rejectMutation.mutate(ideaId);
+  };
+
+  if (!user) return null;
+
+  return (
+    <Card className="shadow-sm border-gray-200 dark:border-gray-800">
+      <CardHeader className="bg-muted/20 dark:bg-gray-800/50 pb-3 border-b border-gray-100 dark:border-gray-700">
+        <CardTitle className="flex items-center gap-2 text-lg font-medium">
+          <Lightbulb className="h-5 w-5 text-amber-500" />
+          Ideas Sugeridas
+        </CardTitle>
+        <CardDescription>
+          Ideas que tus seguidores han sugerido
+        </CardDescription>
+      </CardHeader>
+      <CardContent className="p-0">
+        {isLoading ? (
+          <div className="flex justify-center py-6">
+            <Loader2 className="h-6 w-6 animate-spin text-primary" />
+          </div>
+        ) : !pendingIdeas || pendingIdeas.length === 0 ? (
+          <div className="text-center py-8 px-4">
+            <p className="text-muted-foreground text-sm">
+              No tienes ideas pendientes para revisar
+            </p>
+          </div>
+        ) : (
+          <ScrollArea className="h-[300px] px-4 py-2">
+            <div className="space-y-4 pr-4">
+              {pendingIdeas.map((idea) => (
+                <div key={idea.id} className="border border-gray-200 dark:border-gray-700 rounded-lg p-3 bg-white dark:bg-gray-800">
+                  <div className="mb-1 flex justify-between items-start">
+                    <h3 className="font-medium text-base dark:text-white">{idea.title}</h3>
+                    <Badge variant="outline" className="bg-amber-100 text-amber-700 border-amber-200 dark:bg-amber-900/30 dark:text-amber-300 dark:border-amber-800">
+                      <Clock className="h-3 w-3 mr-1" /> Pendiente
+                    </Badge>
+                  </div>
+                  <p className="text-sm text-gray-600 dark:text-gray-300 mb-2 line-clamp-2">{idea.description}</p>
+                  
+                  {idea.suggestedByUsername && (
+                    <div className="text-xs text-gray-500 dark:text-gray-400 mb-3">
+                      Sugerido por: <span className="font-medium">{idea.suggestedByUsername}</span>
+                    </div>
+                  )}
+                  
+                  <div className="flex justify-end gap-2">
+                    <Button 
+                      variant="outline" 
+                      size="sm" 
+                      className="border-red-200 text-red-600 hover:text-red-700 hover:bg-red-50 dark:border-red-900 dark:text-red-400 dark:hover:bg-red-900/30"
+                      onClick={() => handleReject(idea.id)}
+                      disabled={processingIdea === idea.id}
+                    >
+                      {processingIdea === idea.id && rejectMutation.isPending ? (
+                        <Loader2 className="h-3 w-3 mr-1 animate-spin" />
+                      ) : (
+                        <XCircle className="h-3 w-3 mr-1" />
+                      )}
+                      Rechazar
+                    </Button>
+                    <Button 
+                      variant="outline" 
+                      size="sm" 
+                      className="border-green-200 text-green-600 hover:text-green-700 hover:bg-green-50 dark:border-green-900 dark:text-green-400 dark:hover:bg-green-900/30"
+                      onClick={() => handleApprove(idea.id)}
+                      disabled={processingIdea === idea.id}
+                    >
+                      {processingIdea === idea.id && approveMutation.isPending ? (
+                        <Loader2 className="h-3 w-3 mr-1 animate-spin" />
+                      ) : (
+                        <CheckCircle className="h-3 w-3 mr-1" />
+                      )}
+                      Aprobar
+                    </Button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </ScrollArea>
+        )}
+      </CardContent>
+    </Card>
+  );
+}
 
 export default function HomePage() {
   const { user, logoutMutation } = useAuth();
@@ -195,9 +358,10 @@ export default function HomePage() {
                 )}
               </div>
               
-              {/* Sidebar for sharing profile (1/3 width on larger screens) */}
-              <div className="lg:col-span-1">
+              {/* Sidebar for sharing profile and pending ideas (1/3 width on larger screens) */}
+              <div className="lg:col-span-1 space-y-6">
                 <ShareProfile />
+                <PendingIdeasPanel />
               </div>
             </div>
           ) : (
