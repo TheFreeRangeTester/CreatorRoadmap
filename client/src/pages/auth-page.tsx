@@ -22,9 +22,9 @@ export default function AuthPage() {
   const { user, loginMutation, registerMutation } = useAuth();
   const [, navigate] = useLocation();
 
-  // If user is already logged in, redirect to home
+  // If user is already logged in, redirect to dashboard
   if (user) {
-    navigate("/");
+    navigate("/dashboard");
     return null;
   }
 
@@ -50,7 +50,7 @@ export default function AuthPage() {
   function onLoginSubmit(values: z.infer<typeof formSchema>) {
     loginMutation.mutate(values, {
       onSuccess: () => {
-        navigate("/");
+        navigate("/dashboard");
       },
     });
   }
@@ -59,7 +59,7 @@ export default function AuthPage() {
   function onRegisterSubmit(values: z.infer<typeof formSchema>) {
     registerMutation.mutate(values, {
       onSuccess: () => {
-        navigate("/");
+        navigate("/dashboard");
       },
     });
   }
