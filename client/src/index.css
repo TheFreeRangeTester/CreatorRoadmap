@@ -10,4 +10,12 @@
   body {
     @apply font-sans antialiased bg-background text-foreground;
   }
+
+  * {
+    @apply transition-colors duration-200;
+  }
+
+  button, a {
+    @apply transition-all duration-200;
+  }
 }

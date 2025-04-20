@@ -4,16 +4,22 @@ import HomePage from "@/pages/home-page";
 import AuthPage from "@/pages/auth-page";
 import PublicLeaderboardPage from "@/pages/public-leaderboard-page";
 import { ProtectedRoute } from "./lib/protected-route";
+import { ThemeToggle } from "./components/theme-toggle";
 
 function App() {
   return (
-    <Switch>
-      <Route path="/" component={HomePage} />
-      <Route path="/auth" component={AuthPage} />
-      <ProtectedRoute path="/creator" component={HomePage} />
-      <Route path="/l/:token" component={PublicLeaderboardPage} />
-      <Route component={NotFound} />
-    </Switch>
+    <>
+      <div className="fixed top-4 right-4">
+        <ThemeToggle />
+      </div>
+      <Switch>
+        <Route path="/" component={HomePage} />
+        <Route path="/auth" component={AuthPage} />
+        <ProtectedRoute path="/creator" component={HomePage} />
+        <Route path="/l/:token" component={PublicLeaderboardPage} />
+        <Route component={NotFound} />
+      </Switch>
+    </>
   );
 }
 
