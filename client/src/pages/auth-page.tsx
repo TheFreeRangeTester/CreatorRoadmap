@@ -22,12 +22,6 @@ export default function AuthPage() {
   const { user, loginMutation, registerMutation } = useAuth();
   const [, navigate] = useLocation();
 
-  // If user is already logged in, redirect to dashboard
-  if (user) {
-    navigate("/dashboard");
-    return null;
-  }
-
   // Login form
   const loginForm = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -62,6 +56,15 @@ export default function AuthPage() {
         navigate("/dashboard");
       },
     });
+  }
+  
+  // If user is already logged in, redirect to dashboard
+  // We do this after all hooks have been called to follow the rules of hooks
+  if (user) {
+    // Using setTimeout to avoid React warning about state updates during render
+    setTimeout(() => navigate("/dashboard"), 0);
+    // Render a loading state or nothing while redirect is happening
+    return <div className="flex justify-center items-center min-h-screen">Redirecting...</div>;
   }
 
   return (
