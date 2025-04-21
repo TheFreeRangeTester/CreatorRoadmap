@@ -50,7 +50,9 @@
     "shareTip3": "Encourage your audience to vote to influence your next content",
     "creatorDashboard": "Creator Dashboard",
     "myIdeas": "My Ideas",
-    "suggested": "Suggested"
+    "suggested": "Suggested",
+    "topIdeas": "Top Ideas",
+    "voteDescription": "Vote for your favorite ideas or submit your own"
   },
   "creator": {
     "voted": "Voted",

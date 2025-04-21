@@ -50,7 +50,9 @@
     "shareTip3": "Anima a tu audiencia a votar para influir en tu próximo contenido",
     "creatorDashboard": "Panel del Creador",
     "myIdeas": "Mis Ideas",
-    "suggested": "Sugeridas"
+    "suggested": "Sugeridas",
+    "topIdeas": "Ideas Principales",
+    "voteDescription": "Vota por tus ideas favoritas o propón las tuyas"
   },
   "creator": {
     "voted": "Votado",
@@ -133,8 +135,8 @@
     "vote": "voto",
     "new": "Nuevo",
     "same": "Igual",
-    "up": "▲ {{change}}",
-    "down": "▼ {{change}}"
+    "up": "Subió",
+    "down": "Bajó"
   },
   "profile": {
     "editProfile": "Editar Perfil",
