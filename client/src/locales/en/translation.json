@@ -135,8 +135,8 @@
     "vote": "vote",
     "new": "New",
     "same": "Same",
-    "up": "▲ {{change}}",
-    "down": "▼ {{change}}"
+    "up": "Up",
+    "down": "Down"
   },
   "profile": {
     "editProfile": "Edit Profile",
