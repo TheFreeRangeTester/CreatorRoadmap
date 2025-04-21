@@ -310,19 +310,19 @@ export default function LandingPage() {
           >
             <motion.div variants={fadeIn} className="text-center">
               <p className="text-3xl md:text-4xl font-bold text-primary mb-2">5,000+</p>
-              <p className="text-gray-600 dark:text-gray-400">Creadores activos</p>
+              <p className="text-gray-600 dark:text-gray-400">{t('landing.stats.activeCreators')}</p>
             </motion.div>
             <motion.div variants={fadeIn} className="text-center">
               <p className="text-3xl md:text-4xl font-bold text-primary mb-2">2M+</p>
-              <p className="text-gray-600 dark:text-gray-400">Votos mensuales</p>
+              <p className="text-gray-600 dark:text-gray-400">{t('landing.stats.votesMonthly')}</p>
             </motion.div>
             <motion.div variants={fadeIn} className="text-center">
               <p className="text-3xl md:text-4xl font-bold text-primary mb-2">98%</p>
-              <p className="text-gray-600 dark:text-gray-400">Satisfacción</p>
+              <p className="text-gray-600 dark:text-gray-400">{t('landing.stats.satisfaction')}</p>
             </motion.div>
             <motion.div variants={fadeIn} className="text-center">
               <p className="text-3xl md:text-4xl font-bold text-primary mb-2">35%</p>
-              <p className="text-gray-600 dark:text-gray-400">↑ en engagement</p>
+              <p className="text-gray-600 dark:text-gray-400">{t('landing.stats.engagement')}</p>
             </motion.div>
           </motion.div>
         </div>
@@ -342,13 +342,13 @@ export default function LandingPage() {
               variants={fadeIn}
               className="text-3xl md:text-4xl font-bold mb-4 dark:text-white"
             >
-              Todas las herramientas que necesitas para conectar con tu audiencia
+              {t('landing.features.title')}
             </motion.h2>
             <motion.p 
               variants={fadeIn}
               className="text-lg text-gray-600 dark:text-gray-300"
             >
-              Diseñado específicamente para creadores de contenido que quieren hacer crecer su comunidad e involucrar a su audiencia en el proceso creativo.
+              {t('landing.features.subtitle')}
             </motion.p>
           </motion.div>
 
@@ -361,33 +361,33 @@ export default function LandingPage() {
           >
             <FeatureCard 
               icon={<Zap className="h-6 w-6 text-primary" />}
-              title="Leaderboards interactivos" 
-              description="Crea leaderboards atractivos donde tu audiencia puede votar por sus ideas favoritas y ver los resultados en tiempo real."
+              title={t('landing.features.leaderboards.title')}
+              description={t('landing.features.leaderboards.description')}
             />
             <FeatureCard 
               icon={<Users className="h-6 w-6 text-primary" />}
-              title="Sugerencias de la comunidad" 
-              description="Permite que tu audiencia sugiera ideas directamente en tu leaderboard, potenciando la participación y el sentido de comunidad."
+              title={t('landing.features.suggestions.title')}
+              description={t('landing.features.suggestions.description')}
             />
             <FeatureCard 
               icon={<LineChart className="h-6 w-6 text-primary" />}
-              title="Analíticas detalladas" 
-              description="Obtén insights valiosos sobre qué contenido prefiere tu audiencia y cómo evolucionan estas preferencias con el tiempo."
+              title={t('landing.features.analytics.title')}
+              description={t('landing.features.analytics.description')}
             />
             <FeatureCard 
               icon={<Award className="h-6 w-6 text-primary" />}
-              title="Personalización avanzada" 
-              description="Adapta la apariencia de tus leaderboards para que coincidan con tu marca personal, incluyendo colores, logos y estilos."
+              title={t('landing.features.customization.title')}
+              description={t('landing.features.customization.description')}
             />
             <FeatureCard 
               icon={<Layers className="h-6 w-6 text-primary" />}
-              title="Múltiples leaderboards" 
-              description="Organiza diferentes tipos de contenido o categorías en leaderboards separados para mantener todo ordenado."
+              title={t('landing.features.multiple.title')}
+              description={t('landing.features.multiple.description')}
             />
             <FeatureCard 
               icon={<Globe className="h-6 w-6 text-primary" />}
-              title="Compartible en cualquier lugar" 
-              description="Integra fácilmente tus leaderboards en tu sitio web, redes sociales o newsletters para maximizar su alcance."
+              title={t('landing.features.sharing.title')}
+              description={t('landing.features.sharing.description')}
             />
           </motion.div>
         </div>
@@ -407,13 +407,13 @@ export default function LandingPage() {
               variants={fadeIn}
               className="text-3xl md:text-4xl font-bold mb-4 dark:text-white"
             >
-              Planes que se adaptan a tu crecimiento
+              {t('landing.pricing.title')}
             </motion.h2>
             <motion.p 
               variants={fadeIn}
               className="text-lg text-gray-600 dark:text-gray-300"
             >
-              Desde creadores que están empezando hasta profesionales con grandes comunidades, tenemos un plan para cada etapa de tu viaje.
+              {t('landing.pricing.subtitle')}
             </motion.p>
           </motion.div>
 
@@ -436,7 +436,7 @@ export default function LandingPage() {
                 "Analytics básicos",
                 "Dominio app (tuvoto.app/creador)"
               ]}
-              ctaText="Empezar gratis"
+              ctaText={t('landing.pricing.freePlan.ctaText') || "Empezar gratis"}
             />
             <PricingCard 
               name="Plan Pro" 
@@ -453,7 +453,7 @@ export default function LandingPage() {
                 "Sin branding de plataforma"
               ]}
               isPopular={true}
-              ctaText="Probar gratis por 14 días"
+              ctaText={t('landing.pricing.proPlan.ctaText') || "Probar gratis por 14 días"}
             />
             <PricingCard 
               name="Creator Pro" 
@@ -470,7 +470,7 @@ export default function LandingPage() {
                 "Prioridad en soporte",
                 "Acceso a features beta"
               ]}
-              ctaText="Contactar ventas"
+              ctaText={t('landing.pricing.creatorProPlan.ctaText') || "Contactar ventas"}
             />
           </motion.div>
         </div>
@@ -490,13 +490,13 @@ export default function LandingPage() {
               variants={fadeIn}
               className="text-3xl md:text-4xl font-bold mb-4 dark:text-white"
             >
-              Lo que dicen nuestros creadores
+              {t('landing.testimonials.title')}
             </motion.h2>
             <motion.p 
               variants={fadeIn}
               className="text-lg text-gray-600 dark:text-gray-300"
             >
-              Descubre cómo IdeaVote ha ayudado a creadores a conectar mejor con su audiencia y crear contenido más relevante.
+              {t('landing.testimonials.subtitle')}
             </motion.p>
           </motion.div>
 
@@ -508,19 +508,19 @@ export default function LandingPage() {
             className="grid md:grid-cols-3 gap-8"
           >
             <Testimonial 
-              quote="Desde que empecé a usar IdeaVote, la participación de mi audiencia ha aumentado un 40%. Ahora realmente sé qué quieren ver y mi canal ha crecido mucho más rápido."
-              author="Carlos Martínez"
-              role="YouTuber de Tecnología"
+              quote={t('landing.testimonials.testimonial1.quote')}
+              author={t('landing.testimonials.testimonial1.author')}
+              role={t('landing.testimonials.testimonial1.role')}
             />
             <Testimonial 
-              quote="Mis seguidores adoran poder votar y sugerir temas para mi podcast. IdeaVote se ha convertido en una parte esencial de mi estrategia de contenido."
-              author="Sofía Gómez"
-              role="Podcaster"
+              quote={t('landing.testimonials.testimonial2.quote')}
+              author={t('landing.testimonials.testimonial2.author')}
+              role={t('landing.testimonials.testimonial2.role')}
             />
             <Testimonial 
-              quote="La facilidad para integrar los leaderboards en mi sitio web y la capacidad de personalización son increíbles. Mi comunidad se siente más involucrada que nunca."
-              author="Javier Rodríguez"
-              role="Streamer"
+              quote={t('landing.testimonials.testimonial3.quote')}
+              author={t('landing.testimonials.testimonial3.author')}
+              role={t('landing.testimonials.testimonial3.role')}
             />
           </motion.div>
         </div>
@@ -537,10 +537,10 @@ export default function LandingPage() {
             className="max-w-4xl mx-auto text-center p-8 bg-white dark:bg-gray-800 rounded-2xl shadow-xl border border-gray-200 dark:border-gray-700"
           >
             <h2 className="text-3xl md:text-4xl font-bold mb-4 dark:text-white">
-              Conecta con tu audiencia hoy mismo
+              {t('landing.cta.title')}
             </h2>
             <p className="text-lg text-gray-600 dark:text-gray-300 mb-8 max-w-2xl mx-auto">
-              Únete a miles de creadores que ya están usando IdeaVote para crear contenido más relevante y aumentar su engagement.
+              {t('landing.cta.subtitle')}
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               {user ? (
@@ -549,23 +549,23 @@ export default function LandingPage() {
                   className="font-medium text-base bg-gradient-to-r from-primary to-blue-600 hover:from-primary/90 hover:to-blue-700 text-white"
                   onClick={() => navigate("/dashboard")}
                 >
-                  Ir al Dashboard
+                  {t('landing.cta.dashboardButton')}
                   <ArrowRight className="h-4 w-4 ml-2" />
                 </Button>
               ) : (
                 <Link href="/auth">
                   <Button size="lg" className="font-medium text-base bg-gradient-to-r from-primary to-blue-600 hover:from-primary/90 hover:to-blue-700 text-white">
-                    Comenzar gratis
+                    {t('landing.cta.startButton')}
                     <ArrowRight className="h-4 w-4 ml-2" />
                   </Button>
                 </Link>
               )}
               <Button onClick={() => setIsDemoOpen(true)} size="lg" variant="outline" className="font-medium text-base">
-                Ver demo
+                {t('landing.cta.demoButton')}
               </Button>
             </div>
             <p className="mt-4 text-sm text-gray-500 dark:text-gray-400">
-              No se requiere tarjeta de crédito para comenzar
+              {t('landing.cta.noCreditCard')}
             </p>
           </motion.div>
         </div>
