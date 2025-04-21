@@ -48,7 +48,9 @@
     "shareTip1": "Share your link on social media to get more votes",
     "shareTip2": "Include the link in the description of your videos or posts",
     "shareTip3": "Encourage your audience to vote to influence your next content",
-    "creatorDashboard": "Creator Dashboard"
+    "creatorDashboard": "Creator Dashboard",
+    "myIdeas": "My Ideas",
+    "suggested": "Suggested"
   },
   "creator": {
     "voted": "Voted",

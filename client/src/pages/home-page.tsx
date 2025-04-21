@@ -23,6 +23,7 @@ import { Badge } from "@/components/ui/badge";
 import { Link } from "wouter";
 import { IdeaResponse } from "@shared/schema";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { useTranslation } from "react-i18next";
 
 function IdeasTabView({ mode = "published" }: { mode: "published" | "suggested" }) {
   const { user } = useAuth();
@@ -321,6 +322,7 @@ function IdeasTabView({ mode = "published" }: { mode: "published" | "suggested" 
 export default function HomePage() {
   const { user, logoutMutation } = useAuth();
   const { toast } = useToast();
+  const { t } = useTranslation();
   const [isIdeaFormOpen, setIsIdeaFormOpen] = useState(false);
   const [currentIdea, setCurrentIdea] = useState<IdeaResponse | null>(null);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
@@ -424,7 +426,7 @@ export default function HomePage() {
             <div className="flex items-center">
               <CloudLightning className="h-8 w-8 text-primary" />
               <h1 className="ml-2 text-xl font-bold text-neutral-800 dark:text-white">
-                Idea Leaderboard
+                {t('dashboard.creatorDashboard', 'Idea Leaderboard')}
               </h1>
             </div>
             <div className="flex items-center gap-4">
@@ -443,7 +445,7 @@ export default function HomePage() {
                       onClick={handleLogout}
                       className="inline-flex items-center px-4 py-2 border border-gray-300 dark:border-gray-700 rounded-md shadow-sm text-sm font-medium text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary dark:focus:ring-offset-gray-900"
                     >
-                      Log out
+                      {t('common.logout', 'Log out')}
                     </button>
                   </div>
                 </>
@@ -453,7 +455,7 @@ export default function HomePage() {
                   <ThemeToggle />
                   <Link href="/auth">
                     <button className="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-primary hover:bg-primary-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary dark:focus:ring-offset-gray-900">
-                      Log in
+                      {t('common.login', 'Log in')}
                     </button>
                   </Link>
                 </div>
@@ -482,11 +484,11 @@ export default function HomePage() {
                     <TabsList className="grid grid-cols-2 w-60">
                       <TabsTrigger value="published" className="flex items-center gap-1">
                         <ListFilter className="w-4 h-4" />
-                        Mis Ideas
+                        {t('dashboard.myIdeas', 'Mis Ideas')}
                       </TabsTrigger>
                       <TabsTrigger value="suggested" className="flex items-center gap-1">
                         <Lightbulb className="w-4 h-4" />
-                        Sugeridas
+                        {t('dashboard.suggested', 'Sugeridas')}
                       </TabsTrigger>
                     </TabsList>
                   </div>

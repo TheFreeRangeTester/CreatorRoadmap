@@ -48,7 +48,9 @@
     "shareTip1": "Comparte tu enlace en redes sociales para obtener más votos",
     "shareTip2": "Incluye el enlace en la descripción de tus videos o posts",
     "shareTip3": "Anima a tu audiencia a votar para influir en tu próximo contenido",
-    "creatorDashboard": "Panel del Creador"
+    "creatorDashboard": "Panel del Creador",
+    "myIdeas": "Mis Ideas",
+    "suggested": "Sugeridas"
   },
   "creator": {
     "voted": "Votado",
