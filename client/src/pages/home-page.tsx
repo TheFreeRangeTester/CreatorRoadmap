@@ -16,7 +16,6 @@ import { LanguageToggle } from "@/components/language-toggle";
 import LeaderboardInfo from "@/components/leaderboard-info";
 import EmptyState from "@/components/empty-state";
 import ShareProfile from "@/components/share-profile";
-import ProfileEditor from "@/components/profile-editor";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -500,10 +499,8 @@ export default function HomePage() {
                 </Tabs>
               </div>
               
-              {/* Sidebar for profile and sharing (1/3 width on larger screens) */}
+              {/* Sidebar for sharing (1/3 width on larger screens) */}
               <div className="lg:col-span-1 space-y-6">
-                <ProfileEditor />
-                <div className="h-6"></div>
                 <ShareProfile />
               </div>
             </div>

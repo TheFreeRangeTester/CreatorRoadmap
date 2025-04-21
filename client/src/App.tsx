@@ -2,6 +2,7 @@ import { Switch, Route } from "wouter";
 import NotFound from "@/pages/not-found";
 import HomePage from "@/pages/home-page";
 import AuthPage from "@/pages/auth-page";
+import ProfilePage from "@/pages/profile-page";
 import PublicLeaderboardPage from "@/pages/public-leaderboard-page";
 import LandingPage from "@/pages/landing-page";
 import { ProtectedRoute } from "./lib/protected-route";
@@ -14,6 +15,7 @@ function App() {
     <Switch>
       <Route path="/" component={LandingPage} />
       <ProtectedRoute path="/dashboard" component={HomePage} />
+      <ProtectedRoute path="/profile" component={ProfilePage} />
       <Route path="/auth" component={AuthPage} />
       <Route path="/public/:token" component={PublicLeaderboardPage} />
       <Route path="/:username" component={CreatorPublicPage} />
