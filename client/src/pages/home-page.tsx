@@ -9,6 +9,7 @@ import IdeaForm from "@/components/idea-form";
 import DeleteConfirmation from "@/components/delete-confirmation";
 import CreatorControls from "@/components/creator-controls";
 import { ThemeToggle } from "@/components/theme-toggle";
+import { LanguageToggle } from "@/components/language-toggle";
 import LeaderboardInfo from "@/components/leaderboard-info";
 import EmptyState from "@/components/empty-state";
 import ShareProfile from "@/components/share-profile";
@@ -295,6 +296,7 @@ export default function HomePage() {
                     <span className="font-medium">{user.username}</span>
                   </Badge>
                   <div className="flex items-center gap-2">
+                    <LanguageToggle />
                     <ThemeToggle />
                     <button
                       onClick={handleLogout}
@@ -306,6 +308,7 @@ export default function HomePage() {
                 </>
               ) : (
                 <div className="flex items-center gap-2">
+                  <LanguageToggle />
                   <ThemeToggle />
                   <Link href="/auth">
                     <button className="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-primary hover:bg-primary-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary dark:focus:ring-offset-gray-900">
