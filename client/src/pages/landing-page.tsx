@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { ThemeToggle } from "@/components/theme-toggle";
+import { LanguageToggle } from "@/components/language-toggle";
 import { useAuth } from "@/hooks/use-auth";
 import { useIsMobile } from "@/hooks/use-mobile";
 import DemoDialog from "@/components/demo-dialog";
@@ -181,6 +182,7 @@ export default function LandingPage() {
                   Testimonios
                 </a>
               </div>
+              <LanguageToggle />
               <ThemeToggle />
               {user ? (
                 <Button onClick={() => navigate("/dashboard")}>
