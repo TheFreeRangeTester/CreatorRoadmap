@@ -112,5 +112,121 @@
     "same": "Igual",
     "up": "▲ {{change}}",
     "down": "▼ {{change}}"
+  },
+  "landing": {
+    "menu": {
+      "features": "Características",
+      "pricing": "Precios",
+      "testimonials": "Testimonios"
+    },
+    "cta": {
+      "startFree": "Comenzar gratis",
+      "seeDemo": "Ver demo",
+      "tryFree": "Probar gratis por 14 días",
+      "goDashboard": "Ir al Dashboard",
+      "login": "Iniciar sesión",
+      "register": "Registrarse"
+    },
+    "hero": {
+      "tagline": "La plataforma preferida por creadores de contenido",
+      "title": "Conecta con tu audiencia y crea contenido que impacte",
+      "subtitle": "Descubre exactamente qué contenido quiere ver tu audiencia con nuestra plataforma de votación y leaderboard interactivo. Genera más engagement y mantén a tu audiencia involucrada.",
+      "noCreditCard": "No se requiere tarjeta de crédito para comenzar",
+      "leaderboardPreview": "Vista previa del leaderboard",
+      "seeFullDemo": "Ver demo completa"
+    },
+    "stats": {
+      "activeCreators": "Creadores activos",
+      "votesMonthly": "Votos mensuales",
+      "satisfaction": "Satisfacción",
+      "engagement": "↑ en engagement"
+    },
+    "features": {
+      "title": "Todas las herramientas que necesitas para conectar con tu audiencia",
+      "subtitle": "Diseñado específicamente para creadores de contenido que quieren hacer crecer su comunidad e involucrar a su audiencia en el proceso creativo",
+      "leaderboards": {
+        "title": "Leaderboards interactivos",
+        "description": "Crea leaderboards atractivos donde tu audiencia puede votar por sus ideas favoritas y ver los resultados en tiempo real."
+      },
+      "suggestions": {
+        "title": "Sugerencias de la comunidad",
+        "description": "Permite que tu audiencia sugiera ideas directamente en tu leaderboard, potenciando la participación y el sentido de comunidad."
+      },
+      "analytics": {
+        "title": "Analíticas detalladas",
+        "description": "Obtén insights valiosos sobre qué contenido prefiere tu audiencia y cómo evolucionan estas preferencias con el tiempo."
+      },
+      "customization": {
+        "title": "Personalización avanzada",
+        "description": "Adapta la apariencia de tus leaderboards para que coincidan con tu marca personal, incluyendo colores, logos y estilos."
+      },
+      "multiple": {
+        "title": "Múltiples leaderboards",
+        "description": "Organiza diferentes tipos de contenido o categorías en leaderboards separados para mantener todo ordenado."
+      },
+      "sharing": {
+        "title": "Compartible en cualquier lugar",
+        "description": "Integra fácilmente tus leaderboards en tu sitio web, redes sociales o newsletters para maximizar su alcance."
+      }
+    },
+    "pricing": {
+      "title": "Planes que se adaptan a tu crecimiento",
+      "subtitle": "Desde creadores que están empezando hasta profesionales con grandes comunidades, tenemos un plan para cada etapa de tu viaje.",
+      "free": {
+        "name": "Plan Gratuito",
+        "description": "Ideal para creadores que recién empiezan",
+        "features": [
+          "1 leaderboard activo",
+          "Hasta 10 ideas visibles",
+          "Límite de 100 votos/mes",
+          "Personalización básica",
+          "Analytics básicos",
+          "Dominio app (tuvoto.app/creador)"
+        ]
+      },
+      "pro": {
+        "name": "Plan Pro",
+        "description": "Perfecto para creadores en crecimiento",
+        "features": [
+          "Hasta 5 leaderboards activos",
+          "Ideas ilimitadas",
+          "500 votos/mes",
+          "Personalización avanzada",
+          "Analytics completos",
+          "Soporte de dominio personalizado",
+          "Notificaciones por email"
+        ]
+      },
+      "creatorPro": {
+        "name": "Creator Pro",
+        "description": "Para creadores profesionales",
+        "features": [
+          "Leaderboards ilimitados",
+          "Ideas y votos ilimitados",
+          "Personalización completa",
+          "Analytics avanzados",
+          "Soporte premium",
+          "Dominio personalizado",
+          "White labeling",
+          "Acceso a API"
+        ]
+      },
+      "price": {
+        "free": "Gratis",
+        "proMonthly": "$9",
+        "creatorProMonthly": "$29",
+        "perMonth": "/mes"
+      },
+      "cta": {
+        "startFree": "Empezar gratis",
+        "tryFree": "Probar gratis por 14 días",
+        "contactUs": "Contáctanos"
+      },
+      "popular": "MÁS POPULAR"
+    },
+    "testimonials": {
+      "title": "Lo que dicen nuestros creadores",
+      "subtitle": "Únete a miles de creadores de contenido que ya han transformado la forma en que se conectan con su audiencia."
+    }
   }
 }
