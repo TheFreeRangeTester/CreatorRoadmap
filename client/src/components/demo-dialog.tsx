@@ -14,20 +14,20 @@ export default function DemoDialog({ open, onOpenChange }: DemoDialogProps) {
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-3xl">
         <DialogHeader>
-          <DialogTitle className="text-xl font-semibold">{t('demo.title')}</DialogTitle>
+          <DialogTitle className="text-xl font-semibold">{t('landing.demo.title')}</DialogTitle>
           <DialogDescription>
-            {t('demo.description')}
+            {t('landing.demo.description')}
           </DialogDescription>
         </DialogHeader>
         <div className="overflow-hidden rounded-lg border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800">
           <img 
             src={demoGifPath} 
-            alt={t('demo.alt')} 
+            alt={t('landing.demo.alt')} 
             className="w-full h-auto"
           />
         </div>
         <div className="text-sm text-gray-500 dark:text-gray-400 mt-2">
-          {t('demo.details')}
+          {t('landing.demo.details')}
         </div>
       </DialogContent>
     </Dialog>
