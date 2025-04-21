@@ -120,6 +120,12 @@
       "testimonials": "Testimonios"
     },
     "cta": {
+      "title": "Conecta con tu audiencia hoy mismo",
+      "subtitle": "Únete a miles de creadores que ya utilizan IdeaVote para crear contenido más relevante y aumentar su engagement.",
+      "startButton": "Comenzar gratis",
+      "dashboardButton": "Ir al Dashboard",
+      "demoButton": "Ver demo",
+      "noCreditCard": "No se requiere tarjeta de crédito para comenzar",
       "startFree": "Comenzar gratis",
       "seeDemo": "Ver demo",
       "tryFree": "Probar gratis por 14 días",
@@ -172,8 +178,9 @@
     "pricing": {
       "title": "Planes que se adaptan a tu crecimiento",
       "subtitle": "Desde creadores que están empezando hasta profesionales con grandes comunidades, tenemos un plan para cada etapa de tu viaje.",
-      "free": {
+      "freePlan": {
         "name": "Plan Gratuito",
+        "price": "Gratis",
         "description": "Ideal para creadores que recién empiezan",
         "features": [
           "1 leaderboard activo",
@@ -182,34 +189,41 @@
           "Personalización básica",
           "Analytics básicos",
           "Dominio app (tuvoto.app/creador)"
-        ]
+        ],
+        "ctaText": "Empezar gratis"
       },
-      "pro": {
+      "proPlan": {
         "name": "Plan Pro",
-        "description": "Perfecto para creadores en crecimiento",
+        "price": "$9",
+        "description": "Para creadores activos con contenido regular",
         "features": [
-          "Hasta 5 leaderboards activos",
-          "Ideas ilimitadas",
-          "500 votos/mes",
-          "Personalización avanzada",
-          "Analytics completos",
-          "Soporte de dominio personalizado",
-          "Notificaciones por email"
-        ]
+          "Hasta 3 leaderboards activos",
+          "Hasta 50 ideas por leaderboard",
+          "5,000 votos/mes",
+          "Personalización intermedia",
+          "Integración con redes sociales",
+          "Analytics más detallados",
+          "Exportación CSV",
+          "Sin marca de la plataforma"
+        ],
+        "ctaText": "Probar gratis por 14 días"
       },
-      "creatorPro": {
+      "creatorProPlan": {
         "name": "Creator Pro",
-        "description": "Para creadores profesionales",
+        "price": "$29",
+        "description": "Para creadores que monetizan su contenido",
         "features": [
           "Leaderboards ilimitados",
-          "Ideas y votos ilimitados",
-          "Personalización completa",
-          "Analytics avanzados",
-          "Soporte premium",
+          "Ideas ilimitadas",
+          "Votos ilimitados",
+          "Incrustación en sitios propios",
           "Dominio personalizado",
-          "White labeling",
-          "Acceso a API"
-        ]
+          "Colaboración en equipo",
+          "Integraciones de monetización",
+          "Soporte prioritario",
+          "Acceso a funciones beta"
+        ],
+        "ctaText": "Contactar a ventas"
       },
       "price": {
         "free": "Gratis",
@@ -226,7 +240,52 @@
     },
     "testimonials": {
       "title": "Lo que dicen nuestros creadores",
-      "subtitle": "Únete a miles de creadores de contenido que ya han transformado la forma en que se conectan con su audiencia."
+      "subtitle": "Únete a miles de creadores de contenido que ya han transformado la forma en que se conectan con su audiencia.",
+      "testimonial1": {
+        "quote": "Desde que comencé a usar IdeaVote, mi engagement con la audiencia ha aumentado un 40%. Ahora realmente sé lo que quieren ver y mi canal ha crecido mucho más rápido.",
+        "author": "Carlos Martínez",
+        "role": "YouTuber de tecnología"
+      },
+      "testimonial2": {
+        "quote": "A mis seguidores les encanta poder votar y sugerir temas para mi podcast. IdeaVote se ha convertido en una parte esencial de mi estrategia de contenido.",
+        "author": "Sofía Gómez",
+        "role": "Podcaster"
+      },
+      "testimonial3": {
+        "quote": "La facilidad para integrar leaderboards en mi sitio web y las capacidades de personalización son increíbles. Mi comunidad se siente más involucrada que nunca.",
+        "author": "Javier Rodríguez",
+        "role": "Streamer"
+      }
+    },
+    "footer": {
+      "product": {
+        "title": "Producto",
+        "features": "Características",
+        "pricing": "Precios",
+        "demo": "Demo",
+        "roadmap": "Roadmap"
+      },
+      "resources": {
+        "title": "Recursos",
+        "blog": "Blog",
+        "documentation": "Documentación",
+        "guides": "Guías",
+        "success": "Casos de éxito"
+      },
+      "company": {
+        "title": "Compañía",
+        "about": "Sobre nosotros",
+        "team": "Equipo",
+        "contact": "Contacto",
+        "careers": "Empleo"
+      },
+      "legal": {
+        "title": "Legal",
+        "terms": "Términos de servicio",
+        "privacy": "Política de privacidad",
+        "cookies": "Cookies"
+      },
+      "copyright": "Todos los derechos reservados."
     }
   }
 }
