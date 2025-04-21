@@ -257,6 +257,12 @@
         "role": "Streamer"
       }
     },
+    "demo": {
+      "title": "Demostración de IdeaVote",
+      "description": "Mira cómo funciona nuestra plataforma para creadores de contenido",
+      "details": "En este video podrás ver todas las funcionalidades principales de la plataforma, incluyendo la creación de ideas, el sistema de votación y el panel de control del creador.",
+      "alt": "Demo de IdeaVote"
+    },
     "footer": {
       "product": {
         "title": "Producto",
