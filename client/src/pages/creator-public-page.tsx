@@ -15,12 +15,20 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import SuggestIdeaDialog from "@/components/suggest-idea-dialog";
+import CreatorProfileHeader from "@/components/creator-profile-header";
 
 interface CreatorPublicPageResponse {
   ideas: IdeaResponse[];
   creator: {
     id: number;
     username: string;
+    profileDescription?: string | null;
+    logoUrl?: string | null;
+    twitterUrl?: string | null;
+    instagramUrl?: string | null;
+    youtubeUrl?: string | null;
+    tiktokUrl?: string | null;
+    websiteUrl?: string | null;
   };
 }
 
@@ -196,81 +204,70 @@ export default function CreatorPublicPage() {
 
   return (
     <div className="container px-4 mx-auto py-8 dark:bg-gray-950 min-h-screen">
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
-        <div>
-          <h1 className="text-4xl font-bold mb-2 text-transparent bg-clip-text bg-gradient-to-r from-primary to-blue-600 dark:from-primary dark:to-blue-400">
-            {creator.username}
-          </h1>
-          <div className="flex flex-col space-y-1">
-            <p className="text-xl font-medium text-gray-700 dark:text-gray-300">
-              {t('homepage.title')}
-            </p>
-            <p className="text-muted-foreground dark:text-gray-400">
-              {t('homepage.subtitle')}
-            </p>
-          </div>
-        </div>
-        <div className="flex items-center gap-2">
-          <motion.div
-            whileHover={{ scale: 1.1, rotate: 15 }}
-            whileTap={{ scale: 0.9 }}
+      {/* Perfil del creador con información y redes sociales */}
+      <CreatorProfileHeader creator={creator} />
+      
+      {/* Controles de utilidad */}
+      <div className="flex items-center justify-end gap-2 mb-6">
+        <motion.div
+          whileHover={{ scale: 1.1, rotate: 15 }}
+          whileTap={{ scale: 0.9 }}
+        >
+          <Button 
+            variant="ghost" 
+            onClick={() => refetch()} 
+            aria-label="Refresh leaderboard" 
+            className="flex items-center dark:text-gray-300 dark:hover:text-white"
           >
-            <Button 
-              variant="ghost" 
-              onClick={() => refetch()} 
-              aria-label="Refresh leaderboard" 
-              className="flex items-center dark:text-gray-300 dark:hover:text-white"
+            <motion.span
+              animate={{ rotate: 360 }}
+              transition={{ 
+                duration: 1, 
+                ease: "linear", 
+                repeat: 0
+              }}
+              className="inline-block"
             >
-              <motion.span
-                animate={{ rotate: 360 }}
-                transition={{ 
-                  duration: 1, 
-                  ease: "linear", 
-                  repeat: 0
-                }}
-                className="inline-block"
-              >
-                <RefreshCcw className="h-4 w-4" />
-              </motion.span>
-            </Button>
-          </motion.div>
-          
-          <motion.div
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
+              <RefreshCcw className="h-4 w-4" />
+            </motion.span>
+          </Button>
+        </motion.div>
+        
+        <motion.div
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+        >
+          <Button 
+            onClick={handleShare} 
+            variant="outline" 
+            className="flex items-center gap-2 dark:text-gray-300 dark:border-gray-700 dark:hover:text-white"
           >
-            <Button 
-              onClick={handleShare} 
-              variant="outline" 
-              className="flex items-center gap-2 dark:text-gray-300 dark:border-gray-700 dark:hover:text-white"
+            <motion.span
+              whileHover={{ 
+                rotate: [0, 15, -15, 0],
+                transition: { duration: 0.5 }
+              }}
+              className="inline-block"
             >
-              <motion.span
-                whileHover={{ 
-                  rotate: [0, 15, -15, 0],
-                  transition: { duration: 0.5 }
-                }}
-                className="inline-block"
-              >
-                <Share2 className="h-4 w-4" />
-              </motion.span>
-              {t('common.share')}
+              <Share2 className="h-4 w-4" />
+            </motion.span>
+            {t('common.share')}
+          </Button>
+        </motion.div>
+        <ThemeToggle />
+        <LanguageToggle />
+        {user ? (
+          <Badge variant="outline" className="bg-blue-50 text-blue-700 border-blue-200 dark:bg-blue-900/20 dark:text-blue-300 dark:border-blue-800/50 px-3 py-1 transition-all duration-300 hover:shadow-md hover:-translate-y-0.5">
+            <User className="h-3.5 w-3.5 mr-1.5 text-blue-500 dark:text-blue-400" />
+            <span className="font-medium">{user.username}</span>
+          </Badge>
+        ) : (
+          <Link href="/auth">
+            <Button size="sm" variant="default" className="text-xs">
+              {t('common.login')}
             </Button>
-          </motion.div>
-          <ThemeToggle />
-          <LanguageToggle />
-          {user ? (
-            <Badge variant="outline" className="bg-blue-50 text-blue-700 border-blue-200 dark:bg-blue-900/20 dark:text-blue-300 dark:border-blue-800/50 px-3 py-1 transition-all duration-300 hover:shadow-md hover:-translate-y-0.5">
-              <User className="h-3.5 w-3.5 mr-1.5 text-blue-500 dark:text-blue-400" />
-              <span className="font-medium">{user.username}</span>
-            </Badge>
-          ) : (
-            <Link href="/auth">
-              <Button size="sm" variant="default" className="text-xs">
-                {t('common.login')}
-              </Button>
-            </Link>
-          )}
-        </div>
+          </Link>
+        )}
       </div>
       
       <div className="flex flex-col lg:flex-row gap-4 mb-8">
