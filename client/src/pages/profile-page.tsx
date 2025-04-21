@@ -13,7 +13,7 @@ export default function ProfilePage() {
   const [, setLocation] = useLocation();
 
   const handleBack = () => {
-    setLocation("/");
+    setLocation("/dashboard");
   };
 
   // Renderización única para que siempre retorne un elemento
