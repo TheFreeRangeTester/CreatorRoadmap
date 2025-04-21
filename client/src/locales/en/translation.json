@@ -120,6 +120,12 @@
       "testimonials": "Testimonials"
     },
     "cta": {
+      "title": "Connect with your audience today",
+      "subtitle": "Join thousands of creators already using IdeaVote to create more relevant content and increase their engagement.",
+      "startButton": "Start for free",
+      "dashboardButton": "Go to Dashboard",
+      "demoButton": "See demo",
+      "noCreditCard": "No credit card required to start",
       "startFree": "Start for free",
       "seeDemo": "See demo",
       "tryFree": "Try free for 14 days",
@@ -172,8 +178,9 @@
     "pricing": {
       "title": "Plans that adapt to your growth",
       "subtitle": "From creators who are just starting out to professionals with large communities, we have a plan for every stage of your journey.",
-      "free": {
+      "freePlan": {
         "name": "Free Plan",
+        "price": "Free",
         "description": "Ideal for creators just starting out",
         "features": [
           "1 active leaderboard",
@@ -182,34 +189,41 @@
           "Basic customization",
           "Basic analytics",
           "App domain (yourvote.app/creator)"
-        ]
+        ],
+        "ctaText": "Start for free"
       },
-      "pro": {
+      "proPlan": {
         "name": "Pro Plan",
-        "description": "Perfect for growing creators",
+        "price": "$9",
+        "description": "For active creators with regular content",
         "features": [
-          "Up to 5 active leaderboards",
-          "Unlimited ideas",
-          "500 votes/month",
-          "Advanced customization",
-          "Full analytics",
-          "Custom domain support",
-          "Email notifications"
-        ]
+          "Up to 3 active leaderboards",
+          "Up to 50 ideas per leaderboard",
+          "5,000 votes/month",
+          "Intermediate customization",
+          "Social media integration",
+          "More detailed analytics",
+          "CSV export",
+          "No platform branding"
+        ],
+        "ctaText": "Try free for 14 days"
       },
-      "creatorPro": {
+      "creatorProPlan": {
         "name": "Creator Pro",
-        "description": "For professional creators",
+        "price": "$29",
+        "description": "For creators who monetize their content",
         "features": [
           "Unlimited leaderboards",
-          "Unlimited ideas and votes",
-          "Full customization",
-          "Advanced analytics",
-          "Premium support",
+          "Unlimited ideas",
+          "Unlimited votes",
+          "Embedding on own sites",
           "Custom domain",
-          "White labeling",
-          "API access"
-        ]
+          "Team collaboration",
+          "Monetization integrations",
+          "Priority support",
+          "Access to beta features"
+        ],
+        "ctaText": "Contact sales"
       },
       "price": {
         "free": "Free",
@@ -226,7 +240,52 @@
     },
     "testimonials": {
       "title": "What our creators say",
-      "subtitle": "Join thousands of content creators who have already transformed the way they connect with their audience."
+      "subtitle": "Join thousands of content creators who have already transformed the way they connect with their audience.",
+      "testimonial1": {
+        "quote": "Since I started using IdeaVote, my audience engagement has increased by 40%. I now really know what they want to see and my channel has grown much faster.",
+        "author": "Carlos Martinez",
+        "role": "Tech YouTuber"
+      },
+      "testimonial2": {
+        "quote": "My followers love being able to vote and suggest topics for my podcast. IdeaVote has become an essential part of my content strategy.",
+        "author": "Sofia Gomez",
+        "role": "Podcaster"
+      },
+      "testimonial3": {
+        "quote": "The ease of integrating leaderboards on my website and the customization capabilities are incredible. My community feels more involved than ever.",
+        "author": "Javier Rodriguez",
+        "role": "Streamer"
+      }
+    },
+    "footer": {
+      "product": {
+        "title": "Product",
+        "features": "Features",
+        "pricing": "Pricing",
+        "demo": "Demo",
+        "roadmap": "Roadmap"
+      },
+      "resources": {
+        "title": "Resources",
+        "blog": "Blog",
+        "documentation": "Documentation",
+        "guides": "Guides",
+        "success": "Success stories"
+      },
+      "company": {
+        "title": "Company",
+        "about": "About us",
+        "team": "Team",
+        "contact": "Contact",
+        "careers": "Careers"
+      },
+      "legal": {
+        "title": "Legal",
+        "terms": "Terms of service",
+        "privacy": "Privacy policy",
+        "cookies": "Cookies"
+      },
+      "copyright": "All rights reserved."
     }
   }
 }

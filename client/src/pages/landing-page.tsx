@@ -576,38 +576,38 @@ export default function LandingPage() {
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-8">
             <div>
-              <h3 className="font-semibold text-gray-900 dark:text-white mb-4">Producto</h3>
+              <h3 className="font-semibold text-gray-900 dark:text-white mb-4">{t('landing.footer.product.title')}</h3>
               <ul className="space-y-2">
-                <li><a href="#" className="text-sm text-gray-600 hover:text-primary dark:text-gray-400 dark:hover:text-primary-400 transition-colors">Características</a></li>
-                <li><a href="#" className="text-sm text-gray-600 hover:text-primary dark:text-gray-400 dark:hover:text-primary-400 transition-colors">Precios</a></li>
-                <li><a href="#" className="text-sm text-gray-600 hover:text-primary dark:text-gray-400 dark:hover:text-primary-400 transition-colors">Demo</a></li>
-                <li><a href="#" className="text-sm text-gray-600 hover:text-primary dark:text-gray-400 dark:hover:text-primary-400 transition-colors">Roadmap</a></li>
+                <li><a href="#" className="text-sm text-gray-600 hover:text-primary dark:text-gray-400 dark:hover:text-primary-400 transition-colors">{t('landing.footer.product.features')}</a></li>
+                <li><a href="#" className="text-sm text-gray-600 hover:text-primary dark:text-gray-400 dark:hover:text-primary-400 transition-colors">{t('landing.footer.product.pricing')}</a></li>
+                <li><a href="#" className="text-sm text-gray-600 hover:text-primary dark:text-gray-400 dark:hover:text-primary-400 transition-colors">{t('landing.footer.product.demo')}</a></li>
+                <li><a href="#" className="text-sm text-gray-600 hover:text-primary dark:text-gray-400 dark:hover:text-primary-400 transition-colors">{t('landing.footer.product.roadmap')}</a></li>
               </ul>
             </div>
             <div>
-              <h3 className="font-semibold text-gray-900 dark:text-white mb-4">Recursos</h3>
+              <h3 className="font-semibold text-gray-900 dark:text-white mb-4">{t('landing.footer.resources.title')}</h3>
               <ul className="space-y-2">
-                <li><a href="#" className="text-sm text-gray-600 hover:text-primary dark:text-gray-400 dark:hover:text-primary-400 transition-colors">Blog</a></li>
-                <li><a href="#" className="text-sm text-gray-600 hover:text-primary dark:text-gray-400 dark:hover:text-primary-400 transition-colors">Documentación</a></li>
-                <li><a href="#" className="text-sm text-gray-600 hover:text-primary dark:text-gray-400 dark:hover:text-primary-400 transition-colors">Guías</a></li>
-                <li><a href="#" className="text-sm text-gray-600 hover:text-primary dark:text-gray-400 dark:hover:text-primary-400 transition-colors">Casos de éxito</a></li>
+                <li><a href="#" className="text-sm text-gray-600 hover:text-primary dark:text-gray-400 dark:hover:text-primary-400 transition-colors">{t('landing.footer.resources.blog')}</a></li>
+                <li><a href="#" className="text-sm text-gray-600 hover:text-primary dark:text-gray-400 dark:hover:text-primary-400 transition-colors">{t('landing.footer.resources.documentation')}</a></li>
+                <li><a href="#" className="text-sm text-gray-600 hover:text-primary dark:text-gray-400 dark:hover:text-primary-400 transition-colors">{t('landing.footer.resources.guides')}</a></li>
+                <li><a href="#" className="text-sm text-gray-600 hover:text-primary dark:text-gray-400 dark:hover:text-primary-400 transition-colors">{t('landing.footer.resources.success')}</a></li>
               </ul>
             </div>
             <div>
-              <h3 className="font-semibold text-gray-900 dark:text-white mb-4">Compañía</h3>
+              <h3 className="font-semibold text-gray-900 dark:text-white mb-4">{t('landing.footer.company.title')}</h3>
               <ul className="space-y-2">
-                <li><a href="#" className="text-sm text-gray-600 hover:text-primary dark:text-gray-400 dark:hover:text-primary-400 transition-colors">Sobre nosotros</a></li>
-                <li><a href="#" className="text-sm text-gray-600 hover:text-primary dark:text-gray-400 dark:hover:text-primary-400 transition-colors">Equipo</a></li>
-                <li><a href="#" className="text-sm text-gray-600 hover:text-primary dark:text-gray-400 dark:hover:text-primary-400 transition-colors">Contacto</a></li>
-                <li><a href="#" className="text-sm text-gray-600 hover:text-primary dark:text-gray-400 dark:hover:text-primary-400 transition-colors">Empleo</a></li>
+                <li><a href="#" className="text-sm text-gray-600 hover:text-primary dark:text-gray-400 dark:hover:text-primary-400 transition-colors">{t('landing.footer.company.about')}</a></li>
+                <li><a href="#" className="text-sm text-gray-600 hover:text-primary dark:text-gray-400 dark:hover:text-primary-400 transition-colors">{t('landing.footer.company.team')}</a></li>
+                <li><a href="#" className="text-sm text-gray-600 hover:text-primary dark:text-gray-400 dark:hover:text-primary-400 transition-colors">{t('landing.footer.company.contact')}</a></li>
+                <li><a href="#" className="text-sm text-gray-600 hover:text-primary dark:text-gray-400 dark:hover:text-primary-400 transition-colors">{t('landing.footer.company.careers')}</a></li>
               </ul>
             </div>
             <div>
-              <h3 className="font-semibold text-gray-900 dark:text-white mb-4">Legal</h3>
+              <h3 className="font-semibold text-gray-900 dark:text-white mb-4">{t('landing.footer.legal.title')}</h3>
               <ul className="space-y-2">
-                <li><a href="#" className="text-sm text-gray-600 hover:text-primary dark:text-gray-400 dark:hover:text-primary-400 transition-colors">Términos de servicio</a></li>
-                <li><a href="#" className="text-sm text-gray-600 hover:text-primary dark:text-gray-400 dark:hover:text-primary-400 transition-colors">Política de privacidad</a></li>
-                <li><a href="#" className="text-sm text-gray-600 hover:text-primary dark:text-gray-400 dark:hover:text-primary-400 transition-colors">Cookies</a></li>
+                <li><a href="#" className="text-sm text-gray-600 hover:text-primary dark:text-gray-400 dark:hover:text-primary-400 transition-colors">{t('landing.footer.legal.terms')}</a></li>
+                <li><a href="#" className="text-sm text-gray-600 hover:text-primary dark:text-gray-400 dark:hover:text-primary-400 transition-colors">{t('landing.footer.legal.privacy')}</a></li>
+                <li><a href="#" className="text-sm text-gray-600 hover:text-primary dark:text-gray-400 dark:hover:text-primary-400 transition-colors">{t('landing.footer.legal.cookies')}</a></li>
               </ul>
             </div>
           </div>
@@ -619,7 +619,7 @@ export default function LandingPage() {
               </h1>
             </div>
             <p className="text-sm text-gray-600 dark:text-gray-400">
-              © {new Date().getFullYear()} IdeaVote. Todos los derechos reservados.
+              © {new Date().getFullYear()} IdeaVote. {t('landing.footer.copyright')}
             </p>
           </div>
         </div>
