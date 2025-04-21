@@ -13,6 +13,13 @@ import { useToast } from "@/hooks/use-toast";
 type UserResponse = {
   id: number;
   username: string;
+  profileDescription?: string | null;
+  logoUrl?: string | null;
+  twitterUrl?: string | null;
+  instagramUrl?: string | null;
+  youtubeUrl?: string | null;
+  tiktokUrl?: string | null;
+  websiteUrl?: string | null;
 };
 
 // Define the auth context type with all the data and functions we'll provide
