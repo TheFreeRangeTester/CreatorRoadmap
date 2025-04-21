@@ -2,7 +2,7 @@ import type { Express, Request, Response } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import { setupAuth } from "./auth";
-import { insertIdeaSchema, updateIdeaSchema, insertVoteSchema, insertPublicLinkSchema, suggestIdeaSchema } from "@shared/schema";
+import { insertIdeaSchema, updateIdeaSchema, insertVoteSchema, insertPublicLinkSchema, suggestIdeaSchema, updateProfileSchema } from "@shared/schema";
 import { ZodError } from "zod";
 import { fromZodError } from "zod-validation-error";
 
@@ -312,12 +312,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
         ideas.filter(idea => idea.creatorId === creator.id && idea.status === 'approved')
       );
       
+      // Enviar datos completos del creador, excluyendo la contraseña
+      const { password, ...creatorWithoutPassword } = creator;
+      
       res.json({
         ideas,
-        creator: {
-          id: creator.id,
-          username: creator.username
-        }
+        creator: creatorWithoutPassword
       });
     } catch (error) {
       console.error("Error fetching creator page:", error);
