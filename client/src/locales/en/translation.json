@@ -23,7 +23,8 @@
     "save": "Save",
     "saving": "Saving...",
     "reset": "Reset",
-    "website": "Website"
+    "website": "Website",
+    "back": "Back to Dashboard"
   },
   "homepage": {
     "title": "Content Roadmap",

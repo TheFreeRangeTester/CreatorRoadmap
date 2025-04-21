@@ -130,27 +130,33 @@ export default function ProfileEditor() {
   if (!user) return null;
   
   return (
-    <Card>
-      <CardHeader className="bg-muted/30 dark:bg-gray-800/50 space-y-1">
+    <Card className="shadow-md border-t-4 border-t-primary rounded-lg overflow-hidden bg-white dark:bg-gray-900">
+      <CardHeader className="bg-gradient-to-r from-primary-50 to-blue-50 dark:from-primary-950/30 dark:to-blue-950/20 space-y-1 pb-6">
         <div className="flex items-center justify-between">
-          <CardTitle className="text-xl">{t('profile.editProfile')}</CardTitle>
-          <Settings className="h-4 w-4 text-muted-foreground" />
+          <CardTitle className="text-xl font-semibold flex items-center gap-2">
+            <Settings className="h-5 w-5 text-primary" />
+            {t('profile.editProfile')}
+          </CardTitle>
         </div>
-        <CardDescription>{t('profile.editProfileDesc')}</CardDescription>
+        <CardDescription className="text-sm">{t('profile.editProfileDesc')}</CardDescription>
       </CardHeader>
-      <CardContent className="pt-5">
+      
+      <CardContent className="pt-6">
         <form onSubmit={handleSubmit}>
-          <div className="space-y-4">
-            <div className="flex flex-col items-center mb-6">
-              <Avatar className="h-20 w-20 mb-3 border-2 border-primary/20">
-                <AvatarImage src={profileData.logoUrl || undefined} alt={user.username} />
-                <AvatarFallback className="text-2xl bg-primary/10 text-primary">
-                  {getInitials(user.username)}
-                </AvatarFallback>
-              </Avatar>
+          <div className="space-y-6">
+            {/* Perfil y Avatar */}
+            <div className="flex flex-col sm:flex-row items-center gap-6 p-4 bg-gray-50 dark:bg-gray-800/30 rounded-lg">
+              <div className="flex-shrink-0">
+                <Avatar className="h-24 w-24 border-4 border-primary/10 shadow-lg">
+                  <AvatarImage src={profileData.logoUrl || undefined} alt={user.username} />
+                  <AvatarFallback className="text-3xl bg-gradient-to-br from-primary-100 to-blue-100 dark:from-primary-900/50 dark:to-blue-900/50 text-primary">
+                    {getInitials(user.username)}
+                  </AvatarFallback>
+                </Avatar>
+              </div>
               
-              <div className="w-full">
-                <Label htmlFor="logoUrl" className="text-sm font-medium">
+              <div className="flex-grow sm:ml-4 w-full">
+                <Label htmlFor="logoUrl" className="font-medium">
                   {t('profile.logoUrl')}
                 </Label>
                 <Input
@@ -167,8 +173,9 @@ export default function ProfileEditor() {
               </div>
             </div>
             
-            <div>
-              <Label htmlFor="profileDescription" className="text-sm font-medium">
+            {/* Descripción */}
+            <div className="p-4 border border-gray-100 dark:border-gray-800 rounded-lg">
+              <Label htmlFor="profileDescription" className="font-medium">
                 {t('profile.description')}
               </Label>
               <Textarea
@@ -177,94 +184,112 @@ export default function ProfileEditor() {
                 value={profileData.profileDescription || ""}
                 onChange={handleChange}
                 placeholder={t('profile.descriptionPlaceholder')}
-                className="mt-1 resize-none"
-                rows={3}
+                className="mt-2 resize-none"
+                rows={4}
               />
             </div>
             
-            <div className="space-y-3">
-              <h3 className="text-sm font-medium">{t('profile.socialLinks')}</h3>
+            {/* Enlaces sociales */}
+            <div className="p-4 border border-gray-100 dark:border-gray-800 rounded-lg">
+              <h3 className="font-medium text-lg mb-4">{t('profile.socialLinks')}</h3>
               
-              <div className="space-y-2">
-                <div className="flex items-center">
-                  <Twitter className="h-4 w-4 text-blue-500 mr-2" />
+              <div className="grid gap-4 sm:grid-cols-2">
+                <div className="group relative rounded-md">
+                  <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                    <Twitter className="h-4 w-4 text-blue-500 group-focus-within:text-blue-600" />
+                  </div>
                   <Input
                     name="twitterUrl"
                     value={profileData.twitterUrl || ""}
                     onChange={handleChange}
                     placeholder="https://twitter.com/yourusername"
+                    className="pl-10"
                   />
                 </div>
                 
-                <div className="flex items-center">
-                  <Instagram className="h-4 w-4 text-pink-500 mr-2" />
+                <div className="group relative rounded-md">
+                  <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                    <Instagram className="h-4 w-4 text-pink-500 group-focus-within:text-pink-600" />
+                  </div>
                   <Input
                     name="instagramUrl"
                     value={profileData.instagramUrl || ""}
                     onChange={handleChange}
                     placeholder="https://instagram.com/yourusername"
+                    className="pl-10"
                   />
                 </div>
                 
-                <div className="flex items-center">
-                  <Youtube className="h-4 w-4 text-red-500 mr-2" />
+                <div className="group relative rounded-md">
+                  <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                    <Youtube className="h-4 w-4 text-red-500 group-focus-within:text-red-600" />
+                  </div>
                   <Input
                     name="youtubeUrl"
                     value={profileData.youtubeUrl || ""}
                     onChange={handleChange}
                     placeholder="https://youtube.com/@yourusername"
+                    className="pl-10"
                   />
                 </div>
                 
-                <div className="flex items-center">
-                  <FaTiktok className="h-3.5 w-3.5 mr-2.5 ml-0.5" />
+                <div className="group relative rounded-md">
+                  <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                    <FaTiktok className="h-3.5 w-3.5 text-gray-800 dark:text-gray-300 group-focus-within:text-gray-900 dark:group-focus-within:text-white" />
+                  </div>
                   <Input
                     name="tiktokUrl"
                     value={profileData.tiktokUrl || ""}
                     onChange={handleChange}
                     placeholder="https://tiktok.com/@yourusername"
+                    className="pl-10"
                   />
                 </div>
                 
-                <div className="flex items-center">
-                  <Globe className="h-4 w-4 text-primary mr-2" />
+                <div className="group relative rounded-md sm:col-span-2">
+                  <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                    <Globe className="h-4 w-4 text-primary group-focus-within:text-primary-600" />
+                  </div>
                   <Input
                     name="websiteUrl"
                     value={profileData.websiteUrl || ""}
                     onChange={handleChange}
                     placeholder="https://yourwebsite.com"
+                    className="pl-10"
                   />
                 </div>
               </div>
             </div>
           </div>
           
-          <CardFooter className="px-0 pt-6 pb-0 flex justify-end space-x-2">
+          <div className="mt-8 flex justify-end space-x-3">
             <Button 
               type="button" 
               variant="outline" 
               size="sm"
               onClick={resetForm}
               disabled={!isFormDirty || updateProfileMutation.isPending}
+              className="px-4"
             >
-              <RefreshCw className="h-3.5 w-3.5 mr-1.5" />
+              <RefreshCw className="h-3.5 w-3.5 mr-2" />
               {t('common.reset')}
             </Button>
             <Button 
               type="submit" 
-              size="sm"
+              size="lg"
               disabled={!isFormDirty || updateProfileMutation.isPending}
+              className="px-6 bg-gradient-to-r from-primary to-blue-600 hover:from-primary-600 hover:to-blue-700"
             >
               {updateProfileMutation.isPending ? (
                 <>
-                  <Loader2 className="h-3.5 w-3.5 mr-1.5 animate-spin" />
+                  <Loader2 className="h-4 w-4 mr-2 animate-spin" />
                   {t('common.saving')}
                 </>
               ) : (
                 t('common.save')
               )}
             </Button>
-          </CardFooter>
+          </div>
         </form>
       </CardContent>
     </Card>

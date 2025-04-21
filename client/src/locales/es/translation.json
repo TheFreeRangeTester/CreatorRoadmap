@@ -23,7 +23,8 @@
     "save": "Guardar",
     "saving": "Guardando...",
     "reset": "Restablecer",
-    "website": "Sitio web"
+    "website": "Sitio web",
+    "back": "Volver al Dashboard"
   },
   "homepage": {
     "title": "Roadmap de Contenido",
