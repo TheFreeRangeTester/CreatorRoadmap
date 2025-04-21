@@ -34,6 +34,22 @@
     "noIdeasYet": "Sin ideas todavía",
     "noIdeasDesc": "Este creador aún no ha agregado ideas de contenido."
   },
+  "dashboard": {
+    "yourPublicProfile": "Tu Perfil Público",
+    "shareProfileDesc": "Comparte este enlace para que otros puedan ver y votar por tus ideas de contenido.",
+    "aboutPublicProfile": "Acerca de tu perfil público:",
+    "publicProfileVisibility": "Esta página es visible para cualquier persona con el enlace, incluso si no tiene cuenta en la plataforma.",
+    "visitorVoting": "Los visitantes pueden ver tus ideas y votar por ellas, ayudándote a determinar qué contenido crear primero.",
+    "copied": "Copiado",
+    "copyLink": "Copiar enlace",
+    "viewProfile": "Ver perfil",
+    "shareProfile": "Compartir perfil",
+    "sharingTips": "Consejos para compartir:",
+    "shareTip1": "Comparte tu enlace en redes sociales para obtener más votos",
+    "shareTip2": "Incluye el enlace en la descripción de tus videos o posts",
+    "shareTip3": "Anima a tu audiencia a votar para influir en tu próximo contenido",
+    "creatorDashboard": "Panel del Creador"
+  },
   "creator": {
     "voted": "Votado",
     "votedSuccess": "¡Votado!",
