@@ -6,6 +6,13 @@ export const users = pgTable("users", {
   id: serial("id").primaryKey(),
   username: text("username").notNull().unique(),
   password: text("password").notNull(),
+  profileDescription: text("profile_description"),
+  logoUrl: text("logo_url"),
+  twitterUrl: text("twitter_url"),
+  instagramUrl: text("instagram_url"),
+  youtubeUrl: text("youtube_url"),
+  tiktokUrl: text("tiktok_url"),
+  websiteUrl: text("website_url"),
 });
 
 export const ideas = pgTable("ideas", {
@@ -50,6 +57,13 @@ export const insertUserSchema = createInsertSchema(users).pick({
 export const userResponseSchema = z.object({
   id: z.number(),
   username: z.string(),
+  profileDescription: z.string().nullable().optional(),
+  logoUrl: z.string().nullable().optional(),
+  twitterUrl: z.string().nullable().optional(),
+  instagramUrl: z.string().nullable().optional(),
+  youtubeUrl: z.string().nullable().optional(),
+  tiktokUrl: z.string().nullable().optional(),
+  websiteUrl: z.string().nullable().optional(),
 });
 
 // Idea schemas
@@ -120,10 +134,22 @@ export const publicLinkResponseSchema = z.object({
   url: z.string(), // Full shareable URL 
 });
 
+// Schema para actualizar el perfil del usuario
+export const updateProfileSchema = z.object({
+  profileDescription: z.string().max(500, { message: "La descripción debe tener 500 caracteres o menos" }).optional(),
+  logoUrl: z.string().url({ message: "Debe ser una URL válida" }).optional().nullable(),
+  twitterUrl: z.string().url({ message: "Debe ser una URL válida" }).optional().nullable(),
+  instagramUrl: z.string().url({ message: "Debe ser una URL válida" }).optional().nullable(),
+  youtubeUrl: z.string().url({ message: "Debe ser una URL válida" }).optional().nullable(),
+  tiktokUrl: z.string().url({ message: "Debe ser una URL válida" }).optional().nullable(),
+  websiteUrl: z.string().url({ message: "Debe ser una URL válida" }).optional().nullable(),
+});
+
 // Types
 export type InsertUser = z.infer<typeof insertUserSchema>;
 export type User = typeof users.$inferSelect;
 export type UserResponse = z.infer<typeof userResponseSchema>;
+export type UpdateProfile = z.infer<typeof updateProfileSchema>;
 
 export type InsertIdea = z.infer<typeof insertIdeaSchema>;
 export type SuggestIdea = z.infer<typeof suggestIdeaSchema>;

@@ -1,6 +1,7 @@
 import { ideas as ideasTable, users, votes as votesTable, publicLinks as publicLinksTable, 
   type User, type InsertUser, type Idea, type InsertIdea, type UpdateIdea, type SuggestIdea,
-  type Vote, type InsertVote, type PublicLink, type InsertPublicLink, type PublicLinkResponse } from "@shared/schema";
+  type Vote, type InsertVote, type PublicLink, type InsertPublicLink, type PublicLinkResponse,
+  type UpdateProfile } from "@shared/schema";
 import session from "express-session";
 import createMemoryStore from "memorystore";
 import { randomBytes } from "crypto";
@@ -13,6 +14,7 @@ export interface IStorage {
   getUser(id: number): Promise<User | undefined>;
   getUserByUsername(username: string): Promise<User | undefined>;
   createUser(user: InsertUser): Promise<User>;
+  updateUserProfile(id: number, profileData: UpdateProfile): Promise<User | undefined>;
   
   // Idea operations
   getIdeas(): Promise<Idea[]>;
@@ -101,9 +103,38 @@ export class MemStorage implements IStorage {
 
   async createUser(insertUser: InsertUser): Promise<User> {
     const id = this.currentUserId++;
-    const user: User = { ...insertUser, id };
+    const user: User = { 
+      ...insertUser, 
+      id,
+      profileDescription: null,
+      logoUrl: null,
+      twitterUrl: null,
+      instagramUrl: null,
+      youtubeUrl: null,
+      tiktokUrl: null,
+      websiteUrl: null
+    };
     this.users.set(id, user);
     return user;
+  }
+  
+  async updateUserProfile(id: number, profileData: UpdateProfile): Promise<User | undefined> {
+    const user = this.users.get(id);
+    if (!user) return undefined;
+    
+    const updatedUser: User = {
+      ...user,
+      profileDescription: profileData.profileDescription ?? user.profileDescription,
+      logoUrl: profileData.logoUrl !== undefined ? profileData.logoUrl : user.logoUrl,
+      twitterUrl: profileData.twitterUrl !== undefined ? profileData.twitterUrl : user.twitterUrl,
+      instagramUrl: profileData.instagramUrl !== undefined ? profileData.instagramUrl : user.instagramUrl,
+      youtubeUrl: profileData.youtubeUrl !== undefined ? profileData.youtubeUrl : user.youtubeUrl,
+      tiktokUrl: profileData.tiktokUrl !== undefined ? profileData.tiktokUrl : user.tiktokUrl,
+      websiteUrl: profileData.websiteUrl !== undefined ? profileData.websiteUrl : user.websiteUrl
+    };
+    
+    this.users.set(id, updatedUser);
+    return updatedUser;
   }
 
   // Idea methods
