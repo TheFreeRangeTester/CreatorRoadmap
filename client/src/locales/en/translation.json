@@ -34,6 +34,22 @@
     "noIdeasYet": "No ideas yet",
     "noIdeasDesc": "This creator hasn't added any content ideas yet."
   },
+  "dashboard": {
+    "yourPublicProfile": "Your Public Profile",
+    "shareProfileDesc": "Share this link so others can view and vote for your content ideas.",
+    "aboutPublicProfile": "About your public profile:",
+    "publicProfileVisibility": "This page is visible to anyone with the link, even if they don't have an account on the platform.",
+    "visitorVoting": "Visitors can view your ideas and vote for them, helping you determine what content to create first.",
+    "copied": "Copied",
+    "copyLink": "Copy link",
+    "viewProfile": "View profile",
+    "shareProfile": "Share profile",
+    "sharingTips": "Sharing tips:",
+    "shareTip1": "Share your link on social media to get more votes",
+    "shareTip2": "Include the link in the description of your videos or posts",
+    "shareTip3": "Encourage your audience to vote to influence your next content",
+    "creatorDashboard": "Creator Dashboard"
+  },
   "creator": {
     "voted": "Voted",
     "votedSuccess": "Voted!",

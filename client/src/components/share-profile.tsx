@@ -4,8 +4,10 @@ import { useAuth } from "@/hooks/use-auth";
 import { useToast } from "@/hooks/use-toast";
 import { useState } from "react";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { useTranslation } from "react-i18next";
 
 export default function ShareProfile() {
+  const { t } = useTranslation();
   const { user } = useAuth();
   const { toast } = useToast();
   const [copied, setCopied] = useState(false);
@@ -14,15 +16,25 @@ export default function ShareProfile() {
 
   const profileUrl = `${window.location.origin}/${user.username}`;
 
-  const handleCopyLink = () => {
-    navigator.clipboard.writeText(profileUrl);
-    setCopied(true);
-    toast({
-      title: "Enlace copiado",
-      description: "El enlace a tu perfil público ha sido copiado al portapapeles",
-    });
-    
-    setTimeout(() => setCopied(false), 2000);
+  const handleCopyLink = async () => {
+    try {
+      await navigator.clipboard.writeText(profileUrl);
+      setCopied(true);
+      toast({
+        title: t('common.copySuccess'),
+        description: t('common.copyDesc', { url: profileUrl }),
+      });
+      
+      setTimeout(() => setCopied(false), 2000);
+    } catch (error) {
+      console.error("Error copying:", error);
+      // Fallback para móviles o cuando falla el copiado
+      toast({
+        title: t('common.copySuccess'),
+        description: profileUrl,
+        variant: "default",
+      });
+    }
   };
 
   const handleViewProfile = () => {
@@ -33,14 +45,21 @@ export default function ShareProfile() {
     if (navigator.share) {
       try {
         await navigator.share({
-          title: `Roadmap de Contenido de ${user.username}`,
-          text: "¡Echa un vistazo a mi roadmap de contenido y vota por lo que quieres ver próximamente!",
+          title: t('share.title', { username: user.username }),
+          text: t('share.text', { username: user.username }),
           url: profileUrl,
         });
-      } catch (error) {
-        console.error("Error sharing:", error);
-        // Si falla el compartir, copiamos al portapapeles como fallback
-        handleCopyLink();
+      } catch (err) {
+        console.error("Error sharing:", err);
+        // Solo copiamos al portapapeles si no es un error de cancelación por parte del usuario
+        if (typeof err === 'object' && err !== null && 'name' in err) {
+          const errorName = (err as { name: string }).name;
+          if (errorName !== 'AbortError') {
+            handleCopyLink();
+          }
+        } else {
+          handleCopyLink();
+        }
       }
     } else {
       // Si el navegador no soporta Web Share API, copiamos al portapapeles
@@ -52,9 +71,9 @@ export default function ShareProfile() {
     <div className="space-y-6">
       <Card className="border-primary/20 dark:border-primary/10 bg-white dark:bg-gray-900">
         <CardHeader className="pb-2">
-          <CardTitle className="text-2xl font-bold">Tu Perfil Público</CardTitle>
+          <CardTitle className="text-2xl font-bold">{t('dashboard.yourPublicProfile', 'Tu Perfil Público')}</CardTitle>
           <CardDescription>
-            Comparte este enlace para que otros puedan ver y votar por tus ideas de contenido.
+            {t('dashboard.shareProfileDesc', 'Comparte este enlace para que otros puedan ver y votar por tus ideas de contenido.')}
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -66,10 +85,11 @@ export default function ShareProfile() {
           
           <div className="text-sm text-gray-600 dark:text-gray-400 space-y-2">
             <p>
-              <span className="font-semibold text-primary">Acerca de tu perfil público:</span> Esta página es visible para cualquier persona con el enlace, incluso si no tiene cuenta en la plataforma.
+              <span className="font-semibold text-primary">{t('dashboard.aboutPublicProfile', 'Acerca de tu perfil público:')} </span> 
+              {t('dashboard.publicProfileVisibility', 'Esta página es visible para cualquier persona con el enlace, incluso si no tiene cuenta en la plataforma.')}
             </p>
             <p>
-              Los visitantes pueden ver tus ideas y votar por ellas, ayudándote a determinar qué contenido crear primero.
+              {t('dashboard.visitorVoting', 'Los visitantes pueden ver tus ideas y votar por ellas, ayudándote a determinar qué contenido crear primero.')}
             </p>
           </div>
         </CardContent>
@@ -82,12 +102,12 @@ export default function ShareProfile() {
             {copied ? (
               <>
                 <Check className="mr-2 h-4 w-4 text-green-500" />
-                Copiado
+                {t('dashboard.copied', 'Copiado')}
               </>
             ) : (
               <>
                 <Copy className="mr-2 h-4 w-4" />
-                Copiar enlace
+                {t('dashboard.copyLink', 'Copiar enlace')}
               </>
             )}
           </Button>
@@ -98,7 +118,7 @@ export default function ShareProfile() {
             onClick={handleViewProfile}
           >
             <ExternalLink className="mr-2 h-4 w-4" />
-            Ver perfil
+            {t('dashboard.viewProfile', 'Ver perfil')}
           </Button>
           
           <Button 
@@ -107,17 +127,19 @@ export default function ShareProfile() {
             onClick={handleShare}
           >
             <Share2 className="mr-2 h-4 w-4" />
-            Compartir perfil
+            {t('dashboard.shareProfile', 'Compartir perfil')}
           </Button>
         </CardFooter>
       </Card>
 
       <div className="bg-gradient-to-r from-primary/10 to-blue-500/10 dark:from-primary/5 dark:to-blue-500/5 p-4 rounded-lg">
-        <h3 className="font-semibold text-gray-800 dark:text-gray-200 mb-2">Consejos para compartir:</h3>
+        <h3 className="font-semibold text-gray-800 dark:text-gray-200 mb-2">
+          {t('dashboard.sharingTips', 'Consejos para compartir:')}
+        </h3>
         <ul className="list-disc list-inside text-sm text-gray-600 dark:text-gray-400 space-y-1">
-          <li>Comparte tu enlace en redes sociales para obtener más votos</li>
-          <li>Incluye el enlace en la descripción de tus videos o posts</li>
-          <li>Anima a tu audiencia a votar para influir en tu próximo contenido</li>
+          <li>{t('dashboard.shareTip1', 'Comparte tu enlace en redes sociales para obtener más votos')}</li>
+          <li>{t('dashboard.shareTip2', 'Incluye el enlace en la descripción de tus videos o posts')}</li>
+          <li>{t('dashboard.shareTip3', 'Anima a tu audiencia a votar para influir en tu próximo contenido')}</li>
         </ul>
       </div>
     </div>
