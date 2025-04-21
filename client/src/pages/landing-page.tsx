@@ -9,6 +9,7 @@ import { ThemeToggle } from "@/components/theme-toggle";
 import { LanguageToggle } from "@/components/language-toggle";
 import { useAuth } from "@/hooks/use-auth";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { useTranslation } from "react-i18next";
 import DemoDialog from "@/components/demo-dialog";
 import demoGifPath from "@assets/DemoGIF.gif";
 
@@ -155,6 +156,7 @@ export default function LandingPage() {
   const isMobile = useIsMobile();
   const [, navigate] = useLocation();
   const [isDemoOpen, setIsDemoOpen] = useState(false);
+  const { t } = useTranslation();
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white dark:from-gray-950 dark:to-gray-900">
@@ -173,28 +175,28 @@ export default function LandingPage() {
             <div className="flex items-center gap-4">
               <div className="hidden md:flex items-center gap-6">
                 <a href="#features" className="text-sm font-medium text-gray-600 hover:text-primary dark:text-gray-300 dark:hover:text-primary-400 transition-colors">
-                  Características
+                  {t('landing.menu.features')}
                 </a>
                 <a href="#pricing" className="text-sm font-medium text-gray-600 hover:text-primary dark:text-gray-300 dark:hover:text-primary-400 transition-colors">
-                  Precios
+                  {t('landing.menu.pricing')}
                 </a>
                 <a href="#testimonials" className="text-sm font-medium text-gray-600 hover:text-primary dark:text-gray-300 dark:hover:text-primary-400 transition-colors">
-                  Testimonios
+                  {t('landing.menu.testimonials')}
                 </a>
               </div>
               <LanguageToggle />
               <ThemeToggle />
               {user ? (
                 <Button onClick={() => navigate("/dashboard")}>
-                  Ir al Dashboard
+                  {t('landing.cta.goDashboard')}
                 </Button>
               ) : (
                 <div className="flex gap-2">
                   <Link href="/auth">
-                    <Button variant="outline">Iniciar sesión</Button>
+                    <Button variant="outline">{t('landing.cta.login')}</Button>
                   </Link>
                   <Link href="/auth">
-                    <Button>Registrarse</Button>
+                    <Button>{t('landing.cta.register')}</Button>
                   </Link>
                 </div>
               )}
@@ -215,7 +217,7 @@ export default function LandingPage() {
           >
             <motion.div variants={fadeIn}>
               <Badge variant="outline" className="px-3 py-1 bg-primary/10 text-primary-600 border-primary-200 dark:bg-primary-900/30 dark:text-primary-400 dark:border-primary-800/50 mb-4">
-                La plataforma preferida por creadores de contenido
+                {t('landing.hero.tagline')}
               </Badge>
             </motion.div>
             
@@ -223,14 +225,14 @@ export default function LandingPage() {
               variants={fadeIn}
               className="text-4xl md:text-6xl font-bold tracking-tight mb-6 bg-clip-text text-transparent bg-gradient-to-r from-gray-900 to-gray-700 dark:from-white dark:to-gray-300"
             >
-              Conecta con tu audiencia y crea contenido que impacte
+              {t('landing.hero.title')}
             </motion.h1>
             
             <motion.p 
               variants={fadeIn}
               className="text-lg md:text-xl text-gray-600 dark:text-gray-300 mb-8 max-w-3xl mx-auto"
             >
-              Descubre exactamente qué contenido quiere ver tu audiencia con nuestra plataforma de votación y leaderboard interactivo. Genera más engagement y mantén a tu audiencia involucrada.
+              {t('landing.hero.subtitle')}
             </motion.p>
             
             <motion.div 
@@ -243,19 +245,19 @@ export default function LandingPage() {
                   className="font-medium text-base bg-gradient-to-r from-primary to-blue-600 hover:from-primary/90 hover:to-blue-700 text-white"
                   onClick={() => navigate("/dashboard")}
                 >
-                  Ir al Dashboard
+                  {t('landing.cta.goDashboard')}
                   <ArrowRight className="h-4 w-4 ml-2" />
                 </Button>
               ) : (
                 <Link href="/auth">
                   <Button size="lg" className="font-medium text-base bg-gradient-to-r from-primary to-blue-600 hover:from-primary/90 hover:to-blue-700 text-white">
-                    Comenzar gratis
+                    {t('landing.cta.startFree')}
                     <ArrowRight className="h-4 w-4 ml-2" />
                   </Button>
                 </Link>
               )}
               <Button onClick={() => setIsDemoOpen(true)} size="lg" variant="outline" className="font-medium text-base">
-                Ver demo
+                {t('landing.cta.seeDemo')}
               </Button>
             </motion.div>
             
@@ -263,7 +265,7 @@ export default function LandingPage() {
               variants={fadeIn}
               className="mt-8 text-sm text-gray-500 dark:text-gray-400"
             >
-              No se requiere tarjeta de crédito para comenzar
+              {t('landing.hero.noCreditCard')}
             </motion.div>
             
             <motion.div 
@@ -280,13 +282,13 @@ export default function LandingPage() {
                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
                 <div className="absolute inset-0 flex items-center justify-center">
                   <div className="text-center">
-                    <p className="text-lg font-medium text-white mb-2 drop-shadow-md">Vista previa del leaderboard</p>
+                    <p className="text-lg font-medium text-white mb-2 drop-shadow-md">{t('landing.hero.leaderboardPreview')}</p>
                     <Button 
                       variant="secondary" 
                       size="sm" 
                       className="backdrop-blur-sm"
                     >
-                      Ver demo completa
+                      {t('landing.hero.seeFullDemo')}
                     </Button>
                   </div>
                 </div>

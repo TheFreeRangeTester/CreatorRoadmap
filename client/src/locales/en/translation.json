@@ -112,5 +112,121 @@
     "same": "Same",
     "up": "▲ {{change}}",
     "down": "▼ {{change}}"
+  },
+  "landing": {
+    "menu": {
+      "features": "Features",
+      "pricing": "Pricing",
+      "testimonials": "Testimonials"
+    },
+    "cta": {
+      "startFree": "Start for free",
+      "seeDemo": "See demo",
+      "tryFree": "Try free for 14 days",
+      "goDashboard": "Go to Dashboard",
+      "login": "Login",
+      "register": "Register"
+    },
+    "hero": {
+      "tagline": "The platform preferred by content creators",
+      "title": "Connect with your audience and create impactful content",
+      "subtitle": "Discover exactly what content your audience wants to see with our interactive voting and leaderboard platform. Generate more engagement and keep your audience involved.",
+      "noCreditCard": "No credit card required to start",
+      "leaderboardPreview": "Leaderboard preview",
+      "seeFullDemo": "See full demo"
+    },
+    "stats": {
+      "activeCreators": "Active creators",
+      "votesMonthly": "Monthly votes",
+      "satisfaction": "Satisfaction",
+      "engagement": "↑ in engagement"
+    },
+    "features": {
+      "title": "All the tools you need to connect with your audience",
+      "subtitle": "Specifically designed for content creators who want to grow their community and involve their audience in the creative process",
+      "leaderboards": {
+        "title": "Interactive leaderboards",
+        "description": "Create engaging leaderboards where your audience can vote for their favorite ideas and see the results in real time."
+      },
+      "suggestions": {
+        "title": "Community suggestions",
+        "description": "Allow your audience to suggest ideas directly on your leaderboard, enhancing participation and community sense."
+      },
+      "analytics": {
+        "title": "Detailed analytics",
+        "description": "Get valuable insights about what content your audience prefers and how these preferences evolve over time."
+      },
+      "customization": {
+        "title": "Advanced customization",
+        "description": "Adapt the appearance of your leaderboards to match your personal brand, including colors, logos, and styles."
+      },
+      "multiple": {
+        "title": "Multiple leaderboards",
+        "description": "Organize different types of content or categories in separate leaderboards to keep everything organized."
+      },
+      "sharing": {
+        "title": "Shareable anywhere",
+        "description": "Easily integrate your leaderboards on your website, social media, or newsletters to maximize their reach."
+      }
+    },
+    "pricing": {
+      "title": "Plans that adapt to your growth",
+      "subtitle": "From creators who are just starting out to professionals with large communities, we have a plan for every stage of your journey.",
+      "free": {
+        "name": "Free Plan",
+        "description": "Ideal for creators just starting out",
+        "features": [
+          "1 active leaderboard",
+          "Up to 10 visible ideas",
+          "100 votes/month limit",
+          "Basic customization",
+          "Basic analytics",
+          "App domain (yourvote.app/creator)"
+        ]
+      },
+      "pro": {
+        "name": "Pro Plan",
+        "description": "Perfect for growing creators",
+        "features": [
+          "Up to 5 active leaderboards",
+          "Unlimited ideas",
+          "500 votes/month",
+          "Advanced customization",
+          "Full analytics",
+          "Custom domain support",
+          "Email notifications"
+        ]
+      },
+      "creatorPro": {
+        "name": "Creator Pro",
+        "description": "For professional creators",
+        "features": [
+          "Unlimited leaderboards",
+          "Unlimited ideas and votes",
+          "Full customization",
+          "Advanced analytics",
+          "Premium support",
+          "Custom domain",
+          "White labeling",
+          "API access"
+        ]
+      },
+      "price": {
+        "free": "Free",
+        "proMonthly": "$9",
+        "creatorProMonthly": "$29",
+        "perMonth": "/month"
+      },
+      "cta": {
+        "startFree": "Start for free",
+        "tryFree": "Try free for 14 days",
+        "contactUs": "Contact us"
+      },
+      "popular": "MOST POPULAR"
+    },
+    "testimonials": {
+      "title": "What our creators say",
+      "subtitle": "Join thousands of content creators who have already transformed the way they connect with their audience."
+    }
   }
 }
