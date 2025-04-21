@@ -10,6 +10,39 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Set up authentication routes
   setupAuth(app);
 
+  // User profile update route
+  app.patch("/api/user/profile", async (req: Request, res: Response) => {
+    try {
+      // Verificar autenticación
+      if (!req.isAuthenticated()) {
+        return res.status(401).json({ message: "Unauthorized" });
+      }
+
+      // Validar datos con updateProfileSchema
+      const validatedData = updateProfileSchema.parse(req.body);
+      
+      // Actualizar el perfil del usuario
+      const updatedUser = await storage.updateUserProfile(req.user.id, validatedData);
+      
+      if (!updatedUser) {
+        return res.status(404).json({ message: "User not found" });
+      }
+      
+      // Devolver el usuario actualizado
+      res.json(updatedUser);
+    } catch (error) {
+      if (error instanceof ZodError) {
+        return res.status(400).json({ 
+          message: "Validation error", 
+          errors: fromZodError(error).message 
+        });
+      }
+      
+      console.error("Error updating user profile:", error);
+      res.status(500).json({ message: "Failed to update profile" });
+    }
+  });
+
   // Ideas API routes
   // Get all ideas
   app.get("/api/ideas", async (req: Request, res: Response) => {
