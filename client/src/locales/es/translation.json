@@ -19,7 +19,11 @@
     "copySuccess": "Enlace copiado",
     "copyDesc": "Enlace compartible: {{url}}",
     "refresh": "Actualizar",
-    "votes": "votos"
+    "votes": "votos",
+    "save": "Guardar",
+    "saving": "Guardando...",
+    "reset": "Restablecer",
+    "website": "Sitio web"
   },
   "homepage": {
     "title": "Roadmap de Contenido",
@@ -112,6 +116,20 @@
     "same": "Igual",
     "up": "▲ {{change}}",
     "down": "▼ {{change}}"
+  },
+  "profile": {
+    "editProfile": "Editar Perfil",
+    "editProfileDesc": "Personaliza tu información de perfil y enlaces sociales",
+    "description": "Acerca de ti",
+    "descriptionPlaceholder": "Cuéntale a tu audiencia sobre ti y tu contenido",
+    "logoUrl": "URL de imagen de perfil",
+    "logoUrlPlaceholder": "https://ejemplo.com/tu-logo.png",
+    "logoUrlHelp": "Añade un enlace a tu imagen de perfil o logo",
+    "socialLinks": "Enlaces de Redes Sociales",
+    "updateSuccess": "Perfil actualizado",
+    "updateSuccessDesc": "Tu perfil ha sido actualizado exitosamente",
+    "updateError": "Error de actualización",
+    "updateErrorDesc": "Hubo un error al actualizar tu perfil. Por favor, inténtalo de nuevo."
   },
   "landing": {
     "menu": {

@@ -19,7 +19,11 @@
     "copySuccess": "Link copied",
     "copyDesc": "Shareable link: {{url}}",
     "refresh": "Refresh",
-    "votes": "votes"
+    "votes": "votes",
+    "save": "Save",
+    "saving": "Saving...",
+    "reset": "Reset",
+    "website": "Website"
   },
   "homepage": {
     "title": "Content Roadmap",
@@ -112,6 +116,20 @@
     "same": "Same",
     "up": "▲ {{change}}",
     "down": "▼ {{change}}"
+  },
+  "profile": {
+    "editProfile": "Edit Profile",
+    "editProfileDesc": "Customize your profile information and social links",
+    "description": "About you",
+    "descriptionPlaceholder": "Tell your audience about yourself and your content",
+    "logoUrl": "Profile image URL",
+    "logoUrlPlaceholder": "https://example.com/your-logo.png",
+    "logoUrlHelp": "Add a link to your profile image or logo",
+    "socialLinks": "Social Media Links",
+    "updateSuccess": "Profile updated",
+    "updateSuccessDesc": "Your profile has been updated successfully",
+    "updateError": "Update failed",
+    "updateErrorDesc": "There was an error updating your profile. Please try again."
   },
   "landing": {
     "menu": {
