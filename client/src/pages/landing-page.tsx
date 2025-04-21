@@ -425,52 +425,26 @@ export default function LandingPage() {
             className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto"
           >
             <PricingCard 
-              name="Plan Gratuito" 
-              price="Gratis" 
-              description="Ideal para creadores que recién empiezan"
-              features={[
-                "1 leaderboard activo",
-                "Hasta 10 ideas visibles",
-                "Límite de 100 votos/mes",
-                "Personalización básica",
-                "Analytics básicos",
-                "Dominio app (tuvoto.app/creador)"
-              ]}
-              ctaText={t('landing.pricing.freePlan.ctaText') || "Empezar gratis"}
+              name={t('landing.pricing.freePlan.name')}
+              price={t('landing.pricing.freePlan.price')}
+              description={t('landing.pricing.freePlan.description')}
+              features={t('landing.pricing.freePlan.features', { returnObjects: true })}
+              ctaText={t('landing.pricing.freePlan.ctaText')}
             />
             <PricingCard 
-              name="Plan Pro" 
-              price="$9" 
-              description="Para creadores activos con contenido regular"
-              features={[
-                "Hasta 3 leaderboards activos",
-                "Hasta 50 ideas por leaderboard",
-                "5,000 votos/mes",
-                "Personalización intermedia",
-                "Integración con redes sociales",
-                "Analytics más detallados",
-                "Exportación CSV",
-                "Sin branding de plataforma"
-              ]}
+              name={t('landing.pricing.proPlan.name')}
+              price={t('landing.pricing.proPlan.price')}
+              description={t('landing.pricing.proPlan.description')}
+              features={t('landing.pricing.proPlan.features', { returnObjects: true })}
               isPopular={true}
-              ctaText={t('landing.pricing.proPlan.ctaText') || "Probar gratis por 14 días"}
+              ctaText={t('landing.pricing.proPlan.ctaText')}
             />
             <PricingCard 
-              name="Creator Pro" 
-              price="$29" 
-              description="Para creadores que monetizan su contenido"
-              features={[
-                "Leaderboards ilimitados",
-                "Ideas ilimitadas",
-                "Votos ilimitados",
-                "Embedding en sitios propios",
-                "Dominio personalizado",
-                "Colaboración con equipo",
-                "Integraciones de monetización",
-                "Prioridad en soporte",
-                "Acceso a features beta"
-              ]}
-              ctaText={t('landing.pricing.creatorProPlan.ctaText') || "Contactar ventas"}
+              name={t('landing.pricing.creatorProPlan.name')}
+              price={t('landing.pricing.creatorProPlan.price')}
+              description={t('landing.pricing.creatorProPlan.description')}
+              features={t('landing.pricing.creatorProPlan.features', { returnObjects: true })}
+              ctaText={t('landing.pricing.creatorProPlan.ctaText')}
             />
           </motion.div>
         </div>
