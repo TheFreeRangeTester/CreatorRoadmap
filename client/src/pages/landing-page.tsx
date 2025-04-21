@@ -64,10 +64,12 @@ function PricingCard({
   name: string, 
   price: string, 
   description: string, 
-  features: string[],
+  features: any, // Using any to handle i18n array return type
   isPopular?: boolean,
   ctaText: string
 }) {
+  // Ensure features is an array
+  const featuresList: string[] = Array.isArray(features) ? features : [];
   return (
     <motion.div 
       variants={fadeIn}
@@ -96,7 +98,7 @@ function PricingCard({
       </CardHeader>
       <CardContent className="p-6">
         <ul className="space-y-3">
-          {features.map((feature, index) => (
+          {featuresList.map((feature, index) => (
             <li key={index} className="flex items-start gap-2">
               <CircleCheck className="h-5 w-5 text-primary shrink-0 mt-0.5" />
               <span className="text-sm text-gray-600 dark:text-gray-300">{feature}</span>
@@ -428,14 +430,14 @@ export default function LandingPage() {
               name={t('landing.pricing.freePlan.name')}
               price={t('landing.pricing.freePlan.price')}
               description={t('landing.pricing.freePlan.description')}
-              features={t('landing.pricing.freePlan.features', { returnObjects: true })}
+              features={t('landing.pricing.freePlan.features', { returnObjects: true }) as string[]}
               ctaText={t('landing.pricing.freePlan.ctaText')}
             />
             <PricingCard 
               name={t('landing.pricing.proPlan.name')}
               price={t('landing.pricing.proPlan.price')}
               description={t('landing.pricing.proPlan.description')}
-              features={t('landing.pricing.proPlan.features', { returnObjects: true })}
+              features={t('landing.pricing.proPlan.features', { returnObjects: true }) as string[]}
               isPopular={true}
               ctaText={t('landing.pricing.proPlan.ctaText')}
             />
@@ -443,7 +445,7 @@ export default function LandingPage() {
               name={t('landing.pricing.creatorProPlan.name')}
               price={t('landing.pricing.creatorProPlan.price')}
               description={t('landing.pricing.creatorProPlan.description')}
-              features={t('landing.pricing.creatorProPlan.features', { returnObjects: true })}
+              features={t('landing.pricing.creatorProPlan.features', { returnObjects: true }) as string[]}
               ctaText={t('landing.pricing.creatorProPlan.ctaText')}
             />
           </motion.div>
