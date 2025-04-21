@@ -1,8 +1,15 @@
-import { FaTwitter, FaInstagram, FaYoutube, FaTiktok, FaGlobe } from 'react-icons/fa';
+import { Link } from "wouter";
+import { useTranslation } from "react-i18next";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import ProfileEditor from './profile-editor';
-import { UserResponse } from '@shared/schema';
-import { useAuth } from '@/hooks/use-auth';
+import { 
+  Twitter, 
+  Instagram, 
+  Youtube, 
+  Globe, 
+  ExternalLink 
+} from "lucide-react";
+import { FaTiktok } from "react-icons/fa";
+import { motion } from "framer-motion";
 
 interface CreatorProfileHeaderProps {
   creator: {
@@ -19,96 +26,103 @@ interface CreatorProfileHeaderProps {
 }
 
 export default function CreatorProfileHeader({ creator }: CreatorProfileHeaderProps) {
-  const { user } = useAuth();
-  const isOwnProfile = user?.id === creator.id;
+  const { t } = useTranslation();
   
-  // Obtener las iniciales para el avatar fallback
+  // Calcular las iniciales para el avatar fallback
   const getInitials = (name: string) => {
-    return name.substring(0, 2).toUpperCase();
+    return name.charAt(0).toUpperCase();
   };
   
   return (
-    <div className="p-6 bg-card rounded-lg shadow-sm mb-8">
-      <div className="flex flex-col sm:flex-row items-start sm:items-center gap-6">
-        <Avatar className="h-24 w-24 border-2 border-primary/20">
+    <div className="mb-8">
+      <div className="flex flex-col md:flex-row items-start gap-6">
+        {/* Avatar */}
+        <Avatar className="h-20 w-20 border-2 border-primary/20">
           <AvatarImage src={creator.logoUrl || undefined} alt={creator.username} />
-          <AvatarFallback className="text-2xl">{getInitials(creator.username)}</AvatarFallback>
+          <AvatarFallback className="text-2xl bg-primary/10 text-primary">
+            {getInitials(creator.username)}
+          </AvatarFallback>
         </Avatar>
         
-        <div className="flex-1 min-w-0">
-          <div className="flex items-center gap-2">
-            <h1 className="text-3xl font-bold tracking-tight">{creator.username}</h1>
-            {isOwnProfile && <ProfileEditor />}
-          </div>
+        {/* Información del creador */}
+        <div className="flex-1">
+          <h1 className="text-3xl font-bold mb-2 text-transparent bg-clip-text bg-gradient-to-r from-primary to-blue-600 dark:from-primary dark:to-blue-400">
+            {creator.username}
+          </h1>
           
           {creator.profileDescription && (
-            <p className="mt-2 text-muted-foreground">{creator.profileDescription}</p>
+            <p className="text-gray-700 dark:text-gray-300 mb-4 max-w-2xl">
+              {creator.profileDescription}
+            </p>
           )}
           
-          <div className="flex flex-wrap gap-3 mt-4">
+          {/* Enlaces a redes sociales */}
+          <div className="flex flex-wrap gap-3 mt-3">
             {creator.twitterUrl && (
-              <a 
+              <motion.a 
                 href={creator.twitterUrl} 
                 target="_blank" 
                 rel="noopener noreferrer"
-                className="text-muted-foreground hover:text-primary transition-colors"
-                title="Twitter / X"
+                className="text-gray-600 hover:text-blue-500 dark:text-gray-400 dark:hover:text-blue-400 transition-colors"
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.95 }}
               >
-                <FaTwitter className="h-5 w-5" />
-                <span className="sr-only">Twitter / X</span>
-              </a>
+                <Twitter size={18} />
+              </motion.a>
             )}
             
             {creator.instagramUrl && (
-              <a 
+              <motion.a 
                 href={creator.instagramUrl} 
                 target="_blank" 
                 rel="noopener noreferrer"
-                className="text-muted-foreground hover:text-primary transition-colors"
-                title="Instagram"
+                className="text-gray-600 hover:text-pink-500 dark:text-gray-400 dark:hover:text-pink-400 transition-colors"
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.95 }}
               >
-                <FaInstagram className="h-5 w-5" />
-                <span className="sr-only">Instagram</span>
-              </a>
+                <Instagram size={18} />
+              </motion.a>
             )}
             
             {creator.youtubeUrl && (
-              <a 
+              <motion.a 
                 href={creator.youtubeUrl} 
                 target="_blank" 
                 rel="noopener noreferrer"
-                className="text-muted-foreground hover:text-primary transition-colors"
-                title="YouTube"
+                className="text-gray-600 hover:text-red-500 dark:text-gray-400 dark:hover:text-red-400 transition-colors"
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.95 }}
               >
-                <FaYoutube className="h-5 w-5" />
-                <span className="sr-only">YouTube</span>
-              </a>
+                <Youtube size={18} />
+              </motion.a>
             )}
             
             {creator.tiktokUrl && (
-              <a 
+              <motion.a 
                 href={creator.tiktokUrl} 
                 target="_blank" 
                 rel="noopener noreferrer"
-                className="text-muted-foreground hover:text-primary transition-colors"
-                title="TikTok"
+                className="text-gray-600 hover:text-black dark:text-gray-400 dark:hover:text-white transition-colors"
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.95 }}
               >
-                <FaTiktok className="h-5 w-5" />
-                <span className="sr-only">TikTok</span>
-              </a>
+                <FaTiktok size={16} />
+              </motion.a>
             )}
             
             {creator.websiteUrl && (
-              <a 
+              <motion.a 
                 href={creator.websiteUrl} 
                 target="_blank" 
                 rel="noopener noreferrer"
-                className="text-muted-foreground hover:text-primary transition-colors"
-                title="Sitio Web"
+                className="text-gray-600 hover:text-primary dark:text-gray-400 dark:hover:text-primary-400 transition-colors flex items-center gap-1"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
               >
-                <FaGlobe className="h-5 w-5" />
-                <span className="sr-only">Sitio Web</span>
-              </a>
+                <Globe size={16} />
+                <span className="text-xs">{t('common.website')}</span>
+                <ExternalLink size={12} />
+              </motion.a>
             )}
           </div>
         </div>

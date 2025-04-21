@@ -1,196 +1,272 @@
-import { useState } from "react";
+import { useState, useEffect, ChangeEvent, FormEvent } from "react";
+import { useTranslation } from "react-i18next";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { apiRequest } from "@/lib/queryClient";
 import { useAuth } from "@/hooks/use-auth";
 import { useToast } from "@/hooks/use-toast";
-import { UpdateProfile } from "@shared/schema";
-import { Label } from "@/components/ui/label";
+import { apiRequest } from "@/lib/queryClient";
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { Edit, Check, X } from "lucide-react";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Label } from "@/components/ui/label";
+import { 
+  Twitter, 
+  Instagram, 
+  Youtube, 
+  Globe, 
+  Loader2,
+  RefreshCw,
+  Settings
+} from "lucide-react";
+import { FaTiktok } from "react-icons/fa";
+
+type UpdateProfile = {
+  profileDescription?: string | null;
+  logoUrl?: string | null;
+  twitterUrl?: string | null;
+  instagramUrl?: string | null;
+  youtubeUrl?: string | null;
+  tiktokUrl?: string | null;
+  websiteUrl?: string | null;
+};
 
 export default function ProfileEditor() {
-  const [isOpen, setIsOpen] = useState(false);
+  const { t } = useTranslation();
   const { user } = useAuth();
   const { toast } = useToast();
   const queryClient = useQueryClient();
   
-  const [formData, setFormData] = useState<UpdateProfile>({
+  const [profileData, setProfileData] = useState<UpdateProfile>({
     profileDescription: user?.profileDescription || "",
     logoUrl: user?.logoUrl || "",
     twitterUrl: user?.twitterUrl || "",
     instagramUrl: user?.instagramUrl || "",
     youtubeUrl: user?.youtubeUrl || "",
     tiktokUrl: user?.tiktokUrl || "",
-    websiteUrl: user?.websiteUrl || ""
+    websiteUrl: user?.websiteUrl || "",
   });
+  
+  const [isFormDirty, setIsFormDirty] = useState(false);
+  
+  useEffect(() => {
+    if (user) {
+      setProfileData({
+        profileDescription: user.profileDescription || "",
+        logoUrl: user.logoUrl || "",
+        twitterUrl: user.twitterUrl || "",
+        instagramUrl: user.instagramUrl || "",
+        youtubeUrl: user.youtubeUrl || "",
+        tiktokUrl: user.tiktokUrl || "",
+        websiteUrl: user.websiteUrl || "",
+      });
+    }
+  }, [user]);
   
   const updateProfileMutation = useMutation({
     mutationFn: async (data: UpdateProfile) => {
-      const res = await apiRequest("PATCH", "/api/user/profile", data);
-      return await res.json();
+      const response = await apiRequest("PATCH", "/api/user/profile", data);
+      return await response.json();
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["/api/user"] });
       toast({
-        title: "Perfil actualizado",
-        description: "Tu perfil ha sido actualizado exitosamente",
+        title: t('profile.updateSuccess'),
+        description: t('profile.updateSuccessDesc'),
+        className: "bg-gradient-to-r from-green-50 to-emerald-50 border-green-200 dark:from-green-900/30 dark:to-emerald-900/30 dark:border-green-800",
       });
-      setIsOpen(false);
+      
+      // Refrescar los datos del usuario
+      queryClient.invalidateQueries({ queryKey: ["/api/user"] });
+      setIsFormDirty(false);
     },
     onError: (error: Error) => {
       toast({
-        title: "Error al actualizar perfil",
-        description: error.message,
+        title: t('profile.updateError'),
+        description: error.message || t('profile.updateErrorDesc'),
         variant: "destructive",
       });
     },
   });
-
-  function handleChange(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {
+  
+  function handleChange(e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {
     const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
+    setProfileData(prev => ({ ...prev, [name]: value }));
+    setIsFormDirty(true);
   }
-
-  function handleSubmit(e: React.FormEvent) {
+  
+  function handleSubmit(e: FormEvent) {
     e.preventDefault();
-    updateProfileMutation.mutate(formData);
-  }
-
-  function resetForm() {
-    setFormData({
-      profileDescription: user?.profileDescription || "",
-      logoUrl: user?.logoUrl || "",
-      twitterUrl: user?.twitterUrl || "",
-      instagramUrl: user?.instagramUrl || "",
-      youtubeUrl: user?.youtubeUrl || "",
-      tiktokUrl: user?.tiktokUrl || "",
-      websiteUrl: user?.websiteUrl || ""
+    
+    // Filtrar los campos vacíos para convertirlos en null
+    const filteredData: UpdateProfile = {};
+    Object.entries(profileData).forEach(([key, value]) => {
+      filteredData[key as keyof UpdateProfile] = value || null;
     });
+    
+    updateProfileMutation.mutate(filteredData);
   }
-
+  
+  function resetForm() {
+    if (user) {
+      setProfileData({
+        profileDescription: user.profileDescription || "",
+        logoUrl: user.logoUrl || "",
+        twitterUrl: user.twitterUrl || "",
+        instagramUrl: user.instagramUrl || "",
+        youtubeUrl: user.youtubeUrl || "",
+        tiktokUrl: user.tiktokUrl || "",
+        websiteUrl: user.websiteUrl || "",
+      });
+      setIsFormDirty(false);
+    }
+  }
+  
+  // Calcular las iniciales para el avatar fallback
+  const getInitials = (name: string | undefined) => {
+    if (!name) return '';
+    return name.charAt(0).toUpperCase();
+  };
+  
+  if (!user) return null;
+  
   return (
-    <Dialog open={isOpen} onOpenChange={(open) => {
-      setIsOpen(open);
-      if (open) resetForm();
-    }}>
-      <DialogTrigger asChild>
-        <Button variant="ghost" size="icon" className="ml-2">
-          <Edit className="h-4 w-4" />
-          <span className="sr-only">Editar perfil</span>
-        </Button>
-      </DialogTrigger>
-      <DialogContent className="sm:max-w-[600px]">
-        <DialogHeader>
-          <DialogTitle>Editar perfil de creador</DialogTitle>
-        </DialogHeader>
-        <form onSubmit={handleSubmit} className="space-y-4 py-4">
-          <div className="space-y-2">
-            <Label htmlFor="profileDescription">Descripción del perfil</Label>
-            <Textarea 
-              id="profileDescription"
-              name="profileDescription"
-              value={formData.profileDescription || ""}
-              onChange={handleChange}
-              rows={4}
-              placeholder="Describe quién eres y qué tipo de contenido creas"
-            />
-          </div>
-          
-          <div className="space-y-2">
-            <Label htmlFor="logoUrl">URL del Logo o Avatar</Label>
-            <Input 
-              id="logoUrl"
-              name="logoUrl"
-              value={formData.logoUrl || ""}
-              onChange={handleChange}
-              placeholder="https://ejemplo.com/mi-logo.png"
-            />
-          </div>
-          
-          <div className="space-y-2">
-            <Label htmlFor="websiteUrl">Sitio Web</Label>
-            <Input 
-              id="websiteUrl"
-              name="websiteUrl"
-              value={formData.websiteUrl || ""}
-              onChange={handleChange}
-              placeholder="https://miwebsite.com"
-            />
-          </div>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <Label htmlFor="twitterUrl">Twitter / X</Label>
-              <Input 
-                id="twitterUrl"
-                name="twitterUrl"
-                value={formData.twitterUrl || ""}
+    <Card>
+      <CardHeader className="bg-muted/30 dark:bg-gray-800/50 space-y-1">
+        <div className="flex items-center justify-between">
+          <CardTitle className="text-xl">{t('profile.editProfile')}</CardTitle>
+          <Settings className="h-4 w-4 text-muted-foreground" />
+        </div>
+        <CardDescription>{t('profile.editProfileDesc')}</CardDescription>
+      </CardHeader>
+      <CardContent className="pt-5">
+        <form onSubmit={handleSubmit}>
+          <div className="space-y-4">
+            <div className="flex flex-col items-center mb-6">
+              <Avatar className="h-20 w-20 mb-3 border-2 border-primary/20">
+                <AvatarImage src={profileData.logoUrl || undefined} alt={user.username} />
+                <AvatarFallback className="text-2xl bg-primary/10 text-primary">
+                  {getInitials(user.username)}
+                </AvatarFallback>
+              </Avatar>
+              
+              <div className="w-full">
+                <Label htmlFor="logoUrl" className="text-sm font-medium">
+                  {t('profile.logoUrl')}
+                </Label>
+                <Input
+                  id="logoUrl"
+                  name="logoUrl"
+                  value={profileData.logoUrl || ""}
+                  onChange={handleChange}
+                  placeholder={t('profile.logoUrlPlaceholder')}
+                  className="mt-1"
+                />
+                <p className="text-xs text-muted-foreground mt-1">
+                  {t('profile.logoUrlHelp')}
+                </p>
+              </div>
+            </div>
+            
+            <div>
+              <Label htmlFor="profileDescription" className="text-sm font-medium">
+                {t('profile.description')}
+              </Label>
+              <Textarea
+                id="profileDescription"
+                name="profileDescription"
+                value={profileData.profileDescription || ""}
                 onChange={handleChange}
-                placeholder="https://twitter.com/username"
+                placeholder={t('profile.descriptionPlaceholder')}
+                className="mt-1 resize-none"
+                rows={3}
               />
             </div>
             
-            <div className="space-y-2">
-              <Label htmlFor="instagramUrl">Instagram</Label>
-              <Input 
-                id="instagramUrl"
-                name="instagramUrl"
-                value={formData.instagramUrl || ""}
-                onChange={handleChange}
-                placeholder="https://instagram.com/username"
-              />
-            </div>
-            
-            <div className="space-y-2">
-              <Label htmlFor="youtubeUrl">YouTube</Label>
-              <Input 
-                id="youtubeUrl"
-                name="youtubeUrl"
-                value={formData.youtubeUrl || ""}
-                onChange={handleChange}
-                placeholder="https://youtube.com/@channel"
-              />
-            </div>
-            
-            <div className="space-y-2">
-              <Label htmlFor="tiktokUrl">TikTok</Label>
-              <Input 
-                id="tiktokUrl"
-                name="tiktokUrl"
-                value={formData.tiktokUrl || ""}
-                onChange={handleChange}
-                placeholder="https://tiktok.com/@username"
-              />
+            <div className="space-y-3">
+              <h3 className="text-sm font-medium">{t('profile.socialLinks')}</h3>
+              
+              <div className="space-y-2">
+                <div className="flex items-center">
+                  <Twitter className="h-4 w-4 text-blue-500 mr-2" />
+                  <Input
+                    name="twitterUrl"
+                    value={profileData.twitterUrl || ""}
+                    onChange={handleChange}
+                    placeholder="https://twitter.com/yourusername"
+                  />
+                </div>
+                
+                <div className="flex items-center">
+                  <Instagram className="h-4 w-4 text-pink-500 mr-2" />
+                  <Input
+                    name="instagramUrl"
+                    value={profileData.instagramUrl || ""}
+                    onChange={handleChange}
+                    placeholder="https://instagram.com/yourusername"
+                  />
+                </div>
+                
+                <div className="flex items-center">
+                  <Youtube className="h-4 w-4 text-red-500 mr-2" />
+                  <Input
+                    name="youtubeUrl"
+                    value={profileData.youtubeUrl || ""}
+                    onChange={handleChange}
+                    placeholder="https://youtube.com/@yourusername"
+                  />
+                </div>
+                
+                <div className="flex items-center">
+                  <FaTiktok className="h-3.5 w-3.5 mr-2.5 ml-0.5" />
+                  <Input
+                    name="tiktokUrl"
+                    value={profileData.tiktokUrl || ""}
+                    onChange={handleChange}
+                    placeholder="https://tiktok.com/@yourusername"
+                  />
+                </div>
+                
+                <div className="flex items-center">
+                  <Globe className="h-4 w-4 text-primary mr-2" />
+                  <Input
+                    name="websiteUrl"
+                    value={profileData.websiteUrl || ""}
+                    onChange={handleChange}
+                    placeholder="https://yourwebsite.com"
+                  />
+                </div>
+              </div>
             </div>
           </div>
           
-          <DialogFooter className="pt-4 flex gap-2 justify-end">
+          <CardFooter className="px-0 pt-6 pb-0 flex justify-end space-x-2">
             <Button 
               type="button" 
               variant="outline" 
-              onClick={() => setIsOpen(false)}
-              disabled={updateProfileMutation.isPending}
+              size="sm"
+              onClick={resetForm}
+              disabled={!isFormDirty || updateProfileMutation.isPending}
             >
-              <X className="mr-2 h-4 w-4" />
-              Cancelar
+              <RefreshCw className="h-3.5 w-3.5 mr-1.5" />
+              {t('common.reset')}
             </Button>
             <Button 
               type="submit" 
-              disabled={updateProfileMutation.isPending}
+              size="sm"
+              disabled={!isFormDirty || updateProfileMutation.isPending}
             >
               {updateProfileMutation.isPending ? (
-                <div className="animate-spin mr-2 h-4 w-4 border-2 border-current border-t-transparent rounded-full" />
+                <>
+                  <Loader2 className="h-3.5 w-3.5 mr-1.5 animate-spin" />
+                  {t('common.saving')}
+                </>
               ) : (
-                <Check className="mr-2 h-4 w-4" />
+                t('common.save')
               )}
-              Guardar cambios
             </Button>
-          </DialogFooter>
+          </CardFooter>
         </form>
-      </DialogContent>
-    </Dialog>
+      </CardContent>
+    </Card>
   );
 }
