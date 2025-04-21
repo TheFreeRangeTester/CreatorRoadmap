@@ -1,6 +1,7 @@
 import { ideas, users, votes, publicLinks, 
   type User, type InsertUser, type Idea, type InsertIdea, type UpdateIdea, type SuggestIdea,
-  type Vote, type InsertVote, type PublicLink, type InsertPublicLink, type PublicLinkResponse } from "@shared/schema";
+  type Vote, type InsertVote, type PublicLink, type InsertPublicLink, type PublicLinkResponse,
+  type UpdateProfile } from "@shared/schema";
 import session from "express-session";
 import connectPg from "connect-pg-simple";
 import { db, pool } from "./db";
@@ -34,6 +35,29 @@ export class DatabaseStorage implements IStorage {
   async createUser(insertUser: InsertUser): Promise<User> {
     const [user] = await db.insert(users).values(insertUser).returning();
     return user;
+  }
+  
+  async updateUserProfile(id: number, profileData: UpdateProfile): Promise<User | undefined> {
+    // Obtener el usuario actual
+    const [currentUser] = await db.select().from(users).where(eq(users.id, id));
+    if (!currentUser) return undefined;
+    
+    // Actualizar sólo los campos proporcionados
+    const [updatedUser] = await db
+      .update(users)
+      .set({
+        profileDescription: profileData.profileDescription ?? currentUser.profileDescription,
+        logoUrl: profileData.logoUrl !== undefined ? profileData.logoUrl : currentUser.logoUrl,
+        twitterUrl: profileData.twitterUrl !== undefined ? profileData.twitterUrl : currentUser.twitterUrl,
+        instagramUrl: profileData.instagramUrl !== undefined ? profileData.instagramUrl : currentUser.instagramUrl,
+        youtubeUrl: profileData.youtubeUrl !== undefined ? profileData.youtubeUrl : currentUser.youtubeUrl,
+        tiktokUrl: profileData.tiktokUrl !== undefined ? profileData.tiktokUrl : currentUser.tiktokUrl,
+        websiteUrl: profileData.websiteUrl !== undefined ? profileData.websiteUrl : currentUser.websiteUrl
+      })
+      .where(eq(users.id, id))
+      .returning();
+    
+    return updatedUser;
   }
 
   // Idea methods

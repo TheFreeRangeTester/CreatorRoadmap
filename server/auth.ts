@@ -5,7 +5,7 @@ import session from "express-session";
 import { scrypt, randomBytes, timingSafeEqual } from "crypto";
 import { promisify } from "util";
 import { storage } from "./storage";
-import { User as SelectUser, insertUserSchema } from "@shared/schema";
+import { User as SelectUser, insertUserSchema, updateProfileSchema } from "@shared/schema";
 import { ZodError } from "zod";
 import { fromZodError } from "zod-validation-error";
 
@@ -143,5 +143,38 @@ export function setupAuth(app: Express) {
     // Strip password from response
     const { password, ...userWithoutPassword } = req.user as SelectUser;
     res.json(userWithoutPassword);
+  });
+  
+  app.patch("/api/user/profile", async (req, res, next) => {
+    try {
+      if (!req.isAuthenticated()) {
+        return res.status(401).json({ message: "Authentication required to update profile" });
+      }
+      
+      const validatedData = updateProfileSchema.parse(req.body);
+      const userId = req.user!.id;
+      
+      const updatedUser = await storage.updateUserProfile(userId, validatedData);
+      if (!updatedUser) {
+        return res.status(404).json({ message: "User not found" });
+      }
+      
+      // Actualizar la sesión del usuario
+      req.login(updatedUser, (err) => {
+        if (err) {
+          return next(err);
+        }
+        
+        // Strip password from response
+        const { password, ...userWithoutPassword } = updatedUser;
+        res.json(userWithoutPassword);
+      });
+    } catch (error) {
+      if (error instanceof ZodError) {
+        const validationError = fromZodError(error);
+        return res.status(400).json({ message: validationError.message });
+      }
+      next(error);
+    }
   });
 }
