@@ -68,7 +68,7 @@ export default function IdeaCard({ idea, onVote, onEdit, onDelete, isVoting }: I
       return {
         className: "bg-green-50 dark:bg-green-900/30 text-green-600 dark:text-green-400",
         icon: <ArrowUp className="w-3 h-3 mr-1" />,
-        text: change.toString(),
+        text: t('badges.up') + ' ' + change.toString(),
       };
     } 
     
@@ -77,7 +77,7 @@ export default function IdeaCard({ idea, onVote, onEdit, onDelete, isVoting }: I
       return {
         className: "bg-red-50 dark:bg-red-900/30 text-red-600 dark:text-red-400",
         icon: <ArrowDown className="w-3 h-3 mr-1" />,
-        text: Math.abs(change).toString(),
+        text: t('badges.down') + ' ' + Math.abs(change).toString(),
       };
     } 
     
