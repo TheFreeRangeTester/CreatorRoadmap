@@ -59,14 +59,18 @@ function PricingCard({
   description, 
   features, 
   isPopular,
-  ctaText
+  ctaText,
+  freeLabel,
+  perMonth
 }: { 
   name: string, 
   price: string, 
   description: string, 
   features: any, // Using any to handle i18n array return type
   isPopular?: boolean,
-  ctaText: string
+  ctaText: string,
+  freeLabel: string,
+  perMonth: string
 }) {
   // Ensure features is an array
   const featuresList: string[] = Array.isArray(features) ? features : [];
@@ -90,7 +94,11 @@ function PricingCard({
         </CardTitle>
         <div className="mt-4 text-center">
           <span className="text-3xl font-bold dark:text-white">{price}</span>
-          {price !== "Gratis" && <span className="text-gray-500 dark:text-gray-400 ml-1">/mes</span>}
+          {price !== freeLabel && (
+            <span className="text-gray-500 dark:text-gray-400 ml-1">
+              {perMonth}
+            </span>
+          )}
         </div>
         <CardDescription className="text-center mt-2 text-gray-600 dark:text-gray-300">
           {description}
@@ -432,6 +440,8 @@ export default function LandingPage() {
               description={t('landing.pricing.freePlan.description')}
               features={t('landing.pricing.freePlan.features', { returnObjects: true }) as string[]}
               ctaText={t('landing.pricing.freePlan.ctaText')}
+              freeLabel={t('landing.pricing.freePlan.price')}
+              perMonth={t('landing.pricing.price.perMonth')}
             />
             <PricingCard 
               name={t('landing.pricing.proPlan.name')}
@@ -440,6 +450,8 @@ export default function LandingPage() {
               features={t('landing.pricing.proPlan.features', { returnObjects: true }) as string[]}
               isPopular={true}
               ctaText={t('landing.pricing.proPlan.ctaText')}
+              freeLabel={t('landing.pricing.freePlan.price')}
+              perMonth={t('landing.pricing.price.perMonth')}
             />
             <PricingCard 
               name={t('landing.pricing.creatorProPlan.name')}
@@ -447,6 +459,8 @@ export default function LandingPage() {
               description={t('landing.pricing.creatorProPlan.description')}
               features={t('landing.pricing.creatorProPlan.features', { returnObjects: true }) as string[]}
               ctaText={t('landing.pricing.creatorProPlan.ctaText')}
+              freeLabel={t('landing.pricing.freePlan.price')}
+              perMonth={t('landing.pricing.price.perMonth')}
             />
           </motion.div>
         </div>
