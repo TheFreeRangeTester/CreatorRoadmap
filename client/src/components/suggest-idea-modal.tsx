@@ -25,7 +25,7 @@ interface SuggestIdeaModalProps {
   username: string;
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  onSuccess: () => Promise<void>;
+  onSuccess: () => Promise<any>;
 }
 
 type FormData = z.infer<typeof suggestIdeaSchema>;

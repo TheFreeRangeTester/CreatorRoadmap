@@ -406,7 +406,9 @@ export default function CreatorQAProfile() {
         username={creator.username}
         open={suggestDialogOpen}
         onOpenChange={setSuggestDialogOpen}
-        onSuccess={refetch}
+        onSuccess={async () => {
+          await refetch();
+        }}
       />
     </div>
   );
