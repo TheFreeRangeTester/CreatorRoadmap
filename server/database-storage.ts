@@ -52,7 +52,9 @@ export class DatabaseStorage implements IStorage {
         instagramUrl: profileData.instagramUrl !== undefined ? profileData.instagramUrl : currentUser.instagramUrl,
         youtubeUrl: profileData.youtubeUrl !== undefined ? profileData.youtubeUrl : currentUser.youtubeUrl,
         tiktokUrl: profileData.tiktokUrl !== undefined ? profileData.tiktokUrl : currentUser.tiktokUrl,
-        websiteUrl: profileData.websiteUrl !== undefined ? profileData.websiteUrl : currentUser.websiteUrl
+        threadsUrl: profileData.threadsUrl !== undefined ? profileData.threadsUrl : currentUser.threadsUrl,
+        websiteUrl: profileData.websiteUrl !== undefined ? profileData.websiteUrl : currentUser.websiteUrl,
+        profileBackground: profileData.profileBackground ?? currentUser.profileBackground
       })
       .where(eq(users.id, id))
       .returning();
