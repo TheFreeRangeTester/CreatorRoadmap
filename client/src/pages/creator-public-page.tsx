@@ -224,7 +224,14 @@ export default function CreatorPublicPage() {
   };
 
   return (
-    <div className={`container px-4 mx-auto py-8 dark:bg-gray-950 min-h-screen ${getBackgroundClass()}`}>
+    <div className="min-h-screen dark:bg-gray-950">
+  <div className="bg-white dark:bg-gray-900 py-8">
+    <div className="container px-4 mx-auto">
+      {/* Perfil del creador con información y redes sociales */}
+      <CreatorProfileHeader creator={creator} />
+      
+      {/* Controles de utilidad */}
+      <div className="flex items-center justify-end gap-2 mb-6">
       {/* Perfil del creador con información y redes sociales */}
       <CreatorProfileHeader creator={creator} />
       
@@ -290,7 +297,11 @@ export default function CreatorPublicPage() {
           </Link>
         )}
       </div>
-      
+    </div>
+  </div>
+  
+  <div className={`py-8 ${getBackgroundClass()}`}>
+    <div className="container px-4 mx-auto">
       <div className="flex flex-col lg:flex-row gap-4 mb-8 max-w-4xl mx-auto">
         <div className="bg-gradient-to-r from-primary/10 to-blue-500/10 dark:from-primary/5 dark:to-blue-500/5 p-4 rounded-lg flex-1">
           <p className="text-sm text-gray-700 dark:text-gray-300">
