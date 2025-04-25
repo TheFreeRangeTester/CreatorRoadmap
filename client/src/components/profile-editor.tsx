@@ -10,6 +10,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Label } from "@/components/ui/label";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { 
   Twitter, 
   Instagram, 
@@ -17,9 +18,12 @@ import {
   Globe, 
   Loader2,
   RefreshCw,
-  Settings
+  Settings,
+  PaintBucket,
+  CheckIcon
 } from "lucide-react";
 import { FaTiktok } from "react-icons/fa";
+import { FaThreads } from "react-icons/fa6";
 
 type UpdateProfile = {
   profileDescription?: string | null;
@@ -28,7 +32,9 @@ type UpdateProfile = {
   instagramUrl?: string | null;
   youtubeUrl?: string | null;
   tiktokUrl?: string | null;
+  threadsUrl?: string | null;
   websiteUrl?: string | null;
+  profileBackground?: string;
 };
 
 export default function ProfileEditor() {
@@ -44,7 +50,9 @@ export default function ProfileEditor() {
     instagramUrl: user?.instagramUrl || "",
     youtubeUrl: user?.youtubeUrl || "",
     tiktokUrl: user?.tiktokUrl || "",
+    threadsUrl: user?.threadsUrl || "",
     websiteUrl: user?.websiteUrl || "",
+    profileBackground: user?.profileBackground || "gradient-1",
   });
   
   const [isFormDirty, setIsFormDirty] = useState(false);
@@ -58,7 +66,9 @@ export default function ProfileEditor() {
         instagramUrl: user.instagramUrl || "",
         youtubeUrl: user.youtubeUrl || "",
         tiktokUrl: user.tiktokUrl || "",
+        threadsUrl: user.threadsUrl || "",
         websiteUrl: user.websiteUrl || "",
+        profileBackground: user.profileBackground || "gradient-1",
       });
     }
   }, [user]);
@@ -115,7 +125,9 @@ export default function ProfileEditor() {
         instagramUrl: user.instagramUrl || "",
         youtubeUrl: user.youtubeUrl || "",
         tiktokUrl: user.tiktokUrl || "",
+        threadsUrl: user.threadsUrl || "",
         websiteUrl: user.websiteUrl || "",
+        profileBackground: user.profileBackground || "gradient-1",
       });
       setIsFormDirty(false);
     }
@@ -189,6 +201,75 @@ export default function ProfileEditor() {
               />
             </div>
             
+            {/* Fondo del perfil */}
+            <div className="p-4 border border-gray-100 dark:border-gray-800 rounded-lg">
+              <div className="flex items-center gap-2 mb-4">
+                <PaintBucket className="h-5 w-5 text-primary" />
+                <h3 className="font-medium text-lg">{t('profile.background') || "Fondo del perfil"}</h3>
+              </div>
+              
+              <p className="text-sm text-muted-foreground mb-4">
+                {t('profile.backgroundDesc') || "Elige un fondo para tu perfil público. El patrón se adaptará automáticamente al modo claro/oscuro."}
+              </p>
+              
+              <RadioGroup
+                value={profileData.profileBackground}
+                onValueChange={(value) => {
+                  setProfileData(prev => ({ ...prev, profileBackground: value }));
+                  setIsFormDirty(true);
+                }}
+                className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4"
+              >
+                <div className="flex items-center space-x-2 border border-gray-200 dark:border-gray-700 rounded-lg p-3 hover:bg-gray-50 dark:hover:bg-gray-800 cursor-pointer transition-colors relative">
+                  <RadioGroupItem value="gradient-1" id="gradient-1" className="absolute right-2 top-2" />
+                  <div className="w-full h-16 bg-gradient-to-br from-gray-50 to-white dark:from-gray-900 dark:to-gray-950 rounded overflow-hidden"></div>
+                  <label htmlFor="gradient-1" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer">
+                    {t('profile.gradient1') || "Sutil"}
+                  </label>
+                </div>
+                
+                <div className="flex items-center space-x-2 border border-gray-200 dark:border-gray-700 rounded-lg p-3 hover:bg-gray-50 dark:hover:bg-gray-800 cursor-pointer transition-colors relative">
+                  <RadioGroupItem value="gradient-2" id="gradient-2" className="absolute right-2 top-2" />
+                  <div className="w-full h-16 bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-blue-950/30 dark:to-indigo-950/30 rounded overflow-hidden"></div>
+                  <label htmlFor="gradient-2" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer">
+                    {t('profile.gradient2') || "Azul/Índigo"}
+                  </label>
+                </div>
+                
+                <div className="flex items-center space-x-2 border border-gray-200 dark:border-gray-700 rounded-lg p-3 hover:bg-gray-50 dark:hover:bg-gray-800 cursor-pointer transition-colors relative">
+                  <RadioGroupItem value="gradient-3" id="gradient-3" className="absolute right-2 top-2" />
+                  <div className="w-full h-16 bg-gradient-to-br from-green-50 to-teal-50 dark:from-green-950/30 dark:to-teal-950/30 rounded overflow-hidden"></div>
+                  <label htmlFor="gradient-3" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer">
+                    {t('profile.gradient3') || "Verde/Teal"}
+                  </label>
+                </div>
+                
+                <div className="flex items-center space-x-2 border border-gray-200 dark:border-gray-700 rounded-lg p-3 hover:bg-gray-50 dark:hover:bg-gray-800 cursor-pointer transition-colors relative">
+                  <RadioGroupItem value="gradient-4" id="gradient-4" className="absolute right-2 top-2" />
+                  <div className="w-full h-16 bg-gradient-to-br from-rose-50 to-orange-50 dark:from-rose-950/30 dark:to-orange-950/30 rounded overflow-hidden"></div>
+                  <label htmlFor="gradient-4" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer">
+                    {t('profile.gradient4') || "Rosa/Naranja"}
+                  </label>
+                </div>
+                
+                <div className="flex items-center space-x-2 border border-gray-200 dark:border-gray-700 rounded-lg p-3 hover:bg-gray-50 dark:hover:bg-gray-800 cursor-pointer transition-colors relative">
+                  <RadioGroupItem value="pattern-1" id="pattern-1" className="absolute right-2 top-2" />
+                  <div className="w-full h-16 bg-gray-50 dark:bg-gray-900 rounded overflow-hidden" style={{backgroundImage: "radial-gradient(circle at 1px 1px, gray 1px, transparent 0)", backgroundSize: "20px 20px"}}></div>
+                  <label htmlFor="pattern-1" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer">
+                    {t('profile.pattern1') || "Puntos"}
+                  </label>
+                </div>
+                
+                <div className="flex items-center space-x-2 border border-gray-200 dark:border-gray-700 rounded-lg p-3 hover:bg-gray-50 dark:hover:bg-gray-800 cursor-pointer transition-colors relative">
+                  <RadioGroupItem value="pattern-2" id="pattern-2" className="absolute right-2 top-2" />
+                  <div className="w-full h-16 bg-gray-50 dark:bg-gray-900 rounded overflow-hidden" style={{backgroundImage: "linear-gradient(gray 1px, transparent 1px), linear-gradient(to right, gray 1px, transparent 1px)", backgroundSize: "20px 20px"}}></div>
+                  <label htmlFor="pattern-2" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer">
+                    {t('profile.pattern2') || "Cuadrícula"}
+                  </label>
+                </div>
+              </RadioGroup>
+            </div>
+            
             {/* Enlaces sociales */}
             <div className="p-4 border border-gray-100 dark:border-gray-800 rounded-lg">
               <h3 className="font-medium text-lg mb-4">{t('profile.socialLinks')}</h3>
@@ -242,6 +323,19 @@ export default function ProfileEditor() {
                     value={profileData.tiktokUrl || ""}
                     onChange={handleChange}
                     placeholder="https://tiktok.com/@yourusername"
+                    className="pl-10"
+                  />
+                </div>
+                
+                <div className="group relative rounded-md">
+                  <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                    <FaThreads className="h-3.5 w-3.5 text-gray-800 dark:text-gray-300 group-focus-within:text-gray-900 dark:group-focus-within:text-white" />
+                  </div>
+                  <Input
+                    name="threadsUrl"
+                    value={profileData.threadsUrl || ""}
+                    onChange={handleChange}
+                    placeholder="https://threads.net/@yourusername"
                     className="pl-10"
                   />
                 </div>

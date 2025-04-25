@@ -19,7 +19,9 @@ type UserResponse = {
   instagramUrl?: string | null;
   youtubeUrl?: string | null;
   tiktokUrl?: string | null;
+  threadsUrl?: string | null;
   websiteUrl?: string | null;
+  profileBackground?: string;
 };
 
 // Define the auth context type with all the data and functions we'll provide
