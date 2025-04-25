@@ -9,6 +9,7 @@ import {
   ExternalLink 
 } from "lucide-react";
 import { FaTiktok } from "react-icons/fa";
+import { FaThreads } from "react-icons/fa6";
 import { motion } from "framer-motion";
 
 interface CreatorProfileHeaderProps {
@@ -21,7 +22,9 @@ interface CreatorProfileHeaderProps {
     instagramUrl?: string | null;
     youtubeUrl?: string | null;
     tiktokUrl?: string | null;
+    threadsUrl?: string | null;
     websiteUrl?: string | null;
+    profileBackground?: string;
   };
 }
 
@@ -107,6 +110,19 @@ export default function CreatorProfileHeader({ creator }: CreatorProfileHeaderPr
                 whileTap={{ scale: 0.95 }}
               >
                 <FaTiktok size={16} />
+              </motion.a>
+            )}
+            
+            {creator.threadsUrl && (
+              <motion.a 
+                href={creator.threadsUrl} 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="text-gray-600 hover:text-black dark:text-gray-400 dark:hover:text-white transition-colors"
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                <FaThreads size={16} />
               </motion.a>
             )}
             
