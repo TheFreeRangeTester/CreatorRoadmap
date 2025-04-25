@@ -107,10 +107,14 @@ export default function ProfileEditor() {
   function handleSubmit(e: FormEvent) {
     e.preventDefault();
     
-    // Filtrar los campos vacíos para convertirlos en null
+    // Filtrar los campos vacíos para convertirlos en null, excepto profileBackground
     const filteredData: UpdateProfile = {};
     Object.entries(profileData).forEach(([key, value]) => {
-      filteredData[key as keyof UpdateProfile] = value || null;
+      if (key === 'profileBackground') {
+        filteredData[key as keyof UpdateProfile] = value || 'gradient-1';
+      } else {
+        filteredData[key as keyof UpdateProfile] = value || null;
+      }
     });
     
     updateProfileMutation.mutate(filteredData);
