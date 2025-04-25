@@ -298,8 +298,17 @@ export default function CreatorQAProfile() {
   const getBackgroundStyle = () => {
     if (!creator.profileBackground) return {};
     
-    switch (creator.profileBackground) {
+    // Convertir el formato del fondo para que coincida con las opciones de la interfaz de usuario
+    let backgroundKey = creator.profileBackground;
+    
+    // Convertir de formato gradient-1 a gradient1 si es necesario
+    if (backgroundKey && backgroundKey.includes('-')) {
+      backgroundKey = backgroundKey.replace('-', '');
+    }
+    
+    switch (backgroundKey) {
       case 'gradient1':
+      case 'gradient-1':
         return { 
           backgroundImage: 'linear-gradient(to right bottom, var(--tw-gradient-stops))',
           '--tw-gradient-from': 'rgb(249, 250, 251)',
@@ -307,6 +316,7 @@ export default function CreatorQAProfile() {
           '--tw-gradient-stops': 'var(--tw-gradient-from), var(--tw-gradient-to)'
         };
       case 'gradient2':
+      case 'gradient-2':
         return {
           backgroundImage: 'linear-gradient(to right bottom, rgb(239, 246, 255), rgb(219, 234, 254))',
           '--tw-gradient-from': 'rgb(239, 246, 255)',
@@ -314,6 +324,7 @@ export default function CreatorQAProfile() {
           '--tw-gradient-stops': 'var(--tw-gradient-from), var(--tw-gradient-to)'
         };
       case 'gradient3':
+      case 'gradient-3':
         return {
           backgroundImage: 'linear-gradient(to right bottom, rgb(236, 253, 245), rgb(209, 250, 229))',
           '--tw-gradient-from': 'rgb(236, 253, 245)',
@@ -321,6 +332,7 @@ export default function CreatorQAProfile() {
           '--tw-gradient-stops': 'var(--tw-gradient-from), var(--tw-gradient-to)'
         };
       case 'gradient4':
+      case 'gradient-4':
         return {
           backgroundImage: 'linear-gradient(to right bottom, rgb(254, 242, 242), rgb(254, 226, 226))',
           '--tw-gradient-from': 'rgb(254, 242, 242)',
@@ -328,11 +340,13 @@ export default function CreatorQAProfile() {
           '--tw-gradient-stops': 'var(--tw-gradient-from), var(--tw-gradient-to)'
         };
       case 'pattern1':
+      case 'pattern-1':
         return {
           backgroundImage: 'radial-gradient(circle at 1px 1px, rgb(229, 231, 235) 1px, transparent 0)',
           backgroundSize: '20px 20px',
         };
       case 'pattern2':
+      case 'pattern-2':
         return {
           backgroundImage: 'linear-gradient(to right, rgb(229, 231, 235) 1px, transparent 1px), linear-gradient(to bottom, rgb(229, 231, 235) 1px, transparent 1px)',
           backgroundSize: '20px 20px',
@@ -346,32 +360,46 @@ export default function CreatorQAProfile() {
   const getDarkModeBackgroundStyle = () => {
     if (!creator.profileBackground) return {};
     
-    switch (creator.profileBackground) {
+    // Convertir el formato del fondo para que coincida con las opciones de la interfaz de usuario
+    let backgroundKey = creator.profileBackground;
+    
+    // Convertir de formato gradient-1 a gradient1 si es necesario
+    if (backgroundKey && backgroundKey.includes('-')) {
+      backgroundKey = backgroundKey.replace('-', '');
+    }
+    
+    switch (backgroundKey) {
       case 'gradient1':
+      case 'gradient-1':
         return { 
           '--tw-gradient-from': 'rgb(17, 24, 39)',
           '--tw-gradient-to': 'rgb(31, 41, 55)',
         };
       case 'gradient2':
+      case 'gradient-2':
         return {
           '--tw-gradient-from': 'rgb(30, 58, 138)',
           '--tw-gradient-to': 'rgb(30, 64, 175)',
         };
       case 'gradient3':
+      case 'gradient-3':
         return {
           '--tw-gradient-from': 'rgb(6, 78, 59)',
           '--tw-gradient-to': 'rgb(4, 120, 87)',
         };
       case 'gradient4':
+      case 'gradient-4':
         return {
           '--tw-gradient-from': 'rgb(127, 29, 29)',
           '--tw-gradient-to': 'rgb(153, 27, 27)',
         };
       case 'pattern1':
+      case 'pattern-1':
         return {
           backgroundImage: 'radial-gradient(circle at 1px 1px, rgb(75, 85, 99) 1px, transparent 0)',
         };
       case 'pattern2':
+      case 'pattern-2':
         return {
           backgroundImage: 'linear-gradient(to right, rgb(75, 85, 99) 1px, transparent 1px), linear-gradient(to bottom, rgb(75, 85, 99) 1px, transparent 1px)',
         };
