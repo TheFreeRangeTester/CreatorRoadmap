@@ -30,6 +30,7 @@ interface CreatorPublicPageResponse {
     tiktokUrl?: string | null;
     threadsUrl?: string | null;
     websiteUrl?: string | null;
+    profileBackground?: string;
   };
 }
 
@@ -293,8 +294,108 @@ export default function CreatorQAProfile() {
     );
   };
 
+  // Aplicar el fondo personalizado si está definido
+  const getBackgroundStyle = () => {
+    if (!creator.profileBackground) return {};
+    
+    switch (creator.profileBackground) {
+      case 'gradient1':
+        return { 
+          backgroundImage: 'linear-gradient(to right bottom, var(--tw-gradient-stops))',
+          '--tw-gradient-from': 'rgb(249, 250, 251)',
+          '--tw-gradient-to': 'rgb(243, 244, 246)',
+          '--tw-gradient-stops': 'var(--tw-gradient-from), var(--tw-gradient-to)'
+        };
+      case 'gradient2':
+        return {
+          backgroundImage: 'linear-gradient(to right bottom, rgb(239, 246, 255), rgb(219, 234, 254))',
+          '--tw-gradient-from': 'rgb(239, 246, 255)',
+          '--tw-gradient-to': 'rgb(219, 234, 254)',
+          '--tw-gradient-stops': 'var(--tw-gradient-from), var(--tw-gradient-to)'
+        };
+      case 'gradient3':
+        return {
+          backgroundImage: 'linear-gradient(to right bottom, rgb(236, 253, 245), rgb(209, 250, 229))',
+          '--tw-gradient-from': 'rgb(236, 253, 245)',
+          '--tw-gradient-to': 'rgb(209, 250, 229)',
+          '--tw-gradient-stops': 'var(--tw-gradient-from), var(--tw-gradient-to)'
+        };
+      case 'gradient4':
+        return {
+          backgroundImage: 'linear-gradient(to right bottom, rgb(254, 242, 242), rgb(254, 226, 226))',
+          '--tw-gradient-from': 'rgb(254, 242, 242)',
+          '--tw-gradient-to': 'rgb(254, 226, 226)',
+          '--tw-gradient-stops': 'var(--tw-gradient-from), var(--tw-gradient-to)'
+        };
+      case 'pattern1':
+        return {
+          backgroundImage: 'radial-gradient(circle at 1px 1px, rgb(229, 231, 235) 1px, transparent 0)',
+          backgroundSize: '20px 20px',
+        };
+      case 'pattern2':
+        return {
+          backgroundImage: 'linear-gradient(to right, rgb(229, 231, 235) 1px, transparent 1px), linear-gradient(to bottom, rgb(229, 231, 235) 1px, transparent 1px)',
+          backgroundSize: '20px 20px',
+        };
+      default:
+        return {};
+    }
+  };
+
+  // Compatibilidad con modo oscuro
+  const getDarkModeBackgroundStyle = () => {
+    if (!creator.profileBackground) return {};
+    
+    switch (creator.profileBackground) {
+      case 'gradient1':
+        return { 
+          '--tw-gradient-from': 'rgb(17, 24, 39)',
+          '--tw-gradient-to': 'rgb(31, 41, 55)',
+        };
+      case 'gradient2':
+        return {
+          '--tw-gradient-from': 'rgb(30, 58, 138)',
+          '--tw-gradient-to': 'rgb(30, 64, 175)',
+        };
+      case 'gradient3':
+        return {
+          '--tw-gradient-from': 'rgb(6, 78, 59)',
+          '--tw-gradient-to': 'rgb(4, 120, 87)',
+        };
+      case 'gradient4':
+        return {
+          '--tw-gradient-from': 'rgb(127, 29, 29)',
+          '--tw-gradient-to': 'rgb(153, 27, 27)',
+        };
+      case 'pattern1':
+        return {
+          backgroundImage: 'radial-gradient(circle at 1px 1px, rgb(75, 85, 99) 1px, transparent 0)',
+        };
+      case 'pattern2':
+        return {
+          backgroundImage: 'linear-gradient(to right, rgb(75, 85, 99) 1px, transparent 1px), linear-gradient(to bottom, rgb(75, 85, 99) 1px, transparent 1px)',
+        };
+      default:
+        return {};
+    }
+  };
+
+  // Función para obtener el tema actual
+  const getThemeStyles = () => {
+    if (typeof window === 'undefined') return getBackgroundStyle();
+    
+    // Comprueba si el tema es oscuro
+    if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+      return { ...getBackgroundStyle(), ...getDarkModeBackgroundStyle() };
+    }
+    
+    return getBackgroundStyle();
+  };
+  
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 font-[Inter,system-ui,sans-serif] pb-16">
+    <div 
+      className="min-h-screen bg-gray-50 dark:bg-gray-900 font-[Inter,system-ui,sans-serif] pb-16"
+      style={getThemeStyles()}>
       {/* Header con tema y lenguaje */}
       <div className="absolute top-4 right-4 flex items-center gap-2 z-10">
         <ThemeToggle />
