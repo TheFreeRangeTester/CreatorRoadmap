@@ -203,7 +203,7 @@ export default function CreatorPublicPage() {
   };
 
   return (
-    <div className="container px-4 mx-auto py-8 dark:bg-gray-950 min-h-screen">
+    <div className="container px-4 mx-auto py-8 dark:bg-gray-950 min-h-screen bg-gradient-to-br from-gray-50 to-white dark:from-gray-900 dark:to-gray-950">
       {/* Perfil del creador con información y redes sociales */}
       <CreatorProfileHeader creator={creator} />
       
@@ -270,7 +270,7 @@ export default function CreatorPublicPage() {
         )}
       </div>
       
-      <div className="flex flex-col lg:flex-row gap-4 mb-8">
+      <div className="flex flex-col lg:flex-row gap-4 mb-8 max-w-4xl mx-auto">
         <div className="bg-gradient-to-r from-primary/10 to-blue-500/10 dark:from-primary/5 dark:to-blue-500/5 p-4 rounded-lg flex-1">
           <p className="text-sm text-gray-700 dark:text-gray-300">
             {t('creator.roadmapDescription')}
@@ -290,7 +290,7 @@ export default function CreatorPublicPage() {
           </p>
         </div>
       ) : (
-        <div className="grid grid-cols-1 gap-6">
+        <div className="grid grid-cols-1 gap-6 max-w-3xl mx-auto">
           {ideas.map((idea, index) => (
             <Card 
               key={idea.id} 
