@@ -432,7 +432,7 @@ export default function LandingPage() {
             whileInView="visible"
             viewport={{ once: true, margin: "-100px" }}
             variants={staggerContainer}
-            className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto"
+            className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto"
           >
             <PricingCard 
               name={t('landing.pricing.freePlan.name')}
@@ -450,15 +450,6 @@ export default function LandingPage() {
               features={t('landing.pricing.proPlan.features', { returnObjects: true }) as string[]}
               isPopular={true}
               ctaText={t('landing.pricing.proPlan.ctaText')}
-              freeLabel={t('landing.pricing.freePlan.price')}
-              perMonth={t('landing.pricing.price.perMonth')}
-            />
-            <PricingCard 
-              name={t('landing.pricing.creatorProPlan.name')}
-              price={t('landing.pricing.creatorProPlan.price')}
-              description={t('landing.pricing.creatorProPlan.description')}
-              features={t('landing.pricing.creatorProPlan.features', { returnObjects: true }) as string[]}
-              ctaText={t('landing.pricing.creatorProPlan.ctaText')}
               freeLabel={t('landing.pricing.freePlan.price')}
               perMonth={t('landing.pricing.price.perMonth')}
             />
