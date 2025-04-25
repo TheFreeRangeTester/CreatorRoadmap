@@ -107,17 +107,20 @@ export default function ProfileEditor() {
   function handleSubmit(e: FormEvent) {
     e.preventDefault();
     
-    // Filtrar los campos vacíos para convertirlos en null, excepto profileBackground
-    const filteredData: UpdateProfile = {};
-    Object.entries(profileData).forEach(([key, value]) => {
-      if (key === 'profileBackground') {
-        filteredData[key as keyof UpdateProfile] = value || 'gradient-1';
-      } else {
-        filteredData[key as keyof UpdateProfile] = value || null;
-      }
-    });
+    // Preparar datos para actualizar el perfil
+    const updateData: UpdateProfile = {
+      profileDescription: profileData.profileDescription || undefined,
+      logoUrl: profileData.logoUrl ? profileData.logoUrl : null,
+      twitterUrl: profileData.twitterUrl ? profileData.twitterUrl : null,
+      instagramUrl: profileData.instagramUrl ? profileData.instagramUrl : null,
+      youtubeUrl: profileData.youtubeUrl ? profileData.youtubeUrl : null,
+      tiktokUrl: profileData.tiktokUrl ? profileData.tiktokUrl : null,
+      threadsUrl: profileData.threadsUrl ? profileData.threadsUrl : null,
+      websiteUrl: profileData.websiteUrl ? profileData.websiteUrl : null,
+      profileBackground: profileData.profileBackground || 'gradient-1',
+    };
     
-    updateProfileMutation.mutate(filteredData);
+    updateProfileMutation.mutate(updateData);
   }
   
   function resetForm() {
