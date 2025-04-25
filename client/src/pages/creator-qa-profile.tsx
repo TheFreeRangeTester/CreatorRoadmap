@@ -180,26 +180,93 @@ export default function CreatorQAProfile() {
   const handleShare = () => {
     const shareUrl = `${window.location.origin}/${creator.username}`;
     
-    if (navigator.share) {
-      navigator.share({
-        title: t('share.title', { username: creator.username }),
-        text: t('share.text', { username: creator.username }),
-        url: shareUrl,
-      }).catch((error) => {
-        console.error("Error sharing:", error);
-        copyToClipboard();
-      });
+    // Verificar si la API Web Share está disponible y es seguro usarla
+    if (navigator.share && window.isSecureContext) {
+      try {
+        navigator.share({
+          title: t('share.title', { username: creator.username }),
+          text: t('share.text', { username: creator.username }),
+          url: shareUrl,
+        }).catch((error) => {
+          console.error("Error sharing:", error);
+          copyToClipboard(shareUrl);
+        });
+      } catch (error) {
+        console.error("Error al intentar compartir:", error);
+        copyToClipboard(shareUrl);
+      }
     } else {
-      copyToClipboard();
+      copyToClipboard(shareUrl);
     }
   };
 
-  const copyToClipboard = () => {
-    const shareUrl = `${window.location.origin}/${creator.username}`;
-    navigator.clipboard.writeText(shareUrl);
+  const copyToClipboard = (url: string) => {
+    // Usar un método más seguro para copiar al portapapeles
+    try {
+      // Intenta usar la API moderna de clipboard
+      if (navigator.clipboard && window.isSecureContext) {
+        navigator.clipboard.writeText(url)
+          .then(() => showShareSuccess(url))
+          .catch(err => {
+            console.error("Error al copiar con clipboard API:", err);
+            fallbackCopyToClipboard(url);
+          });
+      } else {
+        fallbackCopyToClipboard(url);
+      }
+    } catch (err) {
+      console.error("Error en copyToClipboard:", err);
+      toast({
+        title: t('common.copyError'),
+        description: t('common.copyErrorDesc'),
+        variant: "destructive",
+      });
+    }
+  };
+  
+  // Método alternativo para navegadores que no soportan clipboard API
+  const fallbackCopyToClipboard = (url: string) => {
+    try {
+      // Crear un elemento textarea temporal
+      const textArea = document.createElement("textarea");
+      textArea.value = url;
+      
+      // Evitar el desplazamiento
+      textArea.style.top = "0";
+      textArea.style.left = "0";
+      textArea.style.position = "fixed";
+      
+      document.body.appendChild(textArea);
+      textArea.focus();
+      textArea.select();
+      
+      // Ejecutar el comando de copia
+      const successful = document.execCommand('copy');
+      
+      // Limpiar
+      document.body.removeChild(textArea);
+      
+      if (successful) {
+        showShareSuccess(url);
+      } else {
+        throw new Error("No se pudo copiar utilizando execCommand");
+      }
+    } catch (err) {
+      console.error("Error en fallbackCopyToClipboard:", err);
+      toast({
+        title: t('common.copyError'),
+        description: t('common.copyManualDesc', { url }),
+        variant: "destructive",
+      });
+    }
+  };
+  
+  // Mostrar mensaje de éxito cuando se copia la URL
+  const showShareSuccess = (url: string) => {
     toast({
       title: t('common.copySuccess'),
-      description: t('common.copyDesc', { url: shareUrl }),
+      description: t('common.copyDesc', { url }),
+      className: "bg-gradient-to-r from-blue-50 to-indigo-50 border-blue-200 dark:from-blue-900/30 dark:to-indigo-900/30 dark:border-blue-800",
     });
   };
 
