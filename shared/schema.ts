@@ -140,15 +140,15 @@ export const publicLinkResponseSchema = z.object({
 
 // Schema para actualizar el perfil del usuario
 export const updateProfileSchema = z.object({
-  profileDescription: z.string().max(500, { message: "La descripción debe tener 500 caracteres o menos" }).optional(),
+  profileDescription: z.string().max(500, { message: "La descripción debe tener 500 caracteres o menos" }).optional().nullable(),
   logoUrl: z.string().url({ message: "Debe ser una URL válida" }).optional().nullable(),
   twitterUrl: z.string().url({ message: "Debe ser una URL válida" }).optional().nullable(),
   instagramUrl: z.string().url({ message: "Debe ser una URL válida" }).optional().nullable(),
   youtubeUrl: z.string().url({ message: "Debe ser una URL válida" }).optional().nullable(),
-  tiktokUrl: z.string().url({ message: "Debe ser una URL válida" }).optional().nullable(),
+  tiktokUrl: z.string().url({ message: "Debe ser una URL válida" }).optional().nullable(), 
   threadsUrl: z.string().url({ message: "Debe ser una URL válida" }).optional().nullable(),
   websiteUrl: z.string().url({ message: "Debe ser una URL válida" }).optional().nullable(),
-  profileBackground: z.string().optional(),
+  profileBackground: z.string().optional().nullable(),
 });
 
 // Types
