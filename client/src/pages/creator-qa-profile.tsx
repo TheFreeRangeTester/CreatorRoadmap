@@ -370,39 +370,57 @@ export default function CreatorQAProfile() {
                 <CardFooter className="border-t dark:border-gray-700 p-3 flex justify-end">
                   {user ? (
                     votedIdeas.has(idea.id) ? (
-                      <Button 
-                        size="sm" 
-                        disabled 
-                        className="bg-green-500 hover:bg-green-500 text-white dark:text-white"
+                      <motion.div
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.95 }}
                       >
-                        <ThumbsUp className="h-4 w-4 mr-2" />
-                        Votado
-                      </Button>
-                    ) : (
-                      <Button
-                        size="sm"
-                        className="bg-green-500 hover:bg-green-600 text-white"
-                        onClick={() => handleVote(idea.id)}
-                        disabled={isVoting[idea.id]}
-                      >
-                        {isVoting[idea.id] ? (
-                          <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                        ) : (
+                        <Button 
+                          size="sm" 
+                          disabled 
+                          className="bg-gradient-to-r from-green-400 to-emerald-500 hover:from-green-500 hover:to-emerald-600 text-white shadow-md transition-all duration-300 ring-2 ring-green-200 dark:ring-green-800 pulse-success"
+                        >
                           <ThumbsUp className="h-4 w-4 mr-2" />
-                        )}
-                        Votar
-                      </Button>
+                          Votado
+                        </Button>
+                      </motion.div>
+                    ) : (
+                      <motion.div
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.9 }}
+                      >
+                        <Button
+                          size="sm"
+                          className={`${successVote === idea.id 
+                            ? 'bg-gradient-to-r from-green-400 to-emerald-500 shadow-lg scale-105 pulse-success' 
+                            : 'bg-blue-500 hover:bg-blue-600'} 
+                            text-white transition-all duration-300 shadow-md`}
+                          onClick={() => handleVote(idea.id)}
+                          disabled={isVoting[idea.id]}
+                        >
+                          {isVoting[idea.id] ? (
+                            <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                          ) : (
+                            <ThumbsUp className="h-4 w-4 mr-2" />
+                          )}
+                          Votar
+                        </Button>
+                      </motion.div>
                     )
                   ) : (
                     <Link href="/auth">
-                      <Button 
-                        variant="outline" 
-                        size="sm"
-                        className="border-dashed"
+                      <motion.div
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.95 }}
                       >
-                        <UserPlus className="h-4 w-4 mr-2" />
-                        Regístrate para votar
-                      </Button>
+                        <Button 
+                          variant="outline" 
+                          size="sm"
+                          className="border-dashed border-gray-300 dark:border-gray-600 hover:bg-primary/10 dark:hover:bg-primary-900/20 transition-all duration-300 hover:border-primary/50 dark:hover:border-primary-400/50 float-animation"
+                        >
+                          <UserPlus className="h-4 w-4 mr-2" />
+                          Regístrate para votar
+                        </Button>
+                      </motion.div>
                     </Link>
                   )}
                 </CardFooter>
