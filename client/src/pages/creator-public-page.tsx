@@ -225,321 +225,303 @@ export default function CreatorPublicPage() {
 
   return (
     <div className="min-h-screen dark:bg-gray-950">
-  <div className="bg-white dark:bg-gray-900 py-8">
-    <div className="container px-4 mx-auto">
-      {/* Perfil del creador con información y redes sociales */}
-      <CreatorProfileHeader creator={creator} />
-      
-      {/* Controles de utilidad */}
-      <div className="flex items-center justify-end gap-2 mb-6">
-      {/* Perfil del creador con información y redes sociales */}
-      <CreatorProfileHeader creator={creator} />
-      
-      {/* Controles de utilidad */}
-      <div className="flex items-center justify-end gap-2 mb-6">
-        <motion.div
-          whileHover={{ scale: 1.1, rotate: 15 }}
-          whileTap={{ scale: 0.9 }}
-        >
-          <Button 
-            variant="ghost" 
-            onClick={() => refetch()} 
-            aria-label="Refresh leaderboard" 
-            className="flex items-center dark:text-gray-300 dark:hover:text-white"
-          >
-            <motion.span
-              animate={{ rotate: 360 }}
-              transition={{ 
-                duration: 1, 
-                ease: "linear", 
-                repeat: 0
-              }}
-              className="inline-block"
+      <div className="bg-white dark:bg-gray-900 py-8">
+        <div className="container px-4 mx-auto">
+          {/* Perfil del creador con información y redes sociales */}
+          <CreatorProfileHeader creator={creator} />
+          
+          {/* Controles de utilidad */}
+          <div className="flex items-center justify-end gap-2 mb-6">
+            <motion.div
+              whileHover={{ scale: 1.1, rotate: 15 }}
+              whileTap={{ scale: 0.9 }}
             >
-              <RefreshCcw className="h-4 w-4" />
-            </motion.span>
-          </Button>
-        </motion.div>
-        
-        <motion.div
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
-        >
-          <Button 
-            onClick={handleShare} 
-            variant="outline" 
-            className="flex items-center gap-2 dark:text-gray-300 dark:border-gray-700 dark:hover:text-white"
-          >
-            <motion.span
-              whileHover={{ 
-                rotate: [0, 15, -15, 0],
-                transition: { duration: 0.5 }
-              }}
-              className="inline-block"
+              <Button 
+                variant="ghost" 
+                onClick={() => refetch()} 
+                aria-label="Refresh leaderboard" 
+                className="flex items-center dark:text-gray-300 dark:hover:text-white"
+              >
+                <motion.span
+                  animate={{ rotate: 360 }}
+                  transition={{ 
+                    duration: 1, 
+                    ease: "linear", 
+                    repeat: 0
+                  }}
+                  className="inline-block"
+                >
+                  <RefreshCcw className="h-4 w-4" />
+                </motion.span>
+              </Button>
+            </motion.div>
+            
+            <motion.div
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
             >
-              <Share2 className="h-4 w-4" />
-            </motion.span>
-            {t('common.share')}
-          </Button>
-        </motion.div>
-        <ThemeToggle />
-        <LanguageToggle />
-        {user ? (
-          <Badge variant="outline" className="bg-blue-50 text-blue-700 border-blue-200 dark:bg-blue-900/20 dark:text-blue-300 dark:border-blue-800/50 px-3 py-1 transition-all duration-300 hover:shadow-md hover:-translate-y-0.5">
-            <User className="h-3.5 w-3.5 mr-1.5 text-blue-500 dark:text-blue-400" />
-            <span className="font-medium">{user.username}</span>
-          </Badge>
-        ) : (
-          <Link href="/auth">
-            <Button size="sm" variant="default" className="text-xs">
-              {t('common.login')}
-            </Button>
-          </Link>
-        )}
-      </div>
-    </div>
-  </div>
-  
-  <div className={`py-8 ${getBackgroundClass()}`}>
-    <div className="container px-4 mx-auto">
-      <div className="flex flex-col lg:flex-row gap-4 mb-8 max-w-4xl mx-auto">
-        <div className="bg-gradient-to-r from-primary/10 to-blue-500/10 dark:from-primary/5 dark:to-blue-500/5 p-4 rounded-lg flex-1">
-          <p className="text-sm text-gray-700 dark:text-gray-300">
-            {t('creator.roadmapDescription')}
-          </p>
+              <Button 
+                onClick={handleShare} 
+                variant="outline" 
+                className="flex items-center gap-2 dark:text-gray-300 dark:border-gray-700 dark:hover:text-white"
+              >
+                <motion.span
+                  whileHover={{ 
+                    rotate: [0, 15, -15, 0],
+                    transition: { duration: 0.5 }
+                  }}
+                  className="inline-block"
+                >
+                  <Share2 className="h-4 w-4" />
+                </motion.span>
+                {t('common.share')}
+              </Button>
+            </motion.div>
+            <ThemeToggle />
+            <LanguageToggle />
+            {user ? (
+              <Badge variant="outline" className="bg-blue-50 text-blue-700 border-blue-200 dark:bg-blue-900/20 dark:text-blue-300 dark:border-blue-800/50 px-3 py-1 transition-all duration-300 hover:shadow-md hover:-translate-y-0.5">
+                <User className="h-3.5 w-3.5 mr-1.5 text-blue-500 dark:text-blue-400" />
+                <span className="font-medium">{user.username}</span>
+              </Badge>
+            ) : (
+              <Link href="/auth">
+                <Button size="sm" variant="default" className="text-xs">
+                  {t('common.login')}
+                </Button>
+              </Link>
+            )}
+          </div>
         </div>
-        
-        {user && (
-          <SuggestIdeaDialog username={creator.username} refetch={refetch} />
-        )}
       </div>
+      
+      <div className={`py-8 ${getBackgroundClass()}`}>
+        <div className="container px-4 mx-auto">
+          <div className="flex flex-col lg:flex-row gap-4 mb-8 max-w-4xl mx-auto">
+            <div className="bg-gradient-to-r from-primary/10 to-blue-500/10 dark:from-primary/5 dark:to-blue-500/5 p-4 rounded-lg flex-1">
+              <p className="text-sm text-gray-700 dark:text-gray-300">
+                {t('creator.roadmapDescription')}
+              </p>
+            </div>
+            
+            {user && (
+              <SuggestIdeaDialog username={creator.username} refetch={refetch} />
+            )}
+          </div>
 
-      {ideas.length === 0 ? (
-        <div className="text-center py-12">
-          <h2 className="text-2xl font-semibold dark:text-white">{t('creator.noIdeasYet')}</h2>
-          <p className="text-muted-foreground dark:text-gray-400 mt-2">
-            {t('creator.noIdeasDescription')}
-          </p>
-        </div>
-      ) : (
-        <div className="grid grid-cols-1 gap-6 max-w-3xl mx-auto">
-          {ideas.map((idea, index) => (
-            <Card 
-              key={idea.id} 
-              className={`overflow-hidden border-l-4 group cursor-pointer ${
-                idea.position.current === 1 
-                  ? "border-l-yellow-400 dark:border-l-yellow-600" 
-                  : idea.position.current === 2
-                    ? "border-l-gray-400 dark:border-l-gray-500"
-                    : idea.position.current === 3
-                      ? "border-l-amber-600 dark:border-l-amber-700"
-                      : "border-l-transparent"
-              } dark:bg-gray-800/90 dark:border-gray-700 transition-all duration-300 hover:shadow-xl hover:-translate-y-1 hover:bg-gray-50/50 dark:hover:bg-gray-700/70`}
-            >
-              <CardHeader className="bg-muted/20 dark:bg-gray-800/50 pb-2 border-b border-gray-100 dark:border-gray-700">
-                <div className="flex justify-between items-start">
-                  <div className="flex items-center">
-                    {idea.position.current && idea.position.current <= 3 && (
-                      <div 
-                        className={`w-6 h-6 rounded-full flex items-center justify-center mr-3 text-xs font-bold transform transition-all duration-300 shadow-md group-hover:scale-110 ${
-                          idea.position.current === 1 
-                            ? "bg-yellow-400 text-yellow-900 dark:bg-yellow-600 dark:text-yellow-100 group-hover:shadow-yellow-300/50 dark:group-hover:shadow-yellow-500/30 group-hover:rotate-3" 
-                            : idea.position.current === 2
-                              ? "bg-gray-400 text-gray-900 dark:bg-gray-500 dark:text-gray-100 group-hover:shadow-gray-300/50 dark:group-hover:shadow-gray-400/30 group-hover:-rotate-3"
-                              : "bg-amber-600 text-amber-100 dark:bg-amber-700 group-hover:shadow-amber-300/50 dark:group-hover:shadow-amber-600/30 group-hover:rotate-3"
-                        }`}
-                      >
-                        {idea.position.current}
-                      </div>
-                    )}
-                    <CardTitle className="dark:text-white transition-all duration-300 group-hover:text-primary group-hover:translate-x-0.5">{idea.title}</CardTitle>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    {idea.position.current && idea.position.current > 3 && (
-                      <Badge variant="outline" className="text-xs dark:border-gray-600 dark:text-gray-300">
-                        #{idea.position.current}
-                      </Badge>
-                    )}
-                    {(() => {
-                      const { previous, change } = idea.position;
-                      
-                      // Determinar la clase de estilo con soporte para dark mode
-                      let badgeClass = "text-xs ";
-                      if (previous === null) {
-                        badgeClass += "bg-primary-100 text-primary-800 dark:bg-primary-900/50 dark:text-primary-300 hover:bg-primary-100 hover:text-primary-800 dark:hover:bg-primary-900/70 dark:hover:text-primary-300";
-                      } else if (change !== null && change > 0) {
-                        badgeClass += "bg-green-100 text-green-800 dark:bg-green-900/50 dark:text-green-300 hover:bg-green-100 hover:text-green-800 dark:hover:bg-green-900/70 dark:hover:text-green-300";
-                      } else if (change !== null && change < 0) {
-                        badgeClass += "bg-red-100 text-red-800 dark:bg-red-900/50 dark:text-red-300 hover:bg-red-100 hover:text-red-800 dark:hover:bg-red-900/70 dark:hover:text-red-300";
-                      } else {
-                        badgeClass += "bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300 hover:bg-gray-100 hover:text-gray-800 dark:hover:bg-gray-700 dark:hover:text-gray-300";
-                      }
-                      
-                      // Determinar el texto a mostrar
-                      let badgeText = t('badges.same');
-                      if (previous === null) {
-                        badgeText = t('badges.new');
-                      } else if (change !== null) {
-                        if (change > 0) {
-                          badgeText = t('badges.up', { change });
-                        } else if (change < 0) {
-                          badgeText = t('badges.down', { change: Math.abs(change) });
-                        }
-                      }
-                      
-                      return (
-                        <Badge className={cn(badgeClass)}>
-                          {badgeText}
-                        </Badge>
-                      );
-                    })()}
-                  </div>
-                </div>
-              </CardHeader>
-              <CardContent className="pt-4">
-                <p className="text-sm text-gray-600 dark:text-gray-300 mb-4 transition-all duration-300 group-hover:text-gray-800 dark:group-hover:text-gray-200">{idea.description}</p>
-                <div className="flex justify-between items-center mt-4">
-                  <div className="flex items-center gap-2">
-                    <div className="bg-muted/30 dark:bg-gray-700/50 rounded-full px-3 py-1 flex items-center transition-all duration-300 group-hover:shadow-md group-hover:bg-muted/60 dark:group-hover:bg-gray-700/80">
-                      <ThumbsUp className="h-4 w-4 text-primary dark:text-primary-400 mr-2 transition-transform duration-300 group-hover:scale-110 group-hover:text-primary-600 dark:group-hover:text-primary-300" />
-                      <span className="text-sm font-medium dark:text-gray-300 transition-all duration-300 group-hover:font-semibold">
-                        <span className="transition-all duration-300 group-hover:text-primary dark:group-hover:text-primary-300">{idea.votes}</span> {t('common.votes')}
-                      </span>
-                    </div>
-                  </div>
-                  {user ? (
-                    votedIdeas.has(idea.id) ? (
-                      <motion.div
-                        whileHover={{ scale: 1.05 }}
-                        whileTap={{ scale: 0.95 }}
-                        className="relative"
-                      >
-                        <Button 
-                          size="sm" 
-                          disabled={true}
-                          className="bg-green-500 dark:bg-green-600 hover:bg-green-500 dark:hover:bg-green-600 dark:text-white transition-all duration-300 opacity-90 hover:opacity-100 shadow-sm hover:shadow-md group-hover:shadow-green-400/20"
-                        >
-                          <motion.span
-                            whileHover={{ rotate: 15 }}
-                            className="inline-block mr-2"
+          {ideas.length === 0 ? (
+            <div className="text-center py-12">
+              <h2 className="text-2xl font-semibold dark:text-white">{t('creator.noIdeasYet')}</h2>
+              <p className="text-muted-foreground dark:text-gray-400 mt-2">
+                {t('creator.noIdeasDescription')}
+              </p>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 gap-6 max-w-3xl mx-auto">
+              {ideas.map((idea, index) => (
+                <Card 
+                  key={idea.id} 
+                  className={`overflow-hidden border-l-4 group cursor-pointer ${
+                    idea.position.current === 1 
+                      ? "border-l-yellow-400 dark:border-l-yellow-600" 
+                      : idea.position.current === 2
+                        ? "border-l-gray-400 dark:border-l-gray-500"
+                        : idea.position.current === 3
+                          ? "border-l-amber-600 dark:border-l-amber-700"
+                          : "border-l-transparent"
+                  } dark:bg-gray-800/90 dark:border-gray-700 transition-all duration-300 hover:shadow-xl hover:-translate-y-1 hover:bg-gray-50/50 dark:hover:bg-gray-700/70`}
+                >
+                  <CardHeader className="bg-muted/20 dark:bg-gray-800/50 pb-2 border-b border-gray-100 dark:border-gray-700">
+                    <div className="flex justify-between items-start">
+                      <div className="flex items-center">
+                        {idea.position.current && idea.position.current <= 3 && (
+                          <div 
+                            className={`w-6 h-6 rounded-full flex items-center justify-center mr-3 text-xs font-bold transform transition-all duration-300 shadow-md group-hover:scale-110 ${
+                              idea.position.current === 1 
+                                ? "bg-yellow-400 text-yellow-900 dark:bg-yellow-600 dark:text-yellow-100 group-hover:shadow-yellow-300/50 dark:group-hover:shadow-yellow-500/30 group-hover:rotate-3" 
+                                : idea.position.current === 2
+                                  ? "bg-gray-400 text-gray-900 dark:bg-gray-500 dark:text-gray-100 group-hover:shadow-gray-300/50 dark:group-hover:shadow-gray-400/30 group-hover:-rotate-3"
+                                  : "bg-amber-600 text-amber-100 dark:bg-amber-700 group-hover:shadow-amber-300/50 dark:group-hover:shadow-amber-600/30 group-hover:rotate-3"
+                            }`}
                           >
-                            <ThumbsUp className="h-4 w-4 text-white" />
-                          </motion.span>
-                          {t('creator.voted')}
-                        </Button>
-                      </motion.div>
-                    ) : (
-                      <motion.div
-                        whileHover={{ scale: 1.05 }}
-                        whileTap={{ scale: 0.95 }}
-                        className="relative"
-                      >
-                        <Button 
-                          size="sm" 
-                          onClick={() => handleVote(idea.id)}
-                          disabled={isVoting[idea.id] || successVote === idea.id}
-                          className={`transition-all duration-300 shadow-sm hover:shadow-md ${
-                            successVote === idea.id 
-                              ? "bg-green-500 hover:bg-green-600 dark:text-white shadow-green-400/20" 
-                              : "bg-gradient-to-r from-primary to-blue-600 hover:from-primary/90 hover:to-blue-700 dark:text-white hover:shadow-primary/20 active:translate-y-0"
-                          }`}
-                        >
-                          {isVoting[idea.id] ? (
-                            <>
-                              <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                              {t('common.voting')}
-                            </>
-                          ) : successVote === idea.id ? (
-                            <motion.div 
-                              className="flex items-center"
-                              animate={{ 
-                                scale: [1, 1.2, 1],
-                                transition: { duration: 0.5, repeat: 2 }
-                              }}
-                            >
-                              <motion.div
-                                animate={{ 
-                                  rotate: [0, 10, 0, -10, 0],
-                                  transition: { duration: 0.5, repeat: 3 }
-                                }}
-                                className="mr-2"
-                              >
-                                <ThumbsUp className="h-4 w-4" />
-                              </motion.div>
-                              <span>{t('creator.votedSuccess')}</span>
-                            </motion.div>
-                          ) : (
-                            <div className="flex items-center">
-                              <motion.div
-                                whileHover={{ rotate: 15, scale: 1.2 }}
-                                transition={{ type: "spring", stiffness: 300 }}
-                                className="mr-2"
-                              >
-                                <ThumbsUp className="h-4 w-4" />
-                              </motion.div>
-                              <span>{t('common.vote')}</span>
-                            </div>
-                          )}
-                        </Button>
-                        
-                        {/* Confetti animation when voting success */}
-                        {successVote === idea.id && (
-                          <motion.div 
-                            className="absolute inset-0 pointer-events-none overflow-hidden"
-                            initial={{ opacity: 0 }}
-                            animate={{ opacity: 1 }}
-                            exit={{ opacity: 0 }}
-                          >
-                            {[...Array(12)].map((_, i) => (
-                              <motion.div
-                                key={i}
-                                className={`absolute rounded-full h-1.5 w-1.5 opacity-80 ${
-                                  ['bg-primary', 'bg-blue-400', 'bg-green-400', 'bg-yellow-400', 'bg-pink-400'][i % 5]
-                                }`}
-                                initial={{ 
-                                  x: "50%", 
-                                  y: "50%",
-                                  scale: 0
-                                }}
-                                animate={{ 
-                                  x: `${50 + (Math.random() * 80 - 40)}%`, 
-                                  y: `${50 + (Math.random() * 80 - 40)}%`,
-                                  scale: [0, 1, 0.5],
-                                  opacity: [0, 1, 0]
-                                }}
-                                transition={{
-                                  duration: 0.6 + Math.random() * 0.2,
-                                  ease: [0.23, 1, 0.32, 1]
-                                }}
-                              />
-                            ))}
-                          </motion.div>
+                            {idea.position.current}
+                          </div>
                         )}
-                      </motion.div>
-                    )
-                  ) : (
-                    <Link href="/auth">
-                      <motion.div
-                        whileHover={{ scale: 1.05 }}
-                        whileTap={{ scale: 0.95 }}
-                      >
-                        <Button 
-                          variant="outline"
-                          size="sm"
-                          className="w-full border-dashed bg-muted/50 hover:bg-muted hover:border-primary/50 transition-all duration-300 hover:shadow-sm dark:hover:border-primary-400/50"
-                        >
-                          <UserPlus className="h-3.5 w-3.5 mr-1.5 text-gray-500 dark:text-gray-400 transition-all duration-300 group-hover:text-primary dark:group-hover:text-primary-400" />
-                          <span className="text-xs text-gray-600 dark:text-gray-400 transition-all duration-300 group-hover:text-primary/80 dark:group-hover:text-primary-400/80">{t('login.requiredToVote')}</span>
-                        </Button>
-                      </motion.div>
-                    </Link>
-                  )}
-                </div>
-              </CardContent>
-            </Card>
-          ))}
+                        <CardTitle className="dark:text-white transition-all duration-300 group-hover:text-primary group-hover:translate-x-0.5">{idea.title}</CardTitle>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        {idea.position.current && idea.position.current > 3 && (
+                          <Badge variant="outline" className="text-xs dark:border-gray-600 dark:text-gray-300">
+                            #{idea.position.current}
+                          </Badge>
+                        )}
+                        {(() => {
+                          const { previous, change } = idea.position;
+                          
+                          // Determinar la clase de estilo con soporte para dark mode
+                          let badgeClass = "text-xs ";
+                          if (previous === null) {
+                            badgeClass += "bg-primary-100 text-primary-800 dark:bg-primary-900/50 dark:text-primary-300 hover:bg-primary-100 hover:text-primary-800 dark:hover:bg-primary-900/70 dark:hover:text-primary-300";
+                          } else if (change !== null && change > 0) {
+                            badgeClass += "bg-green-100 text-green-800 dark:bg-green-900/50 dark:text-green-300 hover:bg-green-100 hover:text-green-800 dark:hover:bg-green-900/70 dark:hover:text-green-300";
+                          } else if (change !== null && change < 0) {
+                            badgeClass += "bg-red-100 text-red-800 dark:bg-red-900/50 dark:text-red-300 hover:bg-red-100 hover:text-red-800 dark:hover:bg-red-900/70 dark:hover:text-red-300";
+                          } else {
+                            badgeClass += "bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300 hover:bg-gray-100 hover:text-gray-800 dark:hover:bg-gray-700 dark:hover:text-gray-300";
+                          }
+                          
+                          // Determinar el texto a mostrar
+                          let badgeText = t('badges.same');
+                          if (previous === null) {
+                            badgeText = t('badges.new');
+                          } else if (change !== null) {
+                            if (change > 0) {
+                              badgeText = t('badges.up', { change });
+                            } else if (change < 0) {
+                              badgeText = t('badges.down', { change: Math.abs(change) });
+                            }
+                          }
+                          
+                          return (
+                            <Badge className={cn(badgeClass)}>
+                              {badgeText}
+                            </Badge>
+                          );
+                        })()}
+                      </div>
+                    </div>
+                  </CardHeader>
+                  <CardContent className="pt-4">
+                    <p className="text-sm text-gray-600 dark:text-gray-300 mb-4 transition-all duration-300 group-hover:text-gray-800 dark:group-hover:text-gray-200">{idea.description}</p>
+                    <div className="flex justify-between items-center mt-4">
+                      <div className="flex items-center gap-2">
+                        <div className="bg-muted/30 dark:bg-gray-700/50 rounded-full px-3 py-1 flex items-center transition-all duration-300 group-hover:shadow-md group-hover:bg-muted/60 dark:group-hover:bg-gray-700/80">
+                          <ThumbsUp className="h-4 w-4 text-primary dark:text-primary-400 mr-2 transition-transform duration-300 group-hover:scale-110 group-hover:text-primary-600 dark:group-hover:text-primary-300" />
+                          <span className="text-sm font-medium dark:text-gray-300 transition-all duration-300 group-hover:font-semibold">
+                            <span className="transition-all duration-300 group-hover:text-primary dark:group-hover:text-primary-300">{idea.votes}</span> {t('common.votes')}
+                          </span>
+                        </div>
+                      </div>
+                      {user ? (
+                        votedIdeas.has(idea.id) ? (
+                          <motion.div
+                            whileHover={{ scale: 1.05 }}
+                            whileTap={{ scale: 0.95 }}
+                            className="relative"
+                          >
+                            <Button 
+                              size="sm" 
+                              disabled={true}
+                              className="bg-green-500 dark:bg-green-600 hover:bg-green-500 dark:hover:bg-green-600 dark:text-white transition-all duration-300 opacity-90 hover:opacity-100 shadow-sm hover:shadow-md group-hover:shadow-green-400/20"
+                            >
+                              <motion.span
+                                whileHover={{ rotate: 15 }}
+                                className="inline-block mr-2"
+                              >
+                                <ThumbsUp className="h-4 w-4 text-white" />
+                              </motion.span>
+                              {t('creator.voted')}
+                            </Button>
+                          </motion.div>
+                        ) : (
+                          <motion.div
+                            whileHover={{ scale: 1.05 }}
+                            whileTap={{ scale: 0.95 }}
+                            className="relative"
+                          >
+                            <Button 
+                              size="sm" 
+                              onClick={() => handleVote(idea.id)}
+                              disabled={isVoting[idea.id] || successVote === idea.id}
+                              className={`transition-all duration-300 shadow-sm hover:shadow-md ${
+                                successVote === idea.id 
+                                  ? "bg-green-500 hover:bg-green-600 dark:text-white shadow-green-400/20" 
+                                  : "bg-gradient-to-r from-primary to-blue-600 hover:from-primary/90 hover:to-blue-700 dark:text-white hover:shadow-primary/20 active:translate-y-0"
+                              }`}
+                            >
+                              {isVoting[idea.id] ? (
+                                <>
+                                  <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                                  {t('common.voting')}
+                                </>
+                              ) : successVote === idea.id ? (
+                                <motion.div 
+                                  className="flex items-center"
+                                  animate={{ 
+                                    scale: [1, 1.2, 1],
+                                    transition: { duration: 0.5, repeat: 2 }
+                                  }}
+                                >
+                                  <motion.div
+                                    animate={{ 
+                                      rotate: [0, 15, 0, 15, 0],
+                                      transition: { duration: 0.5, repeat: 2 }
+                                    }}
+                                    className="inline-block mr-2"
+                                  >
+                                    <ThumbsUp className="h-4 w-4 text-white" />
+                                  </motion.div>
+                                  {t('creator.voted')}
+                                  
+                                  {/* Emoji explosion */}
+                                  <AnimatePresence>
+                                    {Array.from({ length: 8 }).map((_, i) => (
+                                      <motion.div
+                                        key={i}
+                                        className="absolute text-sm" 
+                                        initial={{ 
+                                          x: "50%", 
+                                          y: "50%",
+                                          scale: 0
+                                        }}
+                                        animate={{ 
+                                          x: `${50 + (Math.random() * 80 - 40)}%`, 
+                                          y: `${50 + (Math.random() * 80 - 40)}%`,
+                                          scale: [0, 1, 0.5],
+                                          opacity: [0, 1, 0]
+                                        }}
+                                        transition={{
+                                          duration: 0.6 + Math.random() * 0.2,
+                                          ease: [0.23, 1, 0.32, 1]
+                                        }}
+                                      />
+                                    ))}
+                                  </AnimatePresence>
+                                </motion.div>
+                              ) : (
+                                <>
+                                  <ThumbsUp className="h-4 w-4 mr-2" />
+                                  {t('creator.vote')}
+                                </>
+                              )}
+                            </Button>
+                          </motion.div>
+                        )
+                      ) : (
+                        <Link href="/auth">
+                          <motion.div
+                            whileHover={{ scale: 1.05 }}
+                            whileTap={{ scale: 0.95 }}
+                          >
+                            <Button 
+                              variant="outline"
+                              size="sm"
+                              className="w-full border-dashed bg-muted/50 hover:bg-muted hover:border-primary/50 transition-all duration-300 hover:shadow-sm dark:hover:border-primary-400/50"
+                            >
+                              <UserPlus className="h-3.5 w-3.5 mr-1.5 text-gray-500 dark:text-gray-400 transition-all duration-300 group-hover:text-primary dark:group-hover:text-primary-400" />
+                              <span className="text-xs text-gray-600 dark:text-gray-400 transition-all duration-300 group-hover:text-primary/80 dark:group-hover:text-primary-400/80">{t('login.requiredToVote')}</span>
+                            </Button>
+                          </motion.div>
+                        </Link>
+                      )}
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          )}
         </div>
-      )}
+      </div>
     </div>
   );
 }
