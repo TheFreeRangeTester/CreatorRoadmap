@@ -28,7 +28,9 @@ interface CreatorPublicPageResponse {
     instagramUrl?: string | null;
     youtubeUrl?: string | null;
     tiktokUrl?: string | null;
+    threadsUrl?: string | null;
     websiteUrl?: string | null;
+    profileBackground?: string;
   };
 }
 
@@ -202,8 +204,27 @@ export default function CreatorPublicPage() {
     });
   };
 
+  // Función para obtener la clase CSS del fondo basada en el profileBackground
+  const getBackgroundClass = () => {
+    if (!creator.profileBackground || creator.profileBackground === "gradient-1") {
+      return "bg-gradient-to-br from-gray-50 to-white dark:from-gray-900 dark:to-gray-950";
+    } else if (creator.profileBackground === "gradient-2") {
+      return "bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-blue-950/30 dark:to-indigo-950/30";
+    } else if (creator.profileBackground === "gradient-3") {
+      return "bg-gradient-to-br from-green-50 to-teal-50 dark:from-green-950/30 dark:to-teal-950/30";
+    } else if (creator.profileBackground === "gradient-4") {
+      return "bg-gradient-to-br from-rose-50 to-orange-50 dark:from-rose-950/30 dark:to-orange-950/30";
+    } else if (creator.profileBackground === "pattern-1") {
+      return "bg-gray-50 dark:bg-gray-900 bg-[radial-gradient(circle_at_1px_1px,gray_1px,transparent_0)] bg-[size:20px_20px]";
+    } else if (creator.profileBackground === "pattern-2") {
+      return "bg-gray-50 dark:bg-gray-900 bg-[linear-gradient(gray_1px,transparent_1px),linear-gradient(to_right,gray_1px,transparent_1px)] bg-[size:20px_20px]";
+    }
+    // Por defecto, devolvemos el gradient-1
+    return "bg-gradient-to-br from-gray-50 to-white dark:from-gray-900 dark:to-gray-950";
+  };
+
   return (
-    <div className="container px-4 mx-auto py-8 dark:bg-gray-950 min-h-screen bg-gradient-to-br from-gray-50 to-white dark:from-gray-900 dark:to-gray-950">
+    <div className={`container px-4 mx-auto py-8 dark:bg-gray-950 min-h-screen ${getBackgroundClass()}`}>
       {/* Perfil del creador con información y redes sociales */}
       <CreatorProfileHeader creator={creator} />
       
