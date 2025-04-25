@@ -312,15 +312,26 @@ export default function CreatorQAProfile() {
         ) : (
           <div className="grid grid-cols-1 gap-4">
             {sortedIdeas.map((idea, index) => (
-              <Card 
-                key={idea.id} 
-                className={`overflow-hidden transition-all duration-300 hover:shadow-lg ${
-                  index < 3 ? 'border-l-4 ' + (
-                    index === 0 ? 'border-l-yellow-500' : 
-                    index === 1 ? 'border-l-gray-400' : 'border-l-amber-600'
-                  ) : ''
-                }`}
+              <motion.div
+                key={idea.id}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ 
+                  duration: 0.4, 
+                  delay: index * 0.1,
+                  ease: [0.25, 0.1, 0.25, 1.0]
+                }}
+                whileHover={{ scale: 1.02 }}
+                className="will-change-transform"
               >
+                <Card 
+                  className={`overflow-hidden transition-all duration-300 hover:shadow-lg ${
+                    index < 3 ? 'border-l-4 ' + (
+                      index === 0 ? 'border-l-yellow-500' : 
+                      index === 1 ? 'border-l-gray-400' : 'border-l-amber-600'
+                    ) : ''
+                  }`}
+                >
                 <CardContent className="p-0">
                   <div className="flex p-4">
                     <div className="flex-shrink-0 w-16 sm:w-20 flex flex-col items-center justify-center mr-4 border-r dark:border-gray-700">
@@ -396,6 +407,7 @@ export default function CreatorQAProfile() {
                   )}
                 </CardFooter>
               </Card>
+              </motion.div>
             ))}
           </div>
         )}
