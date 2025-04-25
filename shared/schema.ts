@@ -12,7 +12,9 @@ export const users = pgTable("users", {
   instagramUrl: text("instagram_url"),
   youtubeUrl: text("youtube_url"),
   tiktokUrl: text("tiktok_url"),
+  threadsUrl: text("threads_url"),
   websiteUrl: text("website_url"),
+  profileBackground: text("profile_background").default("gradient-1"),
 });
 
 export const ideas = pgTable("ideas", {
@@ -63,7 +65,9 @@ export const userResponseSchema = z.object({
   instagramUrl: z.string().nullable().optional(),
   youtubeUrl: z.string().nullable().optional(),
   tiktokUrl: z.string().nullable().optional(),
+  threadsUrl: z.string().nullable().optional(),
   websiteUrl: z.string().nullable().optional(),
+  profileBackground: z.string().default("gradient-1"),
 });
 
 // Idea schemas
@@ -142,7 +146,9 @@ export const updateProfileSchema = z.object({
   instagramUrl: z.string().url({ message: "Debe ser una URL válida" }).optional().nullable(),
   youtubeUrl: z.string().url({ message: "Debe ser una URL válida" }).optional().nullable(),
   tiktokUrl: z.string().url({ message: "Debe ser una URL válida" }).optional().nullable(),
+  threadsUrl: z.string().url({ message: "Debe ser una URL válida" }).optional().nullable(),
   websiteUrl: z.string().url({ message: "Debe ser una URL válida" }).optional().nullable(),
+  profileBackground: z.string().optional(),
 });
 
 // Types
