@@ -347,7 +347,7 @@ export default function ProfileEditor() {
                   />
                 </div>
                 
-                <div className="group relative rounded-md sm:col-span-2">
+                <div className="group relative rounded-md">
                   <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
                     <Globe className="h-4 w-4 text-primary group-focus-within:text-primary-600" />
                   </div>
