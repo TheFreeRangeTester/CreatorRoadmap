@@ -66,6 +66,7 @@
   "creator": {
     "voted": "Votado",
     "votedSuccess": "¡Votado!",
+    "voteHeaderTitle": "¡Vota qué contenido quieres primero!",
     "roadmapDescription": "Este roadmap muestra las ideas ordenadas por votos. Tu opinión ayuda a determinar qué contenido se creará primero.",
     "noIdeasYet": "Sin ideas todavía",
     "noIdeasDescription": "Este creador aún no ha agregado ideas de contenido.",

@@ -465,7 +465,7 @@ export default function CreatorQAProfile() {
       <div className="container mx-auto px-4 max-w-4xl">
         <div className="flex justify-between items-center mb-6">
           <h2 className="text-2xl sm:text-3xl font-bold text-gray-800 dark:text-white flex items-center">
-            🗳️ ¡Vota qué contenido quieres primero!
+            🗳️ {t('creator.voteHeaderTitle')}
           </h2>
           
           <div className="flex gap-2">
@@ -476,8 +476,8 @@ export default function CreatorQAProfile() {
               className="flex items-center gap-1.5"
             >
               <Plus className="h-4 w-4" />
-              <span className="hidden sm:inline">Sugerir idea</span>
-              <span className="sm:hidden">Sugerir</span>
+              <span className="hidden sm:inline">{t('suggestIdea.button')}</span>
+              <span className="sm:hidden">{t('common.suggest', 'Suggest')}</span>
             </Button>
             
             <Button 
@@ -487,7 +487,7 @@ export default function CreatorQAProfile() {
               className="flex items-center gap-1.5"
             >
               <Share2 className="h-4 w-4" />
-              <span className="hidden sm:inline">Compartir</span>
+              <span className="hidden sm:inline">{t('common.share', 'Share')}</span>
             </Button>
           </div>
         </div>

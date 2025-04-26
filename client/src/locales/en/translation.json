@@ -66,6 +66,7 @@
   "creator": {
     "voted": "Voted",
     "votedSuccess": "Voted!",
+    "voteHeaderTitle": "Vote which content you want first!",
     "roadmapDescription": "This roadmap shows ideas ordered by votes. Your opinion helps determine which content will be created first.",
     "noIdeasYet": "No ideas yet",
     "noIdeasDescription": "This creator hasn't added any content ideas yet.",
