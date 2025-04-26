@@ -86,19 +86,19 @@ export default function SuggestIdeaModal({
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
           <DialogTitle className="text-xl font-semibold">
-            Sugerir un tema de contenido
+            {t('suggestIdea.title', { username })}
           </DialogTitle>
           <DialogDescription>
-            ¿Qué te gustaría que el creador publique a continuación?
+            {t('suggestIdea.description', { defaultValue: "What would you like the creator to publish next?" })}
           </DialogDescription>
         </DialogHeader>
         
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 py-2">
           <div className="space-y-2">
-            <Label htmlFor="title">Título</Label>
+            <Label htmlFor="title">{t('suggestIdea.titleLabel')}</Label>
             <Input
               id="title"
-              placeholder="Escribe un título claro y conciso"
+              placeholder={t('suggestIdea.titlePlaceholder')}
               {...form.register("title")}
               className="w-full"
             />
@@ -110,10 +110,10 @@ export default function SuggestIdeaModal({
           </div>
           
           <div className="space-y-2">
-            <Label htmlFor="description">Descripción</Label>
+            <Label htmlFor="description">{t('suggestIdea.descriptionLabel')}</Label>
             <Textarea
               id="description"
-              placeholder="Describe brevemente qué contenido te gustaría ver"
+              placeholder={t('suggestIdea.descriptionPlaceholder')}
               {...form.register("description")}
               className="min-h-[100px]"
             />
@@ -131,7 +131,7 @@ export default function SuggestIdeaModal({
               onClick={() => onOpenChange(false)}
               className="mr-2"
             >
-              Cancelar
+              {t('suggestIdea.cancel')}
             </Button>
             
             <Button 
