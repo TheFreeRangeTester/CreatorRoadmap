@@ -40,7 +40,7 @@ export default function PublicLeaderboardPage() {
   useEffect(() => {
     if (error) {
       toast({
-        title: "Error",
+        title: t('common.error', 'Error'),
         description: (error as Error).message || t('publicLeaderboard.errorLoading'),
         variant: "destructive",
       });
