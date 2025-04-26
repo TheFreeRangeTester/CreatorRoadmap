@@ -463,7 +463,7 @@ export default function CreatorPublicPage() {
                                   </motion.div>
                                   {t('creator.voted')}
                                   
-                                  {/* Emoji explosion */}
+                                  {/* Emoji explosion effect */}
                                   <AnimatePresence>
                                     {Array.from({ length: 8 }).map((_, i) => (
                                       <motion.div
