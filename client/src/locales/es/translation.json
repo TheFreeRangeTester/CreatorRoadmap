@@ -28,6 +28,7 @@
     "save": "Guardar",
     "saving": "Guardando...",
     "reset": "Restablecer",
+    "error": "Error",
     "website": "Sitio web",
     "back": "Volver al Dashboard"
   },
@@ -76,7 +77,8 @@
     "voteErrorDesc": "Ocurrió un error al procesar tu voto",
     "voteSuccess": "¡Gracias por tu voto!",
     "voteSuccessDesc": "Tu opinión es importante para el creador.",
-    "loadError": "No se pudo cargar la página del creador"
+    "loadError": "No se pudo cargar la página del creador",
+    "defaultProfileDescription": "Ingeniero QA y creador de contenido sobre pruebas de software, automatización y buenas prácticas en control de calidad."
   },
   "share": {
     "title": "Roadmap de Contenido de {{username}}",
