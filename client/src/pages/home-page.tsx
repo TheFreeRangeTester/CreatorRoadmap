@@ -28,6 +28,7 @@ import { useTranslation } from "react-i18next";
 function IdeasTabView({ mode = "published" }: { mode: "published" | "suggested" }) {
   const { user } = useAuth();
   const { toast } = useToast();
+  const { t } = useTranslation();
   const [processingIdea, setProcessingIdea] = useState<number | null>(null);
   const [isIdeaFormOpen, setIsIdeaFormOpen] = useState(false);
   const [currentIdea, setCurrentIdea] = useState<IdeaResponse | null>(null);
@@ -126,8 +127,8 @@ function IdeasTabView({ mode = "published" }: { mode: "published" | "suggested" 
     },
     onError: (error: Error) => {
       toast({
-        title: "Error al aprobar la idea",
-        description: error.message || "No se pudo aprobar la idea. Inténtalo de nuevo.",
+        title: t('ideas.approveError'),
+        description: error.message || t('ideas.approveErrorDesc'),
         variant: "destructive",
       });
     },
@@ -144,16 +145,16 @@ function IdeasTabView({ mode = "published" }: { mode: "published" | "suggested" 
     },
     onSuccess: () => {
       toast({
-        title: "Idea rechazada",
-        description: "La idea ha sido eliminada.",
+        title: t('ideas.rejected'),
+        description: t('ideas.rejectedSuccess'),
       });
-      // Refrescar la lista de ideas pendientes
+      // Refresh the list of pending ideas
       refetchPending();
     },
     onError: (error: Error) => {
       toast({
-        title: "Error al rechazar la idea",
-        description: error.message || "No se pudo rechazar la idea. Inténtalo de nuevo.",
+        title: t('ideas.rejectError'),
+        description: error.message || t('ideas.rejectErrorDesc'),
         variant: "destructive",
       });
     },
@@ -168,7 +169,7 @@ function IdeasTabView({ mode = "published" }: { mode: "published" | "suggested" 
   };
 
   const handleDeleteIdea = (ideaId: number) => {
-    if (window.confirm("¿Estás seguro de que quieres eliminar esta idea?")) {
+    if (window.confirm(t('ideas.confirmDelete'))) {
       deleteMutation.mutate(ideaId);
     }
   };
@@ -203,7 +204,7 @@ function IdeasTabView({ mode = "published" }: { mode: "published" | "suggested" 
   if (isError) {
     return (
       <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded">
-        No se pudieron cargar las ideas. Por favor, inténtalo de nuevo.
+        {t('ideas.loadError')}
       </div>
     );
   }
@@ -214,13 +215,13 @@ function IdeasTabView({ mode = "published" }: { mode: "published" | "suggested" 
       <div className="text-center py-8 px-4">
         <p className="text-lg font-medium text-gray-700 dark:text-gray-300 mb-2">
           {mode === "published" 
-            ? "No hay ideas publicadas aún" 
-            : "No tienes ideas sugeridas para revisar"}
+            ? t('ideas.noPublishedIdeas') 
+            : t('ideas.noSuggestedIdeas')}
         </p>
         <p className="text-muted-foreground text-sm mb-6">
           {mode === "published" 
-            ? "Crea tu primera idea para empezar a recibir votos" 
-            : "Las ideas sugeridas por tus seguidores aparecerán aquí"}
+            ? t('ideas.createFirstIdea') 
+            : t('ideas.suggestedIdeasWillAppear')}
         </p>
       </div>
     );
@@ -262,7 +263,7 @@ function IdeasTabView({ mode = "published" }: { mode: "published" | "suggested" 
             <div className="mb-2 flex justify-between items-start">
               <h3 className="font-medium text-lg dark:text-white">{idea.title}</h3>
               <Badge variant="outline" className="bg-amber-100 text-amber-700 border-amber-200 dark:bg-amber-900/30 dark:text-amber-300 dark:border-amber-800">
-                <Clock className="h-3 w-3 mr-1" /> Pendiente
+                <Clock className="h-3 w-3 mr-1" /> {t('ideas.pending')}
               </Badge>
             </div>
             
@@ -271,7 +272,7 @@ function IdeasTabView({ mode = "published" }: { mode: "published" | "suggested" 
             {idea.suggestedByUsername && (
               <div className="text-xs text-gray-500 dark:text-gray-400 mb-3 inline-flex items-center gap-1 bg-gray-100 dark:bg-gray-700 px-2 py-1 rounded-full">
                 <User className="h-3 w-3" />
-                Sugerido por: <span className="font-medium">{idea.suggestedByUsername}</span>
+                {t('ideas.suggestedBy')}: <span className="font-medium">{idea.suggestedByUsername}</span>
               </div>
             )}
             
@@ -288,7 +289,7 @@ function IdeasTabView({ mode = "published" }: { mode: "published" | "suggested" 
                 ) : (
                   <XCircle className="h-3 w-3 mr-1" />
                 )}
-                Rechazar
+                {t('ideas.reject')}
               </Button>
               <Button 
                 variant="outline" 
