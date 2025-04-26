@@ -57,6 +57,12 @@
     "topIdeas": "Top Ideas",
     "voteDescription": "Vote for your favorite ideas or submit your own"
   },
+  "ideas": {
+    "noSuggestedIdeas": "No suggested ideas yet",
+    "suggestedIdeasWillAppear": "Ideas suggested by your audience will appear here",
+    "loadError": "Failed to load ideas. Please try again.",
+    "votingFailed": "Voting failed"
+  },
   "creator": {
     "voted": "Voted",
     "votedSuccess": "Voted!",
