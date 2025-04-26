@@ -76,7 +76,10 @@ export default function CreatorPublicPage() {
               await apiRequest("POST", `/api/creators/${username}/ideas/${idea.id}/vote?check_only=true`);
             } catch (error) {
               // If it returns "already voted" error, register this idea as voted
-              if ((error as Error).message?.includes("Ya has votado")) {
+              // Verificar mensajes de error en español o inglés para idea ya votada
+              if ((error as Error).message?.includes("Ya has votado") || 
+                  (error as Error).message?.includes("You have already voted") ||
+                  (error as Error).message?.includes("already voted")) {
                 votedSet.add(idea.id);
               }
             }
@@ -157,7 +160,9 @@ export default function CreatorPublicPage() {
       console.error("[ERROR] Vote error details:", error);
       
       // If the error is because they've already voted, update the local state
-      if ((error as Error).message?.includes("Ya has votado") || (error as Error).message?.includes("already voted")) {
+      if ((error as Error).message?.includes("Ya has votado") || 
+          (error as Error).message?.includes("You have already voted") ||
+          (error as Error).message?.includes("already voted")) {
         setVotedIdeas(prev => {
           const newSet = new Set(prev);
           newSet.add(ideaId);
@@ -274,7 +279,7 @@ export default function CreatorPublicPage() {
                 >
                   <Share2 className="h-4 w-4" />
                 </motion.span>
-                {t('common.share')}
+                {t('common.share', 'Share')}
               </Button>
             </motion.div>
             <ThemeToggle />
@@ -420,7 +425,7 @@ export default function CreatorPublicPage() {
                               >
                                 <ThumbsUp className="h-4 w-4 text-white" />
                               </motion.span>
-                              {t('creator.voted')}
+                              {t('common.voted', 'Voted')}
                             </Button>
                           </motion.div>
                         ) : (
@@ -461,7 +466,7 @@ export default function CreatorPublicPage() {
                                   >
                                     <ThumbsUp className="h-4 w-4 text-white" />
                                   </motion.div>
-                                  {t('creator.voted')}
+                                  {t('common.voted', 'Voted')}
                                   
                                   {/* Emoji explosion effect */}
                                   <AnimatePresence>
@@ -491,7 +496,7 @@ export default function CreatorPublicPage() {
                               ) : (
                                 <>
                                   <ThumbsUp className="h-4 w-4 mr-2" />
-                                  {t('creator.vote')}
+                                  {t('common.vote', 'Vote')}
                                 </>
                               )}
                             </Button>
@@ -509,7 +514,7 @@ export default function CreatorPublicPage() {
                               className="w-full border-dashed bg-muted/50 hover:bg-muted hover:border-primary/50 transition-all duration-300 hover:shadow-sm dark:hover:border-primary-400/50"
                             >
                               <UserPlus className="h-3.5 w-3.5 mr-1.5 text-gray-500 dark:text-gray-400 transition-all duration-300 group-hover:text-primary dark:group-hover:text-primary-400" />
-                              <span className="text-xs text-gray-600 dark:text-gray-400 transition-all duration-300 group-hover:text-primary/80 dark:group-hover:text-primary-400/80">{t('login.requiredToVote')}</span>
+                              <span className="text-xs text-gray-600 dark:text-gray-400 transition-all duration-300 group-hover:text-primary/80 dark:group-hover:text-primary-400/80">{t('common.loginToVote', 'Login to vote')}</span>
                             </Button>
                           </motion.div>
                         </Link>
