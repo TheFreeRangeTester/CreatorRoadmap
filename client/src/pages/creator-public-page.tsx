@@ -61,31 +61,31 @@ export default function CreatorPublicPage() {
     }
   }, [error, navigate, toast]);
   
-  // Efecto para verificar ideas ya votadas por el usuario cuando se carga la página
+  // Effect to check ideas already voted by user when page loads
   useEffect(() => {
     if (user && data?.ideas) {
-      // Función para verificar si el usuario ya ha votado por cada idea
+      // Function to check if user has already voted for each idea
       const checkVotedIdeas = async () => {
         try {
           const votedSet = new Set<number>();
           
-          // Para cada idea, hacer una llamada silenciosa de verificación
+          // For each idea, make a silent verification call
           for (const idea of data.ideas) {
             try {
-              // Intentar votar para verificar (modo silencioso, solo para verificación)
+              // Try to vote to verify (silent mode, only for verification)
               await apiRequest("POST", `/api/creators/${username}/ideas/${idea.id}/vote?check_only=true`);
             } catch (error) {
-              // Si devuelve error de "ya votado", registrar esta idea como votada
+              // If it returns "already voted" error, register this idea as voted
               if ((error as Error).message?.includes("Ya has votado")) {
                 votedSet.add(idea.id);
               }
             }
           }
           
-          // Actualizar el conjunto de ideas votadas
+          // Update the set of voted ideas
           setVotedIdeas(votedSet);
         } catch (error) {
-          console.error("Error al verificar ideas votadas:", error);
+          console.error("[ERROR] Error checking voted ideas:", error);
         }
       };
       
@@ -154,7 +154,7 @@ export default function CreatorPublicPage() {
       });
       
     } catch (error) {
-      console.error("Vote error details:", error);
+      console.error("[ERROR] Vote error details:", error);
       
       // Si el error es porque ya votó, actualizamos el estado local
       if ((error as Error).message?.includes("Ya has votado")) {
