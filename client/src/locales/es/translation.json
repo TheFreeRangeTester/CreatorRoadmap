@@ -113,6 +113,7 @@
   "suggestIdea": {
     "button": "Sugerir idea",
     "title": "Sugerir idea a {{username}}",
+    "description": "¿Qué te gustaría que el creador publique a continuación?",
     "titleLabel": "Título de la idea",
     "titlePlaceholder": "Escribe un título conciso",
     "descriptionLabel": "Descripción",
