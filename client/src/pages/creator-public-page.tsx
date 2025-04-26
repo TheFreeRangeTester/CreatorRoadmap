@@ -239,7 +239,7 @@ export default function CreatorPublicPage() {
               <Button 
                 variant="ghost" 
                 onClick={() => refetch()} 
-                aria-label="Refresh leaderboard" 
+                aria-label={t('common.refresh')} 
                 className="flex items-center dark:text-gray-300 dark:hover:text-white"
               >
                 <motion.span
