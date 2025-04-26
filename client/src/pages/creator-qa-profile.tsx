@@ -250,7 +250,7 @@ export default function CreatorQAProfile() {
       if (successful) {
         showShareSuccess(url);
       } else {
-        throw new Error("No se pudo copiar utilizando execCommand");
+        throw new Error(t('common.copyExecCommandError', 'Could not copy using execCommand'));
       }
     } catch (err) {
       console.error("Error en fallbackCopyToClipboard:", err);
