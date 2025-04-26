@@ -33,9 +33,9 @@ export default function PublicLeaderboardPage() {
     enabled: !!token,
   });
 
-  console.log("PublicLeaderboardPage rendered with token:", token);
-  console.log("Data:", data);
-  console.log("Error:", error);
+  console.log("[DEBUG] PublicLeaderboardPage rendered with token:", token);
+  console.log("[DEBUG] Data:", data);
+  console.log("[DEBUG] Error:", error);
 
   useEffect(() => {
     if (error) {
@@ -66,7 +66,7 @@ export default function PublicLeaderboardPage() {
       
       const response = await apiRequest("POST", endpoint);
       
-      // Mostrar animación de éxito
+      // Show success animation
       setSuccessVote(ideaId);
       setTimeout(() => setSuccessVote(null), 2000);
       
@@ -80,7 +80,7 @@ export default function PublicLeaderboardPage() {
       });
       
     } catch (error) {
-      console.error("Vote error details:", error);
+      console.error("[ERROR] Vote error details:", error);
       toast({
         title: t('creator.voteError'),
         description: (error as Error).message || t('creator.voteErrorDesc'),
@@ -98,7 +98,7 @@ export default function PublicLeaderboardPage() {
         text: t('publicLeaderboard.description'),
         url: window.location.href,
       }).catch((error) => {
-        console.error("Error sharing:", error);
+        console.error("[ERROR] Error sharing:", error);
         copyToClipboard();
       });
     } else {
@@ -165,7 +165,7 @@ export default function PublicLeaderboardPage() {
                     {(() => {
                       const { previous, change } = idea.position;
                       
-                      // Determinar la clase de estilo con soporte para dark mode
+                      // Determine style class with dark mode support
                       let badgeClass = "text-xs ";
                       if (previous === null) {
                         badgeClass += "bg-primary-100 text-primary-800 dark:bg-primary-900/50 dark:text-primary-300 hover:bg-primary-100 hover:text-primary-800 dark:hover:bg-primary-900/70 dark:hover:text-primary-300";
@@ -177,7 +177,7 @@ export default function PublicLeaderboardPage() {
                         badgeClass += "bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300 hover:bg-gray-100 hover:text-gray-800 dark:hover:bg-gray-700 dark:hover:text-gray-300";
                       }
                       
-                      // Determinar el texto a mostrar
+                      // Determine text to display
                       let badgeText = t('badges.same');
                       if (previous === null) {
                         badgeText = t('badges.new');
