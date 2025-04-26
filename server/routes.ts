@@ -519,9 +519,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(400).json({ message: "You have already voted for this idea" });
       }
       
-      // Si es solo verificación, no creamos el voto
+      // If this is only a check, don't create the vote
       if (checkOnly) {
-        return res.status(200).json({ message: "No has votado por esta idea" });
+        return res.status(200).json({ message: "You have not voted for this idea yet" });
       }
 
       // Create the vote
@@ -621,9 +621,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(400).json({ message: "You have already voted for this idea" });
       }
       
-      // Si es solo verificación, no creamos el voto
+      // If this is only a check, don't create the vote
       if (checkOnly) {
-        return res.status(200).json({ message: "No has votado por esta idea" });
+        return res.status(200).json({ message: "You have not voted for this idea yet" });
       }
 
       // Create the vote
