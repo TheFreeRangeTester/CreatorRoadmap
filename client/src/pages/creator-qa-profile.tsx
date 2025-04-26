@@ -69,16 +69,34 @@ export default function CreatorQAProfile() {
       const checkVotedIdeas = async () => {
         try {
           const votedSet = new Set<number>();
+          const existingVotedIdeas = JSON.parse(localStorage.getItem("votedIdeas") || "[]");
+          
+          // Añadir todas las ideas de localStorage
+          for (const ideaId of existingVotedIdeas) {
+            votedSet.add(ideaId);
+          }
           
           // Para cada idea, hacer una llamada silenciosa de verificación
           for (const idea of data.ideas) {
-            try {
-              // Intentar votar para verificar (modo silencioso, solo para verificación)
-              await apiRequest("POST", `/api/creators/${username}/ideas/${idea.id}/vote?check_only=true`);
-            } catch (error) {
-              // Si devuelve error de "ya votado", registrar esta idea como votada
-              if ((error as Error).message?.includes("Ya has votado")) {
-                votedSet.add(idea.id);
+            if (!votedSet.has(idea.id)) {
+              try {
+                // Intentar votar para verificar (modo silencioso, solo para verificación)
+                await apiRequest("POST", `/api/creators/${username}/ideas/${idea.id}/vote?check_only=true`);
+                // Si llegamos aquí, el usuario no ha votado por esta idea
+              } catch (error) {
+                // Si devuelve error de "ya votado", registrar esta idea como votada
+                const errorMsg = (error as Error).message || "";
+                if (errorMsg.includes("Ya has votado") || 
+                    errorMsg.includes("You have already voted") ||
+                    errorMsg.includes("already voted")) {
+                  votedSet.add(idea.id);
+                  
+                  // También actualizar localStorage si es necesario
+                  if (!existingVotedIdeas.includes(idea.id)) {
+                    existingVotedIdeas.push(idea.id);
+                    localStorage.setItem("votedIdeas", JSON.stringify(existingVotedIdeas));
+                  }
+                }
               }
             }
           }
@@ -141,6 +159,13 @@ export default function CreatorQAProfile() {
         newSet.add(ideaId);
         return newSet;
       });
+      
+      // Guardar en localStorage
+      const existingVotedIdeas = JSON.parse(localStorage.getItem("votedIdeas") || "[]");
+      if (!existingVotedIdeas.includes(ideaId)) {
+        existingVotedIdeas.push(ideaId);
+        localStorage.setItem("votedIdeas", JSON.stringify(existingVotedIdeas));
+      }
       
       // Mostrar animación de éxito
       setSuccessVote(ideaId);
