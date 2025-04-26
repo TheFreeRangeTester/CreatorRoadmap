@@ -446,7 +446,7 @@ export default function CreatorQAProfile() {
             </h1>
             
             <p className="text-lg text-gray-600 dark:text-gray-300 mb-6 max-w-2xl">
-              {creator.profileDescription || "Ingeniero QA y creador de contenido sobre pruebas de software, automatización y buenas prácticas en control de calidad."}
+              {creator.profileDescription || t('creator.defaultProfileDescription', "QA Engineer and content creator focused on software testing, automation, and quality control best practices.")}
             </p>
             
             <div className="flex items-center justify-center gap-3 mb-2">

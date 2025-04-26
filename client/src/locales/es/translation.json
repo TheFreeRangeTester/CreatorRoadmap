@@ -75,7 +75,8 @@
     "voteError": "No se pudo registrar tu voto",
     "voteErrorDesc": "Ocurrió un error al procesar tu voto",
     "voteSuccess": "¡Gracias por tu voto!",
-    "voteSuccessDesc": "Tu opinión es importante para el creador."
+    "voteSuccessDesc": "Tu opinión es importante para el creador.",
+    "loadError": "No se pudo cargar la página del creador"
   },
   "share": {
     "title": "Roadmap de Contenido de {{username}}",
