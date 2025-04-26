@@ -142,10 +142,10 @@ export default function SuggestIdeaModal({
               {suggestMutation.isPending ? (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  Enviando...
+                  {t('suggestIdea.sending')}
                 </>
               ) : (
-                "Enviar sugerencia"
+                t('suggestIdea.submit')
               )}
             </Button>
           </DialogFooter>
