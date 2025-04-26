@@ -133,7 +133,8 @@
     "titleMinLength": "Title must be at least 3 characters",
     "titleMaxLength": "Title cannot exceed 100 characters",
     "descriptionMinLength": "Description must be at least 10 characters",
-    "descriptionMaxLength": "Description cannot exceed 500 characters"
+    "descriptionMaxLength": "Description cannot exceed 500 characters",
+    "beFirstToSuggest": "Be the first to suggest a content idea"
   },
   "ideaPosition": {
     "new": "New",

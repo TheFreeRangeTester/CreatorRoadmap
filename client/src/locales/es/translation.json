@@ -133,7 +133,8 @@
     "titleMinLength": "El título debe tener al menos 3 caracteres",
     "titleMaxLength": "El título no puede exceder los 100 caracteres",
     "descriptionMinLength": "La descripción debe tener al menos 10 caracteres",
-    "descriptionMaxLength": "La descripción no puede exceder los 500 caracteres"
+    "descriptionMaxLength": "La descripción no puede exceder los 500 caracteres",
+    "beFirstToSuggest": "Sé el primero en sugerir un tema para el contenido"
   },
   "ideaPosition": {
     "new": "Nuevo",
