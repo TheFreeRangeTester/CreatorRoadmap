@@ -495,14 +495,14 @@ export default function CreatorQAProfile() {
         {sortedIdeas.length === 0 ? (
           <div className="bg-white dark:bg-gray-800 rounded-xl p-8 text-center shadow-md">
             <h3 className="text-xl font-semibold text-gray-800 dark:text-white mb-2">
-              No hay ideas aún
+              {t('ideas.noSuggestedIdeas', 'No suggested ideas yet')}
             </h3>
             <p className="text-gray-600 dark:text-gray-300 mb-4">
-              Sé el primero en sugerir un tema para el contenido
+              {t('suggestIdea.beFirstToSuggest', 'Be the first to suggest a content idea')}
             </p>
             <Button onClick={() => setSuggestDialogOpen(true)}>
               <Plus className="h-4 w-4 mr-2" />
-              Sugerir idea
+              {t('suggestIdea.button', 'Suggest idea')}
             </Button>
           </div>
         ) : (
@@ -539,7 +539,7 @@ export default function CreatorQAProfile() {
                         {idea.votes}
                       </div>
                       <div className="text-xs text-gray-500 dark:text-gray-400">
-                        {idea.votes === 1 ? 'voto' : 'votos'}
+                        {idea.votes === 1 ? t('badges.vote', 'vote') : t('badges.votes', 'votes')}
                       </div>
                       {index < 3 && (
                         <Badge className={`mt-2 ${
@@ -576,7 +576,7 @@ export default function CreatorQAProfile() {
                           className="bg-gradient-to-r from-green-400 to-emerald-500 hover:from-green-500 hover:to-emerald-600 text-white shadow-md transition-all duration-300 ring-2 ring-green-200 dark:ring-green-800 pulse-success"
                         >
                           <ThumbsUp className="h-4 w-4 mr-2" />
-                          Votado
+                          {t('common.voted', 'Voted')}
                         </Button>
                       </motion.div>
                     ) : (
@@ -598,7 +598,7 @@ export default function CreatorQAProfile() {
                           ) : (
                             <ThumbsUp className="h-4 w-4 mr-2" />
                           )}
-                          Votar
+                          {t('common.vote', 'Vote')}
                         </Button>
                       </motion.div>
                     )
@@ -614,7 +614,7 @@ export default function CreatorQAProfile() {
                           className="border-dashed border-gray-300 dark:border-gray-600 hover:bg-primary/10 dark:hover:bg-primary-900/20 transition-all duration-300 hover:border-primary/50 dark:hover:border-primary-400/50 float-animation"
                         >
                           <UserPlus className="h-4 w-4 mr-2" />
-                          Regístrate para votar
+                          {t('common.loginToVote', 'Login to vote')}
                         </Button>
                       </motion.div>
                     </Link>
@@ -627,7 +627,7 @@ export default function CreatorQAProfile() {
         )}
       </div>
       
-      {/* Modal para sugerir una idea */}
+      {/* Modal to suggest an idea */}
       <SuggestIdeaModal 
         username={creator.username}
         open={suggestDialogOpen}
