@@ -104,19 +104,19 @@ export default function CreatorPublicPage() {
   const { ideas, creator } = data;
 
   const handleVote = async (ideaId: number) => {
-    // Si el usuario no está autenticado, mostrar un mensaje y redireccionar a la página de login
+    // If the user is not authenticated, show a message and redirect to the login page
     if (!user) {
       toast({
         title: t('common.loginRequired'),
         description: t('common.loginRequiredDesc'),
         variant: "destructive",
       });
-      // Opcionalmente podríamos redirigir al usuario a la página de login
+      // Optionally we could redirect the user to the login page
       // navigate("/auth");
       return;
     }
     
-    // Si ya votamos por esta idea, no hacer nada
+    // If we've already voted for this idea, do nothing
     if (votedIdeas.has(ideaId)) {
       toast({
         title: t('common.alreadyVoted'),
@@ -133,14 +133,14 @@ export default function CreatorPublicPage() {
       
       const response = await apiRequest("POST", endpoint);
       
-      // Actualizar el estado local de votaciones
+      // Update the local votes state
       setVotedIdeas(prev => {
         const newSet = new Set(prev);
         newSet.add(ideaId);
         return newSet;
       });
       
-      // Mostrar animación de éxito
+      // Show success animation
       setSuccessVote(ideaId);
       setTimeout(() => setSuccessVote(null), 2000);
       
@@ -156,15 +156,15 @@ export default function CreatorPublicPage() {
     } catch (error) {
       console.error("[ERROR] Vote error details:", error);
       
-      // Si el error es porque ya votó, actualizamos el estado local
-      if ((error as Error).message?.includes("Ya has votado")) {
+      // If the error is because they've already voted, update the local state
+      if ((error as Error).message?.includes("Ya has votado") || (error as Error).message?.includes("already voted")) {
         setVotedIdeas(prev => {
           const newSet = new Set(prev);
           newSet.add(ideaId);
           return newSet;
         });
       } else {
-        // Otros errores
+        // Other errors
         toast({
           title: t('creator.voteError'),
           description: (error as Error).message || t('creator.voteErrorDesc'),
@@ -195,7 +195,7 @@ export default function CreatorPublicPage() {
   };
 
   const copyToClipboard = () => {
-    // Construct the URL with the new format /:username (sin /u/)
+    // Construct the URL with the new format /:username (without /u/)
     const shareUrl = `${window.location.origin}/${creator.username}`;
     navigator.clipboard.writeText(shareUrl);
     toast({
@@ -204,7 +204,7 @@ export default function CreatorPublicPage() {
     });
   };
 
-  // Función para obtener la clase CSS del fondo basada en el profileBackground
+  // Function to get the CSS background class based on profileBackground
   const getBackgroundClass = () => {
     if (!creator.profileBackground || creator.profileBackground === "gradient-1") {
       return "bg-gradient-to-br from-gray-50 to-white dark:from-gray-900 dark:to-gray-950";
@@ -219,7 +219,7 @@ export default function CreatorPublicPage() {
     } else if (creator.profileBackground === "pattern-2") {
       return "bg-gray-50 dark:bg-gray-900 bg-[linear-gradient(gray_1px,transparent_1px),linear-gradient(to_right,gray_1px,transparent_1px)] bg-[size:20px_20px]";
     }
-    // Por defecto, devolvemos el gradient-1
+    // By default, return gradient-1
     return "bg-gradient-to-br from-gray-50 to-white dark:from-gray-900 dark:to-gray-950";
   };
 
