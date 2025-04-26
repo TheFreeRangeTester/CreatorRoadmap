@@ -54,7 +54,7 @@ export default function CreatorPublicPage() {
     if (error) {
       toast({
         title: "Error",
-        description: (error as Error).message || "Failed to load creator page",
+        description: (error as Error).message || t('creator.loadError', "Failed to load creator page"),
         variant: "destructive",
       });
       navigate("/dashboard");
