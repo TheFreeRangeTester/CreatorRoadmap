@@ -116,11 +116,11 @@ function IdeasTabView({ mode = "published" }: { mode: "published" | "suggested" 
     },
     onSuccess: () => {
       toast({
-        title: "Idea aprobada",
-        description: "La idea ha sido publicada en tu leaderboard.",
+        title: t('ideas.approved'),
+        description: t('ideas.approvedSuccess'),
         className: "bg-gradient-to-r from-green-50 to-emerald-50 border-green-200 dark:from-green-900/30 dark:to-emerald-900/30 dark:border-green-800",
       });
-      // Refrescar la lista de ideas pendientes y aprobadas
+      // Refresh pending and approved ideas lists
       refetchPending();
       queryClient.invalidateQueries({ queryKey: ["/api/ideas"] });
     },
