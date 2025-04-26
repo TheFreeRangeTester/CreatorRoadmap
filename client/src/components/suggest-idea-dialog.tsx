@@ -27,8 +27,12 @@ export default function SuggestIdeaDialog({ username, refetch }: SuggestIdeaDial
   
   // Definir esquema de validación
   const formSchema = z.object({
-    title: z.string().min(3, "El título debe tener al menos 3 caracteres").max(100, "El título no puede exceder los 100 caracteres"),
-    description: z.string().min(10, "La descripción debe tener al menos 10 caracteres").max(500, "La descripción no puede exceder los 500 caracteres"),
+    title: z.string()
+      .min(3, t('suggestIdea.titleMinLength', { defaultValue: "Title must be at least 3 characters" }))
+      .max(100, t('suggestIdea.titleMaxLength', { defaultValue: "Title cannot exceed 100 characters" })),
+    description: z.string()
+      .min(10, t('suggestIdea.descriptionMinLength', { defaultValue: "Description must be at least 10 characters" }))
+      .max(500, t('suggestIdea.descriptionMaxLength', { defaultValue: "Description cannot exceed 500 characters" })),
   });
   
   // Crear formulario con react-hook-form
@@ -44,7 +48,7 @@ export default function SuggestIdeaDialog({ username, refetch }: SuggestIdeaDial
   const suggestMutation = useMutation({
     mutationFn: async (data: z.infer<typeof formSchema>) => {
       try {
-        console.log("Enviando sugerencia:", data, "a creador:", username);
+        console.log("[DEBUG] Sending suggestion:", data, "to creator:", username);
         const response = await apiRequest(
           "POST", 
           `/api/creators/${username}/suggest`,
@@ -54,19 +58,19 @@ export default function SuggestIdeaDialog({ username, refetch }: SuggestIdeaDial
         if (!response.ok) {
           // Si la respuesta no es exitosa, extraer el mensaje de error
           const errorData = await response.json();
-          throw new Error(errorData.message || "Error al enviar la sugerencia");
+          throw new Error(errorData.message || t('suggestIdea.errorDesc', { defaultValue: "Error sending suggestion" }));
         }
         
         const result = await response.json();
-        console.log("Respuesta de la API:", result);
+        console.log("[DEBUG] API Response:", result);
         return result;
       } catch (error) {
-        console.error("Error en la mutación:", error);
+        console.error("[DEBUG] API request error:", error);
         throw error;
       }
     },
     onSuccess: () => {
-      console.log("Sugerencia enviada con éxito");
+      console.log("[DEBUG] Suggestion submitted successfully");
       // Cerrar el diálogo de inmediato
       setIsOpen(false);
       
@@ -87,7 +91,7 @@ export default function SuggestIdeaDialog({ username, refetch }: SuggestIdeaDial
       }, 100);
     },
     onError: (error: Error) => {
-      console.error("Error en la mutación:", error);
+      console.error("[DEBUG] Mutation error:", error);
       toast({
         title: t('suggestIdea.error'),
         description: error.message || t('suggestIdea.errorDesc'),
@@ -98,7 +102,7 @@ export default function SuggestIdeaDialog({ username, refetch }: SuggestIdeaDial
   
   // Manejar envío del formulario
   const onSubmit = (values: z.infer<typeof formSchema>) => {
-    console.log("Función onSubmit llamada con:", values);
+    console.log("[DEBUG] onSubmit function called with:", values);
     
     // Verificar que el usuario esté autenticado
     if (!user) {
