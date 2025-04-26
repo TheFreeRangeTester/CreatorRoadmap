@@ -227,10 +227,10 @@ export default function CreatorPublicPage() {
     <div className="min-h-screen dark:bg-gray-950">
       <div className="bg-white dark:bg-gray-900 py-8">
         <div className="container px-4 mx-auto">
-          {/* Perfil del creador con información y redes sociales */}
+          {/* Creator profile with information and social networks */}
           <CreatorProfileHeader creator={creator} />
           
-          {/* Controles de utilidad */}
+          {/* Utility controls */}
           <div className="flex items-center justify-end gap-2 mb-6">
             <motion.div
               whileHover={{ scale: 1.1, rotate: 15 }}
@@ -358,7 +358,7 @@ export default function CreatorPublicPage() {
                         {(() => {
                           const { previous, change } = idea.position;
                           
-                          // Determinar la clase de estilo con soporte para dark mode
+                          // Determine the style class with dark mode support
                           let badgeClass = "text-xs ";
                           if (previous === null) {
                             badgeClass += "bg-primary-100 text-primary-800 dark:bg-primary-900/50 dark:text-primary-300 hover:bg-primary-100 hover:text-primary-800 dark:hover:bg-primary-900/70 dark:hover:text-primary-300";
@@ -370,7 +370,7 @@ export default function CreatorPublicPage() {
                             badgeClass += "bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300 hover:bg-gray-100 hover:text-gray-800 dark:hover:bg-gray-700 dark:hover:text-gray-300";
                           }
                           
-                          // Determinar el texto a mostrar
+                          // Determine the text to display
                           let badgeText = t('badges.same');
                           if (previous === null) {
                             badgeText = t('badges.new');
