@@ -11,6 +11,8 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useAuth } from "@/hooks/use-auth";
 import { ThemeToggle } from "@/components/theme-toggle";
+import { LanguageToggle } from "@/components/language-toggle";
+import { useTranslation } from "react-i18next";
 
 // Extend schema for validation
 const formSchema = insertUserSchema.extend({
@@ -21,6 +23,7 @@ const formSchema = insertUserSchema.extend({
 export default function AuthPage() {
   const { user, loginMutation, registerMutation } = useAuth();
   const [, navigate] = useLocation();
+  const { t } = useTranslation();
 
   // Login form
   const loginForm = useForm<z.infer<typeof formSchema>>({
@@ -72,31 +75,32 @@ export default function AuthPage() {
       <div className="flex flex-1 flex-col justify-center py-12 px-4 sm:px-6 lg:flex-none lg:px-20 xl:px-24">
         <div className="mx-auto w-full max-w-sm lg:w-96">
           <div className="flex flex-col items-center">
-            <div className="flex justify-end w-full mb-4">
+            <div className="flex justify-end w-full mb-4 gap-2">
+              <LanguageToggle />
               <ThemeToggle />
             </div>
             <CloudLightning className="h-10 w-10 text-primary" />
             <h2 className="mt-6 text-3xl font-bold tracking-tight text-gray-900 dark:text-white">
-              Idea Leaderboard
+              {t('auth.welcome')}
             </h2>
             <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
-              Sign in to create and manage your ideas
+              {t('auth.loginInfo')}
             </p>
           </div>
 
           <div className="mt-8">
             <Tabs defaultValue="login" className="w-full">
               <TabsList className="grid w-full grid-cols-2">
-                <TabsTrigger value="login">Login</TabsTrigger>
-                <TabsTrigger value="register">Register</TabsTrigger>
+                <TabsTrigger value="login">{t('common.login')}</TabsTrigger>
+                <TabsTrigger value="register">{t('common.register')}</TabsTrigger>
               </TabsList>
               
               <TabsContent value="login">
                 <Card>
                   <CardHeader>
-                    <CardTitle>Login</CardTitle>
+                    <CardTitle>{t('common.login')}</CardTitle>
                     <CardDescription>
-                      Enter your credentials to access your account
+                      {t('auth.loginInfo')}
                     </CardDescription>
                   </CardHeader>
                   <CardContent>
@@ -110,9 +114,9 @@ export default function AuthPage() {
                           name="username"
                           render={({ field }) => (
                             <FormItem>
-                              <FormLabel>Username</FormLabel>
+                              <FormLabel>{t('common.username')}</FormLabel>
                               <FormControl>
-                                <Input placeholder="username" {...field} />
+                                <Input placeholder={t('common.username')} {...field} />
                               </FormControl>
                               <FormMessage />
                             </FormItem>
@@ -123,7 +127,7 @@ export default function AuthPage() {
                           name="password"
                           render={({ field }) => (
                             <FormItem>
-                              <FormLabel>Password</FormLabel>
+                              <FormLabel>{t('common.password')}</FormLabel>
                               <FormControl>
                                 <Input
                                   type="password"
@@ -140,7 +144,7 @@ export default function AuthPage() {
                           className="w-full"
                           disabled={loginMutation.isPending}
                         >
-                          {loginMutation.isPending ? "Logging in..." : "Login"}
+                          {loginMutation.isPending ? t('auth.loginCta') + "..." : t('auth.loginCta')}
                         </Button>
                       </form>
                     </Form>
@@ -151,9 +155,9 @@ export default function AuthPage() {
               <TabsContent value="register">
                 <Card>
                   <CardHeader>
-                    <CardTitle>Create an Account</CardTitle>
+                    <CardTitle>{t('common.register')}</CardTitle>
                     <CardDescription>
-                      Register to start creating and sharing your ideas
+                      {t('auth.registerInfo')}
                     </CardDescription>
                   </CardHeader>
                   <CardContent>
@@ -167,9 +171,9 @@ export default function AuthPage() {
                           name="username"
                           render={({ field }) => (
                             <FormItem>
-                              <FormLabel>Username</FormLabel>
+                              <FormLabel>{t('common.username')}</FormLabel>
                               <FormControl>
-                                <Input placeholder="Choose a username" {...field} />
+                                <Input placeholder={t('common.username')} {...field} />
                               </FormControl>
                               <FormMessage />
                             </FormItem>
@@ -180,11 +184,11 @@ export default function AuthPage() {
                           name="password"
                           render={({ field }) => (
                             <FormItem>
-                              <FormLabel>Password</FormLabel>
+                              <FormLabel>{t('common.password')}</FormLabel>
                               <FormControl>
                                 <Input
                                   type="password"
-                                  placeholder="Create a password"
+                                  placeholder="******"
                                   {...field}
                                 />
                               </FormControl>
@@ -197,7 +201,7 @@ export default function AuthPage() {
                           className="w-full"
                           disabled={registerMutation.isPending}
                         >
-                          {registerMutation.isPending ? "Creating account..." : "Register"}
+                          {registerMutation.isPending ? t('auth.registerCta') + "..." : t('auth.registerCta')}
                         </Button>
                       </form>
                     </Form>
