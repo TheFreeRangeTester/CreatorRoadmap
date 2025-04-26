@@ -217,7 +217,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Check if this user has already voted for this idea
       const existingVote = await storage.getVoteByUserOrSession(ideaId, userId);
       if (existingVote) {
-        return res.status(400).json({ message: "Ya has votado por esta idea" });
+        return res.status(400).json({ message: "You have already voted for this idea" });
       }
 
       // Create the vote
@@ -516,7 +516,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Check if this user has already voted for this idea
       const existingVote = await storage.getVoteByUserOrSession(ideaId, userId);
       if (existingVote) {
-        return res.status(400).json({ message: "Ya has votado por esta idea" });
+        return res.status(400).json({ message: "You have already voted for this idea" });
       }
       
       // Si es solo verificación, no creamos el voto
@@ -618,7 +618,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Check if this user has already voted for this idea
       const existingVote = await storage.getVoteByUserOrSession(ideaId, userId);
       if (existingVote) {
-        return res.status(400).json({ message: "Ya has votado por esta idea" });
+        return res.status(400).json({ message: "You have already voted for this idea" });
       }
       
       // Si es solo verificación, no creamos el voto
