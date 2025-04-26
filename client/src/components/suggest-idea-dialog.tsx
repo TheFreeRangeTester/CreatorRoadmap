@@ -165,7 +165,7 @@ export default function SuggestIdeaDialog({ username, refetch }: SuggestIdeaDial
             onSubmit={(e) => {
               // Prevenir el comportamiento predeterminado para manejar manualmente
               e.preventDefault();
-              console.log("Formulario envió evento submit");
+              console.log("[DEBUG] Form submitted");
             }}
             className="space-y-4 mt-4">
             <FormField
@@ -216,19 +216,19 @@ export default function SuggestIdeaDialog({ username, refetch }: SuggestIdeaDial
                 className="bg-gradient-to-r from-primary to-blue-600 hover:from-primary/90 hover:to-blue-700"
                 disabled={suggestMutation.isPending}
                 onClick={async () => {
-                  console.log("Botón de envío clickeado");
+                  console.log("[DEBUG] Submit button clicked");
                   const values = form.getValues();
-                  console.log("Valores del formulario:", values);
+                  console.log("[DEBUG] Form values:", values);
                   
                   // Realizar validación manual
                   const isValid = await form.trigger();
-                  console.log("¿Formulario válido?", isValid);
+                  console.log("[DEBUG] Is form valid?", isValid);
                   
                   if (isValid) {
-                    console.log("Enviando formulario...");
+                    console.log("[DEBUG] Submitting form...");
                     onSubmit(values as z.infer<typeof formSchema>);
                   } else {
-                    console.log("Formulario no válido:", form.formState.errors);
+                    console.log("[DEBUG] Form invalid:", form.formState.errors);
                     toast({
                       title: t('suggestIdea.invalidFields'),
                       description: t('suggestIdea.invalidFieldsDesc'),

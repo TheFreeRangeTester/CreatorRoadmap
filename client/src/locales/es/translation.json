@@ -123,7 +123,11 @@
     "thankYou": "Gracias por tu sugerencia",
     "thankYouDesc": "Tu idea ha sido enviada al creador para su aprobación.",
     "error": "Error al enviar sugerencia",
-    "errorDesc": "Ocurrió un error al enviar tu sugerencia. Verifica tu conexión e inténtalo de nuevo."
+    "errorDesc": "Ocurrió un error al enviar tu sugerencia. Verifica tu conexión e inténtalo de nuevo.",
+    "titleMinLength": "El título debe tener al menos 3 caracteres",
+    "titleMaxLength": "El título no puede exceder los 100 caracteres",
+    "descriptionMinLength": "La descripción debe tener al menos 10 caracteres",
+    "descriptionMaxLength": "La descripción no puede exceder los 500 caracteres"
   },
   "ideaPosition": {
     "new": "Nuevo",

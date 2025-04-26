@@ -123,7 +123,11 @@
     "thankYou": "Thank you for your suggestion",
     "thankYouDesc": "Your idea has been sent to the creator for approval.",
     "error": "Error submitting suggestion",
-    "errorDesc": "An error occurred while sending your suggestion. Check your connection and try again."
+    "errorDesc": "An error occurred while sending your suggestion. Check your connection and try again.",
+    "titleMinLength": "Title must be at least 3 characters",
+    "titleMaxLength": "Title cannot exceed 100 characters",
+    "descriptionMinLength": "Description must be at least 10 characters",
+    "descriptionMaxLength": "Description cannot exceed 500 characters"
   },
   "ideaPosition": {
     "new": "New",
