@@ -74,12 +74,12 @@
     "voteSuccess": "¡Gracias por tu voto!",
     "voteSuccessDesc": "Tu opinión es importante para el creador."
   },
-  "login": {
-    "requiredToVote": "Inicia sesión para votar"
-  },
   "share": {
     "title": "Roadmap de Contenido de {{username}}",
     "text": "¡Echa un vistazo al roadmap de contenido de {{username}} y vota por lo que quieres ver próximamente!"
+  },
+  "login": {
+    "requiredToVote": "Inicia sesión para votar"
   },
   "publicLeaderboard": {
     "title": "Leaderboard Público",
