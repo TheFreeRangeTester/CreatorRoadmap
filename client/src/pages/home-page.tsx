@@ -303,7 +303,7 @@ function IdeasTabView({ mode = "published" }: { mode: "published" | "suggested" 
                 ) : (
                   <CheckCircle className="h-3 w-3 mr-1" />
                 )}
-                Aprobar
+                {t('ideas.approve')}
               </Button>
             </div>
           </div>
@@ -521,7 +521,7 @@ export default function HomePage() {
                 </div>
               ) : isError ? (
                 <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded">
-                  Failed to load ideas. Please try again.
+                  {t('ideas.loadError')}
                 </div>
               ) : ideas && ideas.length > 0 ? (
                 <div className="grid gap-6 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
