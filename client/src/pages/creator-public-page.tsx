@@ -68,19 +68,34 @@ export default function CreatorPublicPage() {
       const checkVotedIdeas = async () => {
         try {
           const votedSet = new Set<number>();
+          const existingVotedIdeas = JSON.parse(localStorage.getItem("votedIdeas") || "[]");
+          
+          // Add all ideas from localStorage
+          for (const ideaId of existingVotedIdeas) {
+            votedSet.add(ideaId);
+          }
           
           // For each idea, make a silent verification call
           for (const idea of data.ideas) {
-            try {
-              // Try to vote to verify (silent mode, only for verification)
-              await apiRequest("POST", `/api/creators/${username}/ideas/${idea.id}/vote?check_only=true`);
-            } catch (error) {
-              // If it returns "already voted" error, register this idea as voted
-              // Verificar mensajes de error en español o inglés para idea ya votada
-              if ((error as Error).message?.includes("Ya has votado") || 
-                  (error as Error).message?.includes("You have already voted") ||
-                  (error as Error).message?.includes("already voted")) {
-                votedSet.add(idea.id);
+            if (!votedSet.has(idea.id)) {
+              try {
+                // Try to vote to verify (silent mode, only for verification)
+                await apiRequest("POST", `/api/creators/${username}/ideas/${idea.id}/vote?check_only=true`);
+                // If we get here, the user hasn't voted for this idea
+              } catch (error) {
+                // If it returns "already voted" error, register this idea as voted
+                const errorMsg = (error as Error).message || "";
+                if (errorMsg.includes("Ya has votado") || 
+                    errorMsg.includes("You have already voted") ||
+                    errorMsg.includes("already voted")) {
+                  votedSet.add(idea.id);
+                  
+                  // Also update localStorage if needed
+                  if (!existingVotedIdeas.includes(idea.id)) {
+                    existingVotedIdeas.push(idea.id);
+                    localStorage.setItem("votedIdeas", JSON.stringify(existingVotedIdeas));
+                  }
+                }
               }
             }
           }

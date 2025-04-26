@@ -23,40 +23,7 @@ export default function IdeaCard({ idea, onVote, onEdit, onDelete, isVoting }: I
   useEffect(() => {
     const votedIdeas = JSON.parse(localStorage.getItem("votedIdeas") || "[]");
     setHasVoted(votedIdeas.includes(idea.id));
-    
-    // If we receive an API error that says the user has already voted,
-    // make sure we update our localStorage and UI accordingly
-    const checkVoteStatus = async () => {
-      try {
-        const apiUrl = `/api/creators/${idea.creatorUsername}/ideas/${idea.id}/vote?check_only=true`;
-        await fetch(apiUrl, {
-          method: 'POST',
-          credentials: 'include',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        });
-        // If we got here without error, user hasn't voted yet
-      } catch (error) {
-        // Check if error message indicates user already voted
-        const errorMsg = error.toString();
-        if (errorMsg.includes("already voted") || 
-            errorMsg.includes("Ya has votado")) {
-          // Update localStorage and state
-          if (!votedIdeas.includes(idea.id)) {
-            votedIdeas.push(idea.id);
-            localStorage.setItem("votedIdeas", JSON.stringify(votedIdeas));
-            setHasVoted(true);
-          }
-        }
-      }
-    };
-    
-    // Only run check if we're showing voting UI (not in creator dashboard)
-    if (!onEdit && !onDelete) {
-      checkVoteStatus();
-    }
-  }, [idea.id, idea.creatorUsername, onEdit, onDelete]);
+  }, [idea.id]);
 
   // Estado para controlar las animaciones
   const [isVoteAnimating, setIsVoteAnimating] = useState(false);
