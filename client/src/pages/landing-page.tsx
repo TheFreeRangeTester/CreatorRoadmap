@@ -179,7 +179,7 @@ export default function LandingPage() {
             <div className="flex items-center">
               <CloudLightning className="h-8 w-8 text-primary" />
               <h1 className="ml-2 text-xl font-bold text-neutral-800 dark:text-white">
-                IdeaVote
+                Fanlist
               </h1>
             </div>
             <div className="flex items-center gap-4">
@@ -596,11 +596,11 @@ export default function LandingPage() {
             <div className="flex items-center mb-4 md:mb-0">
               <CloudLightning className="h-6 w-6 text-primary" />
               <h1 className="ml-2 text-lg font-bold text-neutral-800 dark:text-white">
-                IdeaVote
+                Fanlist
               </h1>
             </div>
             <p className="text-sm text-gray-600 dark:text-gray-400">
-              © {new Date().getFullYear()} IdeaVote. {t('landing.footer.copyright')}
+              © {new Date().getFullYear()} Fanlist. {t('landing.footer.copyright')}
             </p>
           </div>
         </div>
