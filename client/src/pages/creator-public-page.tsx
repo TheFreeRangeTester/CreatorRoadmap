@@ -130,6 +130,41 @@ export default function CreatorPublicPage() {
     }
   }, [user, data?.ideas, username]);
 
+  // Usar useStaggerCards para animar las tarjetas de ideas cuando estén disponibles
+  useStaggerCards(ideasContainerRef);
+  
+  // Efecto para aplicar animaciones cuando los datos se cargan
+  useEffect(() => {
+    if (data && pageRef.current) {
+      try {
+        // Animar el encabezado con SplitText
+        if (headerRef.current) {
+          const headerSplit = new CustomSplitText(headerRef.current, { type: "words" });
+          gsap.from(headerSplit.words, {
+            opacity: 0,
+            y: 20,
+            stagger: 0.05,
+            duration: 0.8,
+            ease: "power2.out",
+            delay: 0.2
+          });
+        }
+        
+        // Animar la descripción
+        if (descriptionRef.current) {
+          gsap.from(descriptionRef.current, {
+            opacity: 0,
+            y: 15,
+            duration: 0.6,
+            delay: 0.4
+          });
+        }
+      } catch (error) {
+        console.error("Error en animaciones GSAP:", error);
+      }
+    }
+  }, [data]);
+
   if (isLoading || !data) {
     return (
       <div className="flex items-center justify-center min-h-screen">
@@ -263,7 +298,7 @@ export default function CreatorPublicPage() {
   };
 
   return (
-    <div className="min-h-screen dark:bg-gray-950">
+    <div ref={pageRef} className="min-h-screen dark:bg-gray-950">
       <div className="bg-white dark:bg-gray-900 py-8">
         <div className="container px-4 mx-auto">
           {/* Creator profile with information and social networks */}
@@ -338,7 +373,7 @@ export default function CreatorPublicPage() {
         <div className="container px-4 mx-auto">
           <div className="flex flex-col lg:flex-row gap-4 mb-8 max-w-4xl mx-auto">
             <div className="bg-gradient-to-r from-primary/10 to-blue-500/10 dark:from-primary/5 dark:to-blue-500/5 p-4 rounded-lg flex-1">
-              <p className="text-sm text-gray-700 dark:text-gray-300">
+              <p ref={descriptionRef} className="text-sm text-gray-700 dark:text-gray-300">
                 {t('creator.roadmapDescription')}
               </p>
             </div>
@@ -350,13 +385,13 @@ export default function CreatorPublicPage() {
 
           {ideas.length === 0 ? (
             <div className="text-center py-12">
-              <h2 className="text-2xl font-semibold dark:text-white">{t('creator.noIdeasYet')}</h2>
+              <h2 ref={headerRef} className="text-2xl font-semibold dark:text-white">{t('creator.noIdeasYet')}</h2>
               <p className="text-muted-foreground dark:text-gray-400 mt-2">
                 {t('creator.noIdeasDescription')}
               </p>
             </div>
           ) : (
-            <div className="grid grid-cols-1 gap-6 max-w-3xl mx-auto">
+            <div ref={ideasContainerRef} className="grid grid-cols-1 gap-6 max-w-3xl mx-auto">
               {ideas.map((idea, index) => (
                 <Card 
                   key={idea.id} 
