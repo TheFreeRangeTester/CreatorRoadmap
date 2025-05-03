@@ -1,14 +1,7 @@
-import { useState, useEffect, createContext, useContext, ReactNode } from 'react';
-import { AchievementType } from '../components/achievement-animation';
+import { createContext, useState, useContext, useCallback, ReactNode } from 'react';
+import { AchievementType } from '@/components/achievement-animation';
 
-// Interfaz para la información del logro
-interface AchievementState {
-  currentAchievement: AchievementType | null;
-  showAnimation: boolean;
-  stats: UserStats;
-}
-
-// Interfaz para las estadísticas de usuario
+// Interfaz para las estadísticas del usuario
 interface UserStats {
   totalVotes: number;
   suggestedIdeas: number;
@@ -18,187 +11,172 @@ interface UserStats {
   votedIds: number[];
 }
 
-// Crear contexto para los logros
-const AchievementsContext = createContext<{
-  showAchievement: (type: AchievementType, message?: string) => void;
-  hideAchievement: () => void;
-  registerVote: (ideaId: number, isTopIdea?: boolean) => void;
-  registerSuggestedIdea: () => void;
-  registerLogin: () => void;
-  stats: UserStats;
+// Interfaz para el estado de los logros
+interface AchievementState {
   currentAchievement: AchievementType | null;
   showAnimation: boolean;
-} | null>(null);
+  stats: UserStats;
+}
 
-// Clave para almacenar estadísticas en localStorage
-const USER_STATS_KEY = 'fanlist_user_stats';
+// Interfaz para el contexto
+interface AchievementsContextType {
+  currentAchievement: AchievementType | null;
+  showAnimation: boolean;
+  stats: UserStats;
+  showAchievement: (type: AchievementType, message?: string) => void;
+  hideAchievement: () => void;
+  registerVote: (ideaId: number) => void;
+  registerLogin: () => void;
+}
 
-// Proveedor para el contexto de logros
+// Crear el contexto
+const AchievementsContext = createContext<AchievementsContextType | null>(null);
+
+// Proveedor de contexto
 export function AchievementsProvider({ children }: { children: ReactNode }) {
-  // Estado para los logros y animaciones
-  const [state, setState] = useState<AchievementState>({
-    currentAchievement: null,
-    showAnimation: false,
-    stats: {
-      totalVotes: 0,
-      suggestedIdeas: 0,
-      loginStreak: 0,
-      lastLoginDate: null,
-      votedTopIdeas: 0,
-      votedIds: []
-    }
+  // Estado inicial con las estadísticas cargadas desde localStorage
+  const [state, setState] = useState<AchievementState>(() => {
+    // Intentar cargar las estadísticas desde localStorage
+    const savedStats = localStorage.getItem('userStats');
+    const initialStats: UserStats = savedStats 
+      ? JSON.parse(savedStats)
+      : {
+          totalVotes: 0,
+          suggestedIdeas: 0,
+          loginStreak: 0,
+          lastLoginDate: null,
+          votedTopIdeas: 0,
+          votedIds: []
+        };
+    
+    return {
+      currentAchievement: null,
+      showAnimation: false,
+      stats: initialStats
+    };
   });
 
-  // Cargar estadísticas del usuario desde localStorage
-  useEffect(() => {
-    const savedStats = localStorage.getItem(USER_STATS_KEY);
-    if (savedStats) {
-      try {
-        const parsedStats = JSON.parse(savedStats);
-        setState(prev => ({ ...prev, stats: parsedStats }));
-      } catch (error) {
-        console.error('Error parsing user stats:', error);
-      }
-    }
-  }, []);
-
-  // Guardar estadísticas en localStorage cuando cambien
-  useEffect(() => {
-    localStorage.setItem(USER_STATS_KEY, JSON.stringify(state.stats));
-  }, [state.stats]);
-
-  // Mostrar un logro
-  const showAchievement = (type: AchievementType, message?: string) => {
+  // Función para mostrar un logro
+  const showAchievement = useCallback((type: AchievementType, message?: string) => {
     setState(prev => ({
       ...prev,
       currentAchievement: type,
       showAnimation: true,
       message
     }));
-  };
+  }, []);
 
-  // Ocultar la animación del logro
-  const hideAchievement = () => {
+  // Función para ocultar la animación
+  const hideAchievement = useCallback(() => {
     setState(prev => ({
       ...prev,
       showAnimation: false
     }));
-  };
+  }, []);
 
-  // Registrar un voto y otorgar logros si corresponde
-  const registerVote = (ideaId: number, isTopIdea: boolean = false) => {
+  // Registrar un voto
+  const registerVote = useCallback((ideaId: number) => {
     setState(prev => {
-      const newStats = { ...prev.stats };
-      
-      // Evitar contar el mismo voto más de una vez
-      if (!newStats.votedIds.includes(ideaId)) {
-        newStats.totalVotes += 1;
-        newStats.votedIds = [...newStats.votedIds, ideaId];
-        
-        // Si es una idea del top, actualizar contador
-        if (isTopIdea) {
-          newStats.votedTopIdeas += 1;
-        }
-        
-        // Mostrar logros según los hitos alcanzados
-        if (newStats.totalVotes === 1) {
-          // Primer voto
-          setTimeout(() => showAchievement(AchievementType.FIRST_VOTE), 500);
-        } else if (newStats.totalVotes === 5) {
-          // Múltiples votos
-          setTimeout(() => showAchievement(AchievementType.MULTIPLE_VOTES), 500);
-        }
-        
-        // Logro por votar idea del top
-        if (isTopIdea && newStats.votedTopIdeas === 1) {
-          setTimeout(() => showAchievement(AchievementType.VOTED_TOP_IDEA), 800);
-        }
+      // Verificar si ya ha votado por esta idea
+      if (prev.stats.votedIds.includes(ideaId)) {
+        return prev;
       }
-      
-      return { ...prev, stats: newStats };
-    });
-  };
 
-  // Registrar una sugerencia de idea
-  const registerSuggestedIdea = () => {
+      // Actualizar estadísticas
+      const newStats: UserStats = {
+        ...prev.stats,
+        totalVotes: prev.stats.totalVotes + 1,
+        votedIds: [...prev.stats.votedIds, ideaId]
+      };
+
+      // Guardar en localStorage
+      localStorage.setItem('userStats', JSON.stringify(newStats));
+
+      return {
+        ...prev,
+        stats: newStats
+      };
+    });
+  }, []);
+
+  // Registrar inicio de sesión (para mantener el streak)
+  const registerLogin = useCallback(() => {
+    const today = new Date().toISOString().slice(0, 10); // YYYY-MM-DD
+
     setState(prev => {
-      const newStats = { ...prev.stats };
-      newStats.suggestedIdeas += 1;
-      
-      // Mostrar logro por sugerir idea
-      if (newStats.suggestedIdeas === 1) {
-        setTimeout(() => showAchievement(AchievementType.SUGGESTED_IDEA), 500);
+      // Si ya inició sesión hoy, no hacer nada
+      if (prev.stats.lastLoginDate === today) {
+        return prev;
       }
-      
-      return { ...prev, stats: newStats };
-    });
-  };
 
-  // Registrar un inicio de sesión y actualizar racha
-  const registerLogin = () => {
-    setState(prev => {
-      const newStats = { ...prev.stats };
-      const today = new Date().toISOString().split('T')[0];
+      // Calcular si el inicio de sesión es consecutivo
+      let newStreak = prev.stats.loginStreak;
+      const lastLogin = prev.stats.lastLoginDate;
       
-      // Si es la primera vez que inicia sesión o es un día diferente al último
-      if (!newStats.lastLoginDate || newStats.lastLoginDate !== today) {
-        const lastDate = newStats.lastLoginDate 
-          ? new Date(newStats.lastLoginDate) 
-          : null;
-        
+      if (lastLogin) {
+        const lastDate = new Date(lastLogin);
         const yesterday = new Date();
         yesterday.setDate(yesterday.getDate() - 1);
-        const yesterdayStr = yesterday.toISOString().split('T')[0];
         
-        // Comprobar si el último inicio de sesión fue ayer para actualizar racha
-        if (lastDate && newStats.lastLoginDate === yesterdayStr) {
-          newStats.loginStreak += 1;
+        // Verificar si el último inicio de sesión fue ayer
+        if (lastDate.toISOString().slice(0, 10) === yesterday.toISOString().slice(0, 10)) {
+          newStreak += 1;
           
-          // Logro por racha de inicios de sesión
-          if (newStats.loginStreak === 3) {
-            setTimeout(() => showAchievement(AchievementType.STREAK_VOTES), 500);
-          } else if (newStats.loginStreak === 7) {
-            setTimeout(() => showAchievement(AchievementType.TOP_SUPPORTER), 500);
+          // Si alcanza un streak de 3 días, mostrar el logro
+          if (newStreak === 3) {
+            setTimeout(() => {
+              showAchievement(AchievementType.STREAK_VOTES, 
+                '¡Has iniciado sesión durante 3 días consecutivos!');
+            }, 1000);
           }
-        } else if (lastDate && newStats.lastLoginDate !== yesterdayStr) {
-          // Reiniciar racha si no inició sesión ayer
-          newStats.loginStreak = 1;
-        } else {
-          // Primer inicio de sesión
-          newStats.loginStreak = 1;
+        } else if (lastDate.toISOString().slice(0, 10) !== today) {
+          // Si no fue ayer y no es hoy, reiniciar el streak
+          newStreak = 1;
         }
-        
-        newStats.lastLoginDate = today;
+      } else {
+        // Primer inicio de sesión
+        newStreak = 1;
       }
-      
-      return { ...prev, stats: newStats };
-    });
-  };
 
-  // Valor de contexto para proporcionar a los componentes
-  const value = {
+      const newStats: UserStats = {
+        ...prev.stats,
+        loginStreak: newStreak,
+        lastLoginDate: today
+      };
+
+      // Guardar en localStorage
+      localStorage.setItem('userStats', JSON.stringify(newStats));
+
+      return {
+        ...prev,
+        stats: newStats
+      };
+    });
+  }, [showAchievement]);
+
+  // Valores del contexto
+  const contextValue: AchievementsContextType = {
+    currentAchievement: state.currentAchievement,
+    showAnimation: state.showAnimation,
+    stats: state.stats,
     showAchievement,
     hideAchievement,
     registerVote,
-    registerSuggestedIdea,
-    registerLogin,
-    stats: state.stats,
-    currentAchievement: state.currentAchievement,
-    showAnimation: state.showAnimation
+    registerLogin
   };
 
   return (
-    <AchievementsContext.Provider value={value}>
+    <AchievementsContext.Provider value={contextValue}>
       {children}
     </AchievementsContext.Provider>
   );
 }
 
-// Hook personalizado para usar el contexto de logros
+// Hook personalizado para usar el contexto
 export function useAchievements() {
   const context = useContext(AchievementsContext);
   if (!context) {
-    throw new Error('useAchievements debe usarse dentro de un AchievementsProvider');
+    throw new Error('useAchievements debe ser usado dentro de un AchievementsProvider');
   }
   return context;
 }

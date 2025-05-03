@@ -6,6 +6,8 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/hooks/use-auth";
+import { useAchievements } from "@/hooks/use-achievements";
+import { AchievementType } from "@/components/achievement-animation";
 import { apiRequest } from "@/lib/queryClient";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -25,6 +27,7 @@ export default function SuggestIdeaDialog({ username, refetch, fullWidth = false
   const { toast } = useToast();
   const { user } = useAuth();
   const { t } = useTranslation();
+  const { showAchievement } = useAchievements();
   
   // Definir esquema de validación
   const formSchema = z.object({
@@ -74,6 +77,10 @@ export default function SuggestIdeaDialog({ username, refetch, fullWidth = false
       console.log("[DEBUG] Suggestion submitted successfully");
       // Cerrar el diálogo de inmediato
       setIsOpen(false);
+      
+      // Mostrar logro por sugerir una idea
+      showAchievement(AchievementType.SUGGESTED_IDEA, 
+        t('achievements.suggestedIdea', 'Tu idea ha sido enviada a @' + username));
       
       // Pequeña pausa antes de mostrar el toast para asegurar que el diálogo se cerró
       setTimeout(() => {
