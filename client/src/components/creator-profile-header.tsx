@@ -6,7 +6,7 @@ import {
   Instagram, 
   Youtube, 
   Globe, 
-  ExternalLink 
+  ExternalLink
 } from "lucide-react";
 import { FaTiktok } from "react-icons/fa";
 import { FaThreads } from "react-icons/fa6";
@@ -36,113 +36,121 @@ export default function CreatorProfileHeader({ creator }: CreatorProfileHeaderPr
     return name.charAt(0).toUpperCase();
   };
   
+  // Componente más compacto para la vista pública
   return (
-    <div className="mb-8">
-      <div className="flex flex-col md:flex-row items-start gap-6">
+    <div className="mb-2">
+      <div className="flex items-center gap-3">
         {/* Avatar */}
-        <Avatar className="h-20 w-20 border-2 border-primary/20">
+        <Avatar className="h-16 w-16 border-2 border-primary/20 shadow-md">
           <AvatarImage src={creator.logoUrl || undefined} alt={creator.username} />
-          <AvatarFallback className="text-2xl bg-primary/10 text-primary">
+          <AvatarFallback className="text-xl bg-primary/10 text-primary">
             {getInitials(creator.username)}
           </AvatarFallback>
         </Avatar>
         
         {/* Información del creador */}
-        <div className="flex-1">
-          <h1 className="text-3xl font-bold mb-2 text-transparent bg-clip-text bg-gradient-to-r from-primary to-blue-600 dark:from-primary dark:to-blue-400">
+        <div>
+          <h2 className="text-xl font-bold mb-1 text-transparent bg-clip-text bg-gradient-to-r from-primary to-blue-600 dark:from-primary dark:to-blue-400">
             {creator.username}
-          </h1>
+          </h2>
           
-          {creator.profileDescription && (
-            <p className="text-gray-700 dark:text-gray-300 mb-4 max-w-2xl">
-              {creator.profileDescription}
-            </p>
-          )}
-          
-          {/* Enlaces a redes sociales */}
-          <div className="flex flex-wrap gap-3 mt-3">
+          {/* Enlaces a redes sociales en formato compacto */}
+          <div className="flex flex-wrap gap-1.5">
             {creator.twitterUrl && (
-              <motion.a 
+              <SocialLink 
                 href={creator.twitterUrl} 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="text-gray-600 hover:text-blue-500 dark:text-gray-400 dark:hover:text-blue-400 transition-colors"
-                whileHover={{ scale: 1.1 }}
-                whileTap={{ scale: 0.95 }}
-              >
-                <Twitter size={18} />
-              </motion.a>
+                icon={<Twitter size={15} />} 
+                name="Twitter"
+                hoverClass="hover:text-blue-500 dark:hover:text-blue-400"
+              />
             )}
             
             {creator.instagramUrl && (
-              <motion.a 
+              <SocialLink 
                 href={creator.instagramUrl} 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="text-gray-600 hover:text-pink-500 dark:text-gray-400 dark:hover:text-pink-400 transition-colors"
-                whileHover={{ scale: 1.1 }}
-                whileTap={{ scale: 0.95 }}
-              >
-                <Instagram size={18} />
-              </motion.a>
+                icon={<Instagram size={15} />} 
+                name="Instagram"
+                hoverClass="hover:text-pink-500 dark:hover:text-pink-400"
+              />
             )}
             
             {creator.youtubeUrl && (
-              <motion.a 
+              <SocialLink 
                 href={creator.youtubeUrl} 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="text-gray-600 hover:text-red-500 dark:text-gray-400 dark:hover:text-red-400 transition-colors"
-                whileHover={{ scale: 1.1 }}
-                whileTap={{ scale: 0.95 }}
-              >
-                <Youtube size={18} />
-              </motion.a>
+                icon={<Youtube size={15} />} 
+                name="YouTube"
+                hoverClass="hover:text-red-500 dark:hover:text-red-400"
+              />
             )}
             
             {creator.tiktokUrl && (
-              <motion.a 
+              <SocialLink 
                 href={creator.tiktokUrl} 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="text-gray-600 hover:text-black dark:text-gray-400 dark:hover:text-white transition-colors"
-                whileHover={{ scale: 1.1 }}
-                whileTap={{ scale: 0.95 }}
-              >
-                <FaTiktok size={16} />
-              </motion.a>
+                icon={<FaTiktok size={14} />} 
+                name="TikTok"
+                hoverClass="hover:text-black dark:hover:text-white"
+              />
             )}
             
             {creator.threadsUrl && (
-              <motion.a 
+              <SocialLink 
                 href={creator.threadsUrl} 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="text-gray-600 hover:text-black dark:text-gray-400 dark:hover:text-white transition-colors"
-                whileHover={{ scale: 1.1 }}
-                whileTap={{ scale: 0.95 }}
-              >
-                <FaThreads size={16} />
-              </motion.a>
+                icon={<FaThreads size={14} />} 
+                name="Threads"
+                hoverClass="hover:text-black dark:hover:text-white"
+              />
             )}
             
             {creator.websiteUrl && (
-              <motion.a 
+              <SocialLink 
                 href={creator.websiteUrl} 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="text-gray-600 hover:text-primary dark:text-gray-400 dark:hover:text-primary-400 transition-colors flex items-center gap-1"
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-              >
-                <Globe size={16} />
-                <span className="text-xs">{t('common.website')}</span>
-                <ExternalLink size={12} />
-              </motion.a>
+                icon={<Globe size={15} />} 
+                name={t('common.website')}
+                hoverClass="hover:text-primary dark:hover:text-primary-400"
+                hasExternalIcon
+              />
             )}
           </div>
         </div>
       </div>
+      
+      {creator.profileDescription && (
+        <div className="mt-3 text-sm text-gray-600 dark:text-gray-400 line-clamp-3">
+          {creator.profileDescription}
+        </div>
+      )}
     </div>
+  );
+}
+
+// Componente auxiliar para los links sociales
+function SocialLink({ 
+  href, 
+  icon, 
+  name, 
+  hoverClass = "hover:text-gray-900 dark:hover:text-white",
+  hasExternalIcon = false 
+}: { 
+  href: string, 
+  icon: React.ReactNode, 
+  name: string,
+  hoverClass?: string,
+  hasExternalIcon?: boolean 
+}) {
+  return (
+    <motion.a 
+      href={href} 
+      target="_blank" 
+      rel="noopener noreferrer"
+      className={`text-gray-500 dark:text-gray-400 ${hoverClass} transition-colors bg-gray-100 dark:bg-gray-700/50 rounded-md p-1.5`}
+      whileHover={{ scale: 1.1 }}
+      whileTap={{ scale: 0.95 }}
+      title={name}
+    >
+      <span className="flex items-center">
+        {icon}
+        {hasExternalIcon && <ExternalLink size={10} className="ml-0.5 opacity-70" />}
+      </span>
+    </motion.a>
   );
 }
