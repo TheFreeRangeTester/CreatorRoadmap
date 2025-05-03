@@ -32,7 +32,8 @@
     "website": "Website",
     "back": "Back to Dashboard",
     "joinFanlist": "Join Fanlist",
-    "noDescription": "No description available"
+    "noDescription": "No description available",
+    "cancel": "Cancel"
   },
   "homepage": {
     "title": "Content Roadmap",

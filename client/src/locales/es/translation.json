@@ -32,7 +32,8 @@
     "website": "Sitio web",
     "back": "Volver al Dashboard",
     "joinFanlist": "Únete a Fanlist",
-    "noDescription": "Sin descripción disponible"
+    "noDescription": "Sin descripción disponible",
+    "cancel": "Cancelar"
   },
   "homepage": {
     "title": "Roadmap de Contenido",
