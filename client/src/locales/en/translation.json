@@ -243,6 +243,29 @@
         "description": "Easily integrate your leaderboards on your website, social media, or newsletters to maximize their reach."
       }
     },
+    "showcase": {
+      "title": "Data-driven decisions for your content",
+      "description": "Know exactly what your audience wants to see and create content that resonates with them, generating more engagement and growth for your personal brand.",
+      "bullet1": "Higher audience engagement with interactive voting",
+      "bullet2": "Real-time data about your followers' preferences",
+      "bullet3": "Complete customization to adapt to your brand"
+    },
+    "howItWorks": {
+      "title": "How Fanlist works",
+      "subtitle": "A simple process to keep your fans connected",
+      "step1": {
+        "title": "Create your leaderboard",
+        "description": "Quickly set up a personalized leaderboard for your audience to interact with"
+      },
+      "step2": {
+        "title": "Share with your audience",
+        "description": "Share the unique link with your followers on your social media or website"
+      },
+      "step3": {
+        "title": "Get feedback and grow",
+        "description": "Analyze the results and use the feedback to create content that truly connects"
+      }
+    },
     "pricing": {
       "title": "Plans that adapt to your growth",
       "subtitle": "From creators who are just starting out to professionals with large communities, we have a plan for every stage of your journey.",

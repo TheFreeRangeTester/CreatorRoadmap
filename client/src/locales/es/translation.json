@@ -243,6 +243,29 @@
         "description": "Integra fácilmente tus leaderboards en tu sitio web, redes sociales o newsletters para maximizar su alcance."
       }
     },
+    "showcase": {
+      "title": "Decisiones basadas en datos para tu contenido",
+      "description": "Conoce exactamente lo que tu audiencia desea ver y crea contenido que resuene con ellos, generando más engagement y crecimiento para tu marca personal.",
+      "bullet1": "Mayor engagement de tu audiencia con votaciones interactivas",
+      "bullet2": "Datos en tiempo real sobre las preferencias de tus seguidores",
+      "bullet3": "Personalización completa para adaptarse a tu marca"
+    },
+    "howItWorks": {
+      "title": "Cómo funciona Fanlist",
+      "subtitle": "Un proceso simple para mantener conectados a tus fans",
+      "step1": {
+        "title": "Crea tu leaderboard",
+        "description": "Configura rápidamente un leaderboard personalizado para que tu audiencia pueda interactuar"
+      },
+      "step2": {
+        "title": "Comparte con tu audiencia",
+        "description": "Comparte el enlace único con tus seguidores en tus redes sociales o sitio web"
+      },
+      "step3": {
+        "title": "Recibe feedback y crece",
+        "description": "Analiza los resultados y utiliza el feedback para crear contenido que realmente conecte"
+      }
+    },
     "pricing": {
       "title": "Planes que se adaptan a tu crecimiento",
       "subtitle": "Desde creadores que están empezando hasta profesionales con grandes comunidades, tenemos un plan para cada etapa de tu viaje.",
