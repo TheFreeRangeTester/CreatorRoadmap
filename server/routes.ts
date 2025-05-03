@@ -360,39 +360,54 @@ export async function registerRoutes(app: Express): Promise<Server> {
   
   // Suggest an idea to a creator
   app.post("/api/creators/:username/suggest", async (req: Request, res: Response) => {
+    console.log("Recibida petición para sugerir idea:", req.params, req.body);
     try {
       if (!req.isAuthenticated()) {
+        console.log("Usuario no autenticado");
         return res.status(401).json({ message: "Authentication required to suggest ideas" });
       }
       
+      console.log("Usuario autenticado:", req.user);
       const { username } = req.params;
       
       // Find the creator by username
       const creator = await storage.getUserByUsername(username);
       if (!creator) {
+        console.log("Creador no encontrado:", username);
         return res.status(404).json({ message: "Creator not found" });
       }
       
+      console.log("Creador encontrado:", creator);
+      
       // Parse and validate the idea data
+      console.log("Validando datos:", req.body);
       const validatedData = suggestIdeaSchema.parse({
         ...req.body,
         creatorId: creator.id
       });
       
+      console.log("Datos validados:", validatedData);
+      
       // Store the suggested idea with pending status
       const idea = await storage.suggestIdea(validatedData, req.user!.id);
+      console.log("Idea sugerida creada:", idea);
       
       // Get the username of the suggester for the response
       const suggester = await storage.getUser(req.user!.id);
+      console.log("Sugeridor:", suggester);
       
-      res.status(201).json({
+      const response = {
         ...idea,
         suggestedByUsername: suggester!.username,
         position: { current: null, previous: null, change: null }
-      });
+      };
+      
+      console.log("Enviando respuesta:", response);
+      res.status(201).json(response);
     } catch (error) {
       if (error instanceof ZodError) {
         const validationError = fromZodError(error);
+        console.log("Error de validación:", validationError);
         return res.status(400).json({ message: validationError.message });
       }
       console.error("Error suggesting idea:", error);
