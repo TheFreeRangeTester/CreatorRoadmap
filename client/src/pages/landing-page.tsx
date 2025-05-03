@@ -490,6 +490,175 @@ export default function LandingPage() {
         </div>
       </section>
 
+      {/* Visual showcase */}
+      <section className="py-16 bg-gradient-to-b from-white to-gray-50 dark:from-gray-900 dark:to-gray-950 overflow-hidden relative">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+          <motion.div 
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: "-100px" }}
+            variants={staggerContainer}
+            className="max-w-5xl mx-auto"
+          >
+            <div className="grid md:grid-cols-2 gap-10 items-center">
+              <motion.div variants={fadeIn} className="order-2 md:order-1">
+                <h2 className="text-3xl md:text-4xl font-bold mb-6 dark:text-white leading-tight">
+                  {t('landing.showcase.title', 'Decisiones basadas en datos para tu contenido')}
+                </h2>
+                <p className="text-lg text-gray-600 dark:text-gray-300 mb-6">
+                  {t('landing.showcase.description', 'Conoce exactamente lo que tu audiencia desea ver y crea contenido que resuene con ellos, generando más engagement y crecimiento para tu marca personal.')}
+                </p>
+                <ul className="space-y-4">
+                  <li className="flex items-start gap-3">
+                    <div className="bg-green-100 dark:bg-green-900/50 rounded-full p-1 mt-1">
+                      <Check className="h-4 w-4 text-green-600 dark:text-green-400" />
+                    </div>
+                    <p className="text-gray-700 dark:text-gray-300">
+                      {t('landing.showcase.bullet1', 'Mayor engagement de tu audiencia con votaciones interactivas')}
+                    </p>
+                  </li>
+                  <li className="flex items-start gap-3">
+                    <div className="bg-green-100 dark:bg-green-900/50 rounded-full p-1 mt-1">
+                      <Check className="h-4 w-4 text-green-600 dark:text-green-400" />
+                    </div>
+                    <p className="text-gray-700 dark:text-gray-300">
+                      {t('landing.showcase.bullet2', 'Datos en tiempo real sobre las preferencias de tus seguidores')}
+                    </p>
+                  </li>
+                  <li className="flex items-start gap-3">
+                    <div className="bg-green-100 dark:bg-green-900/50 rounded-full p-1 mt-1">
+                      <Check className="h-4 w-4 text-green-600 dark:text-green-400" />
+                    </div>
+                    <p className="text-gray-700 dark:text-gray-300">
+                      {t('landing.showcase.bullet3', 'Personalización completa para adaptarse a tu marca')}
+                    </p>
+                  </li>
+                </ul>
+              </motion.div>
+              
+              <motion.div 
+                variants={fadeIn}
+                className="order-1 md:order-2 bg-white dark:bg-gray-800 p-2 rounded-xl shadow-xl border border-gray-200 dark:border-gray-700 overflow-hidden"
+              >
+                <div className="relative aspect-[4/3] rounded-lg overflow-hidden bg-gray-100 dark:bg-gray-700">
+                  {/* Aquí iría una imagen o gráfico, usando un placeholder por ahora */}
+                  <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-gray-100 to-gray-200 dark:from-gray-800 dark:to-gray-700">
+                    <div className="max-w-[80%] p-4 bg-white dark:bg-gray-900 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700">
+                      <div className="flex justify-between items-center border-b border-gray-100 dark:border-gray-800 pb-3 mb-3">
+                        <div className="flex items-center">
+                          <div className="h-8 w-8 rounded-full bg-primary/20 flex items-center justify-center mr-3">
+                            <span className="text-xs font-semibold text-primary">FN</span>
+                          </div>
+                          <div>
+                            <p className="font-medium text-sm dark:text-white">Fanlist Dashboard</p>
+                            <p className="text-xs text-gray-500 dark:text-gray-400">Ideas en tiempo real</p>
+                          </div>
+                        </div>
+                        <div className="text-xs bg-green-100 text-green-800 dark:bg-green-900/50 dark:text-green-400 px-2 py-1 rounded-full">
+                          Live
+                        </div>
+                      </div>
+                      
+                      <div className="space-y-3">
+                        <div className="flex justify-between items-center p-2 bg-gray-50 dark:bg-gray-800 rounded">
+                          <div className="flex items-center">
+                            <div className="w-5 h-5 rounded-full bg-yellow-400 flex items-center justify-center mr-2">
+                              <span className="text-xs font-bold text-yellow-900">1</span>
+                            </div>
+                            <span className="text-sm dark:text-white">Tutorial avanzado de edición</span>
+                          </div>
+                          <div className="text-xs font-medium">342 votos</div>
+                        </div>
+                        
+                        <div className="flex justify-between items-center p-2 bg-gray-50 dark:bg-gray-800 rounded">
+                          <div className="flex items-center">
+                            <div className="w-5 h-5 rounded-full bg-gray-400 flex items-center justify-center mr-2">
+                              <span className="text-xs font-bold text-gray-900">2</span>
+                            </div>
+                            <span className="text-sm dark:text-white">Revisión de equipos de streaming</span>
+                          </div>
+                          <div className="text-xs font-medium">289 votos</div>
+                        </div>
+                        
+                        <div className="flex justify-between items-center p-2 bg-gray-50 dark:bg-gray-800 rounded">
+                          <div className="flex items-center">
+                            <div className="w-5 h-5 rounded-full bg-amber-600 flex items-center justify-center mr-2">
+                              <span className="text-xs font-bold text-amber-100">3</span>
+                            </div>
+                            <span className="text-sm dark:text-white">Colaboración con artistas</span>
+                          </div>
+                          <div className="text-xs font-medium">251 votos</div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </motion.div>
+            </div>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* How It Works */}
+      <section className="py-24">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+          <motion.div 
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: "-100px" }}
+            variants={staggerContainer}
+            className="max-w-3xl mx-auto text-center mb-16"
+          >
+            <motion.h2 
+              variants={fadeIn}
+              className="text-3xl md:text-4xl font-bold mb-4 dark:text-white"
+            >
+              {t('landing.howItWorks.title', 'Cómo funciona Fanlist')}
+            </motion.h2>
+            <motion.p 
+              variants={fadeIn}
+              className="text-lg text-gray-600 dark:text-gray-300"
+            >
+              {t('landing.howItWorks.subtitle', 'Un proceso simple para mantener conectados a tus fans')}
+            </motion.p>
+          </motion.div>
+
+          <div className="max-w-5xl mx-auto">
+            <motion.div 
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, margin: "-100px" }}
+              variants={staggerContainer}
+              className="grid md:grid-cols-3 gap-10"
+            >
+              <motion.div variants={fadeIn} className="flex flex-col items-center text-center">
+                <div className="w-16 h-16 bg-primary/10 dark:bg-primary/20 rounded-full flex items-center justify-center mb-6">
+                  <span className="text-2xl font-bold text-primary">1</span>
+                </div>
+                <h3 className="text-xl font-semibold mb-3 dark:text-white">{t('landing.howItWorks.step1.title', 'Crea tu leaderboard')}</h3>
+                <p className="text-gray-600 dark:text-gray-400">{t('landing.howItWorks.step1.description', 'Configura rápidamente un leaderboard personalizado para que tu audiencia pueda interactuar')}</p>
+              </motion.div>
+              
+              <motion.div variants={fadeIn} className="flex flex-col items-center text-center">
+                <div className="w-16 h-16 bg-primary/10 dark:bg-primary/20 rounded-full flex items-center justify-center mb-6">
+                  <span className="text-2xl font-bold text-primary">2</span>
+                </div>
+                <h3 className="text-xl font-semibold mb-3 dark:text-white">{t('landing.howItWorks.step2.title', 'Comparte con tu audiencia')}</h3>
+                <p className="text-gray-600 dark:text-gray-400">{t('landing.howItWorks.step2.description', 'Comparte el enlace único con tus seguidores en tus redes sociales o sitio web')}</p>
+              </motion.div>
+              
+              <motion.div variants={fadeIn} className="flex flex-col items-center text-center">
+                <div className="w-16 h-16 bg-primary/10 dark:bg-primary/20 rounded-full flex items-center justify-center mb-6">
+                  <span className="text-2xl font-bold text-primary">3</span>
+                </div>
+                <h3 className="text-xl font-semibold mb-3 dark:text-white">{t('landing.howItWorks.step3.title', 'Recibe feedback y crece')}</h3>
+                <p className="text-gray-600 dark:text-gray-400">{t('landing.howItWorks.step3.description', 'Analiza los resultados y utiliza el feedback para crear contenido que realmente conecte')}</p>
+              </motion.div>
+            </motion.div>
+          </div>
+        </div>
+      </section>
+
       {/* Pricing */}
       <section id="pricing" className="py-24 bg-gray-50 dark:bg-gray-900 border-y border-gray-200 dark:border-gray-800">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
