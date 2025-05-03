@@ -1,6 +1,11 @@
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Link, useLocation } from "wouter";
 import { motion } from "framer-motion";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { SplitText } from "gsap/SplitText";
+
+gsap.registerPlugin(ScrollTrigger, SplitText);
 import { CloudLightning, ArrowRight, Check, CircleCheck, Zap, Users, LineChart, Award, Layers, Globe, Star } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
@@ -37,7 +42,7 @@ function FeatureCard({ icon, title, description }: { icon: React.ReactNode, titl
   return (
     <motion.div 
       variants={fadeIn}
-      className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 transition-all duration-300 hover:shadow-md hover:-translate-y-1"
+      className="feature-card bg-white dark:bg-gray-800 p-6 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 transition-all duration-300 hover:shadow-md hover:-translate-y-1"
     >
       <div className="flex items-start gap-4">
         <div className="bg-primary/10 dark:bg-primary/20 p-3 rounded-lg">
@@ -167,6 +172,44 @@ export default function LandingPage() {
   const [, navigate] = useLocation();
   const [isDemoOpen, setIsDemoOpen] = useState(false);
   const { t } = useTranslation();
+  
+  const heroTitleRef = useRef(null);
+  const heroTextRef = useRef(null);
+  const featuresRef = useRef(null);
+  
+  useEffect(() => {
+    // Hero title animation with SplitText
+    const titleSplit = new SplitText(heroTitleRef.current, { type: "chars,words" });
+    gsap.from(titleSplit.chars, {
+      opacity: 0,
+      y: 50,
+      duration: 1,
+      stagger: 0.02,
+      ease: "back.out"
+    });
+
+    // Hero text fade in
+    gsap.from(heroTextRef.current, {
+      opacity: 0,
+      y: 30,
+      duration: 1,
+      delay: 0.5
+    });
+
+    // Features cards stagger animation
+    gsap.from(".feature-card", {
+      scrollTrigger: {
+        trigger: featuresRef.current,
+        start: "top center",
+        toggleActions: "play none none reverse"
+      },
+      opacity: 0,
+      y: 50,
+      duration: 0.8,
+      stagger: 0.2,
+      ease: "power2.out"
+    });
+  }, []);
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white dark:from-gray-950 dark:to-gray-900">
@@ -179,7 +222,7 @@ export default function LandingPage() {
             <div className="flex items-center">
               <CloudLightning className="h-8 w-8 text-primary" />
               <h1 className="ml-2 text-xl font-bold text-neutral-800 dark:text-white">
-                IdeaVote
+                Fanlist
               </h1>
             </div>
             <div className="flex items-center gap-4">
@@ -231,19 +274,19 @@ export default function LandingPage() {
               </Badge>
             </motion.div>
             
-            <motion.h1 
-              variants={fadeIn}
+            <h1 
+              ref={heroTitleRef}
               className="text-4xl md:text-6xl font-bold tracking-tight mb-6 bg-clip-text text-transparent bg-gradient-to-r from-gray-900 to-gray-700 dark:from-white dark:to-gray-300"
             >
               {t('landing.hero.title')}
-            </motion.h1>
+            </h1>
             
-            <motion.p 
-              variants={fadeIn}
+            <p 
+              ref={heroTextRef}
               className="text-lg md:text-xl text-gray-600 dark:text-gray-300 mb-8 max-w-3xl mx-auto"
             >
               {t('landing.hero.subtitle')}
-            </motion.p>
+            </p>
             
             <motion.div 
               variants={fadeIn}
@@ -363,10 +406,7 @@ export default function LandingPage() {
           </motion.div>
 
           <motion.div 
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, margin: "-100px" }}
-            variants={staggerContainer}
+            ref={featuresRef}
             className="grid md:grid-cols-2 lg:grid-cols-3 gap-8"
           >
             <FeatureCard 
@@ -596,11 +636,11 @@ export default function LandingPage() {
             <div className="flex items-center mb-4 md:mb-0">
               <CloudLightning className="h-6 w-6 text-primary" />
               <h1 className="ml-2 text-lg font-bold text-neutral-800 dark:text-white">
-                IdeaVote
+                Fanlist
               </h1>
             </div>
             <p className="text-sm text-gray-600 dark:text-gray-400">
-              © {new Date().getFullYear()} IdeaVote. {t('landing.footer.copyright')}
+              © {new Date().getFullYear()} Fanlist. {t('landing.footer.copyright')}
             </p>
           </div>
         </div>
