@@ -135,7 +135,7 @@ export default function SuggestIdeaDialog({ username, refetch, fullWidth = false
       <DialogTrigger asChild>
         <Button 
           variant="secondary" 
-          className="h-full shadow-sm flex items-center gap-2"
+          className={`shadow-sm flex items-center gap-2 ${fullWidth ? 'w-full' : ''}`}
           onClick={(e) => {
             // Prevenir apertura automática para verificar autenticación
             if (!user) {
