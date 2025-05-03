@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sugerir Idea</title>
+  <style>
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(to bottom, #3b82f6, #1e40af);
+      color: #fff;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+    
+    header {
+      padding: 20px;
+      text-align: center;
+      background-color: rgba(0, 0, 0, 0.1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    
+    header svg {
+      width: 24px;
+      height: 24px;
+      margin-right: 10px;
+    }
+    
+    .container {
+      flex: 1;
+      width: 100%;
+      max-width: 500px;
+      margin: 0 auto;
+      padding: 20px;
+      box-sizing: border-box;
+    }
+    
+    .card {
+      background-color: white;
+      border-radius: 10px;
+      padding: 20px;
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+      color: #333;
+    }
+    
+    .form-group {
+      margin-bottom: 20px;
+    }
+    
+    label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 500;
+    }
+    
+    input, textarea {
+      width: 100%;
+      padding: 12px;
+      border-radius: 6px;
+      border: 1px solid #ddd;
+      box-sizing: border-box;
+      font-size: 16px;
+    }
+    
+    textarea {
+      min-height: 120px;
+      resize: vertical;
+    }
+    
+    .error {
+      color: #e11d48;
+      font-size: 14px;
+      margin-top: 5px;
+    }
+    
+    .buttons {
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+      margin-top: 30px;
+    }
+    
+    button {
+      cursor: pointer;
+      padding: 10px 20px;
+      border-radius: 6px;
+      border: none;
+      font-size: 16px;
+      font-weight: 500;
+      transition: all 0.2s;
+    }
+    
+    button.primary {
+      background: linear-gradient(to right, #3b82f6, #2563eb);
+      color: white;
+    }
+    
+    button.primary:hover {
+      background: linear-gradient(to right, #2563eb, #1d4ed8);
+      transform: translateY(-2px);
+    }
+    
+    button.secondary {
+      background-color: #e5e7eb;
+      color: #374151;
+    }
+    
+    button.secondary:hover {
+      background-color: #d1d5db;
+    }
+    
+    button:disabled {
+      opacity: 0.7;
+      cursor: not-allowed;
+    }
+    
+    .spinner {
+      display: inline-block;
+      width: 16px;
+      height: 16px;
+      border: 2px solid rgba(255, 255, 255, 0.3);
+      border-radius: 50%;
+      border-top-color: white;
+      animation: spin 1s linear infinite;
+      margin-right: 8px;
+    }
+    
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+    
+    /* Estados */
+    .state {
+      display: none;
+    }
+    
+    .state.active {
+      display: block;
+    }
+    
+    /* Estado de éxito */
+    .success-container {
+      text-align: center;
+      padding: 30px 0;
+    }
+    
+    .success-icon {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 80px;
+      height: 80px;
+      background: #10b981;
+      border-radius: 50%;
+      margin-bottom: 20px;
+    }
+    
+    .success-icon svg {
+      width: 40px;
+      height: 40px;
+      color: white;
+    }
+    
+    .success-title {
+      font-size: 24px;
+      font-weight: 700;
+      margin-bottom: 10px;
+      color: #111827;
+    }
+    
+    .success-message {
+      color: #6b7280;
+      margin-bottom: 30px;
+      font-size: 16px;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="12" r="5"></circle>
+      <line x1="12" y1="1" x2="12" y2="3"></line>
+      <line x1="12" y1="21" x2="12" y2="23"></line>
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+      <line x1="1" y1="12" x2="3" y2="12"></line>
+      <line x1="21" y1="12" x2="23" y2="12"></line>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+    </svg>
+    <h1 id="page-title">Sugerir Idea</h1>
+  </header>
+  
+  <div class="container">
+    <!-- Formulario -->
+    <div id="form-state" class="state active">
+      <div class="card">
+        <div class="form-group">
+          <label for="title">Título</label>
+          <input 
+            type="text" 
+            id="title" 
+            placeholder="Título breve y descriptivo"
+            maxlength="100" 
+            autocomplete="off"
+          >
+          <div id="title-error" class="error"></div>
+        </div>
+        
+        <div class="form-group">
+          <label for="description">Descripción</label>
+          <textarea 
+            id="description" 
+            placeholder="Describe tu idea con más detalle"
+            maxlength="500"
+          ></textarea>
+          <div id="description-error" class="error"></div>
+        </div>
+        
+        <div id="form-error" class="error"></div>
+        
+        <div class="buttons">
+          <button type="button" id="cancel-button" class="secondary">Cancelar</button>
+          <button type="button" id="submit-button" class="primary">Enviar Idea</button>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Éxito -->
+    <div id="success-state" class="state">
+      <div class="card">
+        <div class="success-container">
+          <div class="success-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="20 6 9 17 4 12"></polyline>
+            </svg>
+          </div>
+          <div class="success-title">¡Idea enviada!</div>
+          <div class="success-message">Tu idea ha sido enviada y está pendiente de revisión.</div>
+          <button type="button" id="close-button" class="primary">Cerrar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <script>
+    // Obtener parámetros de URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const username = urlParams.get('username');
+    const messageId = urlParams.get('id');
+    
+    // Elementos DOM
+    const pageTitle = document.getElementById('page-title');
+    const titleInput = document.getElementById('title');
+    const descriptionInput = document.getElementById('description');
+    const titleError = document.getElementById('title-error');
+    const descriptionError = document.getElementById('description-error');
+    const formError = document.getElementById('form-error');
+    const submitButton = document.getElementById('submit-button');
+    const cancelButton = document.getElementById('cancel-button');
+    const closeButton = document.getElementById('close-button');
+    const formState = document.getElementById('form-state');
+    const successState = document.getElementById('success-state');
+    
+    // Actualizar título con nombre de usuario
+    if (username) {
+      pageTitle.textContent = `Sugerir Idea para @${username}`;
+    }
+    
+    // Validar título
+    function validateTitle() {
+      const value = titleInput.value.trim();
+      if (value.length < 3) {
+        titleError.textContent = 'El título debe tener al menos 3 caracteres';
+        return false;
+      }
+      if (value.length > 100) {
+        titleError.textContent = 'El título no puede exceder 100 caracteres';
+        return false;
+      }
+      titleError.textContent = '';
+      return true;
+    }
+    
+    // Validar descripción
+    function validateDescription() {
+      const value = descriptionInput.value.trim();
+      if (value.length < 10) {
+        descriptionError.textContent = 'La descripción debe tener al menos 10 caracteres';
+        return false;
+      }
+      if (value.length > 500) {
+        descriptionError.textContent = 'La descripción no puede exceder 500 caracteres';
+        return false;
+      }
+      descriptionError.textContent = '';
+      return true;
+    }
+    
+    // Validar formulario
+    function validateForm() {
+      const isValidTitle = validateTitle();
+      const isValidDescription = validateDescription();
+      return isValidTitle && isValidDescription;
+    }
+    
+    // Listeners de validación
+    titleInput.addEventListener('input', validateTitle);
+    descriptionInput.addEventListener('input', validateDescription);
+    
+    // Cambiar estado del botón mientras se envía
+    function setSubmitting(isSubmitting) {
+      if (isSubmitting) {
+        submitButton.disabled = true;
+        submitButton.innerHTML = '<span class="spinner"></span>Enviando...';
+      } else {
+        submitButton.disabled = false;
+        submitButton.textContent = 'Enviar Idea';
+      }
+    }
+    
+    // Enviar idea
+    async function submitIdea() {
+      if (!validateForm()) {
+        return;
+      }
+      
+      setSubmitting(true);
+      formError.textContent = '';
+      
+      try {
+        const response = await fetch(`/api/creators/${username}/suggest`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            title: titleInput.value.trim(),
+            description: descriptionInput.value.trim()
+          }),
+          credentials: 'include'
+        });
+        
+        if (!response.ok) {
+          const errorData = await response.json();
+          throw new Error(errorData.message || 'Error al enviar la idea');
+        }
+        
+        const data = await response.json();
+        console.log('Idea enviada con éxito:', data);
+        
+        // Mostrar estado de éxito
+        formState.classList.remove('active');
+        successState.classList.add('active');
+        
+        // Enviar mensaje a la ventana padre
+        if (window.opener && !window.opener.closed) {
+          window.opener.postMessage({
+            type: 'IDEA_SUGGESTED',
+            id: parseInt(messageId, 10),
+            data
+          }, window.location.origin);
+        }
+        
+      } catch (error) {
+        console.error('Error:', error);
+        formError.textContent = error.message || 'Ocurrió un error al enviar la idea';
+        setSubmitting(false);
+      }
+    }
+    
+    // Botón de envío
+    submitButton.addEventListener('click', submitIdea);
+    
+    // Botón de cancelar
+    cancelButton.addEventListener('click', function() {
+      window.close();
+    });
+    
+    // Botón de cerrar
+    closeButton.addEventListener('click', function() {
+      window.close();
+    });
+    
+    // Submit con Enter en inputs
+    titleInput.addEventListener('keypress', function(e) {
+      if (e.key === 'Enter') {
+        descriptionInput.focus();
+      }
+    });
+    
+    // Focus inicial
+    window.addEventListener('load', function() {
+      titleInput.focus();
+    });
+  </script>
+</body>
+</html>
