@@ -5,10 +5,6 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { CustomSplitText, registerGSAPPlugins } from "@/components/gsap-animations";
 import { CloudLightning, ArrowRight, Check, CircleCheck, Zap, Users, LineChart, Award, Layers, Globe, Star } from "lucide-react";
-
-// Registra los plugins
-registerGSAPPlugins();
-gsap.registerPlugin(ScrollTrigger);
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -178,6 +174,19 @@ export default function LandingPage() {
   const heroTitleRef = useRef(null);
   const heroTextRef = useRef(null);
   const featuresRef = useRef(null);
+  
+  // Inicializar los plugins de GSAP
+  useEffect(() => {
+    // Registra los plugins personalizados
+    registerGSAPPlugins();
+    // Registra ScrollTrigger
+    gsap.registerPlugin(ScrollTrigger);
+    
+    return () => {
+      // Limpiar cuando el componente se desmonte
+      ScrollTrigger.getAll().forEach(t => t.kill());
+    };
+  }, []);
   
   useEffect(() => {
     try {

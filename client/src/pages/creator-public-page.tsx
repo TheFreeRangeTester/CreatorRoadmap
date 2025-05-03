@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useParams, useLocation, Link } from "wouter";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { motion, AnimatePresence } from "framer-motion";
@@ -16,6 +16,9 @@ import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import SuggestIdeaDialog from "@/components/suggest-idea-dialog";
 import CreatorProfileHeader from "@/components/creator-profile-header";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { CustomSplitText, registerGSAPPlugins, useStaggerCards, useSplitTextAnimation } from "@/components/gsap-animations";
 
 interface CreatorPublicPageResponse {
   ideas: IdeaResponse[];
@@ -44,7 +47,23 @@ export default function CreatorPublicPage() {
   const { toast } = useToast();
   const { user } = useAuth();
   const { t } = useTranslation();
-
+  
+  // Referencias para las animaciones
+  const pageRef = useRef<HTMLDivElement>(null);
+  const headerRef = useRef<HTMLHeadingElement>(null);
+  const descriptionRef = useRef<HTMLParagraphElement>(null);
+  const ideasContainerRef = useRef<HTMLDivElement>(null);
+  
+  // Inicializar GSAP
+  useEffect(() => {
+    registerGSAPPlugins();
+    gsap.registerPlugin(ScrollTrigger);
+    
+    return () => {
+      ScrollTrigger.getAll().forEach(trigger => trigger.kill());
+    };
+  }, []);
+  
   const { data, isLoading, error, refetch } = useQuery<CreatorPublicPageResponse>({
     queryKey: [`/api/creators/${username}`],
     enabled: !!username,
