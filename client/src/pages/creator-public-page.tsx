@@ -380,6 +380,20 @@ export default function CreatorPublicPage() {
               </motion.p>
             )}
             
+            {/* Botón para sugerir ideas */}
+            <motion.div
+              className="mt-4 mb-6"
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.15 }}
+            >
+              <SuggestIdeaDialog 
+                username={creator.username} 
+                refetch={refetch}
+                fullWidth={true} 
+              />
+            </motion.div>
+            
             {/* Iconos sociales en línea */}
             <motion.div 
               className="flex justify-center gap-3 mb-8"
