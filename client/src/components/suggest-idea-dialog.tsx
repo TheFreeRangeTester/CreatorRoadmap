@@ -6,7 +6,6 @@ import { useAchievements } from "@/hooks/use-achievements";
 import { AchievementType } from "@/components/achievement-animation";
 import { Button } from "@/components/ui/button";
 import { useTranslation } from "react-i18next";
-import { apiRequest } from "@/lib/queryClient";
 
 interface SuggestIdeaDialogProps {
   username: string;
@@ -22,10 +21,6 @@ export default function SuggestIdeaDialog({ username, refetch, fullWidth = false
   
   // Estado para el modal inline
   const [showModal, setShowModal] = useState(false);
-  const [title, setTitle] = useState('');
-  const [description, setDescription] = useState('');
-  const [titleError, setTitleError] = useState('');
-  const [descriptionError, setDescriptionError] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   
   // Función para abrir el modal
@@ -40,100 +35,82 @@ export default function SuggestIdeaDialog({ username, refetch, fullWidth = false
     }
     
     setShowModal(true);
-    // Resetear los valores
-    setTitle('');
-    setDescription('');
-    setTitleError('');
-    setDescriptionError('');
   };
   
-  // Función para validar el título
-  const validateTitle = () => {
-    if (title.trim().length < 3) {
-      setTitleError(t('suggestIdea.titleMinLength', { defaultValue: "Title must be at least 3 characters" }));
-      return false;
-    }
-    if (title.trim().length > 100) {
-      setTitleError(t('suggestIdea.titleMaxLength', { defaultValue: "Title cannot exceed 100 characters" }));
-      return false;
-    }
-    setTitleError('');
-    return true;
-  };
-  
-  // Función para validar la descripción
-  const validateDescription = () => {
-    if (description.trim().length < 10) {
-      setDescriptionError(t('suggestIdea.descriptionMinLength', { defaultValue: "Description must be at least 10 characters" }));
-      return false;
-    }
-    if (description.trim().length > 500) {
-      setDescriptionError(t('suggestIdea.descriptionMaxLength', { defaultValue: "Description cannot exceed 500 characters" }));
-      return false;
-    }
-    setDescriptionError('');
-    return true;
-  };
-  
-  // Función para enviar el formulario
-  const handleSubmit = async () => {
-    console.log("Intentando enviar idea");
+  // Función para manejar el envío del formulario directamente con fetch
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
     
-    // Validar los campos
-    const isTitleValid = validateTitle();
-    const isDescriptionValid = validateDescription();
+    // Obtenemos los valores del formulario directamente del evento
+    const form = e.currentTarget;
+    const formData = new FormData(form);
+    const title = formData.get('title') as string;
+    const description = formData.get('description') as string;
     
-    if (!isTitleValid || !isDescriptionValid) {
+    // Validación básica
+    if (title.trim().length < 3 || description.trim().length < 10) {
+      toast({
+        title: t('suggestIdea.invalidFields'),
+        description: t('suggestIdea.invalidFieldsDesc'),
+        variant: "destructive",
+      });
       return;
     }
     
     // Mostrar estado de carga
     setIsSubmitting(true);
     
-    try {
-      console.log(`Enviando sugerencia a ${username}`, { title, description });
-      
-      // Hacer la petición
-      const response = await apiRequest(
-        'POST',
-        `/api/creators/${username}/suggest`,
-        { title: title.trim(), description: description.trim() }
-      );
-      
-      console.log("Respuesta de la API:", response);
-      
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.message || t('suggestIdea.errorDesc', { defaultValue: "Error sending suggestion" }));
-      }
-      
-      // Cerrar modal
-      setShowModal(false);
-      
-      // Mostrar logro
-      showAchievement(AchievementType.SUGGESTED_IDEA, 
-        t('achievements.suggestedIdea', `Tu idea ha sido enviada a @${username}`));
-      
-      // Mostrar mensaje de éxito
-      toast({
-        title: t('suggestIdea.thankYou'),
-        description: t('suggestIdea.thankYouDesc'),
-        className: "bg-gradient-to-r from-green-50 to-emerald-50 border-green-200 dark:from-green-900/30 dark:to-emerald-900/30 dark:border-green-800",
+    // Convertimos a JSON para la API
+    const data = { title, description };
+    
+    // Usar fetch directamente para mejor compatibilidad y depuración
+    fetch(`/api/creators/${username}/suggest`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(data),
+      credentials: 'include' // Para cookies de sesión
+    })
+      .then(response => {
+        if (!response.ok) {
+          return response.json().then(data => {
+            throw new Error(data.message || t('suggestIdea.errorDesc'));
+          });
+        }
+        return response.json();
+      })
+      .then(data => {
+        console.log("Idea sugerida con éxito:", data);
+        
+        // Cerrar modal
+        setShowModal(false);
+        
+        // Mostrar logro
+        showAchievement(AchievementType.SUGGESTED_IDEA, 
+          t('achievements.suggestedIdea', `Tu idea ha sido enviada a @${username}`));
+        
+        // Mostrar mensaje de éxito
+        toast({
+          title: t('suggestIdea.thankYou'),
+          description: t('suggestIdea.thankYouDesc'),
+          className: "bg-gradient-to-r from-green-50 to-emerald-50 border-green-200 dark:from-green-900/30 dark:to-emerald-900/30 dark:border-green-800",
+        });
+        
+        // Refrescar ideas
+        refetch();
+      })
+      .catch(error => {
+        console.error("Error al enviar sugerencia:", error);
+        toast({
+          title: t('suggestIdea.error'),
+          description: error.message || t('suggestIdea.errorDesc'),
+          variant: "destructive",
+        });
+      })
+      .finally(() => {
+        setIsSubmitting(false);
       });
-      
-      // Refrescar ideas
-      refetch();
-      
-    } catch (error) {
-      console.error("Error al enviar sugerencia:", error);
-      toast({
-        title: t('suggestIdea.error'),
-        description: (error as Error).message || t('suggestIdea.errorDesc'),
-        variant: "destructive",
-      });
-    } finally {
-      setIsSubmitting(false);
-    }
   };
   
   return (
@@ -177,84 +154,75 @@ export default function SuggestIdeaDialog({ username, refetch, fullWidth = false
               </Button>
             </div>
             
-            {/* Cuerpo */}
-            <div className="p-4">
-              <div className="space-y-4">
-                {/* Campo de título */}
-                <div>
-                  <label htmlFor="title" className="block text-sm font-medium mb-1">
-                    {t('suggestIdea.titleLabel')}
-                  </label>
-                  <input
-                    id="title"
-                    type="text"
-                    className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 ${
-                      titleError ? 'border-red-500' : ''
-                    }`}
-                    value={title}
-                    onChange={(e) => {
-                      setTitle(e.target.value);
-                      if (titleError) validateTitle();
-                    }}
-                    placeholder={t('suggestIdea.titlePlaceholder')}
-                    disabled={isSubmitting}
-                  />
-                  {titleError && (
-                    <p className="mt-1 text-sm text-red-500">{titleError}</p>
-                  )}
-                </div>
-                
-                {/* Campo de descripción */}
-                <div>
-                  <label htmlFor="description" className="block text-sm font-medium mb-1">
-                    {t('suggestIdea.descriptionLabel')}
-                  </label>
-                  <textarea
-                    id="description"
-                    className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 ${
-                      descriptionError ? 'border-red-500' : ''
-                    }`}
-                    rows={4}
-                    value={description}
-                    onChange={(e) => {
-                      setDescription(e.target.value);
-                      if (descriptionError) validateDescription();
-                    }}
-                    placeholder={t('suggestIdea.descriptionPlaceholder')}
-                    disabled={isSubmitting}
-                  />
-                  {descriptionError && (
-                    <p className="mt-1 text-sm text-red-500">{descriptionError}</p>
-                  )}
+            {/* Formulario HTML normal */}
+            <form onSubmit={handleSubmit}>
+              <div className="p-4">
+                <div className="space-y-4">
+                  {/* Campo de título */}
+                  <div>
+                    <label htmlFor="title" className="block text-sm font-medium mb-1">
+                      {t('suggestIdea.titleLabel')}
+                    </label>
+                    <input
+                      id="title"
+                      name="title"
+                      type="text"
+                      className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600"
+                      placeholder={t('suggestIdea.titlePlaceholder')}
+                      minLength={3}
+                      maxLength={100}
+                      required
+                      disabled={isSubmitting}
+                    />
+                  </div>
+                  
+                  {/* Campo de descripción */}
+                  <div>
+                    <label htmlFor="description" className="block text-sm font-medium mb-1">
+                      {t('suggestIdea.descriptionLabel')}
+                    </label>
+                    <textarea
+                      id="description"
+                      name="description"
+                      className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600"
+                      rows={4}
+                      placeholder={t('suggestIdea.descriptionPlaceholder')}
+                      minLength={10}
+                      maxLength={500}
+                      required
+                      disabled={isSubmitting}
+                    />
+                  </div>
                 </div>
               </div>
-            </div>
-            
-            {/* Pie */}
-            <div className="flex justify-end gap-2 p-4 border-t dark:border-gray-700">
-              <Button
-                variant="outline"
-                onClick={() => !isSubmitting && setShowModal(false)}
-                disabled={isSubmitting}
-              >
-                {t('suggestIdea.cancel')}
-              </Button>
               
-              <Button
-                onClick={handleSubmit}
-                disabled={isSubmitting}
-                className="bg-gradient-to-r from-primary to-blue-600 hover:from-primary/90 hover:to-blue-700"
-              >
-                {isSubmitting ? (
-                  <>
-                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    {t('suggestIdea.sending')}
-                  </>
-                ) : (
-                  t('suggestIdea.submit')
-                )}
-              </Button>
-            </div>
+              {/* Pie */}
+              <div className="flex justify-end gap-2 p-4 border-t dark:border-gray-700">
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => !isSubmitting && setShowModal(false)}
+                  disabled={isSubmitting}
+                >
+                  {t('suggestIdea.cancel')}
+                </Button>
+                
+                <Button
+                  type="submit"
+                  disabled={isSubmitting}
+                  className="bg-gradient-to-r from-primary to-blue-600 hover:from-primary/90 hover:to-blue-700"
+                >
+                  {isSubmitting ? (
+                    <>
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      {t('suggestIdea.sending')}
+                    </>
+                  ) : (
+                    t('suggestIdea.submit')
+                  )}
+                </Button>
+              </div>
+            </form>
           </div>
         </div>
       )}
