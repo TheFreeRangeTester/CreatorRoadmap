@@ -91,29 +91,53 @@ export default function SuggestIdeaDialog({ username, refetch, fullWidth = false
     if (!validateForm()) return;
     
     setIsSubmitting(true);
+    console.log('Iniciando envío de sugerencia a:', username);
+    console.log('Datos a enviar:', { title: title.trim(), description: description.trim() });
     
     try {
-      const response = await apiRequest('POST', `/api/creators/${username}/suggest`, {
-        title: title.trim(),
-        description: description.trim()
+      // Usar fetch directamente para tener más control y ver exactamente qué ocurre
+      const response = await fetch(`/api/creators/${username}/suggest`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          title: title.trim(),
+          description: description.trim()
+        }),
+        credentials: 'include'
       });
       
+      console.log('Respuesta del servidor:', response.status);
+      
+      if (!response.ok) {
+        let errorMessage = 'Error al enviar sugerencia';
+        try {
+          const errorData = await response.json();
+          errorMessage = errorData.message || errorMessage;
+        } catch (e) {
+          console.error('Error al parsear respuesta de error:', e);
+        }
+        throw new Error(errorMessage);
+      }
+      
       const data = await response.json();
+      console.log('Datos recibidos:', data);
       
       // Cerrar diálogo
       setOpen(false);
       
       // Mostrar notificación de éxito
       toast({
-        title: t('suggestIdea.thankYou'),
-        description: t('suggestIdea.thankYouDesc'),
+        title: t('suggestIdea.thankYou', '¡Gracias por tu idea!'),
+        description: t('suggestIdea.thankYouDesc', 'Tu idea ha sido enviada al creador para su aprobación.'),
         className: 'bg-gradient-to-r from-green-50 to-emerald-50 border-green-200 dark:from-green-900/30 dark:to-emerald-900/30 dark:border-green-800',
       });
       
       // Mostrar logro de sugerencia
       showAchievement(
         AchievementType.SUGGESTED_IDEA, 
-        t('suggestIdea.achievementText', { username })
+        t('suggestIdea.achievementText', '¡Tu idea ha sido enviada a @{{username}}!', { username })
       );
       
       // Actualizar datos
@@ -122,11 +146,11 @@ export default function SuggestIdeaDialog({ username, refetch, fullWidth = false
     } catch (error: any) {
       console.error('Error al sugerir idea:', error);
       
-      setError(error.message || t('suggestIdea.errorDesc'));
+      setError(error.message || t('suggestIdea.errorDesc', 'Ocurrió un error al enviar tu sugerencia'));
       
       toast({
-        title: t('suggestIdea.error'),
-        description: error.message || t('suggestIdea.errorDesc'),
+        title: t('suggestIdea.error', 'Error al enviar sugerencia'),
+        description: error.message || t('suggestIdea.errorDesc', 'Ocurrió un error al enviar tu sugerencia'),
         variant: 'destructive'
       });
     } finally {
