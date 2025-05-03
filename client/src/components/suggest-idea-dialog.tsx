@@ -110,7 +110,7 @@ export default function SuggestIdeaDialog({ username, refetch, fullWidth = false
       // Mostrar logro
       showAchievement(
         AchievementType.SUGGESTED_IDEA, 
-        t('suggestIdea.achievementText', `¡Tu idea ha sido enviada a @${username}!`)
+        t('suggestIdea.achievementText', '¡Tu idea ha sido enviada a @{{username}}!', { username: username })
       );
       
       // Actualizar datos
@@ -151,7 +151,7 @@ export default function SuggestIdeaDialog({ username, refetch, fullWidth = false
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
               <Lightbulb className="h-5 w-5 text-yellow-500" />
-              {t('suggestIdea.title', 'Sugerir idea a {{username}}', { username })}
+              {t('suggestIdea.title', 'Sugerir idea a {{username}}', { username: username })}
             </DialogTitle>
           </DialogHeader>
           
