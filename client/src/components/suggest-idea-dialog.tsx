@@ -17,9 +17,10 @@ import { useTranslation } from "react-i18next";
 interface SuggestIdeaDialogProps {
   username: string;
   refetch: () => Promise<any>;
+  fullWidth?: boolean;
 }
 
-export default function SuggestIdeaDialog({ username, refetch }: SuggestIdeaDialogProps) {
+export default function SuggestIdeaDialog({ username, refetch, fullWidth = false }: SuggestIdeaDialogProps) {
   const [isOpen, setIsOpen] = useState(false);
   const { toast } = useToast();
   const { user } = useAuth();
