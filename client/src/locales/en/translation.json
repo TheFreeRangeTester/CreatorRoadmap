@@ -63,10 +63,32 @@
     "voteDescription": "Vote for your favorite ideas or submit your own"
   },
   "ideas": {
+    "noPublishedIdeas": "No published ideas yet",
+    "createFirstIdea": "Get started by creating your first idea",
     "noSuggestedIdeas": "No suggested ideas yet",
     "suggestedIdeasWillAppear": "Ideas suggested by your audience will appear here",
     "loadError": "Failed to load ideas. Please try again.",
-    "votingFailed": "Voting failed"
+    "votingFailed": "Voting failed",
+    "addIdea": "Add an idea",
+    "loginToAdd": "Login to add an idea",
+    "noIdeasYet": "No ideas yet",
+    "getStarted": "Get started by creating a new idea.",
+    "confirmDelete": "Are you sure you want to delete this idea?",
+    "deleted": "Idea deleted",
+    "deletedSuccess": "Your idea has been deleted successfully.",
+    "deleteError": "Delete failed",
+    "approved": "Idea approved",
+    "approvedSuccess": "The idea has been approved and published to your leaderboard",
+    "approveError": "Approval error",
+    "approveErrorDesc": "Could not approve idea",
+    "rejected": "Idea rejected",
+    "rejectedSuccess": "The idea has been rejected",
+    "rejectError": "Rejection error",
+    "rejectErrorDesc": "Could not reject idea",
+    "pending": "Pending",
+    "suggestedBy": "Suggested by",
+    "reject": "Reject",
+    "approve": "Approve"
   },
   "creator": {
     "voted": "Voted",

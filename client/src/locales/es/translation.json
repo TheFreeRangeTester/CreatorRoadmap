@@ -63,10 +63,32 @@
     "voteDescription": "Vota por tus ideas favoritas o propón las tuyas"
   },
   "ideas": {
+    "noPublishedIdeas": "No hay ideas publicadas todavía",
+    "createFirstIdea": "Comienza creando tu primera idea",
     "noSuggestedIdeas": "No hay ideas sugeridas todavía",
     "suggestedIdeasWillAppear": "Las ideas sugeridas por tu audiencia aparecerán aquí",
     "loadError": "Error al cargar ideas. Por favor, inténtalo de nuevo.",
-    "votingFailed": "Error al votar"
+    "votingFailed": "Error al votar",
+    "addIdea": "Añadir una idea",
+    "loginToAdd": "Inicia sesión para añadir una idea",
+    "noIdeasYet": "No hay ideas todavía",
+    "getStarted": "Comienza creando una nueva idea.",
+    "confirmDelete": "¿Estás seguro de que deseas eliminar esta idea?",
+    "deleted": "Idea eliminada",
+    "deletedSuccess": "Tu idea ha sido eliminada correctamente.",
+    "deleteError": "Error al eliminar",
+    "approved": "Idea aprobada",
+    "approvedSuccess": "La idea ha sido aprobada y publicada en tu leaderboard",
+    "approveError": "Error de aprobación",
+    "approveErrorDesc": "No se pudo aprobar la idea",
+    "rejected": "Idea rechazada",
+    "rejectedSuccess": "La idea ha sido rechazada",
+    "rejectError": "Error de rechazo",
+    "rejectErrorDesc": "No se pudo rechazar la idea",
+    "pending": "Pendiente",
+    "suggestedBy": "Sugerido por",
+    "reject": "Rechazar",
+    "approve": "Aprobar"
   },
   "creator": {
     "voted": "Votado",

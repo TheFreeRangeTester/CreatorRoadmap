@@ -376,13 +376,13 @@ export default function HomePage() {
       setIsDeleteModalOpen(false);
       queryClient.invalidateQueries({ queryKey: ["/api/ideas"] });
       toast({
-        title: "Idea deleted",
-        description: "Your idea has been deleted successfully.",
+        title: t('ideas.deleted', "Idea deleted"),
+        description: t('ideas.deletedSuccess', "Your idea has been deleted successfully."),
       });
     },
     onError: (error) => {
       toast({
-        title: "Delete failed",
+        title: t('ideas.deleteError', "Delete failed"),
         description: error.message,
         variant: "destructive",
       });
