@@ -19,20 +19,11 @@ export default function AchievementsContainer() {
     console.log("AchievementsContainer montado");
     registerLogin();
     
-    // Para propósitos de prueba, mostrar un logro después de cargar
-    const timer = setTimeout(() => {
-      console.log("🏆 Mostrando logro de prueba...");
-      if (showAchievement) {
-        showAchievement(AchievementType.FIRST_VOTE, "¡Esta es una animación de prueba!");
-      }
-    }, 2000);
-    
-    // Limpiar timer cuando se desmonte el componente
+    // Limpiar cuando se desmonte el componente
     return () => {
-      clearTimeout(timer);
       console.log("AchievementsContainer desmontado");
     };
-  }, [registerLogin, showAchievement]);
+  }, [registerLogin]);
 
   // Mostrar estado de la animación para debug
   useEffect(() => {

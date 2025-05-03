@@ -96,9 +96,10 @@ export const AchievementsProvider = ({ children }: { children: ReactNode }) => {
       }
 
       // Actualizar estadísticas
+      const totalVotes = prev.totalVotes + 1;
       const newStats: UserStats = {
         ...prev,
-        totalVotes: prev.totalVotes + 1,
+        totalVotes,
         votedIds: [...prev.votedIds, ideaId]
       };
 
@@ -106,10 +107,33 @@ export const AchievementsProvider = ({ children }: { children: ReactNode }) => {
       if (typeof window !== 'undefined') {
         localStorage.setItem('userStats', JSON.stringify(newStats));
       }
+      
+      // Comprobar si hemos alcanzado algún hito
+      // Primer voto
+      if (totalVotes === 1) {
+        setTimeout(() => {
+          showAchievement(AchievementType.FIRST_VOTE, 
+            '¡Has emitido tu primer voto! +5 puntos');
+        }, 500);
+      }
+      // 10 votos
+      else if (totalVotes === 10) {
+        setTimeout(() => {
+          showAchievement(AchievementType.TEN_VOTES, 
+            '¡Has alcanzado 10 votos! +10 puntos');
+        }, 500);
+      }
+      // 50 votos
+      else if (totalVotes === 50) {
+        setTimeout(() => {
+          showAchievement(AchievementType.FIFTY_VOTES, 
+            '¡Increíble! Has alcanzado 50 votos. +50 puntos');
+        }, 500);
+      }
 
       return newStats;
     });
-  }, []);
+  }, [showAchievement]);
 
   // Registrar inicio de sesión (para mantener el streak)
   const registerLogin = useCallback(() => {

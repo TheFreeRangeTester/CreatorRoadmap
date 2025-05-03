@@ -209,8 +209,8 @@ export default function CreatorPublicPage() {
         // Muestra la animación del logro del primer voto
         showAchievement(AchievementType.FIRST_VOTE);
       } else if (existingVotedIdeas.length >= 4) {
-        // Si ya ha votado más de 5 ideas (incluyendo esta), mostrar logro de votante frecuente
-        showAchievement(AchievementType.MULTIPLE_VOTES);
+        // Si ya ha votado más de 5 ideas (incluyendo esta), mostrar logro de 10 votos
+        showAchievement(AchievementType.TEN_VOTES);
       }
       
       // Comprobar si está votando a una idea del Top 3
