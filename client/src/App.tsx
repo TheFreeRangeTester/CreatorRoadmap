@@ -15,6 +15,11 @@ import CreatorPublicPage from "./pages/creator-public-page";
 function App() {
   return (
     <>
+      {/* Contenedor para animaciones de logros (colocado antes para mayor z-index) */}
+      <div className="fixed inset-0 pointer-events-none z-[9999]">
+        <AchievementsContainer />
+      </div>
+      
       {/* Router principal */}
       <Switch>
         <Route path="/" component={LandingPage} />
@@ -26,9 +31,6 @@ function App() {
         <Route path="/:username" component={CreatorQAProfile} />
         <Route component={NotFound} />
       </Switch>
-      
-      {/* Contenedor para animaciones de logros */}
-      <AchievementsContainer />
     </>
   );
 }
