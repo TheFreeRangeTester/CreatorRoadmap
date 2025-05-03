@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useMutation } from "@tanstack/react-query";
-import { Lightbulb, Loader2 } from "lucide-react";
+import { Lightbulb, Loader2, X } from "lucide-react";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -13,8 +13,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogClose } from "@/components/ui/dialog";
 import { useTranslation } from "react-i18next";
+import { motion, AnimatePresence } from "framer-motion";
 
 interface SuggestIdeaDialogProps {
   username: string;
@@ -23,11 +23,14 @@ interface SuggestIdeaDialogProps {
 }
 
 export default function SuggestIdeaDialog({ username, refetch, fullWidth = false }: SuggestIdeaDialogProps) {
-  const [open, setOpen] = useState(false);
+  const [showModal, setShowModal] = useState(false);
   const { toast } = useToast();
   const { user } = useAuth();
   const { t } = useTranslation();
   const { showAchievement } = useAchievements();
+  
+  // Para capturar clics fuera del modal
+  const modalRef = React.useRef<HTMLDivElement>(null);
   
   // Definir esquema de validación
   const formSchema = z.object({
@@ -65,8 +68,8 @@ export default function SuggestIdeaDialog({ username, refetch, fullWidth = false
       return await response.json();
     },
     onSuccess: () => {
-      // Cerrar el diálogo
-      setOpen(false);
+      // Cerrar el modal
+      setShowModal(false);
       
       // Mostrar logro por sugerir una idea
       showAchievement(AchievementType.SUGGESTED_IDEA, 
@@ -94,10 +97,42 @@ export default function SuggestIdeaDialog({ username, refetch, fullWidth = false
     }
   });
   
-  // Handler para abrir el diálogo
-  const handleOpenDialog = (e: React.MouseEvent) => {
-    e.preventDefault();
+  // Efecto para listener de clicks fuera del modal
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (modalRef.current && !modalRef.current.contains(event.target as Node)) {
+        setShowModal(false);
+      }
+    };
+
+    if (showModal) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
     
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [showModal]);
+  
+  // Effect para manejar la tecla Escape
+  useEffect(() => {
+    const handleEscape = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        setShowModal(false);
+      }
+    };
+
+    if (showModal) {
+      document.addEventListener('keydown', handleEscape);
+    }
+    
+    return () => {
+      document.removeEventListener('keydown', handleEscape);
+    };
+  }, [showModal]);
+  
+  // Handler para abrir el modal
+  const handleOpenModal = () => {
     if (!user) {
       toast({
         title: t('suggestIdea.loginRequired'),
@@ -107,7 +142,7 @@ export default function SuggestIdeaDialog({ username, refetch, fullWidth = false
       return;
     }
     
-    setOpen(true);
+    setShowModal(true);
   };
   
   // Handler para enviar el formulario
@@ -128,90 +163,126 @@ export default function SuggestIdeaDialog({ username, refetch, fullWidth = false
   };
   
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
+    <>
       <Button 
         variant={fullWidth ? "secondary" : "outline"}
         className={`
           ${fullWidth ? 'w-full shadow-sm flex items-center gap-2' : 'bg-white/20 hover:bg-white/30 text-white border-white/20 backdrop-blur-sm flex items-center gap-2 px-4 py-2'}
         `}
-        onClick={handleOpenDialog}
+        onClick={handleOpenModal}
       >
         <Lightbulb className="h-4 w-4" />
         <span>{t('suggestIdea.button')}</span>
       </Button>
       
-      <DialogContent className="sm:max-w-[500px]">
-        <DialogHeader>
-          <DialogTitle className="text-xl font-semibold flex items-center gap-2">
-            <Lightbulb className="h-5 w-5 text-amber-500" />
-            {t('suggestIdea.title', {username})}
-          </DialogTitle>
-        </DialogHeader>
-        
-        <Form {...form}>
-          <form onSubmit={(e) => e.preventDefault()} className="space-y-4 mt-4">
-            <FormField
-              control={form.control}
-              name="title"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>{t('suggestIdea.titleLabel')}</FormLabel>
-                  <FormControl>
-                    <Input 
-                      placeholder={t('suggestIdea.titlePlaceholder')}
-                      {...field} 
-                      className="dark:bg-gray-800"
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
+      <AnimatePresence>
+        {showModal && (
+          <>
+            {/* Overlay oscuro */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="fixed inset-0 bg-black/50 z-50"
+              onClick={() => setShowModal(false)}
             />
             
-            <FormField
-              control={form.control}
-              name="description"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>{t('suggestIdea.descriptionLabel')}</FormLabel>
-                  <FormControl>
-                    <Textarea 
-                      placeholder={t('suggestIdea.descriptionPlaceholder')}
-                      {...field}
-                      rows={4}
-                      className="resize-none dark:bg-gray-800"
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            
-            <div className="flex justify-end gap-2 pt-2">
-              <DialogClose asChild>
-                <Button type="button" variant="outline" disabled={suggestMutation.isPending}>
-                  {t('suggestIdea.cancel')}
+            {/* Modal */}
+            <motion.div
+              ref={modalRef}
+              initial={{ opacity: 0, scale: 0.9, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.9, y: 20 }}
+              transition={{ type: "spring", damping: 25, stiffness: 300 }}
+              className="fixed z-50 bg-white dark:bg-gray-900 rounded-xl shadow-xl max-w-[500px] w-[95%] p-6 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
+            >
+              {/* Cabecera */}
+              <div className="flex items-center justify-between mb-4">
+                <h2 className="text-xl font-semibold flex items-center gap-2">
+                  <Lightbulb className="h-5 w-5 text-amber-500" />
+                  {t('suggestIdea.title', {username})}
+                </h2>
+                <Button 
+                  variant="ghost" 
+                  size="icon" 
+                  onClick={() => setShowModal(false)}
+                  className="rounded-full h-8 w-8"
+                >
+                  <X className="h-4 w-4" />
                 </Button>
-              </DialogClose>
-              <Button 
-                type="button" 
-                className="bg-gradient-to-r from-primary to-blue-600 hover:from-primary/90 hover:to-blue-700"
-                disabled={suggestMutation.isPending}
-                onClick={onSubmit}
-              >
-                {suggestMutation.isPending ? (
-                  <>
-                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    {t('suggestIdea.sending')}
-                  </>
-                ) : (
-                  t('suggestIdea.submit')
-                )}
-              </Button>
-            </div>
-          </form>
-        </Form>
-      </DialogContent>
-    </Dialog>
+              </div>
+              
+              {/* Contenido */}
+              <Form {...form}>
+                <form onSubmit={(e) => e.preventDefault()} className="space-y-4">
+                  <FormField
+                    control={form.control}
+                    name="title"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>{t('suggestIdea.titleLabel')}</FormLabel>
+                        <FormControl>
+                          <Input 
+                            placeholder={t('suggestIdea.titlePlaceholder')}
+                            {...field} 
+                            className="dark:bg-gray-800"
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  
+                  <FormField
+                    control={form.control}
+                    name="description"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>{t('suggestIdea.descriptionLabel')}</FormLabel>
+                        <FormControl>
+                          <Textarea 
+                            placeholder={t('suggestIdea.descriptionPlaceholder')}
+                            {...field}
+                            rows={4}
+                            className="resize-none dark:bg-gray-800"
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  
+                  <div className="flex justify-end gap-2 pt-2">
+                    <Button 
+                      type="button" 
+                      variant="outline" 
+                      disabled={suggestMutation.isPending}
+                      onClick={() => setShowModal(false)}
+                    >
+                      {t('suggestIdea.cancel')}
+                    </Button>
+                    <Button 
+                      type="button" 
+                      className="bg-gradient-to-r from-primary to-blue-600 hover:from-primary/90 hover:to-blue-700"
+                      disabled={suggestMutation.isPending}
+                      onClick={onSubmit}
+                    >
+                      {suggestMutation.isPending ? (
+                        <>
+                          <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                          {t('suggestIdea.sending')}
+                        </>
+                      ) : (
+                        t('suggestIdea.submit')
+                      )}
+                    </Button>
+                  </div>
+                </form>
+              </Form>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
+    </>
   );
 }
