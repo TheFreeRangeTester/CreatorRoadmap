@@ -2,11 +2,106 @@ import { useEffect, useRef, useState } from 'react';
 import { gsap } from 'gsap';
 import { useGSAP } from "@gsap/react";
 
-// Utilities para inicializar GSAP con sus plugins
+// Implementación simplificada de SplitText
+export class CustomSplitText {
+  elements: HTMLElement[];
+  chars: HTMLElement[] = [];
+  words: HTMLElement[] = [];
+  lines: HTMLElement[] = [];
+  originalHTML: string[] = [];
+
+  constructor(elements: string | HTMLElement | HTMLElement[] | NodeListOf<HTMLElement>, options: { type?: string } = {}) {
+    if (typeof elements === 'string') {
+      this.elements = Array.from(document.querySelectorAll(elements)) as HTMLElement[];
+    } else if (elements instanceof HTMLElement) {
+      this.elements = [elements];
+    } else if (elements instanceof NodeList) {
+      this.elements = Array.from(elements) as HTMLElement[];
+    } else {
+      this.elements = elements;
+    }
+    
+    this.originalHTML = this.elements.map(el => el.innerHTML);
+    
+    if (options.type?.includes('chars')) this.splitChars();
+    if (options.type?.includes('words')) this.splitWords();
+    if (options.type?.includes('lines')) this.splitLines();
+  }
+  
+  // Dividir en caracteres
+  splitChars() {
+    this.elements.forEach((element, index) => {
+      const text = element.innerText;
+      element.innerHTML = '';
+      
+      for (let i = 0; i < text.length; i++) {
+        const char = text[i];
+        const charSpan = document.createElement('span');
+        charSpan.className = 'split-char';
+        charSpan.style.display = 'inline-block';
+        charSpan.textContent = char === ' ' ? '\u00A0' : char;
+        element.appendChild(charSpan);
+        this.chars.push(charSpan);
+      }
+    });
+  }
+  
+  // Dividir en palabras
+  splitWords() {
+    this.elements.forEach((element, index) => {
+      const text = element.innerText;
+      const words = text.split(' ');
+      element.innerHTML = '';
+      
+      for (let i = 0; i < words.length; i++) {
+        const wordSpan = document.createElement('span');
+        wordSpan.className = 'split-word';
+        wordSpan.style.display = 'inline-block';
+        wordSpan.textContent = words[i];
+        
+        element.appendChild(wordSpan);
+        if (i < words.length - 1) {
+          element.appendChild(document.createTextNode(' '));
+        }
+        
+        this.words.push(wordSpan);
+      }
+    });
+  }
+  
+  // Dividir en líneas (simplificado, no detecta saltos reales)
+  splitLines() {
+    this.elements.forEach((element, index) => {
+      const text = element.innerText;
+      const lines = text.split('\n');
+      element.innerHTML = '';
+      
+      for (let i = 0; i < lines.length; i++) {
+        const lineSpan = document.createElement('span');
+        lineSpan.className = 'split-line';
+        lineSpan.style.display = 'block';
+        lineSpan.textContent = lines[i];
+        element.appendChild(lineSpan);
+        this.lines.push(lineSpan);
+      }
+    });
+  }
+  
+  // Restaurar el HTML original
+  revert() {
+    this.elements.forEach((element, index) => {
+      element.innerHTML = this.originalHTML[index];
+    });
+    this.chars = [];
+    this.words = [];
+    this.lines = [];
+  }
+}
+
+// Utilities para inicializar GSAP con nuestra implementación
 export function registerGSAPPlugins() {
-  // Los plugins como SplitText están disponibles solo en versiones comerciales
-  // o mediante la membresía Club GSAP, pero podemos usar GSAP core
-  gsap.registerPlugin();
+  // Añadimos nuestra implementación de SplitText al objeto global
+  (window as any).CustomSplitText = CustomSplitText;
 }
 
 // Hook para texto con animación de entrada
@@ -194,4 +289,89 @@ export function useGSAPScrollTrigger() {
       // Limpieza al desmontar
     };
   }, []);
+}
+
+// Hook para animaciones de texto avanzadas usando nuestra implementación de SplitText
+export function useSplitTextAnimation(elementRef: React.RefObject<HTMLElement>, options: {
+  type?: 'chars' | 'words' | 'lines',
+  trigger?: 'load' | 'scroll',
+  stagger?: number,
+  duration?: number,
+  delay?: number,
+  ease?: string,
+  from?: any,
+  to?: any
+} = {}) {
+  const {
+    type = 'chars',
+    trigger = 'load',
+    stagger = 0.02,
+    duration = 0.8,
+    delay = 0,
+    ease = 'power2.out',
+    from = { opacity: 0, y: 20 },
+    to = { opacity: 1, y: 0 }
+  } = options;
+  
+  const splitInstance = useRef<CustomSplitText | null>(null);
+  
+  useEffect(() => {
+    if (!elementRef.current) return;
+    
+    // Crear instancia de SplitText
+    splitInstance.current = new CustomSplitText(elementRef.current, { 
+      type: type
+    });
+    
+    // Seleccionar los elementos a animar
+    let elements: HTMLElement[] = [];
+    switch (type) {
+      case 'chars':
+        elements = splitInstance.current.chars;
+        break;
+      case 'words':
+        elements = splitInstance.current.words;
+        break;
+      case 'lines':
+        elements = splitInstance.current.lines;
+        break;
+    }
+    
+    // Configurar la timeline
+    const tl = gsap.timeline({
+      delay,
+      paused: trigger === 'scroll',
+      scrollTrigger: trigger === 'scroll' ? {
+        trigger: elementRef.current,
+        start: 'top 80%',
+        toggleActions: 'play none none reverse'
+      } : undefined
+    });
+    
+    // Establecer animación
+    tl.fromTo(
+      elements,
+      from,
+      {
+        ...to,
+        stagger,
+        duration,
+        ease
+      }
+    );
+    
+    // Iniciar la animación si es inmediata
+    if (trigger === 'load') {
+      tl.play();
+    }
+    
+    // Limpiar al desmontar
+    return () => {
+      tl.kill();
+      if (splitInstance.current) {
+        splitInstance.current.revert();
+        splitInstance.current = null;
+      }
+    };
+  }, [elementRef, type, trigger, stagger, duration, delay, ease]);
 }
