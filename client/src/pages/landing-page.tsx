@@ -405,7 +405,7 @@ export default function LandingPage() {
             </motion.p>
           </motion.div>
 
-          <div 
+          <motion.div 
             ref={featuresRef}
             className="grid md:grid-cols-2 lg:grid-cols-3 gap-8"
           >

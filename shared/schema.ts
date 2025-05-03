@@ -98,6 +98,7 @@ export const ideaResponseSchema = z.object({
   votes: z.number(),
   createdAt: z.date(),
   creatorId: z.number(),
+  creatorUsername: z.string().optional(), // Nombre del creador (para usar en las URLs o mostrar en la UI)
   position: z.object({
     current: z.number().nullable(),
     previous: z.number().nullable(),
