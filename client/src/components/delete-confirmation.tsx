@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { AlertTriangle, Loader2 } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -24,20 +25,22 @@ export default function DeleteConfirmation({
   onConfirm,
   isDeleting,
 }: DeleteConfirmationProps) {
+  const { t } = useTranslation();
+  
   return (
     <AlertDialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
       <AlertDialogContent>
         <AlertDialogHeader>
           <div className="flex items-center gap-2">
             <AlertTriangle className="h-6 w-6 text-red-500" />
-            <AlertDialogTitle>Delete idea</AlertDialogTitle>
+            <AlertDialogTitle>{t('ideas.deleteTitle', 'Delete idea')}</AlertDialogTitle>
           </div>
           <AlertDialogDescription>
-            Are you sure you want to delete this idea? This action cannot be undone and all votes will be lost.
+            {t('ideas.confirmDelete', 'Are you sure you want to delete this idea? This action cannot be undone and all votes will be lost.')}
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel disabled={isDeleting}>Cancel</AlertDialogCancel>
+          <AlertDialogCancel disabled={isDeleting}>{t('common.cancel', 'Cancel')}</AlertDialogCancel>
           <AlertDialogAction 
             onClick={onConfirm} 
             disabled={isDeleting}
@@ -46,9 +49,9 @@ export default function DeleteConfirmation({
             {isDeleting ? (
               <span className="flex items-center justify-center">
                 <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                Deleting...
+                {t('ideas.deleting', 'Deleting...')}
               </span>
-            ) : "Delete"}
+            ) : t('ideas.delete', 'Delete')}
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>

@@ -73,7 +73,10 @@
     "loginToAdd": "Inicia sesión para añadir una idea",
     "noIdeasYet": "No hay ideas todavía",
     "getStarted": "Comienza creando una nueva idea.",
-    "confirmDelete": "¿Estás seguro de que deseas eliminar esta idea?",
+    "confirmDelete": "¿Estás seguro de que deseas eliminar esta idea? Esta acción no se puede deshacer y todos los votos se perderán.",
+    "deleteTitle": "Eliminar idea",
+    "delete": "Eliminar",
+    "deleting": "Eliminando...",
     "deleted": "Idea eliminada",
     "deletedSuccess": "Tu idea ha sido eliminada correctamente.",
     "deleteError": "Error al eliminar",
@@ -165,7 +168,8 @@
     "titleMaxLength": "El título no puede exceder los 100 caracteres",
     "descriptionMinLength": "La descripción debe tener al menos 10 caracteres",
     "descriptionMaxLength": "La descripción no puede exceder los 500 caracteres",
-    "beFirstToSuggest": "Sé el primero en sugerir un tema para el contenido"
+    "beFirstToSuggest": "Sé el primero en sugerir un tema para el contenido",
+    "achievementText": "¡Tu idea ha sido enviada a @{{username}}!"
   },
   "ideaPosition": {
     "new": "Nuevo",

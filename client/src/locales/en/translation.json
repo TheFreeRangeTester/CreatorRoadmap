@@ -73,7 +73,10 @@
     "loginToAdd": "Login to add an idea",
     "noIdeasYet": "No ideas yet",
     "getStarted": "Get started by creating a new idea.",
-    "confirmDelete": "Are you sure you want to delete this idea?",
+    "confirmDelete": "Are you sure you want to delete this idea? This action cannot be undone and all votes will be lost.",
+    "deleteTitle": "Delete idea",
+    "delete": "Delete",
+    "deleting": "Deleting...",
     "deleted": "Idea deleted",
     "deletedSuccess": "Your idea has been deleted successfully.",
     "deleteError": "Delete failed",
@@ -165,7 +168,8 @@
     "titleMaxLength": "Title cannot exceed 100 characters",
     "descriptionMinLength": "Description must be at least 10 characters",
     "descriptionMaxLength": "Description cannot exceed 500 characters",
-    "beFirstToSuggest": "Be the first to suggest a content idea"
+    "beFirstToSuggest": "Be the first to suggest a content idea",
+    "achievementText": "Your idea has been sent to @{{username}}!"
   },
   "ideaPosition": {
     "new": "New",
