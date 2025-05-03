@@ -29,6 +29,9 @@ export default function SuggestIdeaDialog({ username, refetch, fullWidth = false
   const { t } = useTranslation();
   const { showAchievement } = useAchievements();
   
+  // Mostrar un log para debug
+  console.log("SuggestIdeaDialog renderizado", { isOpen, username, user: !!user });
+  
   // Definir esquema de validación
   const formSchema = z.object({
     title: z.string()
@@ -146,6 +149,7 @@ export default function SuggestIdeaDialog({ username, refetch, fullWidth = false
             ${fullWidth ? 'w-full shadow-sm flex items-center gap-2' : 'bg-white/20 hover:bg-white/30 text-white border-white/20 backdrop-blur-sm flex items-center gap-2 px-4 py-2'}
           `}
           onClick={(e) => {
+            console.log("[DEBUG] Botón de sugerir idea clickeado");
             // Prevenir apertura automática para verificar autenticación
             if (!user) {
               e.preventDefault();
@@ -154,6 +158,9 @@ export default function SuggestIdeaDialog({ username, refetch, fullWidth = false
                 description: t('suggestIdea.loginRequiredDesc'),
                 variant: "destructive",
               });
+            } else {
+              // Si el usuario está autenticado, abrir el diálogo directamente
+              setIsOpen(true);
             }
           }}
         >
