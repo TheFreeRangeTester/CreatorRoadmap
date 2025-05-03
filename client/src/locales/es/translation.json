@@ -31,7 +31,8 @@
     "error": "Error",
     "website": "Sitio web",
     "back": "Volver al Dashboard",
-    "joinFanlist": "Únete a Fanlist"
+    "joinFanlist": "Únete a Fanlist",
+    "noDescription": "Sin descripción disponible"
   },
   "homepage": {
     "title": "Roadmap de Contenido",

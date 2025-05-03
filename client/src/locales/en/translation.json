@@ -31,7 +31,8 @@
     "error": "Error",
     "website": "Website",
     "back": "Back to Dashboard",
-    "joinFanlist": "Join Fanlist"
+    "joinFanlist": "Join Fanlist",
+    "noDescription": "No description available"
   },
   "homepage": {
     "title": "Content Roadmap",
