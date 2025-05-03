@@ -54,20 +54,35 @@ export default function SuggestIdeaDialog({ username, refetch, fullWidth = false
   // Mutation para enviar la sugerencia
   const suggestMutation = useMutation({
     mutationFn: async (data: z.infer<typeof formSchema>) => {
-      const response = await apiRequest(
-        "POST", 
-        `/api/creators/${username}/suggest`,
-        data
-      );
+      console.log("[DEBUG] mutationFn ejecutándose con datos:", data);
       
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.message || t('suggestIdea.errorDesc', { defaultValue: "Error sending suggestion" }));
+      try {
+        console.log("[DEBUG] Realizando solicitud a:", `/api/creators/${username}/suggest`);
+        const response = await apiRequest(
+          "POST", 
+          `/api/creators/${username}/suggest`,
+          data
+        );
+        
+        console.log("[DEBUG] Respuesta recibida:", response.status, response.statusText);
+        
+        if (!response.ok) {
+          const errorData = await response.json();
+          console.error("[DEBUG] Error en respuesta:", errorData);
+          throw new Error(errorData.message || t('suggestIdea.errorDesc', { defaultValue: "Error sending suggestion" }));
+        }
+        
+        const result = await response.json();
+        console.log("[DEBUG] Datos de respuesta:", result);
+        return result;
+      } catch (err) {
+        console.error("[DEBUG] Error en mutationFn:", err);
+        throw err;
       }
-      
-      return await response.json();
     },
-    onSuccess: () => {
+    onSuccess: (data) => {
+      console.log("[DEBUG] Mutación exitosa:", data);
+      
       // Cerrar el modal
       setShowModal(false);
       
@@ -89,6 +104,7 @@ export default function SuggestIdeaDialog({ username, refetch, fullWidth = false
       refetch();
     },
     onError: (error: Error) => {
+      console.error("[DEBUG] Error en mutación:", error);
       toast({
         title: t('suggestIdea.error'),
         description: error.message || t('suggestIdea.errorDesc'),
@@ -147,10 +163,14 @@ export default function SuggestIdeaDialog({ username, refetch, fullWidth = false
   
   // Handler para enviar el formulario
   const onSubmit = async () => {
+    console.log("[DEBUG] Iniciando envío del formulario");
     const values = form.getValues();
+    console.log("[DEBUG] Valores del formulario:", values);
     const isValid = await form.trigger();
+    console.log("[DEBUG] ¿Formulario válido?:", isValid);
     
     if (!isValid) {
+      console.log("[DEBUG] Formulario inválido, errores:", form.formState.errors);
       toast({
         title: t('suggestIdea.invalidFields'),
         description: t('suggestIdea.invalidFieldsDesc'),
@@ -159,7 +179,13 @@ export default function SuggestIdeaDialog({ username, refetch, fullWidth = false
       return;
     }
     
-    suggestMutation.mutate(values);
+    console.log("[DEBUG] Enviando mutación con datos:", values);
+    try {
+      suggestMutation.mutate(values);
+      console.log("[DEBUG] Mutación enviada correctamente");
+    } catch (error) {
+      console.error("[DEBUG] Error al enviar la mutación:", error);
+    }
   };
   
   return (
