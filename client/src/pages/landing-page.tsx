@@ -10,7 +10,7 @@ import {
   useShakeEffect,
   ANIMATION_EFFECTS
 } from "@/components/gsap-animations";
-import AnimatedText from "@/components/animated-text";
+import AnimatedTitle from "@/components/animated-title";
 import { CloudLightning, ArrowRight, Check, CircleCheck, Zap, Users, LineChart, Award, Layers, Globe, Star } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
@@ -384,13 +384,14 @@ export default function LandingPage() {
             </h1>
             
             {/* Título con animación 3D al estilo GSAP.com */}
-            <h1 
-              ref={heroTitle3DRef}
-              className="text-4xl md:text-6xl font-bold tracking-tight mb-6 bg-clip-text text-transparent bg-gradient-to-r from-gray-900 to-gray-700 dark:from-white dark:to-gray-300 perspective-1000"
-              style={{ perspective: "1000px", opacity: 0 }}
-            >
-              {t('landing.hero.title')}
-            </h1>
+            <div className="mb-6">
+              <AnimatedTitle 
+                text={t('landing.hero.title')}
+                effect={ANIMATION_EFFECTS.TEXT_REVEAL}
+                className="text-4xl md:text-6xl font-bold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-gray-900 to-gray-700 dark:from-white dark:to-gray-300"
+                direction="center"
+              />
+            </div>
             
             <p 
               ref={heroTextRef}
@@ -500,12 +501,13 @@ export default function LandingPage() {
             variants={staggerContainer}
             className="max-w-3xl mx-auto text-center mb-16"
           >
-            <motion.h2 
-              variants={fadeIn}
-              className="text-3xl md:text-4xl font-bold mb-4 dark:text-white"
-            >
-              {t('landing.features.title')}
-            </motion.h2>
+            <div className="mb-4">
+              <AnimatedTitle 
+                text={t('landing.features.title')}
+                effect={ANIMATION_EFFECTS.BLINKING_CURSOR}
+                className="text-3xl md:text-4xl font-bold dark:text-white"
+              />
+            </div>
             <motion.p 
               variants={fadeIn}
               className="text-lg text-gray-600 dark:text-gray-300"
@@ -564,9 +566,13 @@ export default function LandingPage() {
           >
             <div className="grid md:grid-cols-2 gap-10 items-center">
               <motion.div variants={fadeIn} className="order-2 md:order-1">
-                <h2 className="text-3xl md:text-4xl font-bold mb-6 dark:text-white leading-tight">
-                  {t('landing.showcase.title', 'Decisiones basadas en datos para tu contenido')}
-                </h2>
+                <div className="mb-6">
+                  <AnimatedTitle 
+                    text={t('landing.showcase.title', 'Decisiones basadas en datos para tu contenido')}
+                    effect={ANIMATION_EFFECTS.GLITCH}
+                    className="text-3xl md:text-4xl font-bold dark:text-white leading-tight"
+                  />
+                </div>
                 <p className="text-lg text-gray-600 dark:text-gray-300 mb-6">
                   {t('landing.showcase.description', 'Conoce exactamente lo que tu audiencia desea ver y crea contenido que resuene con ellos, generando más engagement y crecimiento para tu marca personal.')}
                 </p>
@@ -671,12 +677,13 @@ export default function LandingPage() {
             variants={staggerContainer}
             className="max-w-3xl mx-auto text-center mb-16"
           >
-            <motion.h2 
-              variants={fadeIn}
-              className="text-3xl md:text-4xl font-bold mb-4 dark:text-white"
-            >
-              {t('landing.howItWorks.title', 'Cómo funciona Fanlist')}
-            </motion.h2>
+            <div className="mb-4">
+              <AnimatedTitle 
+                text={t('landing.howItWorks.title', 'Cómo funciona Fanlist')}
+                effect={ANIMATION_EFFECTS.BOUNCE}
+                className="text-3xl md:text-4xl font-bold dark:text-white"
+              />
+            </div>
             <motion.p 
               variants={fadeIn}
               className="text-lg text-gray-600 dark:text-gray-300"
