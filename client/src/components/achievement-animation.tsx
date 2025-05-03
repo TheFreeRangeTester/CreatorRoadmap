@@ -6,11 +6,11 @@ import confetti from 'canvas-confetti';
 // Tipos de logros que podemos mostrar
 export enum AchievementType {
   FIRST_VOTE = 'first_vote',
+  TEN_VOTES = 'ten_votes',
+  FIFTY_VOTES = 'fifty_votes',
   VOTED_TOP_IDEA = 'voted_top_idea',
   SUGGESTED_IDEA = 'suggested_idea',
-  STREAK_VOTES = 'streak_votes',
-  MULTIPLE_VOTES = 'multiple_votes',
-  TOP_SUPPORTER = 'top_supporter'
+  STREAK_VOTES = 'streak_votes'
 }
 
 // Interfaces para props y configuración
@@ -43,6 +43,24 @@ const achievementConfigs: Record<AchievementType, AchievementConfig> = {
     points: 5,
     confetti: true
   },
+  [AchievementType.TEN_VOTES]: {
+    icon: <Award className="h-6 w-6" />,
+    title: '¡10 Votos!',
+    defaultMessage: 'Has emitido 10 votos. ¡Sigues avanzando!',
+    color: 'text-blue-500',
+    bgColor: 'bg-blue-500/10',
+    points: 10,
+    confetti: true
+  },
+  [AchievementType.FIFTY_VOTES]: {
+    icon: <Crown className="h-6 w-6" />,
+    title: '¡50 Votos!',
+    defaultMessage: '¡Increíble! Has alcanzado 50 votos. Eres increíble.',
+    color: 'text-indigo-500',
+    bgColor: 'bg-indigo-500/10',
+    points: 50,
+    confetti: true
+  },
   [AchievementType.VOTED_TOP_IDEA]: {
     icon: <Trophy className="h-6 w-6" />,
     title: '¡Voto al Top!',
@@ -58,7 +76,7 @@ const achievementConfigs: Record<AchievementType, AchievementConfig> = {
     defaultMessage: 'Tu sugerencia ha sido enviada al creador',
     color: 'text-purple-500',
     bgColor: 'bg-purple-500/10',
-    points: 15,
+    points: 5,
     confetti: true
   },
   [AchievementType.STREAK_VOTES]: {
@@ -69,24 +87,6 @@ const achievementConfigs: Record<AchievementType, AchievementConfig> = {
     bgColor: 'bg-orange-500/10',
     points: 20,
     confetti: false
-  },
-  [AchievementType.MULTIPLE_VOTES]: {
-    icon: <Award className="h-6 w-6" />,
-    title: '¡Votante frecuente!',
-    defaultMessage: 'Has votado por 5 ideas diferentes',
-    color: 'text-blue-500',
-    bgColor: 'bg-blue-500/10',
-    points: 25,
-    confetti: false
-  },
-  [AchievementType.TOP_SUPPORTER]: {
-    icon: <Crown className="h-6 w-6" />,
-    title: '¡Top Supporter!',
-    defaultMessage: 'Estás entre los mayores supporters de este creador',
-    color: 'text-indigo-500',
-    bgColor: 'bg-indigo-500/10',
-    points: 50,
-    confetti: true
   }
 };
 

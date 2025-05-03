@@ -29,8 +29,19 @@ export default function SuggestIdeaDialog({ username, refetch, fullWidth = false
   const { t } = useTranslation();
   const { showAchievement } = useAchievements();
   
-  // Mostrar un log para debug
+  // Log para debug
   console.log("SuggestIdeaDialog renderizado", { isOpen, username, user: !!user });
+  
+  // Estado para controlar si el botón abre el diálogo
+  const [buttonClicked, setButtonClicked] = useState(false);
+  
+  // Efecto para abrir el diálogo cuando se hace clic en el botón
+  useEffect(() => {
+    if (buttonClicked && user) {
+      setIsOpen(true);
+      setButtonClicked(false);
+    }
+  }, [buttonClicked, user]);
   
   // Definir esquema de validación
   const formSchema = z.object({
@@ -150,17 +161,18 @@ export default function SuggestIdeaDialog({ username, refetch, fullWidth = false
           `}
           onClick={(e) => {
             console.log("[DEBUG] Botón de sugerir idea clickeado");
-            // Prevenir apertura automática para verificar autenticación
+            e.preventDefault(); // Prevenir comportamiento por defecto del DialogTrigger
+            
+            // Verificar autenticación
             if (!user) {
-              e.preventDefault();
               toast({
                 title: t('suggestIdea.loginRequired'),
                 description: t('suggestIdea.loginRequiredDesc'),
                 variant: "destructive",
               });
             } else {
-              // Si el usuario está autenticado, abrir el diálogo directamente
-              setIsOpen(true);
+              // Marcar el botón como clickeado para que el efecto abra el diálogo
+              setButtonClicked(true);
             }
           }}
         >
