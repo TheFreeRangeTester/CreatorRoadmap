@@ -5,6 +5,8 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useTranslation } from "react-i18next";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/hooks/use-auth";
+import { useAchievements } from "@/hooks/use-achievements";
+import { AchievementType } from "@/components/achievement-animation";
 import { IdeaResponse } from "@shared/schema";
 import { apiRequest } from "@/lib/queryClient";
 import { 
@@ -61,6 +63,7 @@ export default function CreatorPublicPage() {
   const { toast } = useToast();
   const { user } = useAuth();
   const { t } = useTranslation();
+  const { registerVote, showAchievement } = useAchievements();
   
   // Referencias para las animaciones
   const pageRef = useRef<HTMLDivElement>(null);
@@ -196,6 +199,26 @@ export default function CreatorPublicPage() {
       
       // Refetch data to update UI
       await refetch();
+      
+      // Registrar el voto para el sistema de logros
+      registerVote(ideaId);
+      
+      // Comprobar si es el primer voto
+      const existingVotedIdeas = JSON.parse(localStorage.getItem("votedIdeas") || "[]");
+      if (existingVotedIdeas.length === 0) {
+        // Muestra la animación del logro del primer voto
+        showAchievement(AchievementType.FIRST_VOTE);
+      } else if (existingVotedIdeas.length >= 4) {
+        // Si ya ha votado más de 5 ideas (incluyendo esta), mostrar logro de votante frecuente
+        showAchievement(AchievementType.MULTIPLE_VOTES);
+      }
+      
+      // Comprobar si está votando a una idea del Top 3
+      const idea = ideas.find(i => i.id === ideaId);
+      if (idea?.position?.current && idea.position.current <= 3) {
+        // Mostrar logro de votar a una idea Top
+        showAchievement(AchievementType.VOTED_TOP_IDEA);
+      }
       
       toast({
         title: t('common.thankYou'),
