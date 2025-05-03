@@ -21,16 +21,21 @@ const fadeIn = {
   visible: { 
     opacity: 1, 
     y: 0,
-    transition: { duration: 0.6 }
+    transition: { 
+      duration: 0.5,
+      ease: "easeOut"
+    }
   }
 };
 
 const staggerContainer = {
-  hidden: { opacity: 0 },
+  hidden: { opacity: 1 },
   visible: {
     opacity: 1,
     transition: {
-      staggerChildren: 0.2
+      when: "beforeChildren",
+      staggerChildren: 0.1,
+      delayChildren: 0.1
     }
   }
 };
@@ -190,42 +195,63 @@ export default function LandingPage() {
   
   useEffect(() => {
     try {
+      // Set initial states to avoid flickering
+      if (heroTitleRef.current && heroTextRef.current) {
+        gsap.set([heroTitleRef.current, heroTextRef.current], { 
+          opacity: 0 
+        });
+      }
+
+      // Create a timeline for better control
+      const tl = gsap.timeline({ delay: 0.2 });
+
       // Hero title animation usando nuestra implementación CustomSplitText
       if (heroTitleRef.current) {
         const titleSplit = new CustomSplitText(heroTitleRef.current, { type: "chars" });
-        gsap.from(titleSplit.chars, {
-          opacity: 0,
-          y: 50,
-          duration: 1,
-          stagger: 0.02,
-          ease: "back.out"
-        });
+        tl.fromTo(titleSplit.chars, 
+          { opacity: 0, y: 40 },
+          { 
+            opacity: 1, 
+            y: 0,
+            duration: 0.8, 
+            stagger: 0.015,
+            ease: "back.out(1.7)"
+          }
+        );
       }
 
       // Hero text fade in
       if (heroTextRef.current) {
-        gsap.from(heroTextRef.current, {
-          opacity: 0,
-          y: 30,
-          duration: 1,
-          delay: 0.5
-        });
+        tl.fromTo(heroTextRef.current,
+          { opacity: 0, y: 20 },
+          { 
+            opacity: 1, 
+            y: 0,
+            duration: 0.8,
+            ease: "power2.out"
+          },
+          "-=0.4" // Start a bit before the previous animation finishes
+        );
       }
 
-      // Features cards stagger animation
+      // Features cards stagger animation with better controls
       if (featuresRef.current) {
-        gsap.from(".feature-card", {
-          scrollTrigger: {
-            trigger: featuresRef.current,
-            start: "top center",
-            toggleActions: "play none none reverse"
-          },
-          opacity: 0,
-          y: 50,
-          duration: 0.8,
-          stagger: 0.2,
-          ease: "power2.out"
-        });
+        gsap.fromTo(".feature-card",
+          { opacity: 0, y: 30 },
+          { 
+            scrollTrigger: {
+              trigger: featuresRef.current,
+              start: "top 80%",
+              toggleActions: "play none none none"
+            },
+            opacity: 1,
+            y: 0,
+            duration: 0.6,
+            stagger: 0.1,
+            ease: "power2.out",
+            clearProps: "all" // Clean up to avoid conflicts
+          }
+        );
       }
     } catch (error) {
       console.error("Error en animaciones GSAP:", error);
