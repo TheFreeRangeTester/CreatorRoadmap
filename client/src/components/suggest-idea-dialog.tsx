@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { useMutation } from "@tanstack/react-query";
 import { Lightbulb, Loader2 } from "lucide-react";
 import { z } from "zod";
@@ -23,25 +23,11 @@ interface SuggestIdeaDialogProps {
 }
 
 export default function SuggestIdeaDialog({ username, refetch, fullWidth = false }: SuggestIdeaDialogProps) {
-  const [isOpen, setIsOpen] = useState(false);
+  const [open, setOpen] = useState(false);
   const { toast } = useToast();
   const { user } = useAuth();
   const { t } = useTranslation();
   const { showAchievement } = useAchievements();
-  
-  // Log para debug
-  console.log("SuggestIdeaDialog renderizado", { isOpen, username, user: !!user });
-  
-  // Estado para controlar si el botón abre el diálogo
-  const [buttonClicked, setButtonClicked] = useState(false);
-  
-  // Efecto para abrir el diálogo cuando se hace clic en el botón
-  useEffect(() => {
-    if (buttonClicked && user) {
-      setIsOpen(true);
-      setButtonClicked(false);
-    }
-  }, [buttonClicked, user]);
   
   // Definir esquema de validación
   const formSchema = z.object({
@@ -65,55 +51,41 @@ export default function SuggestIdeaDialog({ username, refetch, fullWidth = false
   // Mutation para enviar la sugerencia
   const suggestMutation = useMutation({
     mutationFn: async (data: z.infer<typeof formSchema>) => {
-      try {
-        console.log("[DEBUG] Sending suggestion:", data, "to creator:", username);
-        const response = await apiRequest(
-          "POST", 
-          `/api/creators/${username}/suggest`,
-          data
-        );
-        
-        if (!response.ok) {
-          // Si la respuesta no es exitosa, extraer el mensaje de error
-          const errorData = await response.json();
-          throw new Error(errorData.message || t('suggestIdea.errorDesc', { defaultValue: "Error sending suggestion" }));
-        }
-        
-        const result = await response.json();
-        console.log("[DEBUG] API Response:", result);
-        return result;
-      } catch (error) {
-        console.error("[DEBUG] API request error:", error);
-        throw error;
+      const response = await apiRequest(
+        "POST", 
+        `/api/creators/${username}/suggest`,
+        data
+      );
+      
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || t('suggestIdea.errorDesc', { defaultValue: "Error sending suggestion" }));
       }
+      
+      return await response.json();
     },
     onSuccess: () => {
-      console.log("[DEBUG] Suggestion submitted successfully");
-      // Cerrar el diálogo de inmediato
-      setIsOpen(false);
+      // Cerrar el diálogo
+      setOpen(false);
       
       // Mostrar logro por sugerir una idea
       showAchievement(AchievementType.SUGGESTED_IDEA, 
         t('achievements.suggestedIdea', 'Tu idea ha sido enviada a @' + username));
       
-      // Pequeña pausa antes de mostrar el toast para asegurar que el diálogo se cerró
-      setTimeout(() => {
-        // Mostrar mensaje de éxito
-        toast({
-          title: t('suggestIdea.thankYou'),
-          description: t('suggestIdea.thankYouDesc'),
-          className: "bg-gradient-to-r from-green-50 to-emerald-50 border-green-200 dark:from-green-900/30 dark:to-emerald-900/30 dark:border-green-800",
-        });
-        
-        // Resetear el formulario
-        form.reset();
-        
-        // Refrescar la página para mostrar cambios
-        refetch();
-      }, 100);
+      // Mostrar mensaje de éxito
+      toast({
+        title: t('suggestIdea.thankYou'),
+        description: t('suggestIdea.thankYouDesc'),
+        className: "bg-gradient-to-r from-green-50 to-emerald-50 border-green-200 dark:from-green-900/30 dark:to-emerald-900/30 dark:border-green-800",
+      });
+      
+      // Resetear el formulario
+      form.reset();
+      
+      // Refrescar la página para mostrar cambios
+      refetch();
     },
     onError: (error: Error) => {
-      console.error("[DEBUG] Mutation error:", error);
       toast({
         title: t('suggestIdea.error'),
         description: error.message || t('suggestIdea.errorDesc'),
@@ -122,64 +94,51 @@ export default function SuggestIdeaDialog({ username, refetch, fullWidth = false
     }
   });
   
-  // Manejar envío del formulario
-  const onSubmit = (values: z.infer<typeof formSchema>) => {
-    console.log("[DEBUG] onSubmit function called with:", values);
+  // Handler para abrir el diálogo
+  const handleOpenDialog = (e: React.MouseEvent) => {
+    e.preventDefault();
     
-    // Verificar que el usuario esté autenticado
     if (!user) {
       toast({
         title: t('suggestIdea.loginRequired'),
         description: t('suggestIdea.loginRequiredDesc'),
         variant: "destructive",
       });
-      setIsOpen(false);
       return;
     }
     
-    // Verificar campos vacíos por seguridad adicional
-    if (!values.title || !values.description) {
+    setOpen(true);
+  };
+  
+  // Handler para enviar el formulario
+  const onSubmit = async () => {
+    const values = form.getValues();
+    const isValid = await form.trigger();
+    
+    if (!isValid) {
       toast({
-        title: t('suggestIdea.incompleteFields'),
-        description: t('suggestIdea.incompleteFieldsDesc'),
+        title: t('suggestIdea.invalidFields'),
+        description: t('suggestIdea.invalidFieldsDesc'),
         variant: "destructive",
       });
       return;
     }
     
-    // Enviar la sugerencia a través de la mutación
     suggestMutation.mutate(values);
   };
   
   return (
-    <Dialog open={isOpen} onOpenChange={setIsOpen}>
-      <DialogTrigger asChild>
-        <Button 
-          variant={fullWidth ? "secondary" : "outline"}
-          className={`
-            ${fullWidth ? 'w-full shadow-sm flex items-center gap-2' : 'bg-white/20 hover:bg-white/30 text-white border-white/20 backdrop-blur-sm flex items-center gap-2 px-4 py-2'}
-          `}
-          onClick={(e) => {
-            console.log("[DEBUG] Botón de sugerir idea clickeado");
-            e.preventDefault(); // Prevenir comportamiento por defecto del DialogTrigger
-            
-            // Verificar autenticación
-            if (!user) {
-              toast({
-                title: t('suggestIdea.loginRequired'),
-                description: t('suggestIdea.loginRequiredDesc'),
-                variant: "destructive",
-              });
-            } else {
-              // Marcar el botón como clickeado para que el efecto abra el diálogo
-              setButtonClicked(true);
-            }
-          }}
-        >
-          <Lightbulb className="h-4 w-4" />
-          <span>{t('suggestIdea.button')}</span>
-        </Button>
-      </DialogTrigger>
+    <Dialog open={open} onOpenChange={setOpen}>
+      <Button 
+        variant={fullWidth ? "secondary" : "outline"}
+        className={`
+          ${fullWidth ? 'w-full shadow-sm flex items-center gap-2' : 'bg-white/20 hover:bg-white/30 text-white border-white/20 backdrop-blur-sm flex items-center gap-2 px-4 py-2'}
+        `}
+        onClick={handleOpenDialog}
+      >
+        <Lightbulb className="h-4 w-4" />
+        <span>{t('suggestIdea.button')}</span>
+      </Button>
       
       <DialogContent className="sm:max-w-[500px]">
         <DialogHeader>
@@ -190,13 +149,7 @@ export default function SuggestIdeaDialog({ username, refetch, fullWidth = false
         </DialogHeader>
         
         <Form {...form}>
-          <form 
-            onSubmit={(e) => {
-              // Prevenir el comportamiento predeterminado para manejar manualmente
-              e.preventDefault();
-              console.log("[DEBUG] Form submitted");
-            }}
-            className="space-y-4 mt-4">
+          <form onSubmit={(e) => e.preventDefault()} className="space-y-4 mt-4">
             <FormField
               control={form.control}
               name="title"
@@ -244,27 +197,7 @@ export default function SuggestIdeaDialog({ username, refetch, fullWidth = false
                 type="button" 
                 className="bg-gradient-to-r from-primary to-blue-600 hover:from-primary/90 hover:to-blue-700"
                 disabled={suggestMutation.isPending}
-                onClick={async () => {
-                  console.log("[DEBUG] Submit button clicked");
-                  const values = form.getValues();
-                  console.log("[DEBUG] Form values:", values);
-                  
-                  // Realizar validación manual
-                  const isValid = await form.trigger();
-                  console.log("[DEBUG] Is form valid?", isValid);
-                  
-                  if (isValid) {
-                    console.log("[DEBUG] Submitting form...");
-                    onSubmit(values as z.infer<typeof formSchema>);
-                  } else {
-                    console.log("[DEBUG] Form invalid:", form.formState.errors);
-                    toast({
-                      title: t('suggestIdea.invalidFields'),
-                      description: t('suggestIdea.invalidFieldsDesc'),
-                      variant: "destructive",
-                    });
-                  }
-                }}
+                onClick={onSubmit}
               >
                 {suggestMutation.isPending ? (
                   <>
