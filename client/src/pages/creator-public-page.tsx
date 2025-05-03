@@ -22,7 +22,9 @@ import {
   Youtube, 
   Globe, 
   ChevronRight,
-  MoreVertical
+  MoreVertical,
+  LogIn,
+  LogOut
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "@/components/theme-toggle";
@@ -327,6 +329,23 @@ export default function CreatorPublicPage() {
         <div className="container mx-auto px-4 max-w-3xl pt-6">
           {/* Barra superior con controles de utilidad (minimalista) */}
           <div className="absolute top-4 right-4 flex items-center gap-2 z-50">
+            {/* Estado de inicio de sesión */}
+            <div className="bg-white/10 backdrop-blur-sm px-2 py-1 rounded-md text-white text-xs mr-1 flex items-center border border-white/10">
+              {user ? (
+                <div className="flex items-center gap-1.5">
+                  <span>{t('common.logged', 'Logged in')}: {user.username}</span>
+                  <Link to="/auth" className="hover:text-white/80">
+                    <LogOut className="h-3.5 w-3.5" />
+                  </Link>
+                </div>
+              ) : (
+                <Link to="/auth" className="flex items-center gap-1.5 hover:text-white/80">
+                  <LogIn className="h-3.5 w-3.5" />
+                  <span>{t('common.loginToVote')}</span>
+                </Link>
+              )}
+            </div>
+            
             <motion.div
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.9 }}
@@ -343,12 +362,6 @@ export default function CreatorPublicPage() {
             </motion.div>
             <ThemeToggle />
             <LanguageToggle />
-            {user && (
-              <Badge variant="outline" className="bg-white/20 text-white border-white/20 px-3 py-1 backdrop-blur-sm">
-                <User className="h-3 w-3 mr-1.5" />
-                <span className="font-medium text-xs">{user.username}</span>
-              </Badge>
-            )}
           </div>
           
           {/* Perfil del creador simplificado al estilo Linktree */}
