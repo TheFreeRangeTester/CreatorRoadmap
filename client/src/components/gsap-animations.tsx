@@ -2,6 +2,31 @@ import { useEffect, useRef, useState } from 'react';
 import { gsap } from 'gsap';
 import { useGSAP } from "@gsap/react";
 
+// Constantes para efectos de animación
+export const ANIMATION_EFFECTS = {
+  FADE_IN: 'fadeIn',
+  SLIDE_UP: 'slideUp',
+  SLIDE_DOWN: 'slideDown',
+  SLIDE_LEFT: 'slideLeft',
+  SLIDE_RIGHT: 'slideRight',
+  SCALE_IN: 'scaleIn',
+  FLIP_X: 'flipX',
+  FLIP_Y: 'flipY',
+  BOUNCE: 'bounce',
+  ELASTIC: 'elastic',
+  ROTATE_IN: 'rotateIn',
+  STAGGER: 'stagger',
+  TEXT_REVEAL: 'textReveal',
+  LOGO_ANIMATION: 'logoAnimation',
+  FLOAT: 'float',
+  PULSE: 'pulse',
+  MORPH: 'morph',
+  GLITCH: 'glitch',
+  FOLLOW_PATH: 'followPath',
+  DRAW_SVG: 'drawSVG',
+  BLINKING_CURSOR: 'blinkingCursor'
+};
+
 // Implementación simplificada de SplitText
 export class CustomSplitText {
   elements: HTMLElement[];
@@ -291,6 +316,348 @@ export function useGSAPScrollTrigger() {
   }, []);
 }
 
+// NUEVAS ANIMACIONES AVANZADAS TIPO GSAP.COM
+
+// Hook para animación de texto en cascada 3D
+export function useAdvancedTextReveal(elementRef: React.RefObject<HTMLElement>, options: {
+  effect?: string,
+  trigger?: 'load' | 'scroll',
+  direction?: 'ltr' | 'rtl' | 'center',
+  ease?: string
+} = {}) {
+  const { 
+    effect = ANIMATION_EFFECTS.TEXT_REVEAL, 
+    trigger = 'scroll',
+    direction = 'ltr',
+    ease = 'expo.out' 
+  } = options;
+  
+  useEffect(() => {
+    if (!elementRef.current) return;
+    
+    // Crear instancia de SplitText
+    const splitText = new CustomSplitText(elementRef.current, {
+      type: 'chars'
+    });
+    
+    // Aplicamos estilos iniciales
+    gsap.set(splitText.chars, { 
+      perspective: 400,
+      transformStyle: 'preserve-3d'
+    });
+    
+    // Oculta inicialmente
+    gsap.set(elementRef.current, { 
+      autoAlpha: 1
+    });
+    
+    // Determinar el orden de los caracteres
+    let charSet = [...splitText.chars];
+    if (direction === 'rtl') {
+      charSet.reverse();
+    } else if (direction === 'center') {
+      const mid = Math.floor(charSet.length / 2);
+      const left = charSet.slice(0, mid).reverse();
+      const right = charSet.slice(mid);
+      charSet = [];
+      for (let i = 0; i < Math.max(left.length, right.length); i++) {
+        if (i < left.length) charSet.push(left[i]);
+        if (i < right.length) charSet.push(right[i]);
+      }
+    }
+    
+    // Crear timeline
+    const tl = gsap.timeline({
+      scrollTrigger: trigger === 'scroll' ? {
+        trigger: elementRef.current,
+        start: 'top 80%',
+        toggleActions: 'play none none reset'
+      } : undefined
+    });
+    
+    // Determinar el tipo de animación
+    switch(effect) {
+      case ANIMATION_EFFECTS.TEXT_REVEAL:
+        tl.fromTo(charSet, 
+          { 
+            opacity: 0, 
+            rotationX: -90, 
+            translateY: 30 
+          }, 
+          {
+            duration: 0.03, 
+            opacity: 1, 
+            rotationX: 0, 
+            translateY: 0,
+            stagger: 0.02,
+            ease: ease
+          }
+        );
+        break;
+        
+      case ANIMATION_EFFECTS.GLITCH:
+        // Efecto glitch
+        charSet.forEach((char, index) => {
+          tl.fromTo(char,
+            { 
+              opacity: 0,
+              scale: 0,
+              color: 'red',
+              textShadow: '2px 2px 0 #0ff, -2px -2px 0 #f0f'
+            },
+            {
+              opacity: 1,
+              scale: 1,
+              color: '',
+              textShadow: 'none',
+              duration: 0.2,
+              ease: 'power1.inOut'
+            },
+            index * 0.01
+          );
+          
+          // Añadir pulso glitch aleatorio
+          if (index % 3 === 0) {
+            tl.to(char, {
+              opacity: 0.8,
+              skewX: 20,
+              color: '#0ff',
+              duration: 0.05,
+              yoyo: true,
+              repeat: 1
+            }, `>-0.1`);
+          }
+        });
+        break;
+        
+      case ANIMATION_EFFECTS.BLINKING_CURSOR:
+        // Efecto máquina de escribir
+        tl.set(charSet, { opacity: 0 })
+          .set(elementRef.current, { position: 'relative' });
+          
+        // Crear cursor
+        const cursor = document.createElement('span');
+        cursor.innerHTML = '|';
+        cursor.style.position = 'absolute';
+        cursor.style.right = '-4px';
+        cursor.style.top = '0';
+        cursor.style.opacity = '1';
+        elementRef.current.appendChild(cursor);
+        
+        // Animar cursor
+        tl.to(cursor, {
+          opacity: 0,
+          duration: 0.5,
+          repeat: -1,
+          yoyo: true
+        });
+        
+        // Animar caracteres uno por uno
+        charSet.forEach((char, i) => {
+          tl.to(char, {
+            opacity: 1,
+            duration: 0.01,
+            delay: i * 0.06
+          });
+        });
+        
+        // Mover cursor mientras tipea
+        charSet.forEach((char, i) => {
+          if (i < charSet.length - 1) {
+            const nextChar = charSet[i + 1];
+            tl.to(cursor, {
+              left: nextChar.offsetLeft + 'px',
+              duration: 0.05
+            }, `>-0.05`);
+          }
+        });
+        break;
+        
+      case ANIMATION_EFFECTS.BOUNCE:
+        tl.fromTo(charSet, 
+          { opacity: 0, y: -100 }, 
+          {
+            opacity: 1,
+            y: 0,
+            stagger: 0.03,
+            duration: 0.8,
+            ease: 'bounce.out'
+          }
+        );
+        break;
+    }
+    
+    return () => {
+      tl.kill();
+      if (splitText) {
+        splitText.revert();
+      }
+      // Limpiar cursor si existe
+      if (elementRef.current && effect === ANIMATION_EFFECTS.BLINKING_CURSOR) {
+        const cursor = elementRef.current.querySelector('span:last-child');
+        if (cursor) elementRef.current.removeChild(cursor);
+      }
+    };
+  }, [elementRef, effect, trigger, direction, ease]);
+}
+
+// Hook para efecto de flotación continua
+export function useFloatingElement(elementRef: React.RefObject<HTMLElement>, options: {
+  amplitude?: number,
+  frequency?: number,
+  rotation?: boolean
+} = {}) {
+  const {
+    amplitude = 10,
+    frequency = 3,
+    rotation = true
+  } = options;
+  
+  useEffect(() => {
+    if (!elementRef.current) return;
+    
+    // Timeline para coordinar múltiples animaciones
+    const tl = gsap.timeline({ repeat: -1, yoyo: true });
+    
+    // Movimiento flotante principal
+    tl.to(elementRef.current, {
+      y: `-=${amplitude}`,
+      duration: frequency / 2,
+      ease: 'sine.inOut'
+    }).to(elementRef.current, {
+      y: `+=${amplitude}`,
+      duration: frequency / 2,
+      ease: 'sine.inOut'
+    });
+    
+    // Rotación suave (opcional)
+    if (rotation) {
+      tl.to(elementRef.current, {
+        rotation: -2,
+        duration: frequency * 0.75,
+        ease: 'none'
+      }, 0).to(elementRef.current, {
+        rotation: 2,
+        duration: frequency * 0.75,
+        ease: 'none'
+      }, frequency * 0.75);
+    }
+    
+    return () => {
+      tl.kill();
+    };
+  }, [elementRef, amplitude, frequency, rotation]);
+}
+
+// Hook para crear un efecto de morfado entre formas SVG
+export function useMorphSVG(elementRef: React.RefObject<SVGElement>, options: {
+  targetPaths?: string[],
+  duration?: number,
+  repeatDelay?: number
+} = {}) {
+  const {
+    targetPaths = [],
+    duration = 1,
+    repeatDelay = 2
+  } = options;
+  
+  useEffect(() => {
+    if (!elementRef.current || !targetPaths.length) return;
+    
+    let currentPath = elementRef.current.getAttribute('d') || '';
+    const targets = [currentPath, ...targetPaths];
+    
+    const tl = gsap.timeline({
+      repeat: -1,
+      repeatDelay: repeatDelay
+    });
+    
+    // Animar entre cada forma
+    for (let i = 1; i < targets.length; i++) {
+      tl.to(elementRef.current, {
+        attr: { d: targets[i] },
+        duration: duration,
+        ease: 'power2.inOut'
+      });
+    }
+    
+    // Volver a la forma original
+    tl.to(elementRef.current, {
+      attr: { d: targets[0] },
+      duration: duration,
+      ease: 'power2.inOut'
+    });
+    
+    return () => {
+      tl.kill();
+    };
+  }, [elementRef, targetPaths, duration, repeatDelay]);
+}
+
+// Animación para efecto de seguimiento de cursor
+export function useMouseFollowEffect(elementRef: React.RefObject<HTMLElement>, options: {
+  intensity?: number,
+  ease?: number,
+  rotate?: boolean
+} = {}) {
+  const {
+    intensity = 0.1,
+    ease = 0.1,
+    rotate = true
+  } = options;
+  
+  useEffect(() => {
+    if (!elementRef.current) return;
+    
+    let mouseX = 0;
+    let mouseY = 0;
+    let currentX = 0;
+    let currentY = 0;
+    let currentRotation = 0;
+    let animation: number;
+    
+    // Función para actualizar la posición
+    const updatePosition = () => {
+      // Interpolación suave
+      currentX += (mouseX - currentX) * ease;
+      currentY += (mouseY - currentY) * ease;
+      
+      // Actualizar rotación si está habilitada
+      if (rotate) {
+        const targetRotation = (mouseX - window.innerWidth / 2) * 0.01;
+        currentRotation += (targetRotation - currentRotation) * ease;
+        gsap.set(elementRef.current, { 
+          rotation: currentRotation 
+        });
+      }
+      
+      // Aplicar transformación
+      gsap.set(elementRef.current, {
+        x: currentX * intensity,
+        y: currentY * intensity
+      });
+      
+      animation = requestAnimationFrame(updatePosition);
+    };
+    
+    // Event listeners para seguir el cursor
+    const handleMouseMove = (e: MouseEvent) => {
+      mouseX = e.clientX - window.innerWidth / 2;
+      mouseY = e.clientY - window.innerHeight / 2;
+    };
+    
+    // Iniciar animación
+    window.addEventListener('mousemove', handleMouseMove);
+    animation = requestAnimationFrame(updatePosition);
+    
+    // Limpieza
+    return () => {
+      window.removeEventListener('mousemove', handleMouseMove);
+      cancelAnimationFrame(animation);
+    };
+  }, [elementRef, intensity, ease, rotate]);
+}
+
 // Hook para animaciones de texto avanzadas usando nuestra implementación de SplitText
 export function useSplitTextAnimation(elementRef: React.RefObject<HTMLElement>, options: {
   type?: 'chars' | 'words' | 'lines',
@@ -374,4 +741,122 @@ export function useSplitTextAnimation(elementRef: React.RefObject<HTMLElement>, 
       }
     };
   }, [elementRef, type, trigger, stagger, duration, delay, ease]);
+}
+
+// Hook para crear efecto de vibración continuo como en GSAP.com
+export function useShakeEffect(elementRef: React.RefObject<HTMLElement>, options: {
+  intensity?: number,
+  speed?: number, 
+  rotation?: boolean,
+  trigger?: 'load' | 'hover' | 'scroll'
+} = {}) {
+  const {
+    intensity = 2,
+    speed = 0.1,
+    rotation = true,
+    trigger = 'hover'
+  } = options;
+  
+  useEffect(() => {
+    if (!elementRef.current) return;
+    
+    // Timeline para la animación de vibración
+    const tl = gsap.timeline({ paused: true });
+    
+    // Se ejecuta secuencialmente para cada keyframe
+    const createAndApplyShakeEffect = () => {
+      // Número de etapas de animación
+      const steps = 10;
+      
+      // Limpiar timeline existente
+      tl.clear();
+      
+      // Añadir cada keyframe a la timeline secuencialmente
+      for (let i = 0; i < steps; i++) {
+        const offsetX = Math.random() * intensity * 2 - intensity;
+        const offsetY = Math.random() * intensity * 2 - intensity;
+        const offsetRotation = rotation ? (Math.random() * intensity * 2 - intensity) : 0;
+        
+        // Añadir cada paso como una animación individual
+        tl.to(elementRef.current, {
+          x: offsetX,
+          y: offsetY,
+          rotation: offsetRotation,
+          ease: 'none',
+          duration: speed
+        });
+      }
+      
+      // Añadir el keyframe final para volver al origen
+      tl.to(elementRef.current, {
+        x: 0,
+        y: 0,
+        rotation: 0,
+        ease: 'power1.inOut',
+        duration: speed * 3
+      });
+      
+      return tl;
+    };
+    
+    // Establecer la animación
+    createAndApplyShakeEffect();
+    
+    // Manejar diferentes desencadenantes
+    let scrollTriggerInstance: any;
+    
+    if (trigger === 'hover') {
+      const startShake = () => {
+        tl.restart();
+        tl.play();
+      };
+      
+      const stopShake = () => {
+        tl.progress(1).pause();
+      };
+      
+      elementRef.current.addEventListener('mouseenter', startShake);
+      elementRef.current.addEventListener('mouseleave', stopShake);
+      
+      return () => {
+        if (elementRef.current) {
+          elementRef.current.removeEventListener('mouseenter', startShake);
+          elementRef.current.removeEventListener('mouseleave', stopShake);
+        }
+        tl.kill();
+      };
+    } 
+    else if (trigger === 'scroll') {
+      scrollTriggerInstance = {
+        trigger: elementRef.current,
+        start: 'top 80%',
+        end: 'bottom 20%',
+        onEnter: () => tl.play(),
+        onLeave: () => tl.pause(),
+        onEnterBack: () => tl.play(),
+        onLeaveBack: () => tl.pause()
+      };
+      
+      // Aplicar el ScrollTrigger
+      gsap.fromTo(elementRef.current, 
+        { x: 0, y: 0, rotation: 0 },
+        { duration: 0.1, scrollTrigger: scrollTriggerInstance }
+      );
+      
+      return () => {
+        tl.kill();
+        if (scrollTriggerInstance && scrollTriggerInstance.kill) {
+          scrollTriggerInstance.kill();
+        }
+      };
+    } 
+    else {
+      // Para el trigger 'load'
+      tl.play();
+      
+      return () => {
+        tl.kill();
+      };
+    }
+  }, [elementRef, intensity, speed, rotation, trigger]);
 }

@@ -3,7 +3,15 @@ import { Link, useLocation } from "wouter";
 import { motion } from "framer-motion";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { CustomSplitText, registerGSAPPlugins } from "@/components/gsap-animations";
+import { 
+  CustomSplitText, 
+  registerGSAPPlugins, 
+  useAdvancedTextReveal, 
+  useFloatingElement, 
+  useMouseFollowEffect, 
+  useShakeEffect,
+  ANIMATION_EFFECTS
+} from "@/components/gsap-animations";
 import { CloudLightning, ArrowRight, Check, CircleCheck, Zap, Users, LineChart, Award, Layers, Globe, Star } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
@@ -193,6 +201,34 @@ export default function LandingPage() {
     };
   }, []);
   
+  // Hero title ref para animación avanzada (estilo GSAP.com)
+  const heroTitle3DRef = useRef(null);
+  const heroBadgeRef = useRef(null);
+  const heroGraphicRef = useRef(null);
+  const heroButtonRef = useRef(null);
+  
+  // Usar animación avanzada similar a GSAP.com para el título
+  useAdvancedTextReveal(heroTitle3DRef, {
+    effect: ANIMATION_EFFECTS.TEXT_REVEAL,
+    direction: 'center',
+    trigger: 'load'
+  });
+  
+  // Añadir efecto de flotación al gráfico del hero
+  useFloatingElement(heroGraphicRef, {
+    amplitude: 15,
+    frequency: 4,
+    rotation: true
+  });
+  
+  // Efecto de vibración en hover para el botón
+  useShakeEffect(heroButtonRef, {
+    intensity: 0.5,
+    speed: 0.05,
+    trigger: 'hover'
+  });
+  
+  // Animaciones principales con la implementación anterior para mantener compatibilidad
   useEffect(() => {
     try {
       // Set initial states to avoid flickering
@@ -201,32 +237,56 @@ export default function LandingPage() {
           opacity: 0 
         });
       }
+      
+      // Set initial state for badge
+      if (heroBadgeRef.current) {
+        gsap.set(heroBadgeRef.current, {
+          scale: 0.8,
+          opacity: 0
+        });
+      }
 
       // Create a timeline for better control
       const tl = gsap.timeline({ delay: 0.2 });
+      
+      // Badge pop animation
+      if (heroBadgeRef.current) {
+        tl.to(heroBadgeRef.current, {
+          scale: 1.1,
+          opacity: 1,
+          duration: 0.4,
+          ease: "back.out(2)"
+        }).to(heroBadgeRef.current, {
+          scale: 1,
+          duration: 0.2,
+          ease: "power1.out"
+        });
+      }
 
       // Hero title animation usando nuestra implementación CustomSplitText
       if (heroTitleRef.current) {
         const titleSplit = new CustomSplitText(heroTitleRef.current, { type: "chars" });
         tl.fromTo(titleSplit.chars, 
-          { opacity: 0, y: 40 },
+          { opacity: 0, y: 40, rotationX: -90 },
           { 
             opacity: 1, 
             y: 0,
+            rotationX: 0,
             duration: 0.8, 
-            stagger: 0.015,
+            stagger: 0.02,
             ease: "back.out(1.7)"
           }
         );
       }
 
-      // Hero text fade in
+      // Hero text fade in con efecto mejorado
       if (heroTextRef.current) {
         tl.fromTo(heroTextRef.current,
-          { opacity: 0, y: 20 },
+          { opacity: 0, y: 20, scale: 0.95 },
           { 
             opacity: 1, 
             y: 0,
+            scale: 1,
             duration: 0.8,
             ease: "power2.out"
           },
@@ -315,15 +375,25 @@ export default function LandingPage() {
             variants={staggerContainer}
             className="max-w-4xl mx-auto text-center"
           >
-            <motion.div variants={fadeIn}>
+            <div ref={heroBadgeRef}>
               <Badge variant="outline" className="px-3 py-1 bg-primary/10 text-primary-600 border-primary-200 dark:bg-primary-900/30 dark:text-primary-400 dark:border-primary-800/50 mb-4">
                 {t('landing.hero.tagline')}
               </Badge>
-            </motion.div>
+            </div>
             
+            {/* Título con animación antigua para compatibilidad */}
             <h1 
               ref={heroTitleRef}
-              className="text-4xl md:text-6xl font-bold tracking-tight mb-6 bg-clip-text text-transparent bg-gradient-to-r from-gray-900 to-gray-700 dark:from-white dark:to-gray-300"
+              className="text-4xl md:text-6xl font-bold tracking-tight mb-6 bg-clip-text text-transparent bg-gradient-to-r from-gray-900 to-gray-700 dark:from-white dark:to-gray-300 hidden"
+            >
+              {t('landing.hero.title')}
+            </h1>
+            
+            {/* Título con animación 3D al estilo GSAP.com */}
+            <h1 
+              ref={heroTitle3DRef}
+              className="text-4xl md:text-6xl font-bold tracking-tight mb-6 bg-clip-text text-transparent bg-gradient-to-r from-gray-900 to-gray-700 dark:from-white dark:to-gray-300 perspective-1000"
+              style={{ perspective: "1000px", opacity: 0 }}
             >
               {t('landing.hero.title')}
             </h1>
@@ -335,41 +405,39 @@ export default function LandingPage() {
               {t('landing.hero.subtitle')}
             </p>
             
-            <motion.div 
-              variants={fadeIn}
-              className="flex flex-col sm:flex-row gap-4 justify-center"
-            >
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
               {user ? (
-                <Button 
-                  size="lg" 
-                  className="font-medium text-base bg-gradient-to-r from-primary to-blue-600 hover:from-primary/90 hover:to-blue-700 text-white"
-                  onClick={() => navigate("/dashboard")}
-                >
-                  {t('landing.cta.goDashboard')}
-                  <ArrowRight className="h-4 w-4 ml-2" />
-                </Button>
-              ) : (
-                <Link href="/auth">
-                  <Button size="lg" className="font-medium text-base bg-gradient-to-r from-primary to-blue-600 hover:from-primary/90 hover:to-blue-700 text-white">
-                    {t('landing.cta.startFree')}
+                <div ref={heroButtonRef}>
+                  <Button 
+                    size="lg" 
+                    className="font-medium text-base bg-gradient-to-r from-primary to-blue-600 hover:from-primary/90 hover:to-blue-700 text-white"
+                    onClick={() => navigate("/dashboard")}
+                  >
+                    {t('landing.cta.goDashboard')}
                     <ArrowRight className="h-4 w-4 ml-2" />
                   </Button>
-                </Link>
+                </div>
+              ) : (
+                <div ref={heroButtonRef}>
+                  <Link href="/auth">
+                    <Button size="lg" className="font-medium text-base bg-gradient-to-r from-primary to-blue-600 hover:from-primary/90 hover:to-blue-700 text-white">
+                      {t('landing.cta.startFree')}
+                      <ArrowRight className="h-4 w-4 ml-2" />
+                    </Button>
+                  </Link>
+                </div>
               )}
               <Button onClick={() => setIsDemoOpen(true)} size="lg" variant="outline" className="font-medium text-base">
                 {t('landing.cta.seeDemo')}
               </Button>
-            </motion.div>
+            </div>
             
-            <motion.div 
-              variants={fadeIn}
-              className="mt-8 text-sm text-gray-500 dark:text-gray-400"
-            >
+            <div className="mt-8 text-sm text-gray-500 dark:text-gray-400">
               {t('landing.hero.noCreditCard')}
-            </motion.div>
+            </div>
             
-            <motion.div 
-              variants={fadeIn}
+            <div 
+              ref={heroGraphicRef}
               className="mt-16 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl shadow-xl overflow-hidden cursor-pointer"
               onClick={() => setIsDemoOpen(true)}
             >
@@ -393,7 +461,7 @@ export default function LandingPage() {
                   </div>
                 </div>
               </div>
-            </motion.div>
+            </div>
           </motion.div>
         </div>
       </section>
