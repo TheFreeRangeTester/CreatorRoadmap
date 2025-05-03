@@ -5,13 +5,12 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { 
   CustomSplitText, 
-  registerGSAPPlugins, 
-  useAdvancedTextReveal, 
+  registerGSAPPlugins,
   useFloatingElement, 
-  useMouseFollowEffect, 
   useShakeEffect,
   ANIMATION_EFFECTS
 } from "@/components/gsap-animations";
+import AnimatedText from "@/components/animated-text";
 import { CloudLightning, ArrowRight, Check, CircleCheck, Zap, Users, LineChart, Award, Layers, Globe, Star } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
@@ -207,12 +206,7 @@ export default function LandingPage() {
   const heroGraphicRef = useRef(null);
   const heroButtonRef = useRef(null);
   
-  // Usar animación avanzada similar a GSAP.com para el título
-  useAdvancedTextReveal(heroTitle3DRef, {
-    effect: ANIMATION_EFFECTS.TEXT_REVEAL,
-    direction: 'center',
-    trigger: 'load'
-  });
+  // Ya no necesitamos useAdvancedTextReveal, usaremos el componente AnimatedText
   
   // Añadir efecto de flotación al gráfico del hero
   useFloatingElement(heroGraphicRef, {
