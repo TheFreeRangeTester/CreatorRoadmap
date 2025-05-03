@@ -5,7 +5,17 @@ import { useAuth } from "@/hooks/use-auth";
 import { useAchievements } from "@/hooks/use-achievements";
 import { AchievementType } from "@/components/achievement-animation";
 import { Button } from "@/components/ui/button";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
+import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import { useTranslation } from "react-i18next";
+import { useMutation } from "@tanstack/react-query";
+import { apiRequest } from "@/lib/queryClient";
+import { suggestIdeaSchema } from "@shared/schema";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
 
 interface SuggestIdeaDialogProps {
   username: string;
@@ -13,114 +23,74 @@ interface SuggestIdeaDialogProps {
   fullWidth?: boolean;
 }
 
+type FormData = z.infer<typeof suggestIdeaSchema>;
+
 export default function SuggestIdeaDialog({ username, refetch, fullWidth = false }: SuggestIdeaDialogProps) {
   const { toast } = useToast();
   const { user } = useAuth();
   const { t } = useTranslation();
   const { showAchievement } = useAchievements();
-  
-  // Estado básico
   const [showModal, setShowModal] = useState(false);
-  const [title, setTitle] = useState("");
-  const [description, setDescription] = useState("");
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  
-  // Restablecer el formulario
-  const resetForm = () => {
-    setTitle("");
-    setDescription("");
-  };
-  
-  // Abrir modal
+
+  const form = useForm<FormData>({
+    resolver: zodResolver(suggestIdeaSchema),
+    defaultValues: {
+      title: "",
+      description: "",
+    },
+  });
+
+  const suggestMutation = useMutation({
+    mutationFn: async (data: FormData) => {
+      const response = await apiRequest(
+        "POST",
+        `/api/creators/${username}/suggest`,
+        data
+      );
+      return response;
+    },
+    onSuccess: async () => {
+      form.reset();
+      setShowModal(false);
+      showAchievement(AchievementType.SUGGESTED_IDEA, 
+        t('achievements.ideaSuggested', { username: `@${username}` }));
+
+      toast({
+        title: t('creator.suggestionSuccess'),
+        description: t('creator.suggestionSuccessDesc'),
+        className: "bg-gradient-to-r from-green-50 to-emerald-50 border-green-200 dark:from-green-900/30 dark:to-emerald-900/30 dark:border-green-800",
+      });
+
+      await refetch();
+    },
+    onError: (error: Error) => {
+      toast({
+        title: t('creator.suggestionError'),
+        description: error.message || t('creator.suggestionErrorDesc'),
+        variant: "destructive",
+      });
+    },
+  });
+
   const handleOpen = () => {
     if (!user) {
       toast({
-        title: "Iniciar sesión requerido",
-        description: "Debes iniciar sesión para sugerir ideas",
+        title: t('login.required'),
+        description: t('login.requiredToSuggest'),
         variant: "destructive",
       });
       return;
     }
-    resetForm();
+    form.reset();
     setShowModal(true);
   };
-  
-  // Cerrar modal
-  const handleClose = () => {
-    if (!isSubmitting) {
-      setShowModal(false);
-    }
+
+  const onSubmit = (data: FormData) => {
+    suggestMutation.mutate(data);
   };
-  
-  // Manejar el envío
-  const handleSubmit = () => {
-    // Validación simple
-    if (title.trim().length < 3 || description.trim().length < 10) {
-      toast({
-        title: "Datos incompletos",
-        description: "El título debe tener al menos 3 caracteres y la descripción al menos 10.",
-        variant: "destructive",
-      });
-      return;
-    }
-    
-    // Activar estado de envío
-    setIsSubmitting(true);
-    console.log("Enviando idea:", { title, description });
-    
-    // Solicitud simple pero directa
-    fetch(`/api/creators/${username}/suggest`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ title, description }),
-      credentials: "include"
-    })
-      .then(response => {
-        // Manejo básico de errores
-        if (!response.ok) {
-          response.text().then(text => {
-            console.error("Error del servidor:", text);
-            throw new Error(text);
-          });
-        }
-        return response.json();
-      })
-      .then(data => {
-        console.log("Idea sugerida con éxito:", data);
-        
-        // Cerrar modal
-        setShowModal(false);
-        
-        // Mostrar logro
-        showAchievement(AchievementType.SUGGESTED_IDEA, 
-          `Tu idea ha sido enviada a @${username}`);
-        
-        // Mensaje de éxito
-        toast({
-          title: "¡Gracias por tu idea!",
-          description: "Tu sugerencia ha sido enviada y está pendiente de revisión.",
-          className: "bg-gradient-to-r from-green-50 to-emerald-50 border-green-200 dark:from-green-900/30 dark:to-emerald-900/30 dark:border-green-800",
-        });
-        
-        // Recargar datos
-        refetch();
-      })
-      .catch(error => {
-        console.error("Error al enviar la idea:", error);
-        toast({
-          title: "Error al enviar idea",
-          description: error.message || "Hubo un problema al enviar tu idea. Inténtalo de nuevo.",
-          variant: "destructive",
-        });
-      })
-      .finally(() => {
-        setIsSubmitting(false);
-      });
-  };
-  
+
   return (
     <>
-      {/* Botón para abrir el modal */}
       <Button 
         variant={fullWidth ? "secondary" : "outline"}
         className={fullWidth 
@@ -130,97 +100,78 @@ export default function SuggestIdeaDialog({ username, refetch, fullWidth = false
         onClick={handleOpen}
       >
         <Lightbulb className="h-4 w-4" />
-        <span>Sugerir idea</span>
+        <span>{t('suggestIdea.button')}</span>
       </Button>
-      
-      {/* Modal de sugerencia */}
-      {showModal && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-          {/* Contenedor principal */}
-          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg w-full max-w-md mx-4">
-            {/* Cabecera */}
-            <div className="flex justify-between items-center p-4 border-b dark:border-gray-700">
-              <h3 className="text-lg font-medium flex items-center">
-                <Lightbulb className="h-5 w-5 text-yellow-500 mr-2" />
-                Sugerir idea para @{username}
-              </h3>
-              
-              <Button 
-                variant="ghost" 
-                size="icon" 
-                onClick={handleClose}
-                disabled={isSubmitting}
-                className="h-8 w-8 rounded-full"
-              >
-                <X className="h-4 w-4" />
-              </Button>
+
+      <Dialog open={showModal} onOpenChange={setShowModal}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <Lightbulb className="h-5 w-5 text-yellow-500" />
+              {t('suggestIdea.title', { username: `@${username}` })}
+            </DialogTitle>
+            <DialogDescription>
+              {t('suggestIdea.description')}
+            </DialogDescription>
+          </DialogHeader>
+
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="title">{t('suggestIdea.titleLabel')}</Label>
+              <Input
+                id="title"
+                placeholder={t('suggestIdea.titlePlaceholder')}
+                {...form.register("title")}
+              />
+              {form.formState.errors.title && (
+                <p className="text-sm text-red-500 mt-1">
+                  {form.formState.errors.title.message}
+                </p>
+              )}
             </div>
-            
-            {/* Cuerpo */}
-            <div className="p-4">
-              {/* Título */}
-              <div className="mb-4">
-                <label htmlFor="idea-title" className="block text-sm font-medium mb-1">
-                  Título
-                </label>
-                <input
-                  id="idea-title"
-                  type="text"
-                  value={title}
-                  onChange={(e) => setTitle(e.target.value)}
-                  placeholder="Título breve y descriptivo"
-                  className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600"
-                  disabled={isSubmitting}
-                />
-              </div>
-              
-              {/* Descripción */}
-              <div className="mb-4">
-                <label htmlFor="idea-description" className="block text-sm font-medium mb-1">
-                  Descripción
-                </label>
-                <textarea
-                  id="idea-description"
-                  value={description}
-                  onChange={(e) => setDescription(e.target.value)}
-                  placeholder="Describe tu idea con más detalle"
-                  rows={4}
-                  className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600"
-                  disabled={isSubmitting}
-                />
-              </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="description">{t('suggestIdea.descriptionLabel')}</Label>
+              <Textarea
+                id="description"
+                placeholder={t('suggestIdea.descriptionPlaceholder')}
+                {...form.register("description")}
+                rows={4}
+              />
+              {form.formState.errors.description && (
+                <p className="text-sm text-red-500 mt-1">
+                  {form.formState.errors.description.message}
+                </p>
+              )}
             </div>
-            
-            {/* Pie */}
-            <div className="flex justify-end p-4 border-t dark:border-gray-700 gap-2">
-              {/* Botón Cancelar */}
+
+            <DialogFooter>
               <Button
+                type="button"
                 variant="outline"
-                onClick={handleClose}
-                disabled={isSubmitting}
+                onClick={() => setShowModal(false)}
+                disabled={suggestMutation.isPending}
               >
-                Cancelar
+                {t('common.cancel')}
               </Button>
-              
-              {/* Botón Enviar */}
               <Button
-                onClick={handleSubmit}
-                disabled={isSubmitting}
+                type="submit"
+                disabled={suggestMutation.isPending}
                 className="bg-gradient-to-r from-primary to-blue-600 hover:from-primary/90 hover:to-blue-700"
               >
-                {isSubmitting ? (
+                {suggestMutation.isPending ? (
                   <>
                     <Loader2 className="h-4 w-4 animate-spin mr-2" />
-                    Enviando...
+                    {t('common.sending')}
                   </>
                 ) : (
-                  "Enviar"
+                  t('common.submit')
                 )}
               </Button>
-            </div>
-          </div>
-        </div>
-      )}
+            </DialogFooter>
+          </form>
+        </DialogContent>
+      </Dialog>
     </>
   );
 }
