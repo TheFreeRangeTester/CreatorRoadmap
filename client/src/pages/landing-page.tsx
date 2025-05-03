@@ -3,10 +3,12 @@ import { Link, useLocation } from "wouter";
 import { motion } from "framer-motion";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { SplitText } from "gsap/SplitText";
-
-gsap.registerPlugin(ScrollTrigger, SplitText);
+import { CustomSplitText, registerGSAPPlugins } from "@/components/gsap-animations";
 import { CloudLightning, ArrowRight, Check, CircleCheck, Zap, Users, LineChart, Award, Layers, Globe, Star } from "lucide-react";
+
+// Registra los plugins
+registerGSAPPlugins();
+gsap.registerPlugin(ScrollTrigger);
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -178,37 +180,47 @@ export default function LandingPage() {
   const featuresRef = useRef(null);
   
   useEffect(() => {
-    // Hero title animation with SplitText
-    const titleSplit = new SplitText(heroTitleRef.current, { type: "chars,words" });
-    gsap.from(titleSplit.chars, {
-      opacity: 0,
-      y: 50,
-      duration: 1,
-      stagger: 0.02,
-      ease: "back.out"
-    });
+    try {
+      // Hero title animation usando nuestra implementación CustomSplitText
+      if (heroTitleRef.current) {
+        const titleSplit = new CustomSplitText(heroTitleRef.current, { type: "chars" });
+        gsap.from(titleSplit.chars, {
+          opacity: 0,
+          y: 50,
+          duration: 1,
+          stagger: 0.02,
+          ease: "back.out"
+        });
+      }
 
-    // Hero text fade in
-    gsap.from(heroTextRef.current, {
-      opacity: 0,
-      y: 30,
-      duration: 1,
-      delay: 0.5
-    });
+      // Hero text fade in
+      if (heroTextRef.current) {
+        gsap.from(heroTextRef.current, {
+          opacity: 0,
+          y: 30,
+          duration: 1,
+          delay: 0.5
+        });
+      }
 
-    // Features cards stagger animation
-    gsap.from(".feature-card", {
-      scrollTrigger: {
-        trigger: featuresRef.current,
-        start: "top center",
-        toggleActions: "play none none reverse"
-      },
-      opacity: 0,
-      y: 50,
-      duration: 0.8,
-      stagger: 0.2,
-      ease: "power2.out"
-    });
+      // Features cards stagger animation
+      if (featuresRef.current) {
+        gsap.from(".feature-card", {
+          scrollTrigger: {
+            trigger: featuresRef.current,
+            start: "top center",
+            toggleActions: "play none none reverse"
+          },
+          opacity: 0,
+          y: 50,
+          duration: 0.8,
+          stagger: 0.2,
+          ease: "power2.out"
+        });
+      }
+    } catch (error) {
+      console.error("Error en animaciones GSAP:", error);
+    }
   }, []);
 
   return (
