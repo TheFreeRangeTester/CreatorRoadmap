@@ -489,8 +489,14 @@ export default function CreatorPublicPage() {
                     ease: "easeOut"
                   }}
                 >
-                  <div 
-                    className={`relative rounded-xl overflow-hidden backdrop-blur-md ${getGradientBackground(index)}`}
+                  <motion.div 
+                    className={`relative rounded-xl overflow-hidden backdrop-blur-md ${getGradientBackground(index)} cursor-pointer transition-all duration-300`}
+                    whileHover={{ 
+                      scale: 1.03, 
+                      boxShadow: "0 10px 25px -5px rgba(0,0,0,0.1), 0 10px 10px -5px rgba(0,0,0,0.04)"
+                    }}
+                    whileTap={{ scale: 0.98 }}
+                    layoutId={`idea-card-${idea.id}`}
                   >
                     {/* Posición y medalla para TOP 3 */}
                     {idea.position.current && idea.position.current <= 3 && (
@@ -510,7 +516,7 @@ export default function CreatorPublicPage() {
                       </div>
                     )}
                     
-                    <div className="p-4 flex items-center gap-3">
+                    <div className="p-4 flex items-center gap-3 relative group">
                       <div className="flex-grow">
                         <div className="font-semibold text-white mb-1 pr-6">
                           {idea.title}
@@ -584,8 +590,29 @@ export default function CreatorPublicPage() {
                           </Button>
                         </Link>
                       )}
+                      
+                      {/* Tooltip con descripción en hover */}
+                      <AnimatePresence>
+                        <motion.div 
+                          className="absolute opacity-0 group-hover:opacity-100 top-full left-0 right-0 z-50 mt-2 p-3 bg-white/90 dark:bg-gray-800/90 rounded-lg shadow-lg backdrop-blur-md border border-white/20 dark:border-gray-700/50"
+                          initial={{ opacity: 0, y: -5 }}
+                          whileHover={{ opacity: 1, y: 0 }}
+                          transition={{ duration: 0.2 }}
+                        >
+                          <div className="text-sm text-gray-700 dark:text-gray-300">
+                            {idea.description ? (
+                              <>
+                                <p className="font-medium mb-1">{idea.title}</p>
+                                <p className="text-xs opacity-80 line-clamp-3">{idea.description}</p>
+                              </>
+                            ) : (
+                              <p className="text-xs opacity-80 italic">{t('common.noDescription', 'No description available')}</p>
+                            )}
+                          </div>
+                        </motion.div>
+                      </AnimatePresence>
                     </div>
-                  </div>
+                  </motion.div>
                 </motion.div>
               ))
             )}
