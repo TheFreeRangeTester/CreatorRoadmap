@@ -76,6 +76,7 @@ export default function SuggestIdeaDialog({ username, refetch, fullWidth = false
     if (!validateForm()) return;
     
     setIsSubmitting(true);
+    console.log('Enviando sugerencia:', { title, description });
     
     try {
       const response = await fetch(`/api/creators/${username}/suggest`, {
@@ -90,12 +91,16 @@ export default function SuggestIdeaDialog({ username, refetch, fullWidth = false
         credentials: 'include'
       });
       
+      console.log('Respuesta del servidor:', response.status, response.statusText);
+      
       if (!response.ok) {
         const errorData = await response.json();
+        console.error('Error del servidor:', errorData);
         throw new Error(errorData.message || t('suggestIdea.error', 'Error al enviar sugerencia'));
       }
       
       const data = await response.json();
+      console.log('Datos recibidos:', data);
       
       // Cerrar diálogo
       setIsOpen(false);
