@@ -360,58 +360,77 @@ export async function registerRoutes(app: Express): Promise<Server> {
   
   // Suggest an idea to a creator
   app.post("/api/creators/:username/suggest", async (req: Request, res: Response) => {
+    console.log("=========== INICIO PROCESO DE SUGERENCIA ===========");
     console.log("Recibida petición para sugerir idea:", req.params, req.body);
+    console.log("Headers:", req.headers);
+    console.log("isAuthenticated:", req.isAuthenticated());
+    console.log("session:", req.session);
+    
     try {
       if (!req.isAuthenticated()) {
-        console.log("Usuario no autenticado");
+        console.log("❌ ERROR: Usuario no autenticado");
         return res.status(401).json({ message: "Authentication required to suggest ideas" });
       }
       
-      console.log("Usuario autenticado:", req.user);
+      console.log("✅ Usuario autenticado:", req.user);
       const { username } = req.params;
       
       // Find the creator by username
       const creator = await storage.getUserByUsername(username);
       if (!creator) {
-        console.log("Creador no encontrado:", username);
+        console.log(`❌ ERROR: Creador "${username}" no encontrado`);
         return res.status(404).json({ message: "Creator not found" });
       }
       
-      console.log("Creador encontrado:", creator);
+      console.log("✅ Creador encontrado:", creator);
       
       // Parse and validate the idea data
-      console.log("Validando datos:", req.body);
-      const validatedData = suggestIdeaSchema.parse({
+      console.log("Cuerpo de la petición:", req.body);
+      console.log("Datos a validar:", {
         ...req.body,
         creatorId: creator.id
       });
       
-      console.log("Datos validados:", validatedData);
-      
-      // Store the suggested idea with pending status
-      const idea = await storage.suggestIdea(validatedData, req.user!.id);
-      console.log("Idea sugerida creada:", idea);
-      
-      // Get the username of the suggester for the response
-      const suggester = await storage.getUser(req.user!.id);
-      console.log("Sugeridor:", suggester);
-      
-      const response = {
-        ...idea,
-        suggestedByUsername: suggester!.username,
-        position: { current: null, previous: null, change: null }
-      };
-      
-      console.log("Enviando respuesta:", response);
-      res.status(201).json(response);
-    } catch (error) {
-      if (error instanceof ZodError) {
-        const validationError = fromZodError(error);
-        console.log("Error de validación:", validationError);
-        return res.status(400).json({ message: validationError.message });
+      try {
+        const validatedData = suggestIdeaSchema.parse({
+          ...req.body,
+          creatorId: creator.id
+        });
+        
+        console.log("✅ Datos validados:", validatedData);
+        
+        // Store the suggested idea with pending status
+        const idea = await storage.suggestIdea(validatedData, req.user!.id);
+        console.log("✅ Idea sugerida creada:", idea);
+        
+        // Get the username of the suggester for the response
+        const suggester = await storage.getUser(req.user!.id);
+        console.log("✅ Sugeridor:", suggester);
+        
+        const response = {
+          ...idea,
+          suggestedByUsername: suggester!.username,
+          position: { current: null, previous: null, change: null }
+        };
+        
+        console.log("✅ Enviando respuesta:", response);
+        console.log("=========== FIN PROCESO DE SUGERENCIA ===========");
+        return res.status(201).json(response);
+      } catch (validationError) {
+        console.log("❌ ERROR: Validación fallida:", validationError);
+        if (validationError instanceof ZodError) {
+          const errorMessage = fromZodError(validationError).message;
+          console.log("Mensaje de error formateado:", errorMessage);
+          return res.status(400).json({ message: errorMessage });
+        }
+        throw validationError; // Si no es un error de Zod, relanzo el error
       }
-      console.error("Error suggesting idea:", error);
-      res.status(500).json({ message: "Failed to suggest idea" });
+    } catch (error) {
+      console.error("❌ ERROR GENERAL SUGIRIENDO IDEA:", error);
+      const errorMessage = error instanceof Error ? error.message : "Error desconocido";
+      console.log("Mensaje de error:", errorMessage);
+      console.log("=========== FIN PROCESO DE SUGERENCIA (CON ERROR) ===========");
+      return res.status(500).json({ message: "Failed to suggest idea: " + errorMessage });
     }
   });
   
