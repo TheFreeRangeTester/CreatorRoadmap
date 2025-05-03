@@ -30,7 +30,8 @@
     "reset": "Reset",
     "error": "Error",
     "website": "Website",
-    "back": "Back to Dashboard"
+    "back": "Back to Dashboard",
+    "joinFanlist": "Join Fanlist"
   },
   "homepage": {
     "title": "Content Roadmap",

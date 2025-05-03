@@ -30,7 +30,8 @@
     "reset": "Restablecer",
     "error": "Error",
     "website": "Sitio web",
-    "back": "Volver al Dashboard"
+    "back": "Volver al Dashboard",
+    "joinFanlist": "Únete a Fanlist"
   },
   "homepage": {
     "title": "Roadmap de Contenido",
