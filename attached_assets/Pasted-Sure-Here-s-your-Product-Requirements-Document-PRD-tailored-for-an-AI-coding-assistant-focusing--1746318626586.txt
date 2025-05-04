@@ -1,0 +1,175 @@
+Sure! Here’s your Product Requirements Document (PRD) tailored for an AI coding assistant, focusing on the functionality of a Public Creator Profile with community voting and idea submissions. It is tech-stack agnostic but assumes the use of shadcn/ui for UI components, clean code practices, and developer experience considerations.
+
+⸻
+
+🧾 Product Requirements Document (PRD)
+
+Feature: Public Creator Profile with Voting and Idea Submissions
+
+⸻
+
+📌 Overview
+
+This feature enables content creators to share a public profile page where their audience can:
+	•	View the creator’s branding and description
+	•	Vote on content ideas proposed by the creator
+	•	Submit their own ideas for future content
+	•	Unlock and view achievements based on interaction (voting/suggesting)
+
+This fosters engagement by surfacing the most anticipated content ideas via community-driven ranking.
+
+⸻
+
+🧠 Goals & Objectives
+	•	Enable creators to share a public profile with branding and ideas
+	•	Allow authenticated followers to vote on published ideas (only once per idea)
+	•	Let followers suggest new ideas via a submission modal
+	•	Display dynamic idea rankings (with visual cues for position changes)
+	•	Encourage engagement via animated achievement unlocks
+
+⸻
+
+🧩 Functional Requirements
+
+1. Public Profile Page
+	•	Accessible via /profile/:username
+	•	Displays:
+	•	Creator avatar or logo
+	•	Creator description and social media links (with icons)
+	•	Ranked list of published ideas with voting buttons
+	•	Button to open “Submit an idea” modal
+	•	Visual highlight of position changes (e.g., 🔺 Up, 🔻 Down, ➖ Unchanged)
+
+2. Voting System
+	•	Only authenticated users can vote
+	•	One vote per idea per user
+	•	After voting:
+	•	Button becomes disabled
+	•	Text changes to “Already Voted”
+	•	Vote count updates optimistically
+	•	Votes contribute to idea ranking
+
+3. Idea Submission
+	•	Modal triggered via a button (“💡 Submit an Idea”)
+	•	Form includes:
+	•	Title (required, 3–100 characters)
+	•	Description (optional, max 300 characters)
+	•	Upon submission:
+	•	Idea is stored as pending for the creator’s moderation
+	•	Count toward “submitter” achievements
+	•	Modal can be closed via cancel or outside click
+
+4. Ranking System
+	•	Ideas are displayed based on vote count (descending)
+	•	Track and compare previous rank vs current to show movement
+	•	Order recalculated on each vote
+
+5. Achievements
+
+Tracked locally per user:
+	•	For votes and submissions:
+	•	1st, 5th, 10th, 50th, 100th interaction milestones
+	•	On unlock:
+	•	Display animation (using GSAP or similar)
+	•	Persist unlocked state to localStorage or via API if available
+
+6. Animations
+	•	Hover and click animations for interactive elements
+	•	Achievement unlock animations (e.g., popup trophy icon + text)
+	•	Smooth transition of idea cards on ranking change (optional)
+
+⸻
+
+🔐 Authentication Requirements
+	•	Voting and idea submission only available to authenticated users
+	•	Public profile page is accessible to everyone
+	•	If unauthenticated:
+	•	Show prompt on vote or submission attempt to sign in
+
+⸻
+
+🎨 UI/UX Requirements
+	•	Use shadcn/ui for all form controls, modals, and layout components
+	•	TailwindCSS utility classes for spacing, layout, and coloring
+	•	Accessible design (WCAG 2.1 AA)
+	•	Responsive layout (mobile-first)
+	•	Clear feedback states: disabled buttons, loading spinners, error messages
+
+⸻
+
+🧪 Validation Rules
+
+Voting
+	•	User can vote only once per idea (client enforcement + optional server-side)
+
+Submission
+
+Field	Validation
+Title	Required, string, min 3, max 100 chars
+Description	Optional, string, max 300 chars
+
+Validation via Zod schema or equivalent form library.
+
+⸻
+
+📊 Data Models (Conceptual)
+
+type Idea = {
+  id: string;
+  title: string;
+  description?: string;
+  votes: number;
+  submittedBy: "creator" | "follower";
+  status: "published" | "pending";
+  currentRank: number;
+  previousRank?: number;
+};
+
+type CreatorProfile = {
+  username: string;
+  avatarUrl: string;
+  bio: string;
+  socialLinks: { icon: string; url: string }[];
+  ideas: Idea[];
+};
+
+type Achievement = {
+  type: "vote" | "submission";
+  milestone: number;
+  unlocked: boolean;
+};
+
+
+
+⸻
+
+🔄 Persistence Strategy
+	•	Ideas: Persisted to DB or mock API (Replit-compatible or JSON mock)
+	•	Votes/Submissions tracking: Initially via localStorage (IDs + counts)
+	•	Achievements: localStorage + optional in-app toast/banner when unlocked
+
+⸻
+
+🔌 API Endpoints (Mocked or Real)
+
+Method	Endpoint	Description
+GET	/api/profile/:username	Fetch profile and published ideas
+POST	/api/ideas/:id/vote	Register vote (one per user)
+POST	/api/ideas	Submit a new idea
+
+
+
+⸻
+
+✅ Acceptance Criteria
+	•	Public profile loads avatar, bio, social links
+	•	Ranked list of ideas is shown, sorted by votes
+	•	Voting is disabled after 1st vote per idea
+	•	Submission modal validates and stores idea
+	•	Achievements unlock with feedback on milestones
+	•	Animations are implemented on interactions
+	•	Page is responsive and accessible
+
+⸻
+
+Would you like me to generate a component scaffolding using shadcn and TailwindCSS based on this PRD?
