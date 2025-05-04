@@ -109,11 +109,15 @@ export default function IdeaForm({ isOpen, idea, onClose }: IdeaFormProps) {
     <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
       <DialogContent className="sm:max-w-[500px]">
         <DialogHeader>
-          <DialogTitle>{isEditing ? "Edit idea" : "Add new idea"}</DialogTitle>
+          <DialogTitle>
+            {isEditing 
+              ? t('ideaForm.editTitle', 'Edit idea') 
+              : t('ideaForm.addTitle', 'Add new idea')}
+          </DialogTitle>
           <DialogDescription>
             {isEditing 
-              ? "Make changes to your idea."
-              : "Share your idea with the community. Be clear and concise to get more votes!"}
+              ? t('ideaForm.editDescription', 'Make changes to your idea.')
+              : t('ideaForm.addDescription', 'Share your idea with the community. Be clear and concise to get more votes!')}
           </DialogDescription>
         </DialogHeader>
         
@@ -126,10 +130,10 @@ export default function IdeaForm({ isOpen, idea, onClose }: IdeaFormProps) {
               name="title"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Title</FormLabel>
+                  <FormLabel>{t('ideaForm.title', 'Title')}</FormLabel>
                   <FormControl>
                     <Input 
-                      placeholder="Enter a catchy title (required)" 
+                      placeholder={t('ideaForm.titlePlaceholder', 'Enter a catchy title (required)')} 
                       maxLength={100} 
                       {...field} 
                     />
@@ -144,17 +148,17 @@ export default function IdeaForm({ isOpen, idea, onClose }: IdeaFormProps) {
               name="description"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Description</FormLabel>
+                  <FormLabel>{t('ideaForm.description', 'Description')}</FormLabel>
                   <FormControl>
                     <Textarea 
-                      placeholder="Describe your idea in 280 characters or less" 
+                      placeholder={t('ideaForm.descriptionPlaceholder', 'Describe your idea in 280 characters or less')} 
                       maxLength={280} 
                       className="resize-none h-24"
                       {...field} 
                     />
                   </FormControl>
                   <div className="mt-1 text-xs text-neutral-500 text-right">
-                    {charCount}/280 characters
+                    {charCount}/280 {t('ideaForm.characters', 'characters')}
                   </div>
                   <FormMessage />
                 </FormItem>
@@ -167,7 +171,7 @@ export default function IdeaForm({ isOpen, idea, onClose }: IdeaFormProps) {
                 variant="outline" 
                 onClick={onClose}
               >
-                Cancel
+                {t('common.cancel', 'Cancel')}
               </Button>
               <Button 
                 type="submit" 
@@ -177,9 +181,9 @@ export default function IdeaForm({ isOpen, idea, onClose }: IdeaFormProps) {
                 {createMutation.isPending || updateMutation.isPending ? (
                   <span className="flex items-center justify-center">
                     <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                    Saving...
+                    {t('common.saving', 'Saving...')}
                   </span>
-                ) : "Save idea"}
+                ) : t('ideaForm.submitIdea', 'Save idea')}
               </Button>
             </div>
           </form>
