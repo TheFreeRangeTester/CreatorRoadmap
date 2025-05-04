@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useMutation } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
 import { useToast } from "@/hooks/use-toast";
@@ -28,7 +28,14 @@ interface SuggestIdeaModalProps {
   onSuccess: () => Promise<any>;
 }
 
-type FormData = z.infer<typeof suggestIdeaSchema>;
+// Definimos un esquema simplificado para el formulario sin el campo creatorId
+// ya que ese campo se añade en el servidor
+const formSchema = z.object({
+  title: z.string().min(1, { message: "Title is required" }).max(100, { message: "Title must be 100 characters or less" }),
+  description: z.string().max(280, { message: "Description must be 280 characters or less" }),
+});
+
+type FormData = z.infer<typeof formSchema>;
 
 export default function SuggestIdeaModal({ 
   username, 
@@ -38,10 +45,11 @@ export default function SuggestIdeaModal({
 }: SuggestIdeaModalProps) {
   const { toast } = useToast();
   const { t } = useTranslation();
+  const [formError, setFormError] = useState<string | null>(null);
   
   // Form validation setup with react-hook-form and zod
   const form = useForm<FormData>({
-    resolver: zodResolver(suggestIdeaSchema),
+    resolver: zodResolver(formSchema),
     defaultValues: {
       title: "",
       description: "",
@@ -68,10 +76,28 @@ export default function SuggestIdeaModal({
       onOpenChange(false);
       await onSuccess();
     },
-    onError: (error: Error) => {
+    onError: (error: any) => {
+      console.error('Error al sugerir idea:', error);
+      let errorMessage = '';
+      
+      try {
+        // Si el error tiene un responseText, intentamos parsearlo
+        if (error.responseText) {
+          const errorData = JSON.parse(error.responseText);
+          errorMessage = errorData.message || '';
+        } else if (error.message) {
+          errorMessage = error.message;
+        }
+      } catch (e) {
+        errorMessage = t('creator.suggestionErrorDesc');
+      }
+      
+      // Mostrar error en el formulario
+      setFormError(errorMessage || t('creator.suggestionErrorDesc', 'Ocurrió un error al enviar tu sugerencia'));
+      
       toast({
-        title: t('creator.suggestionError'),
-        description: error.message || t('creator.suggestionErrorDesc'),
+        title: t('creator.suggestionError', 'Error al enviar sugerencia'),
+        description: errorMessage || t('creator.suggestionErrorDesc', 'Ocurrió un error al enviar tu sugerencia'),
         variant: "destructive",
       });
     },
@@ -79,11 +105,24 @@ export default function SuggestIdeaModal({
   
   const onSubmit = (data: FormData) => {
     console.log("Enviando sugerencia:", data);
+    setFormError(null); // Limpiar errores anteriores
     suggestMutation.mutate(data);
   };
   
+  // Limpiar errores al cerrar el modal
+  useEffect(() => {
+    if (!open) {
+      setFormError(null);
+    }
+  }, [open]);
+  
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
+    <Dialog open={open} onOpenChange={(newOpen) => {
+      if (!newOpen) {
+        setFormError(null);
+      }
+      onOpenChange(newOpen);
+    }}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
           <DialogTitle className="text-xl font-semibold">
