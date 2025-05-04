@@ -12,6 +12,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { z } from "zod";
+import { useTranslation } from "react-i18next";
 
 interface IdeaFormProps {
   isOpen: boolean;
@@ -21,6 +22,7 @@ interface IdeaFormProps {
 
 export default function IdeaForm({ isOpen, idea, onClose }: IdeaFormProps) {
   const { toast } = useToast();
+  const { t } = useTranslation();
   const isEditing = !!idea;
 
   // Form definition
@@ -51,15 +53,15 @@ export default function IdeaForm({ isOpen, idea, onClose }: IdeaFormProps) {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/ideas"] });
       toast({
-        title: "Idea created",
-        description: "Your idea has been added to the leaderboard.",
+        title: t('ideas.created', 'Idea created'),
+        description: t('ideas.createdDesc', 'Your idea has been added to the leaderboard.'),
       });
       form.reset();
       onClose();
     },
     onError: (error) => {
       toast({
-        title: "Failed to create idea",
+        title: t('ideas.createFailed', 'Failed to create idea'),
         description: error.message,
         variant: "destructive",
       });
@@ -75,15 +77,15 @@ export default function IdeaForm({ isOpen, idea, onClose }: IdeaFormProps) {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/ideas"] });
       toast({
-        title: "Idea updated",
-        description: "Your idea has been updated successfully.",
+        title: t('ideas.updated', 'Idea updated'),
+        description: t('ideas.updatedDesc', 'Your idea has been updated successfully.'),
       });
       form.reset();
       onClose();
     },
     onError: (error) => {
       toast({
-        title: "Failed to update idea",
+        title: t('ideas.updateFailed', 'Failed to update idea'),
         description: error.message,
         variant: "destructive",
       });
