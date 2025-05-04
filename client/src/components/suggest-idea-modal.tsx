@@ -78,6 +78,7 @@ export default function SuggestIdeaModal({
   });
   
   const onSubmit = (data: FormData) => {
+    console.log("Enviando sugerencia:", data);
     suggestMutation.mutate(data);
   };
   
