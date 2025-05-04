@@ -31,7 +31,7 @@ import { ThemeToggle } from "@/components/theme-toggle";
 import { LanguageToggle } from "@/components/language-toggle";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
-import SuggestIdeaDialog from "@/components/suggest-idea-dialog";
+import { NewSuggestionModal } from "@/components/new-suggestion-modal";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { ANIMATION_EFFECTS, CustomSplitText, registerGSAPPlugins, useStaggerCards, useFloatingElement } from "@/components/gsap-animations";
@@ -400,9 +400,10 @@ export default function CreatorPublicPage() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.15 }}
             >
-              <SuggestIdeaDialog 
+              <NewSuggestionModal
                 username={creator.username} 
-                refetch={refetch}
+                onSuggestionSuccess={refetch}
+                buttonStyle="secondary"
                 fullWidth={true} 
               />
             </motion.div>
@@ -502,7 +503,7 @@ export default function CreatorPublicPage() {
               </motion.button>
             </motion.div>
             
-            {/* Botón para sugerir idea */}
+            {/* Botón para sugerir idea flotante */}
             {user && (
               <motion.div 
                 className="mb-10"
@@ -510,7 +511,12 @@ export default function CreatorPublicPage() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, delay: 0.3 }}
               >
-                <SuggestIdeaDialog username={creator.username} refetch={refetch} fullWidth={false} />
+                <NewSuggestionModal 
+                  username={creator.username} 
+                  onSuggestionSuccess={refetch} 
+                  buttonStyle="outline" 
+                  fullWidth={false} 
+                />
               </motion.div>
             )}
           </div>
