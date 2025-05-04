@@ -147,7 +147,7 @@ export function NewSuggestionModal({
       
       // Cerrar diálogo después de un breve momento
       setTimeout(() => {
-        setOpen(false);
+        handleOpenChange(false);
         // Resetear form después de cerrar para una mejor experiencia
         setTimeout(resetForm, 300);
       }, 1500);
@@ -253,7 +253,7 @@ export function NewSuggestionModal({
               <Button
                 type="button"
                 variant="outline"
-                onClick={() => setOpen(false)}
+                onClick={() => handleOpenChange(false)}
                 disabled={isSubmitting}
               >
                 {t('suggestIdea.cancel', 'Cancelar')}
