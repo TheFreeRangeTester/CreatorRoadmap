@@ -2,15 +2,17 @@ import { useState, useEffect } from "react";
 import { useMutation } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
 import { useToast } from "@/hooks/use-toast";
+import { useAuth } from "@/hooks/use-auth";
 import { apiRequest } from "@/lib/queryClient";
 import { suggestIdeaSchema } from "@shared/schema";
-import { Loader2, X } from "lucide-react";
+import { Loader2, X, LogIn } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
+import { Link } from "wouter";
 import { z } from "zod";
 import {
   Dialog,
@@ -45,6 +47,7 @@ export default function SuggestIdeaModal({
 }: SuggestIdeaModalProps) {
   const { toast } = useToast();
   const { t } = useTranslation();
+  const { user } = useAuth();
   const [formError, setFormError] = useState<string | null>(null);
   
   // Form validation setup with react-hook-form and zod
@@ -133,63 +136,105 @@ export default function SuggestIdeaModal({
           </DialogDescription>
         </DialogHeader>
         
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 py-2">
-          <div className="space-y-2">
-            <Label htmlFor="title">{t('suggestIdea.titleLabel')}</Label>
-            <Input
-              id="title"
-              placeholder={t('suggestIdea.titlePlaceholder')}
-              {...form.register("title")}
-              className="w-full"
-            />
-            {form.formState.errors.title && (
-              <p className="text-sm text-red-500 mt-1">
-                {form.formState.errors.title.message}
+        {/* Mostrar mensaje de inicio de sesión si el usuario no está autenticado */}
+        {!user ? (
+          <div className="space-y-4 py-4">
+            <div className="p-4 rounded-lg bg-amber-50 border border-amber-200 text-amber-800 dark:bg-amber-900/30 dark:border-amber-800 dark:text-amber-200">
+              <h3 className="text-sm font-semibold mb-2">
+                {t('suggestIdea.loginRequired', 'Login required')}
+              </h3>
+              <p className="text-sm">
+                {t('suggestIdea.loginRequiredDesc', 'You need an account to suggest ideas to this creator.')}
               </p>
-            )}
-          </div>
-          
-          <div className="space-y-2">
-            <Label htmlFor="description">{t('suggestIdea.descriptionLabel')}</Label>
-            <Textarea
-              id="description"
-              placeholder={t('suggestIdea.descriptionPlaceholder')}
-              {...form.register("description")}
-              className="min-h-[100px]"
-            />
-            {form.formState.errors.description && (
-              <p className="text-sm text-red-500 mt-1">
-                {form.formState.errors.description.message}
-              </p>
-            )}
-          </div>
-          
-          <DialogFooter>
-            <Button 
-              type="button" 
-              variant="outline" 
-              onClick={() => onOpenChange(false)}
-              className="mr-2"
-            >
-              {t('suggestIdea.cancel')}
-            </Button>
+            </div>
             
-            <Button 
-              type="submit" 
-              disabled={suggestMutation.isPending}
-              className="bg-green-500 hover:bg-green-600 text-white"
-            >
-              {suggestMutation.isPending ? (
-                <>
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  {t('suggestIdea.sending')}
-                </>
-              ) : (
-                t('suggestIdea.submit')
+            <div className="flex justify-end">
+              <Button
+                variant="outline"
+                type="button"
+                onClick={() => onOpenChange(false)}
+                className="mr-2"
+              >
+                {t('suggestIdea.cancel', 'Cancel')}
+              </Button>
+              
+              <Button
+                asChild
+                onClick={() => onOpenChange(false)}
+              >
+                <Link to="/auth">
+                  <LogIn className="h-4 w-4 mr-2" />
+                  {t('suggestIdea.login', 'Login')}
+                </Link>
+              </Button>
+            </div>
+          </div>
+        ) : (
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 py-2">
+            {/* General form error message */}
+            {formError && (
+              <div className="p-3 rounded-md bg-red-50 border border-red-200 text-red-800 dark:bg-red-900/30 dark:border-red-800 dark:text-red-200">
+                <p className="text-sm font-medium">{formError}</p>
+              </div>
+            )}
+
+            <div className="space-y-2">
+              <Label htmlFor="title">{t('suggestIdea.titleLabel')}</Label>
+              <Input
+                id="title"
+                placeholder={t('suggestIdea.titlePlaceholder')}
+                {...form.register("title")}
+                className="w-full"
+              />
+              {form.formState.errors.title && (
+                <p className="text-sm text-red-500 mt-1">
+                  {form.formState.errors.title.message}
+                </p>
               )}
-            </Button>
-          </DialogFooter>
-        </form>
+            </div>
+            
+            <div className="space-y-2">
+              <Label htmlFor="description">{t('suggestIdea.descriptionLabel')}</Label>
+              <Textarea
+                id="description"
+                placeholder={t('suggestIdea.descriptionPlaceholder')}
+                {...form.register("description")}
+                className="min-h-[100px]"
+              />
+              {form.formState.errors.description && (
+                <p className="text-sm text-red-500 mt-1">
+                  {form.formState.errors.description.message}
+                </p>
+              )}
+            </div>
+            
+            <DialogFooter>
+              <Button 
+                type="button" 
+                variant="outline" 
+                onClick={() => onOpenChange(false)}
+                className="mr-2"
+              >
+                {t('suggestIdea.cancel')}
+              </Button>
+              
+              <Button 
+                type="submit" 
+                disabled={suggestMutation.isPending}
+                className="bg-green-500 hover:bg-green-600 text-white"
+              >
+                {suggestMutation.isPending ? (
+                  <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    {t('suggestIdea.sending')}
+                  </>
+                ) : (
+                  t('suggestIdea.submit')
+                )}
+              </Button>
+            </DialogFooter>
+          </form>
+        )}
       </DialogContent>
     </Dialog>
   );
