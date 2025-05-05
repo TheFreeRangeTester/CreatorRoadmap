@@ -23,6 +23,7 @@ interface AchievementsContextValue {
   hideAchievement: () => void;
   registerVote: (ideaId: number) => void;
   registerLogin: () => void;
+  resetAchievements: () => void; // Nueva función para resetear logros
 }
 
 // Crear el contexto
@@ -73,13 +74,51 @@ export const AchievementsProvider = ({ children }: { children: ReactNode }) => {
       loginStreak: 0,
       lastLoginDate: null,
       votedTopIdeas: 0,
-      votedIds: []
+      votedIds: [],
+      totalPoints: 0,
+      unlockedAchievements: []
     };
   });
 
   // Función para mostrar un logro
   const showAchievement = useCallback((type: AchievementType, msg?: string) => {
     console.log(`Mostrando logro: ${type} - mensaje: ${msg}`);
+    
+    // Definir los puntos asociados con cada tipo de logro
+    const achievementPoints: {[key in AchievementType]: number} = {
+      [AchievementType.FIRST_VOTE]: 5,
+      [AchievementType.TEN_VOTES]: 10,
+      [AchievementType.FIFTY_VOTES]: 50,
+      [AchievementType.VOTED_TOP_IDEA]: 15,
+      [AchievementType.SUGGESTED_IDEA]: 20,
+      [AchievementType.STREAK_VOTES]: 25
+    };
+    
+    // Actualizar las estadísticas para incluir los puntos y el logro desbloqueado
+    setStats(prev => {
+      // Si el logro ya está desbloqueado, no sumar puntos nuevamente
+      if (prev.unlockedAchievements?.includes(type)) {
+        return prev;
+      }
+      
+      const pointsToAdd = achievementPoints[type] || 0;
+      const updatedAchievements = [...(prev.unlockedAchievements || []), type];
+      const totalPoints = (prev.totalPoints || 0) + pointsToAdd;
+      
+      const newStats: UserStats = {
+        ...prev,
+        totalPoints,
+        unlockedAchievements: updatedAchievements
+      };
+      
+      // Guardar en localStorage
+      if (typeof window !== 'undefined') {
+        localStorage.setItem('userStats', JSON.stringify(newStats));
+      }
+      
+      return newStats;
+    });
+    
     setCurrentAchievement(type);
     setMessage(msg);
     setShowAnimation(true);
@@ -196,6 +235,34 @@ export const AchievementsProvider = ({ children }: { children: ReactNode }) => {
       return newStats;
     });
   }, [showAchievement]);
+  
+  // Función para resetear todos los logros y estadísticas
+  const resetAchievements = useCallback(() => {
+    console.log("Reseteando todos los logros y estadísticas");
+    
+    // Estadísticas por defecto
+    const defaultStats: UserStats = {
+      totalVotes: 0,
+      suggestedIdeas: 0,
+      loginStreak: 0,
+      lastLoginDate: null,
+      votedTopIdeas: 0,
+      votedIds: [],
+      totalPoints: 0,
+      unlockedAchievements: []
+    };
+    
+    // Actualizar estado
+    setStats(defaultStats);
+    
+    // Limpiar localStorage
+    if (typeof window !== 'undefined') {
+      localStorage.removeItem('userStats');
+      localStorage.removeItem('votedIdeas');
+    }
+    
+    return defaultStats;
+  }, []);
 
   const value = {
     currentAchievement,
@@ -205,7 +272,8 @@ export const AchievementsProvider = ({ children }: { children: ReactNode }) => {
     showAchievement,
     hideAchievement,
     registerVote,
-    registerLogin
+    registerLogin,
+    resetAchievements
   };
 
   return (

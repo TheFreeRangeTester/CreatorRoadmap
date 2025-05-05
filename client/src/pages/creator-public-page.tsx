@@ -6,6 +6,7 @@ import { useTranslation } from "react-i18next";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/hooks/use-auth";
 import { useAchievements } from "@/hooks/use-achievements";
+import AchievementsContainer from "@/components/achievements-container";
 import { AchievementType } from "@/components/achievement-animation";
 import { IdeaResponse } from "@shared/schema";
 import { apiRequest } from "@/lib/queryClient";
@@ -325,6 +326,11 @@ export default function CreatorPublicPage() {
 
   return (
     <div ref={pageRef} className="min-h-screen">
+      {/* Contenedor para animaciones de logros (solo en esta página) */}
+      <div className="fixed inset-0 pointer-events-none z-[9999]">
+        <AchievementsContainer />
+      </div>
+      
       <div className="bg-gradient-to-b from-blue-600 to-indigo-900 min-h-screen pb-16">
         <div className="container mx-auto px-4 max-w-3xl pt-6">
           {/* Barra superior con controles de utilidad (minimalista) */}
