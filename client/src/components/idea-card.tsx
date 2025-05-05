@@ -5,6 +5,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { IdeaResponse } from "@shared/schema";
 import { useTranslation } from "react-i18next";
+import { useAuth } from "@/hooks/use-auth";
 
 interface IdeaCardProps {
   idea: IdeaResponse;
