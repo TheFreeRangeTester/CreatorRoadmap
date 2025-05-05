@@ -426,9 +426,16 @@ export default function HomePage() {
           <div className="flex justify-between items-center h-16">
             <div className="flex items-center">
               <CloudLightning className="h-8 w-8 text-primary" />
-              <h1 className="ml-2 text-xl font-bold text-neutral-800 dark:text-white">
-                {t('dashboard.creatorDashboard', 'Idea Leaderboard')}
-              </h1>
+              <div className="ml-2">
+                <h1 className="text-xl font-bold text-neutral-800 dark:text-white">
+                  {t('dashboard.creatorDashboard', 'Idea Leaderboard')}
+                </h1>
+                <div className="text-xs text-muted-foreground flex items-center">
+                  <Badge variant="outline" className="bg-primary/10 text-primary dark:bg-primary-900/30 dark:text-primary-300 h-5 rounded-sm">
+                    {t('dashboard.creatorView', 'Panel de creador')}
+                  </Badge>
+                </div>
+              </div>
             </div>
             <div className="flex items-center gap-4">
               {user ? (

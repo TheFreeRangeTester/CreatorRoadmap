@@ -465,6 +465,11 @@ export default function CreatorQAProfile() {
       <div className="container mx-auto px-4 py-8">
         <Card className="bg-white dark:bg-gray-800 shadow-md rounded-xl overflow-hidden max-w-3xl mx-auto mb-10">
           <CardContent className="p-6 sm:p-8 flex flex-col items-center text-center">
+            {/* Etiqueta de perfil público */}
+            <Badge variant="outline" className="mb-4 bg-blue-50 text-blue-700 border-blue-200 dark:bg-blue-900/20 dark:text-blue-300 dark:border-blue-800/50">
+              {t('creator.publicProfileView', 'Perfil Público')}
+            </Badge>
+            
             <Avatar className="w-32 h-32 mb-6 ring-4 ring-primary/10 shadow-xl">
               <AvatarImage src={creator.logoUrl || ""} alt={creator.username} />
               <AvatarFallback className="text-3xl font-bold bg-primary/20 text-primary dark:bg-primary-900/30 dark:text-primary-300">
