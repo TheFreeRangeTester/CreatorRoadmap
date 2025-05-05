@@ -19,6 +19,10 @@ export default function IdeaCard({ idea, onVote, onEdit, onDelete, isVoting }: I
   // Check if user has already voted for this idea
   const [hasVoted, setHasVoted] = useState(false);
   const { t } = useTranslation();
+  const { user } = useAuth();
+  
+  // Verificar si el usuario actual es el creador de la idea
+  const isCreator = user?.id === idea.creatorId;
   
   // Load voting state from localStorage
   useEffect(() => {
@@ -212,8 +216,8 @@ export default function IdeaCard({ idea, onVote, onEdit, onDelete, isVoting }: I
           
           <div className="flex justify-between items-center">
             <div className="flex items-center">
-              {/* Solo mostrar el botón de voto cuando NO estamos en el dashboard del creador */}
-              {!onEdit && !onDelete && (
+              {/* Solo mostrar el botón de voto cuando NO estamos en el dashboard del creador y no es el creador de la idea */}
+              {!onEdit && !onDelete && !isCreator && (
                 <motion.button
                   variants={buttonVariants}
                   whileHover="hover"

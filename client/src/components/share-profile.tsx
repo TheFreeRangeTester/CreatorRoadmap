@@ -71,9 +71,14 @@ export default function ShareProfile() {
     <div className="space-y-6">
       <Card className="border-primary/20 dark:border-primary/10 bg-white dark:bg-gray-900">
         <CardHeader className="pb-2">
-          <CardTitle className="text-2xl font-bold">{t('dashboard.yourPublicProfile', 'Tu Perfil Público')}</CardTitle>
+          <div className="flex items-center space-x-2 mb-1">
+            <CardTitle className="text-2xl font-bold">{t('dashboard.yourPublicProfile', 'Tu Perfil Público')}</CardTitle>
+            <Badge variant="secondary" className="bg-blue-50 text-blue-700 dark:bg-blue-900/20 dark:text-blue-300">
+              {t('dashboard.publicView', 'Enlace público')}
+            </Badge>
+          </div>
           <CardDescription>
-            {t('dashboard.shareProfileDesc', 'Comparte este enlace para que otros puedan ver y votar por tus ideas de contenido.')}
+            {t('dashboard.shareProfileDesc', 'Este enlace dirige a tus seguidores a la versión pública de tu perfil, donde pueden ver y votar por tus ideas de contenido.')}
           </CardDescription>
         </CardHeader>
         <CardContent>
