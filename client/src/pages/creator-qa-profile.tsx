@@ -5,6 +5,8 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useTranslation } from "react-i18next";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/hooks/use-auth";
+import { useAchievements } from "@/hooks/use-achievements";
+import AchievementsContainer from "@/components/achievements-container";
 import { IdeaResponse } from "@shared/schema";
 import { apiRequest } from "@/lib/queryClient";
 import { Share2, Plus, ThumbsUp, Loader2, UserPlus, ExternalLink } from "lucide-react";
@@ -449,6 +451,10 @@ export default function CreatorQAProfile() {
     <div 
       className="min-h-screen bg-gray-50 dark:bg-gray-900 font-[Inter,system-ui,sans-serif] pb-16"
       style={getThemeStyles()}>
+      {/* Contenedor para animaciones de logros (solo en esta página) */}
+      <div className="fixed inset-0 pointer-events-none z-[9999]">
+        <AchievementsContainer />
+      </div>
       {/* Header con tema y lenguaje */}
       <div className="absolute top-4 right-4 flex items-center gap-2 z-10">
         <ThemeToggle />

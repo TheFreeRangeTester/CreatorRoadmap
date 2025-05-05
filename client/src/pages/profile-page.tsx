@@ -1,19 +1,32 @@
 import { useTranslation } from "react-i18next";
 import { useAuth } from "@/hooks/use-auth";
-import { Loader2, ArrowLeft, User } from "lucide-react";
+import { useAchievements } from "@/hooks/use-achievements";
+import { Loader2, ArrowLeft, User, Trophy, RotateCcw } from "lucide-react";
 import { Link, useLocation } from "wouter";
 import ProfileEditor from "@/components/profile-editor";
 import { Button } from "@/components/ui/button";
 import { LanguageToggle } from "@/components/language-toggle";
 import { ThemeToggle } from "@/components/theme-toggle";
+import { useToast } from "@/hooks/use-toast";
 
 export default function ProfilePage() {
   const { t } = useTranslation();
   const { user, isLoading } = useAuth();
   const [, setLocation] = useLocation();
+  const { resetAchievements, stats } = useAchievements();
+  const { toast } = useToast();
 
   const handleBack = () => {
     setLocation("/dashboard");
+  };
+  
+  const handleResetAchievements = () => {
+    resetAchievements();
+    toast({
+      title: t('achievements.resetSuccess', 'Achievements Reset'),
+      description: t('achievements.resetSuccessDesc', 'All your achievements and stats have been reset successfully.'),
+      variant: "default",
+    });
   };
 
   // Renderización única para que siempre retorne un elemento
@@ -70,6 +83,52 @@ export default function ProfilePage() {
               </div>
               
               <ProfileEditor />
+              
+              {/* Sección de Logros */}
+              <div className="mt-12 bg-white dark:bg-gray-800 rounded-xl shadow-sm border dark:border-gray-700 p-6">
+                <div className="flex justify-between items-center mb-4">
+                  <h2 className="text-xl font-semibold flex items-center gap-2">
+                    <Trophy className="h-5 w-5 text-amber-500" />
+                    {t('achievements.title', 'Your Achievements')}
+                  </h2>
+                  
+                  <Button 
+                    variant="outline" 
+                    size="sm" 
+                    onClick={handleResetAchievements}
+                    className="flex items-center gap-1.5 text-muted-foreground border-gray-200 dark:border-gray-600"
+                  >
+                    <RotateCcw className="h-3.5 w-3.5" />
+                    {t('achievements.reset', 'Reset Achievements')}
+                  </Button>
+                </div>
+                
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                  <div className="bg-gray-50 dark:bg-gray-900 rounded-lg p-4">
+                    <div className="text-sm text-muted-foreground mb-1">{t('achievements.totalVotes', 'Total Votes')}</div>
+                    <div className="text-2xl font-bold">{stats.totalVotes}</div>
+                  </div>
+                  
+                  <div className="bg-gray-50 dark:bg-gray-900 rounded-lg p-4">
+                    <div className="text-sm text-muted-foreground mb-1">{t('achievements.totalPoints', 'Achievement Points')}</div>
+                    <div className="text-2xl font-bold">{stats.totalPoints}</div>
+                  </div>
+                  
+                  <div className="bg-gray-50 dark:bg-gray-900 rounded-lg p-4">
+                    <div className="text-sm text-muted-foreground mb-1">{t('achievements.loginStreak', 'Login Streak')}</div>
+                    <div className="text-2xl font-bold">{stats.loginStreak} {t('achievements.days', 'days')}</div>
+                  </div>
+                  
+                  <div className="bg-gray-50 dark:bg-gray-900 rounded-lg p-4">
+                    <div className="text-sm text-muted-foreground mb-1">{t('achievements.unlockedAchievements', 'Unlocked Achievements')}</div>
+                    <div className="text-2xl font-bold">{stats.unlockedAchievements?.length || 0}</div>
+                  </div>
+                </div>
+                
+                <p className="text-sm text-muted-foreground">
+                  {t('achievements.resetInfo', 'Resetting your achievements will clear all your stats and progress. This cannot be undone.')}
+                </p>
+              </div>
             </div>
           </main>
         </div>
