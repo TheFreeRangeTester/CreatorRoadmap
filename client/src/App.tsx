@@ -8,18 +8,12 @@ import LandingPage from "@/pages/landing-page";
 import CreatorQAProfile from "@/pages/creator-qa-profile";
 import { ProtectedRoute } from "./lib/protected-route";
 import { ThemeToggle } from "./components/theme-toggle";
-import AchievementsContainer from "./components/achievements-container";
 // Importación directa sin usar alias @
 import CreatorPublicPage from "./pages/creator-public-page";
 
 function App() {
   return (
     <>
-      {/* Contenedor para animaciones de logros (colocado antes para mayor z-index) */}
-      <div className="fixed inset-0 pointer-events-none z-[9999]">
-        <AchievementsContainer />
-      </div>
-      
       {/* Router principal */}
       <Switch>
         <Route path="/" component={LandingPage} />
