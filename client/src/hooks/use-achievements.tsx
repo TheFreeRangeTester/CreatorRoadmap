@@ -9,6 +9,8 @@ interface UserStats {
   lastLoginDate: string | null;
   votedTopIdeas: number;
   votedIds: number[];
+  totalPoints: number; // Nuevo campo para almacenar los puntos totales
+  unlockedAchievements: AchievementType[]; // Array de logros desbloqueados
 }
 
 // Interfaz para el contexto
@@ -46,7 +48,9 @@ export const AchievementsProvider = ({ children }: { children: ReactNode }) => {
               loginStreak: 0,
               lastLoginDate: null,
               votedTopIdeas: 0,
-              votedIds: []
+              votedIds: [],
+              totalPoints: 0,
+              unlockedAchievements: []
             };
       } catch (error) {
         console.error("Error loading stats from localStorage:", error);
@@ -56,7 +60,9 @@ export const AchievementsProvider = ({ children }: { children: ReactNode }) => {
           loginStreak: 0,
           lastLoginDate: null,
           votedTopIdeas: 0,
-          votedIds: []
+          votedIds: [],
+          totalPoints: 0,
+          unlockedAchievements: []
         };
       }
     }
