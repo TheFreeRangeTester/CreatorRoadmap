@@ -1,7 +1,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { useLocation } from "wouter";
+import { useLocation, useRoute } from "wouter";
 import { CloudLightning } from "lucide-react";
 import { insertUserSchema } from "@shared/schema";
 import { Button } from "@/components/ui/button";
@@ -13,6 +13,7 @@ import { useAuth } from "@/hooks/use-auth";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { LanguageToggle } from "@/components/language-toggle";
 import { useTranslation } from "react-i18next";
+import { useEffect, useState } from "react";
 
 // Extend schema for validation
 const formSchema = insertUserSchema.extend({
@@ -24,6 +25,29 @@ export default function AuthPage() {
   const { user, loginMutation, registerMutation } = useAuth();
   const [, navigate] = useLocation();
   const { t } = useTranslation();
+  const [authSource, setAuthSource] = useState<string | null>(null);
+  const [match, params] = useRoute("/:username");
+  const [matchPublic] = useRoute("/public/:token");
+  
+  // Determine the referrer source on component mount
+  useEffect(() => {
+    const searchParams = new URLSearchParams(window.location.search);
+    const referrer = searchParams.get('referrer');
+    
+    if (referrer) {
+      setAuthSource(referrer);
+    } else if (match && params?.username) {
+      // Coming from a creator profile page
+      setAuthSource(`/${params.username}`);
+    } else if (matchPublic) {
+      // Coming from a public token page
+      const path = window.location.pathname;
+      const pathSegments = path.split('/');
+      if (pathSegments.length >= 2) {
+        setAuthSource(`/public/${pathSegments[2]}`);
+      }
+    }
+  }, [match, params, matchPublic]);
 
   // Login form
   const loginForm = useForm<z.infer<typeof formSchema>>({
@@ -43,11 +67,22 @@ export default function AuthPage() {
     },
   });
 
+  // Get redirect destination based on auth source
+  const getRedirectDestination = () => {
+    if (authSource) {
+      // If coming from a profile page or public link, go back there
+      return authSource;
+    }
+    // Default redirect to dashboard for direct logins
+    return "/dashboard";
+  };
+
   // Login form submission
   function onLoginSubmit(values: z.infer<typeof formSchema>) {
     loginMutation.mutate(values, {
       onSuccess: () => {
-        navigate("/dashboard");
+        const destination = getRedirectDestination();
+        navigate(destination);
       },
     });
   }
@@ -56,17 +91,18 @@ export default function AuthPage() {
   function onRegisterSubmit(values: z.infer<typeof formSchema>) {
     registerMutation.mutate(values, {
       onSuccess: () => {
-        navigate("/dashboard");
+        const destination = getRedirectDestination();
+        navigate(destination);
       },
     });
   }
   
-  // If user is already logged in, redirect to dashboard
-  // We do this after all hooks have been called to follow the rules of hooks
+  // If user is already logged in, redirect appropriately
   if (user) {
+    const destination = getRedirectDestination();
     // Using setTimeout to avoid React warning about state updates during render
-    setTimeout(() => navigate("/dashboard"), 0);
-    // Render a loading state or nothing while redirect is happening
+    setTimeout(() => navigate(destination), 0);
+    // Render a loading state while redirect is happening
     return <div className="flex justify-center items-center min-h-screen">Redirecting...</div>;
   }
 

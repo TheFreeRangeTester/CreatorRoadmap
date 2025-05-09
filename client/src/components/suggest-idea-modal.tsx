@@ -162,7 +162,7 @@ export default function SuggestIdeaModal({
                 asChild
                 onClick={() => onOpenChange(false)}
               >
-                <Link to="/auth">
+                <Link to={`/auth?referrer=/${username}`}>
                   <LogIn className="h-4 w-4 mr-2" />
                   {t('suggestIdea.login', 'Login')}
                 </Link>
