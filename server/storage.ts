@@ -13,6 +13,7 @@ export interface IStorage {
   // User operations
   getUser(id: number): Promise<User | undefined>;
   getUserByUsername(username: string): Promise<User | undefined>;
+  getUserByEmail(email: string): Promise<User | undefined>;
   createUser(user: InsertUser): Promise<User>;
   updateUserProfile(id: number, profileData: UpdateProfile): Promise<User | undefined>;
   
@@ -101,18 +102,29 @@ export class MemStorage implements IStorage {
     );
   }
 
+  async getUserByEmail(email: string): Promise<User | undefined> {
+    return Array.from(this.users.values()).find(
+      (user) => user.email === email,
+    );
+  }
+
   async createUser(insertUser: InsertUser): Promise<User> {
     const id = this.currentUserId++;
     const user: User = { 
       ...insertUser, 
       id,
-      profileDescription: null,
-      logoUrl: null,
+      profileDescription: insertUser.profileDescription || null,
+      logoUrl: insertUser.logoUrl || null,
       twitterUrl: null,
       instagramUrl: null,
       youtubeUrl: null,
       tiktokUrl: null,
-      websiteUrl: null
+      threadsUrl: null,
+      websiteUrl: null,
+      profileBackground: "gradient-1",
+      email: insertUser.email || null,
+      googleId: insertUser.googleId || null,
+      isGoogleUser: insertUser.isGoogleUser || false
     };
     this.users.set(id, user);
     return user;
@@ -130,7 +142,13 @@ export class MemStorage implements IStorage {
       instagramUrl: profileData.instagramUrl !== undefined ? profileData.instagramUrl : user.instagramUrl,
       youtubeUrl: profileData.youtubeUrl !== undefined ? profileData.youtubeUrl : user.youtubeUrl,
       tiktokUrl: profileData.tiktokUrl !== undefined ? profileData.tiktokUrl : user.tiktokUrl,
-      websiteUrl: profileData.websiteUrl !== undefined ? profileData.websiteUrl : user.websiteUrl
+      threadsUrl: profileData.threadsUrl !== undefined ? profileData.threadsUrl : user.threadsUrl,
+      websiteUrl: profileData.websiteUrl !== undefined ? profileData.websiteUrl : user.websiteUrl,
+      profileBackground: profileData.profileBackground !== undefined ? profileData.profileBackground : user.profileBackground,
+      // Campos de Google
+      googleId: profileData.googleId !== undefined ? profileData.googleId : user.googleId,
+      email: profileData.email !== undefined ? profileData.email : user.email,
+      isGoogleUser: profileData.isGoogleUser !== undefined ? profileData.isGoogleUser : user.isGoogleUser
     };
     
     this.users.set(id, updatedUser);

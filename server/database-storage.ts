@@ -32,6 +32,11 @@ export class DatabaseStorage implements IStorage {
     return user;
   }
 
+  async getUserByEmail(email: string): Promise<User | undefined> {
+    const [user] = await db.select().from(users).where(eq(users.email, email));
+    return user;
+  }
+
   async createUser(insertUser: InsertUser): Promise<User> {
     const [user] = await db.insert(users).values(insertUser).returning();
     return user;
@@ -54,7 +59,11 @@ export class DatabaseStorage implements IStorage {
         tiktokUrl: profileData.tiktokUrl !== undefined ? profileData.tiktokUrl : currentUser.tiktokUrl,
         threadsUrl: profileData.threadsUrl !== undefined ? profileData.threadsUrl : currentUser.threadsUrl,
         websiteUrl: profileData.websiteUrl !== undefined ? profileData.websiteUrl : currentUser.websiteUrl,
-        profileBackground: profileData.profileBackground ?? currentUser.profileBackground
+        profileBackground: profileData.profileBackground ?? currentUser.profileBackground,
+        // Campos de Google
+        googleId: profileData.googleId !== undefined ? profileData.googleId : currentUser.googleId,
+        email: profileData.email !== undefined ? profileData.email : currentUser.email,
+        isGoogleUser: profileData.isGoogleUser !== undefined ? profileData.isGoogleUser : currentUser.isGoogleUser
       })
       .where(eq(users.id, id))
       .returning();
