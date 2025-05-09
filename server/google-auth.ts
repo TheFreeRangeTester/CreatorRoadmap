@@ -56,10 +56,10 @@ export async function handleGoogleAuth(req: Request, res: Response) {
       const newUser: InsertUser = {
         username: username,
         password: "", // No usamos password para usuarios de Google
-        googleId: uid,
+        googleId: uid || undefined,
         email: email,
         profileDescription: `Google user: ${name || username}`,
-        logoUrl: picture || null,
+        logoUrl: picture || undefined,
         isGoogleUser: true
       };
       
@@ -68,14 +68,19 @@ export async function handleGoogleAuth(req: Request, res: Response) {
     } else if (!user.googleId) {
       // Si el usuario ya existe pero no tiene googleId, actualizamos su perfil
       await storage.updateUserProfile(user.id, {
-        googleId: uid,
-        logoUrl: user.logoUrl || picture || null,
+        googleId: uid || undefined,
+        logoUrl: user.logoUrl || picture || undefined,
         isGoogleUser: true
       });
     }
     
-    // Iniciar sesión (establecer cookie de sesión)
-    req.session.userId = user.id;
+    // Iniciar sesión (establecer usuario en la sesión)
+    req.login(user, (err) => {
+      if (err) {
+        console.error("Error logging in user after Google auth:", err);
+        return res.status(500).json({ message: "Failed to login after Google authentication" });
+      }
+    });
     
     // Devolver los datos del usuario
     res.status(200).json({
