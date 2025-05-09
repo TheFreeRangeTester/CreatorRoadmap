@@ -5,7 +5,7 @@ import { z } from "zod";
 export const users = pgTable("users", {
   id: serial("id").primaryKey(),
   username: text("username").notNull().unique(),
-  password: text("password").notNull(),
+  password: text("password").notNull(), // Podría estar vacío para usuarios de Google
   profileDescription: text("profile_description"),
   logoUrl: text("logo_url"),
   twitterUrl: text("twitter_url"),
@@ -15,6 +15,10 @@ export const users = pgTable("users", {
   threadsUrl: text("threads_url"),
   websiteUrl: text("website_url"),
   profileBackground: text("profile_background").default("gradient-1"),
+  // Campos para autenticación con Google
+  email: text("email").unique(),
+  googleId: text("google_id").unique(),
+  isGoogleUser: boolean("is_google_user").default(false),
 });
 
 export const ideas = pgTable("ideas", {
@@ -54,6 +58,13 @@ export const publicLinks = pgTable("public_links", {
 export const insertUserSchema = createInsertSchema(users).pick({
   username: true,
   password: true,
+}).extend({
+  // Campos opcionales para autenticación con Google
+  email: z.string().email().optional(),
+  googleId: z.string().optional(),
+  isGoogleUser: z.boolean().optional(),
+  logoUrl: z.string().optional(), // Para la foto de perfil de Google
+  profileDescription: z.string().optional(), // Para descripción inicial
 });
 
 export const userResponseSchema = z.object({
@@ -68,6 +79,9 @@ export const userResponseSchema = z.object({
   threadsUrl: z.string().nullable().optional(),
   websiteUrl: z.string().nullable().optional(),
   profileBackground: z.string().default("gradient-1"),
+  // Campos de Google
+  email: z.string().email().optional(),
+  isGoogleUser: z.boolean().optional().default(false),
 });
 
 // Idea schemas
@@ -150,6 +164,10 @@ export const updateProfileSchema = z.object({
   threadsUrl: z.string().url({ message: "Debe ser una URL válida" }).optional().nullable(),
   websiteUrl: z.string().url({ message: "Debe ser una URL válida" }).optional().nullable(),
   profileBackground: z.string().optional().nullable(),
+  // Campos adicionales para Google
+  googleId: z.string().optional(),
+  email: z.string().email().optional(),
+  isGoogleUser: z.boolean().optional(),
 });
 
 // Types
