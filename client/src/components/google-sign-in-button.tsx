@@ -34,9 +34,10 @@ export default function GoogleSignInButton({
       const googleUser = await signInWithGoogle();
       
       if (!googleUser) {
+        // Este mensaje indica que debes añadir el dominio de Replit a tu proyecto de Firebase
         toast({
           title: t('auth.googleSignInError'),
-          description: t('auth.googleSignInErrorDesc'),
+          description: "Error de dominio no autorizado. Por favor, añade el dominio actual a la lista de dominios autorizados en la consola de Firebase (Authentication > Settings > Authorized domains).",
           variant: "destructive",
         });
         return;
@@ -51,7 +52,8 @@ export default function GoogleSignInButton({
       });
       
       if (!response.ok) {
-        throw new Error("Error al autenticar con el servidor");
+        const errorText = await response.text();
+        throw new Error(`Error al autenticar con el servidor: ${errorText}`);
       }
       
       // Parse the user data returned from our backend
@@ -76,11 +78,22 @@ export default function GoogleSignInButton({
       
     } catch (error) {
       console.error("Error during Google sign in:", error);
-      toast({
-        title: t('auth.googleSignInError'),
-        description: (error as Error).message || t('auth.googleSignInErrorDesc'),
-        variant: "destructive",
-      });
+      
+      // Check if it's a firebase error
+      const firebaseError = error as any;
+      if (firebaseError.code === 'auth/unauthorized-domain') {
+        toast({
+          title: "Error de dominio no autorizado",
+          description: "Este dominio no está autorizado en Firebase. Por favor, añade el dominio actual a la lista de dominios autorizados en la consola de Firebase (Authentication > Settings > Authorized domains).",
+          variant: "destructive",
+        });
+      } else {
+        toast({
+          title: t('auth.googleSignInError'),
+          description: (error as Error).message || t('auth.googleSignInErrorDesc'),
+          variant: "destructive",
+        });
+      }
     } finally {
       setIsLoading(false);
     }
