@@ -2,6 +2,7 @@ import type { Express, Request, Response } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import { setupAuth } from "./auth";
+import { handleGoogleAuth } from "./google-auth";
 import { insertIdeaSchema, updateIdeaSchema, insertVoteSchema, insertPublicLinkSchema, suggestIdeaSchema, updateProfileSchema } from "@shared/schema";
 import { ZodError } from "zod";
 import { fromZodError } from "zod-validation-error";
@@ -9,6 +10,11 @@ import { fromZodError } from "zod-validation-error";
 export async function registerRoutes(app: Express): Promise<Server> {
   // Set up authentication routes
   setupAuth(app);
+  
+  // Google authentication route
+  app.post("/api/auth/google", (req: Request, res: Response) => {
+    handleGoogleAuth(req, res);
+  });
 
   // User profile update route
   app.patch("/api/user/profile", async (req: Request, res: Response) => {
