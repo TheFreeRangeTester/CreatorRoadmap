@@ -169,6 +169,11 @@ export default function CreatorPublicPage() {
         description: t('common.loginRequiredDesc'),
         variant: "destructive",
       });
+      
+      // Redirect to login page with referrer parameter to come back to this profile
+      setTimeout(() => {
+        navigate(`/auth?referrer=/${username}`);
+      }, 1500);
       return;
     }
     
@@ -345,7 +350,7 @@ export default function CreatorPublicPage() {
                   </Link>
                 </div>
               ) : (
-                <Link to="/auth" className="flex items-center gap-1.5 hover:text-white/80">
+                <Link to={`/auth?referrer=/${username}`} className="flex items-center gap-1.5 hover:text-white/80">
                   <LogIn className="h-3.5 w-3.5" />
                   <span>{t('common.loginToVote')}</span>
                 </Link>
