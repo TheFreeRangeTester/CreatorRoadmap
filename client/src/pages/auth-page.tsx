@@ -28,6 +28,7 @@ export default function AuthPage() {
   const [, navigate] = useLocation();
   const { t } = useTranslation();
   const [authSource, setAuthSource] = useState<string | null>(null);
+  const [isPublicProfile, setIsPublicProfile] = useState<boolean>(false);
   const [match, params] = useRoute("/:username");
   const [matchPublic] = useRoute("/public/:token");
   
@@ -38,15 +39,19 @@ export default function AuthPage() {
     
     if (referrer) {
       setAuthSource(referrer);
+      // Check if coming from a creator or public profile
+      setIsPublicProfile(!!referrer.match(/^\/([\w-]+|public\/[\w-]+)/));
     } else if (match && params?.username) {
       // Coming from a creator profile page
       setAuthSource(`/${params.username}`);
+      setIsPublicProfile(true);
     } else if (matchPublic) {
       // Coming from a public token page
       const path = window.location.pathname;
       const pathSegments = path.split('/');
       if (pathSegments.length >= 2) {
         setAuthSource(`/public/${pathSegments[2]}`);
+        setIsPublicProfile(true);
       }
     }
   }, [match, params, matchPublic]);
@@ -127,164 +132,186 @@ export default function AuthPage() {
           </div>
 
           <div className="mt-8">
-            <Tabs defaultValue="login" className="w-full">
-              <TabsList className="grid w-full grid-cols-2">
-                <TabsTrigger value="login">{t('common.login')}</TabsTrigger>
-                <TabsTrigger value="register">{t('common.register')}</TabsTrigger>
-              </TabsList>
-              
-              <TabsContent value="login">
-                <Card>
-                  <CardHeader>
-                    <CardTitle>{t('common.login')}</CardTitle>
-                    <CardDescription>
-                      {t('auth.loginInfo')}
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <Form {...loginForm}>
-                      <form
-                        onSubmit={loginForm.handleSubmit(onLoginSubmit)}
-                        className="space-y-4"
-                      >
-                        <FormField
-                          control={loginForm.control}
-                          name="username"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel>{t('common.username')}</FormLabel>
-                              <FormControl>
-                                <Input placeholder={t('common.username')} {...field} />
-                              </FormControl>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
-                        <FormField
-                          control={loginForm.control}
-                          name="password"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel>{t('common.password')}</FormLabel>
-                              <FormControl>
-                                <Input
-                                  type="password"
-                                  placeholder="******"
-                                  {...field}
-                                />
-                              </FormControl>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
-                        <Button 
-                          type="submit" 
-                          className="w-full"
-                          disabled={loginMutation.isPending}
+            {isPublicProfile ? (
+              // For public profiles, only show Google Sign-In
+              <Card>
+                <CardHeader>
+                  <CardTitle>{t('auth.loginToVote')}</CardTitle>
+                  <CardDescription>
+                    {t('auth.googleLoginDescription')}
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <GoogleSignInButton 
+                    className="w-full" 
+                    redirectPath={getRedirectDestination()} 
+                    onSuccess={() => {
+                      navigate(getRedirectDestination());
+                    }}
+                  />
+                </CardContent>
+              </Card>
+            ) : (
+              // For landing page, show both login and register options
+              <Tabs defaultValue="login" className="w-full">
+                <TabsList className="grid w-full grid-cols-2">
+                  <TabsTrigger value="login">{t('common.login')}</TabsTrigger>
+                  <TabsTrigger value="register">{t('common.register')}</TabsTrigger>
+                </TabsList>
+                
+                <TabsContent value="login">
+                  <Card>
+                    <CardHeader>
+                      <CardTitle>{t('common.login')}</CardTitle>
+                      <CardDescription>
+                        {t('auth.loginInfo')}
+                      </CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                      <Form {...loginForm}>
+                        <form
+                          onSubmit={loginForm.handleSubmit(onLoginSubmit)}
+                          className="space-y-4"
                         >
-                          {loginMutation.isPending ? t('auth.loginCta') + "..." : t('auth.loginCta')}
-                        </Button>
-                        
-                        <div className="relative my-4">
-                          <div className="absolute inset-0 flex items-center">
-                            <Separator className="w-full" />
+                          <FormField
+                            control={loginForm.control}
+                            name="username"
+                            render={({ field }) => (
+                              <FormItem>
+                                <FormLabel>{t('common.username')}</FormLabel>
+                                <FormControl>
+                                  <Input placeholder={t('common.username')} {...field} />
+                                </FormControl>
+                                <FormMessage />
+                              </FormItem>
+                            )}
+                          />
+                          <FormField
+                            control={loginForm.control}
+                            name="password"
+                            render={({ field }) => (
+                              <FormItem>
+                                <FormLabel>{t('common.password')}</FormLabel>
+                                <FormControl>
+                                  <Input
+                                    type="password"
+                                    placeholder="******"
+                                    {...field}
+                                  />
+                                </FormControl>
+                                <FormMessage />
+                              </FormItem>
+                            )}
+                          />
+                          <Button 
+                            type="submit" 
+                            className="w-full"
+                            disabled={loginMutation.isPending}
+                          >
+                            {loginMutation.isPending ? t('auth.loginCta') + "..." : t('auth.loginCta')}
+                          </Button>
+                          
+                          <div className="relative my-4">
+                            <div className="absolute inset-0 flex items-center">
+                              <Separator className="w-full" />
+                            </div>
+                            <div className="relative flex justify-center text-xs uppercase">
+                              <span className="bg-background px-2 text-muted-foreground">
+                                {t('auth.orContinueWith')}
+                              </span>
+                            </div>
                           </div>
-                          <div className="relative flex justify-center text-xs uppercase">
-                            <span className="bg-background px-2 text-muted-foreground">
-                              {t('auth.orContinueWith')}
-                            </span>
-                          </div>
-                        </div>
-                        
-                        <GoogleSignInButton 
-                          className="w-full" 
-                          redirectPath={getRedirectDestination()} 
-                          onSuccess={() => {
-                            navigate(getRedirectDestination());
-                          }}
-                        />
-                      </form>
-                    </Form>
-                  </CardContent>
-                </Card>
-              </TabsContent>
-              
-              <TabsContent value="register">
-                <Card>
-                  <CardHeader>
-                    <CardTitle>{t('common.register')}</CardTitle>
-                    <CardDescription>
-                      {t('auth.registerInfo')}
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <Form {...registerForm}>
-                      <form
-                        onSubmit={registerForm.handleSubmit(onRegisterSubmit)}
-                        className="space-y-4"
-                      >
-                        <FormField
-                          control={registerForm.control}
-                          name="username"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel>{t('common.username')}</FormLabel>
-                              <FormControl>
-                                <Input placeholder={t('common.username')} {...field} />
-                              </FormControl>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
-                        <FormField
-                          control={registerForm.control}
-                          name="password"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel>{t('common.password')}</FormLabel>
-                              <FormControl>
-                                <Input
-                                  type="password"
-                                  placeholder="******"
-                                  {...field}
-                                />
-                              </FormControl>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
-                        <Button 
-                          type="submit" 
-                          className="w-full"
-                          disabled={registerMutation.isPending}
+                          
+                          <GoogleSignInButton 
+                            className="w-full" 
+                            redirectPath={getRedirectDestination()} 
+                            onSuccess={() => {
+                              navigate(getRedirectDestination());
+                            }}
+                          />
+                        </form>
+                      </Form>
+                    </CardContent>
+                  </Card>
+                </TabsContent>
+                
+                <TabsContent value="register">
+                  <Card>
+                    <CardHeader>
+                      <CardTitle>{t('common.register')}</CardTitle>
+                      <CardDescription>
+                        {t('auth.registerInfo')}
+                      </CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                      <Form {...registerForm}>
+                        <form
+                          onSubmit={registerForm.handleSubmit(onRegisterSubmit)}
+                          className="space-y-4"
                         >
-                          {registerMutation.isPending ? t('auth.registerCta') + "..." : t('auth.registerCta')}
-                        </Button>
-                        
-                        <div className="relative my-4">
-                          <div className="absolute inset-0 flex items-center">
-                            <Separator className="w-full" />
+                          <FormField
+                            control={registerForm.control}
+                            name="username"
+                            render={({ field }) => (
+                              <FormItem>
+                                <FormLabel>{t('common.username')}</FormLabel>
+                                <FormControl>
+                                  <Input placeholder={t('common.username')} {...field} />
+                                </FormControl>
+                                <FormMessage />
+                              </FormItem>
+                            )}
+                          />
+                          <FormField
+                            control={registerForm.control}
+                            name="password"
+                            render={({ field }) => (
+                              <FormItem>
+                                <FormLabel>{t('common.password')}</FormLabel>
+                                <FormControl>
+                                  <Input
+                                    type="password"
+                                    placeholder="******"
+                                    {...field}
+                                  />
+                                </FormControl>
+                                <FormMessage />
+                              </FormItem>
+                            )}
+                          />
+                          <Button 
+                            type="submit" 
+                            className="w-full"
+                            disabled={registerMutation.isPending}
+                          >
+                            {registerMutation.isPending ? t('auth.registerCta') + "..." : t('auth.registerCta')}
+                          </Button>
+                          
+                          <div className="relative my-4">
+                            <div className="absolute inset-0 flex items-center">
+                              <Separator className="w-full" />
+                            </div>
+                            <div className="relative flex justify-center text-xs uppercase">
+                              <span className="bg-background px-2 text-muted-foreground">
+                                {t('auth.orContinueWith')}
+                              </span>
+                            </div>
                           </div>
-                          <div className="relative flex justify-center text-xs uppercase">
-                            <span className="bg-background px-2 text-muted-foreground">
-                              {t('auth.orContinueWith')}
-                            </span>
-                          </div>
-                        </div>
-                        
-                        <GoogleSignInButton 
-                          className="w-full" 
-                          redirectPath={getRedirectDestination()} 
-                          onSuccess={() => {
-                            navigate(getRedirectDestination());
-                          }}
-                        />
-                      </form>
-                    </Form>
-                  </CardContent>
-                </Card>
-              </TabsContent>
-            </Tabs>
+                          
+                          <GoogleSignInButton 
+                            className="w-full" 
+                            redirectPath={getRedirectDestination()} 
+                            onSuccess={() => {
+                              navigate(getRedirectDestination());
+                            }}
+                          />
+                        </form>
+                      </Form>
+                    </CardContent>
+                  </Card>
+                </TabsContent>
+              </Tabs>
+            )}
           </div>
         </div>
       </div>
