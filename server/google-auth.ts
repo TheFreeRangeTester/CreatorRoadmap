@@ -4,6 +4,15 @@ import { Request, Response } from "express";
 import { storage } from "./storage";
 import { InsertUser } from "@shared/schema";
 
+// Extend Express Request to include login method from Passport
+declare global {
+  namespace Express {
+    interface Request {
+      login(user: any, callback: (err: any) => void): void;
+    }
+  }
+}
+
 // Inicializar Firebase Admin SDK para verificación de tokens
 try {
   const firebaseAdminApp = initializeApp({

@@ -135,7 +135,13 @@
     "registerInfo": "Regístrate para hacer seguimiento de tus votos y sugerir nuevas ideas a creadores",
     "loginInfo": "Inicia sesión para continuar tu experiencia",
     "registerCta": "Crear cuenta",
-    "loginCta": "Iniciar sesión"
+    "loginCta": "Iniciar sesión",
+    "orContinueWith": "o continuar con",
+    "signInWithGoogle": "Iniciar sesión con Google",
+    "googleSignInSuccess": "Sesión iniciada con éxito",
+    "googleSignInSuccessDesc": "¡Bienvenido de nuevo a la plataforma!",
+    "googleSignInError": "Error al iniciar sesión con Google",
+    "googleSignInErrorDesc": "Hubo un error al intentar iniciar sesión con Google. Por favor intenta de nuevo."
   },
   "ideaForm": {
     "title": "Título",
