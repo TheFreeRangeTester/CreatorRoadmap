@@ -141,7 +141,13 @@
     "googleSignInSuccess": "Successfully signed in",
     "googleSignInSuccessDesc": "Welcome back to the platform!",
     "googleSignInError": "Google sign-in failed",
-    "googleSignInErrorDesc": "There was an error signing in with Google. Please try again."
+    "googleSignInErrorDesc": "There was an error signing in with Google. Please try again.",
+    "loginToVote": "Login to vote or suggest ideas",
+    "googleLoginDescription": "Use your Google account to easily login and participate",
+    "creatorLoginInfo": "Login as a creator to manage your content",
+    "audienceLoginInfo": "Login to vote and suggest content ideas",
+    "unauthorizedDomain": "Unauthorized domain",
+    "unauthorizedDomainDesc": "This domain is not authorized in Firebase. Please add it to your allowed domains list."
   },
   "ideaForm": {
     "title": "Title",

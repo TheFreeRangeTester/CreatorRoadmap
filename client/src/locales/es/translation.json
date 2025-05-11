@@ -141,7 +141,13 @@
     "googleSignInSuccess": "Sesión iniciada con éxito",
     "googleSignInSuccessDesc": "¡Bienvenido de nuevo a la plataforma!",
     "googleSignInError": "Error al iniciar sesión con Google",
-    "googleSignInErrorDesc": "Hubo un error al intentar iniciar sesión con Google. Por favor intenta de nuevo."
+    "googleSignInErrorDesc": "Hubo un error al intentar iniciar sesión con Google. Por favor intenta de nuevo.",
+    "loginToVote": "Inicia sesión para votar o sugerir ideas",
+    "googleLoginDescription": "Usa tu cuenta de Google para iniciar sesión fácilmente y participar",
+    "creatorLoginInfo": "Inicia sesión como creador para gestionar tu contenido",
+    "audienceLoginInfo": "Inicia sesión para votar y sugerir ideas de contenido",
+    "unauthorizedDomain": "Dominio no autorizado",
+    "unauthorizedDomainDesc": "Este dominio no está autorizado en Firebase. Por favor, añádelo a tu lista de dominios permitidos."
   },
   "ideaForm": {
     "title": "Título",

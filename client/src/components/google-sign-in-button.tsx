@@ -83,8 +83,8 @@ export default function GoogleSignInButton({
       const firebaseError = error as any;
       if (firebaseError.code === 'auth/unauthorized-domain') {
         toast({
-          title: "Error de dominio no autorizado",
-          description: "Este dominio no está autorizado en Firebase. Por favor, añade el dominio actual a la lista de dominios autorizados en la consola de Firebase (Authentication > Settings > Authorized domains).",
+          title: t('auth.unauthorizedDomain'),
+          description: t('auth.unauthorizedDomainDesc'),
           variant: "destructive",
         });
       } else {

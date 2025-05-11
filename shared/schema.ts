@@ -19,6 +19,8 @@ export const users = pgTable("users", {
   email: text("email").unique(),
   googleId: text("google_id").unique(),
   isGoogleUser: boolean("is_google_user").default(false),
+  // Rol del usuario (creator o audience)
+  role: text("role").default("audience").notNull(),
 });
 
 export const ideas = pgTable("ideas", {
