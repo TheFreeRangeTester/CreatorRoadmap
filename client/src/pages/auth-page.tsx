@@ -176,7 +176,7 @@ export default function AuthPage() {
                     <CardHeader>
                       <CardTitle>{t('common.login')}</CardTitle>
                       <CardDescription>
-                        {t('auth.loginInfo')}
+                        {isPublicProfile ? t('auth.loginInfo') : t('auth.creatorLoginInfo')}
                       </CardDescription>
                     </CardHeader>
                     <CardContent>
@@ -222,25 +222,6 @@ export default function AuthPage() {
                           >
                             {loginMutation.isPending ? t('auth.loginCta') + "..." : t('auth.loginCta')}
                           </Button>
-                          
-                          <div className="relative my-4">
-                            <div className="absolute inset-0 flex items-center">
-                              <Separator className="w-full" />
-                            </div>
-                            <div className="relative flex justify-center text-xs uppercase">
-                              <span className="bg-background px-2 text-muted-foreground">
-                                {t('auth.orContinueWith')}
-                              </span>
-                            </div>
-                          </div>
-                          
-                          <GoogleSignInButton 
-                            className="w-full" 
-                            redirectPath={getRedirectDestination()} 
-                            onSuccess={() => {
-                              navigate(getRedirectDestination());
-                            }}
-                          />
                         </form>
                       </Form>
                     </CardContent>
@@ -252,7 +233,7 @@ export default function AuthPage() {
                     <CardHeader>
                       <CardTitle>{t('common.register')}</CardTitle>
                       <CardDescription>
-                        {t('auth.registerInfo')}
+                        {isPublicProfile ? t('auth.registerInfo') : t('auth.creatorRegisterInfo')}
                       </CardDescription>
                     </CardHeader>
                     <CardContent>
@@ -298,25 +279,6 @@ export default function AuthPage() {
                           >
                             {registerMutation.isPending ? t('auth.registerCta') + "..." : t('auth.registerCta')}
                           </Button>
-                          
-                          <div className="relative my-4">
-                            <div className="absolute inset-0 flex items-center">
-                              <Separator className="w-full" />
-                            </div>
-                            <div className="relative flex justify-center text-xs uppercase">
-                              <span className="bg-background px-2 text-muted-foreground">
-                                {t('auth.orContinueWith')}
-                              </span>
-                            </div>
-                          </div>
-                          
-                          <GoogleSignInButton 
-                            className="w-full" 
-                            redirectPath={getRedirectDestination()} 
-                            onSuccess={() => {
-                              navigate(getRedirectDestination());
-                            }}
-                          />
                         </form>
                       </Form>
                     </CardContent>

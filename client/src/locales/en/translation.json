@@ -145,6 +145,7 @@
     "loginToVote": "Login to vote or suggest ideas",
     "googleLoginDescription": "Use your Google account to easily login and participate",
     "creatorLoginInfo": "Login as a creator to manage your content",
+    "creatorRegisterInfo": "Register as a creator to start managing your content and getting audience feedback",
     "audienceLoginInfo": "Login to vote and suggest content ideas",
     "unauthorizedDomain": "Unauthorized domain",
     "unauthorizedDomainDesc": "This domain is not authorized in Firebase. Please add it to your allowed domains list."
