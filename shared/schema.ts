@@ -85,6 +85,8 @@ export const userResponseSchema = z.object({
   // Campos de Google
   email: z.string().email().optional(),
   isGoogleUser: z.boolean().optional().default(false),
+  // Rol del usuario
+  role: z.enum(["creator", "audience"]).default("audience"),
 });
 
 // Idea schemas

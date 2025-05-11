@@ -97,7 +97,9 @@ export async function handleGoogleAuth(req: Request, res: Response) {
       id: user.id,
       username: user.username,
       profileDescription: user.profileDescription,
-      logoUrl: user.logoUrl
+      logoUrl: user.logoUrl,
+      role: user.role || "audience", // Incluimos el rol en la respuesta
+      isGoogleUser: true
     });
     
   } catch (error) {
