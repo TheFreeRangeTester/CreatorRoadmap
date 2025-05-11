@@ -36,6 +36,14 @@ export default function AuthPage() {
   useEffect(() => {
     const searchParams = new URLSearchParams(window.location.search);
     const referrer = searchParams.get('referrer');
+    const directAccess = searchParams.get('direct') === 'true';
+    
+    // Si hay un parámetro 'direct=true', es acceso directo desde la landing page
+    if (directAccess) {
+      setIsPublicProfile(false);
+      setAuthSource('/dashboard');
+      return;
+    }
     
     if (referrer) {
       setAuthSource(referrer);
@@ -53,6 +61,10 @@ export default function AuthPage() {
         setAuthSource(`/public/${pathSegments[2]}`);
         setIsPublicProfile(true);
       }
+    } else {
+      // Si no hay referrer ni match, es acceso directo desde la landing page
+      setIsPublicProfile(false);
+      setAuthSource('/dashboard');
     }
   }, [match, params, matchPublic]);
 
