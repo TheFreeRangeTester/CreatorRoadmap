@@ -88,6 +88,7 @@ export function setupAuth(app: Express) {
       const user = await storage.createUser({
         username: validatedData.username,
         password: hashedPassword,
+        role: "creator" // Los usuarios que se registran con username/password son creadores
       });
 
       // Strip password from response

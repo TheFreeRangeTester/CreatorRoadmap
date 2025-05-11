@@ -67,6 +67,7 @@ export const insertUserSchema = createInsertSchema(users).pick({
   isGoogleUser: z.boolean().optional(),
   logoUrl: z.string().optional(), // Para la foto de perfil de Google
   profileDescription: z.string().optional(), // Para descripción inicial
+  role: z.enum(["creator", "audience"]).default("audience"), // "creator" o "audience"
 });
 
 export const userResponseSchema = z.object({

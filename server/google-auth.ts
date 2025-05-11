@@ -69,7 +69,8 @@ export async function handleGoogleAuth(req: Request, res: Response) {
         email: email,
         profileDescription: `Google user: ${name || username}`,
         logoUrl: picture || undefined,
-        isGoogleUser: true
+        isGoogleUser: true,
+        role: "audience" // Los usuarios de Google siempre tendrán rol de audiencia
       };
       
       // Crear el usuario en nuestra base de datos
