@@ -94,11 +94,27 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Si el usuario está autenticado y solicita incluir ideas pendientes, incluirlas
       const includePending = req.query.include_pending === 'true' && req.isAuthenticated();
       
-      // Filtrar solo ideas aprobadas a menos que el usuario solicite incluir pendientes
-      const ideas = includePending 
-        ? allIdeas 
-        : allIdeas.filter(idea => idea.status === 'approved');
-        
+      let ideas = [];
+      
+      // Si el usuario está autenticado, filtramos según su rol
+      if (req.isAuthenticated()) {
+        // Si el usuario es creador, solo mostrar sus propias ideas y las sugeridas para él
+        if (req.user.userRole === 'creator') {
+          ideas = allIdeas.filter(idea => 
+            // Ideas que el creador ha creado
+            idea.creatorId === req.user.id || 
+            // Ideas que fueron sugeridas para este creador
+            (idea.suggestedBy !== null && idea.creatorId === req.user.id)
+          );
+        } else {
+          // Para usuarios con rol 'audience', mostrar todas las ideas aprobadas
+          ideas = allIdeas.filter(idea => idea.status === 'approved');
+        }
+      } else {
+        // Para usuarios no autenticados, mostrar solo ideas aprobadas
+        ideas = allIdeas.filter(idea => idea.status === 'approved');
+      }
+      
       res.json(ideas);
     } catch (error) {
       console.error("Error fetching ideas:", error);
@@ -480,6 +496,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       if (!req.isAuthenticated()) {
         return res.status(401).json({ message: "Authentication required to view pending ideas" });
+      }
+      
+      // Comprobar si el usuario tiene rol de creador
+      if (req.user.userRole !== 'creator') {
+        return res.status(403).json({ message: "Only creators can view pending ideas" });
       }
       
       const creatorId = req.user!.id;
