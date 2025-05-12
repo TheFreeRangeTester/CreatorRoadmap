@@ -455,10 +455,23 @@ export default function CreatorQAProfile() {
       <div className="fixed inset-0 pointer-events-none z-[9999]">
         <AchievementsContainer />
       </div>
-      {/* Header con tema y lenguaje */}
-      <div className="absolute top-4 right-4 flex items-center gap-2 z-10">
-        <ThemeToggle />
-        <LanguageToggle />
+      {/* Header con controles y estado de usuario */}
+      <div className="absolute top-4 right-4 flex items-center gap-3 z-10">
+        {user && (
+          <div className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-full px-3 py-1 flex items-center shadow-sm border border-gray-100 dark:border-gray-700">
+            <Avatar className="h-6 w-6 mr-2">
+              <AvatarImage src={user.logoUrl || ""} />
+              <AvatarFallback className="text-xs bg-primary/20 text-primary">
+                {user.username?.substring(0, 2).toUpperCase()}
+              </AvatarFallback>
+            </Avatar>
+            <span className="text-sm font-medium">{user.username}</span>
+          </div>
+        )}
+        <div className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-full flex gap-1 p-1 shadow-sm border border-gray-100 dark:border-gray-700">
+          <ThemeToggle />
+          <LanguageToggle />
+        </div>
       </div>
       
       {/* Sección de Perfil */}
@@ -639,7 +652,7 @@ export default function CreatorQAProfile() {
                       </motion.div>
                     )
                   ) : (
-                    <Link href="/auth">
+                    <Link href={`/auth?referrer=/${username}`}>
                       <motion.div
                         whileHover={{ scale: 1.05 }}
                         whileTap={{ scale: 0.95 }}

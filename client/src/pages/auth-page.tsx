@@ -88,7 +88,7 @@ export default function AuthPage() {
     defaultValues: {
       username: "",
       password: "",
-      userRole: "creator", // Por defecto, creador
+      userRole: isPublicProfile ? "audience" : "creator", // Si viene del perfil público, rol audiencia por defecto
     },
   });
 
@@ -163,13 +163,25 @@ export default function AuthPage() {
                 <TabsContent value="login">
                   <Card>
                     <CardHeader>
-                      <CardTitle>Iniciar sesión como creador</CardTitle>
+                      <CardTitle>
+                        {isPublicProfile 
+                          ? "Iniciar sesión para votar" 
+                          : "Iniciar sesión como creador"}
+                      </CardTitle>
                       <CardDescription>
-                        Accede a tu cuenta para gestionar tus ideas y ver estadísticas.
+                        {isPublicProfile 
+                          ? "Accede a tu cuenta para votar ideas y enviar sugerencias."
+                          : "Accede a tu cuenta para gestionar tus ideas y ver estadísticas."}
                       </CardDescription>
-                      <div className="mt-3 py-2 px-3 bg-blue-50 dark:bg-blue-900 border border-blue-200 dark:border-blue-800 rounded-md">
-                        <p className="text-xs text-blue-700 dark:text-blue-300">
-                          Esta opción es para creadores de contenido que quieren gestionar un leaderboard de ideas.
+                      <div className={`mt-3 py-2 px-3 ${isPublicProfile 
+                        ? "bg-green-50 dark:bg-green-900 border border-green-200 dark:border-green-800" 
+                        : "bg-blue-50 dark:bg-blue-900 border border-blue-200 dark:border-blue-800"} rounded-md`}>
+                        <p className={`text-xs ${isPublicProfile 
+                          ? "text-green-700 dark:text-green-300" 
+                          : "text-blue-700 dark:text-blue-300"}`}>
+                          {isPublicProfile 
+                            ? "Accede con tu cuenta para votar ideas y enviar sugerencias a este creador."
+                            : "Esta opción es para creadores de contenido que quieren gestionar un leaderboard de ideas."}
                         </p>
                       </div>
                     </CardHeader>
