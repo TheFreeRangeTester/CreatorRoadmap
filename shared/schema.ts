@@ -5,7 +5,7 @@ import { z } from "zod";
 export const users = pgTable("users", {
   id: serial("id").primaryKey(),
   username: text("username").notNull().unique(),
-  password: text("password").notNull(), // Podría estar vacío para usuarios de Google
+  password: text("password").notNull(),
   userRole: text("user_role").notNull().default("audience"), // 'creator' o 'audience'
   profileDescription: text("profile_description"),
   logoUrl: text("logo_url"),
@@ -16,10 +16,7 @@ export const users = pgTable("users", {
   threadsUrl: text("threads_url"),
   websiteUrl: text("website_url"),
   profileBackground: text("profile_background").default("gradient-1"),
-  // Campos para autenticación con Google
   email: text("email").unique(),
-  googleId: text("google_id").unique(),
-  isGoogleUser: boolean("is_google_user").default(false),
 });
 
 export const ideas = pgTable("ideas", {
@@ -60,13 +57,10 @@ export const insertUserSchema = createInsertSchema(users).pick({
   username: true,
   password: true,
 }).extend({
-  // Campos opcionales para autenticación con Google
   userRole: z.enum(['creator', 'audience']).default('audience'),
   email: z.string().email().optional(),
-  googleId: z.string().optional(),
-  isGoogleUser: z.boolean().optional(),
-  logoUrl: z.string().optional(), // Para la foto de perfil de Google
-  profileDescription: z.string().optional(), // Para descripción inicial
+  logoUrl: z.string().optional(),
+  profileDescription: z.string().optional(),
 });
 
 export const userResponseSchema = z.object({
@@ -82,9 +76,7 @@ export const userResponseSchema = z.object({
   threadsUrl: z.string().nullable().optional(),
   websiteUrl: z.string().nullable().optional(),
   profileBackground: z.string().default("gradient-1"),
-  // Campos de Google
   email: z.string().email().optional(),
-  isGoogleUser: z.boolean().optional().default(false),
 });
 
 // Idea schemas
@@ -169,10 +161,7 @@ export const updateProfileSchema = z.object({
   profileBackground: z.string().optional().nullable(),
   // Campo para actualizar el rol
   userRole: z.enum(['creator', 'audience']).optional(),
-  // Campos adicionales para Google
-  googleId: z.string().optional(),
   email: z.string().email().optional(),
-  isGoogleUser: z.boolean().optional(),
 });
 
 // Types
