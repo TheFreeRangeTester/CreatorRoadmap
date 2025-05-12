@@ -113,6 +113,35 @@ export default function CreatorQAProfile() {
       checkVotedIdeas();
     }
   }, [user, data?.ideas, username]);
+  
+  // Efecto para manejar votaciones pendientes después de autenticación
+  useEffect(() => {
+    // Solo ejecutar si el usuario está autenticado y hay datos
+    if (user && data?.ideas) {
+      const pendingVoteIdeaId = localStorage.getItem("pendingVoteIdeaId");
+      const pendingVoteUsername = localStorage.getItem("pendingVoteUsername");
+      
+      // Si hay una votación pendiente y corresponde a este perfil
+      if (pendingVoteIdeaId && pendingVoteUsername === username) {
+        const ideaId = parseInt(pendingVoteIdeaId, 10);
+        
+        // Verificar que la idea exista en este perfil
+        const ideaExists = data.ideas.some(idea => idea.id === ideaId);
+        
+        if (ideaExists) {
+          // Limpiar los datos almacenados para evitar repeticiones
+          localStorage.removeItem("pendingVoteIdeaId");
+          localStorage.removeItem("pendingVoteUsername");
+          
+          // Ejecutar la votación pendiente después de un breve retraso
+          // para asegurar que todas las verificaciones de estado se completen
+          setTimeout(() => {
+            handleVote(ideaId);
+          }, 500);
+        }
+      }
+    }
+  }, [user, data?.ideas, username]);
 
   if (isLoading || !data) {
     return (
