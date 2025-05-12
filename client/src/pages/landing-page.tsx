@@ -17,7 +17,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Badge } from "@/components/ui/badge";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { LanguageToggle } from "@/components/language-toggle";
-import { useAuth } from "@/hooks/use-auth";
+// No necesitamos importar useAuth para la página de inicio
 import { useIsMobile } from "@/hooks/use-mobile";
 import { useTranslation } from "react-i18next";
 import DemoDialog from "@/components/demo-dialog";
@@ -177,7 +177,6 @@ function Testimonial({
 }
 
 export default function LandingPage() {
-  const { user } = useAuth();
   const isMobile = useIsMobile();
   const [, navigate] = useLocation();
   const [isDemoOpen, setIsDemoOpen] = useState(false);
@@ -340,20 +339,14 @@ export default function LandingPage() {
               </div>
               <LanguageToggle />
               <ThemeToggle />
-              {user ? (
-                <Button onClick={() => navigate("/dashboard")}>
-                  {t('landing.cta.goDashboard')}
-                </Button>
-              ) : (
-                <div className="flex gap-2">
-                  <Link href="/auth">
-                    <Button variant="outline">{t('landing.cta.login')}</Button>
-                  </Link>
-                  <Link href="/auth">
-                    <Button>{t('landing.cta.register')}</Button>
-                  </Link>
-                </div>
-              )}
+              <div className="flex gap-2">
+                <Link href="/auth">
+                  <Button variant="outline">{t('landing.cta.login')}</Button>
+                </Link>
+                <Link href="/auth">
+                  <Button>{t('landing.cta.register')}</Button>
+                </Link>
+              </div>
             </div>
           </div>
         </div>
@@ -401,27 +394,14 @@ export default function LandingPage() {
             </p>
             
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              {user ? (
-                <div ref={heroButtonRef}>
-                  <Button 
-                    size="lg" 
-                    className="font-medium text-base bg-gradient-to-r from-primary to-blue-600 hover:from-primary/90 hover:to-blue-700 text-white"
-                    onClick={() => navigate("/dashboard")}
-                  >
-                    {t('landing.cta.goDashboard')}
+              <div ref={heroButtonRef}>
+                <Link href="/auth">
+                  <Button size="lg" className="font-medium text-base bg-gradient-to-r from-primary to-blue-600 hover:from-primary/90 hover:to-blue-700 text-white">
+                    {t('landing.cta.startFree')}
                     <ArrowRight className="h-4 w-4 ml-2" />
                   </Button>
-                </div>
-              ) : (
-                <div ref={heroButtonRef}>
-                  <Link href="/auth">
-                    <Button size="lg" className="font-medium text-base bg-gradient-to-r from-primary to-blue-600 hover:from-primary/90 hover:to-blue-700 text-white">
-                      {t('landing.cta.startFree')}
-                      <ArrowRight className="h-4 w-4 ml-2" />
-                    </Button>
-                  </Link>
-                </div>
-              )}
+                </Link>
+              </div>
               <Button onClick={() => setIsDemoOpen(true)} size="lg" variant="outline" className="font-medium text-base">
                 {t('landing.cta.seeDemo')}
               </Button>
@@ -849,23 +829,12 @@ export default function LandingPage() {
               {t('landing.cta.subtitle')}
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              {user ? (
-                <Button 
-                  size="lg" 
-                  className="font-medium text-base bg-gradient-to-r from-primary to-blue-600 hover:from-primary/90 hover:to-blue-700 text-white"
-                  onClick={() => navigate("/dashboard")}
-                >
-                  {t('landing.cta.dashboardButton')}
+              <Link href="/auth">
+                <Button size="lg" className="font-medium text-base bg-gradient-to-r from-primary to-blue-600 hover:from-primary/90 hover:to-blue-700 text-white">
+                  {t('landing.cta.startButton')}
                   <ArrowRight className="h-4 w-4 ml-2" />
                 </Button>
-              ) : (
-                <Link href="/auth">
-                  <Button size="lg" className="font-medium text-base bg-gradient-to-r from-primary to-blue-600 hover:from-primary/90 hover:to-blue-700 text-white">
-                    {t('landing.cta.startButton')}
-                    <ArrowRight className="h-4 w-4 ml-2" />
-                  </Button>
-                </Link>
-              )}
+              </Link>
               <Button onClick={() => setIsDemoOpen(true)} size="lg" variant="outline" className="font-medium text-base">
                 {t('landing.cta.demoButton')}
               </Button>
