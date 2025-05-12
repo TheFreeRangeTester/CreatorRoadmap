@@ -5,6 +5,7 @@ import { AuthProvider } from './hooks/use-auth';
 import { AchievementsProvider } from './hooks/use-achievements';
 import { Toaster } from '@/components/ui/toaster';
 import { ThemeProvider } from '@/lib/theme-provider';
+import { FirebaseAuthHandler } from '@/components/firebase-auth-handler';
 
 interface AppProvidersProps {
   children: ReactNode;
