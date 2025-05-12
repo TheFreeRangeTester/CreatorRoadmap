@@ -199,6 +199,42 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     },
   });
 
+  // Handle role update (audience -> creator)
+  const updateRoleMutation = useMutation({
+    mutationFn: async () => {
+      const res = await fetch("/api/user/role", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ userRole: "creator" }),
+        credentials: "include"
+      });
+      
+      if (!res.ok) {
+        const errorData = await res.text();
+        throw new Error(errorData || "Failed to update role");
+      }
+      
+      return res.json() as Promise<UserResponse>;
+    },
+    onSuccess: (userData) => {
+      // Update cache with updated user data
+      queryClient.setQueryData(["/api/user"], userData);
+      
+      // Show success message
+      toast({
+        title: "¡Felicidades!",
+        description: "Tu cuenta ha sido actualizada a creador de contenido.",
+      });
+    },
+    onError: (error: Error) => {
+      toast({
+        title: "Error al actualizar rol",
+        description: error.message,
+        variant: "destructive",
+      });
+    },
+  });
+
   // Create the auth value object
   const value = {
     user: user ?? null,
@@ -207,6 +243,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     loginMutation,
     registerMutation,
     logoutMutation,
+    updateRoleMutation,
   };
 
   // Provide the auth context to children

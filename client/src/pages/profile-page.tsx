@@ -11,7 +11,7 @@ import { useToast } from "@/hooks/use-toast";
 
 export default function ProfilePage() {
   const { t } = useTranslation();
-  const { user, isLoading } = useAuth();
+  const { user, isLoading, updateRoleMutation } = useAuth();
   const [, setLocation] = useLocation();
   const { resetAchievements, stats } = useAchievements();
   const { toast } = useToast();
@@ -100,10 +100,17 @@ export default function ProfilePage() {
                       variant="default"
                       className="bg-blue-600 hover:bg-blue-700 text-white dark:bg-blue-700 dark:hover:bg-blue-800 self-start md:self-center"
                       onClick={() => {
-                        // Implementaremos esta función
+                        // Confirmar antes de actualizar el rol
                         const confirmed = window.confirm(t('profile.becomeCreatorConfirm', '¿Estás seguro de que quieres convertirte en creador? Podrás comenzar a gestionar tu propio leaderboard de ideas.'));
                         if (confirmed) {
-                          // Aquí irá la llamada a la API
+                          updateRoleMutation.mutate(undefined, {
+                            onSuccess: () => {
+                              // Redireccionar al dashboard después de actualizar el rol
+                              setTimeout(() => {
+                                setLocation("/dashboard");
+                              }, 1500);
+                            }
+                          });
                         }
                       }}
                     >

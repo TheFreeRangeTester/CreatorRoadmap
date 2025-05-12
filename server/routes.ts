@@ -48,6 +48,47 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.status(500).json({ message: "Failed to update profile" });
     }
   });
+  
+  // User role update route (audience -> creator)
+  app.patch("/api/user/role", async (req: Request, res: Response) => {
+    try {
+      // Verificar autenticación
+      if (!req.isAuthenticated()) {
+        return res.status(401).json({ message: "Unauthorized" });
+      }
+      
+      // Verificar que el rol solicitado sea válido
+      const { userRole } = req.body;
+      if (userRole !== "creator") {
+        return res.status(400).json({ 
+          message: "Invalid role. Only upgrading to 'creator' is allowed." 
+        });
+      }
+      
+      // Verificar que el usuario actual sea 'audience'
+      if (req.user.userRole !== "audience") {
+        return res.status(400).json({ 
+          message: "User is already a creator or has a different role." 
+        });
+      }
+      
+      // Actualizar el rol del usuario
+      const updatedUser = await storage.updateUserProfile(req.user.id, { userRole: "creator" });
+      
+      if (!updatedUser) {
+        return res.status(404).json({ message: "User not found" });
+      }
+      
+      // Actualizar el usuario en sesión
+      req.user.userRole = "creator";
+      
+      // Devolver el usuario actualizado
+      res.json(updatedUser);
+    } catch (error) {
+      console.error("Error updating user role:", error);
+      res.status(500).json({ message: "Failed to update role" });
+    }
+  });
 
   // Ideas API routes
   // Get all ideas
