@@ -6,6 +6,7 @@ export const users = pgTable("users", {
   id: serial("id").primaryKey(),
   username: text("username").notNull().unique(),
   password: text("password").notNull(), // Podría estar vacío para usuarios de Google
+  userRole: text("user_role").notNull().default("audience"), // 'creator' o 'audience'
   profileDescription: text("profile_description"),
   logoUrl: text("logo_url"),
   twitterUrl: text("twitter_url"),
@@ -60,6 +61,7 @@ export const insertUserSchema = createInsertSchema(users).pick({
   password: true,
 }).extend({
   // Campos opcionales para autenticación con Google
+  userRole: z.enum(['creator', 'audience']).default('audience'),
   email: z.string().email().optional(),
   googleId: z.string().optional(),
   isGoogleUser: z.boolean().optional(),
@@ -70,6 +72,7 @@ export const insertUserSchema = createInsertSchema(users).pick({
 export const userResponseSchema = z.object({
   id: z.number(),
   username: z.string(),
+  userRole: z.enum(['creator', 'audience']).default('audience'),
   profileDescription: z.string().nullable().optional(),
   logoUrl: z.string().nullable().optional(),
   twitterUrl: z.string().nullable().optional(),

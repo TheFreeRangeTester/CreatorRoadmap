@@ -17,6 +17,9 @@ import { useEffect, useState } from "react";
 import GoogleSignInButton from "@/components/google-sign-in-button";
 import { Separator } from "@/components/ui/separator";
 import FirebaseSetupGuide from "@/components/firebase-setup-guide";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Label } from "@/components/ui/label";
+import { FormDescription } from "@/components/ui/form";
 
 // Extend schema for validation
 const formSchema = insertUserSchema.extend({
@@ -85,6 +88,7 @@ export default function AuthPage() {
     defaultValues: {
       username: "",
       password: "",
+      userRole: "creator", // Por defecto, creador
     },
   });
 
@@ -286,6 +290,37 @@ export default function AuthPage() {
                               </FormItem>
                             )}
                           />
+                          
+                          <FormField
+                            control={registerForm.control}
+                            name="userRole"
+                            render={({ field }) => (
+                              <FormItem className="space-y-3">
+                                <FormLabel>Tipo de cuenta</FormLabel>
+                                <FormControl>
+                                  <RadioGroup
+                                    onValueChange={field.onChange}
+                                    defaultValue={field.value}
+                                    className="flex flex-col space-y-1"
+                                  >
+                                    <div className="flex items-center space-x-2">
+                                      <RadioGroupItem value="creator" id="creator" />
+                                      <Label htmlFor="creator">Creador de contenido</Label>
+                                    </div>
+                                    <div className="flex items-center space-x-2">
+                                      <RadioGroupItem value="audience" id="audience" />
+                                      <Label htmlFor="audience">Miembro de audiencia</Label>
+                                    </div>
+                                  </RadioGroup>
+                                </FormControl>
+                                <FormDescription>
+                                  Los creadores pueden gestionar ideas y su perfil. La audiencia puede votar y sugerir.
+                                </FormDescription>
+                                <FormMessage />
+                              </FormItem>
+                            )}
+                          />
+                          
                           <Button 
                             type="submit" 
                             className="w-full"

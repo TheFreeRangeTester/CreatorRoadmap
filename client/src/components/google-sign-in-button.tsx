@@ -13,6 +13,7 @@ interface GoogleSignInButtonProps {
   onSuccess?: () => void;
   variant?: "default" | "destructive" | "outline" | "secondary" | "ghost" | "link";
   size?: "default" | "sm" | "lg" | "icon";
+  userRole?: "creator" | "audience";  // Nuevo parámetro para rol
 }
 
 export default function GoogleSignInButton({
