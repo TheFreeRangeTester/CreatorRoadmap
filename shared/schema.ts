@@ -167,6 +167,8 @@ export const updateProfileSchema = z.object({
   threadsUrl: z.string().url({ message: "Debe ser una URL válida" }).optional().nullable(),
   websiteUrl: z.string().url({ message: "Debe ser una URL válida" }).optional().nullable(),
   profileBackground: z.string().optional().nullable(),
+  // Campo para actualizar el rol
+  userRole: z.enum(['creator', 'audience']).optional(),
   // Campos adicionales para Google
   googleId: z.string().optional(),
   email: z.string().email().optional(),

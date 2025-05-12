@@ -105,6 +105,12 @@ export default function ProfilePage() {
                         if (confirmed) {
                           updateRoleMutation.mutate(undefined, {
                             onSuccess: () => {
+                              toast({
+                                title: t('profile.becomeCreatorSuccess', '¡Rol actualizado!'),
+                                description: t('profile.becomeCreatorSuccessDesc', 'Tu cuenta ha sido actualizada a creador. Serás redirigido al dashboard.'),
+                                variant: "default",
+                              });
+                              
                               // Redireccionar al dashboard después de actualizar el rol
                               setTimeout(() => {
                                 setLocation("/dashboard");

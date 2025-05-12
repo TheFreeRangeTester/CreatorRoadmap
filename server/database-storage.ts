@@ -60,6 +60,8 @@ export class DatabaseStorage implements IStorage {
         threadsUrl: profileData.threadsUrl !== undefined ? profileData.threadsUrl : currentUser.threadsUrl,
         websiteUrl: profileData.websiteUrl !== undefined ? profileData.websiteUrl : currentUser.websiteUrl,
         profileBackground: profileData.profileBackground ?? currentUser.profileBackground,
+        // Campos de rol
+        userRole: profileData.userRole ?? currentUser.userRole,
         // Campos de Google
         googleId: profileData.googleId !== undefined ? profileData.googleId : currentUser.googleId,
         email: profileData.email !== undefined ? profileData.email : currentUser.email,
