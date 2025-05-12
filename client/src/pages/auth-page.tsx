@@ -2,7 +2,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { useLocation, useRoute } from "wouter";
-import { CloudLightning } from "lucide-react";
+import { CloudLightning, HelpCircle } from "lucide-react";
 import { insertUserSchema } from "@shared/schema";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -16,6 +16,7 @@ import { useTranslation } from "react-i18next";
 import { useEffect, useState } from "react";
 import GoogleSignInButton from "@/components/google-sign-in-button";
 import { Separator } from "@/components/ui/separator";
+import FirebaseSetupGuide from "@/components/firebase-setup-guide";
 
 // Extend schema for validation
 const formSchema = insertUserSchema.extend({
@@ -29,6 +30,7 @@ export default function AuthPage() {
   const { t } = useTranslation();
   const [authSource, setAuthSource] = useState<string | null>(null);
   const [isPublicProfile, setIsPublicProfile] = useState<boolean>(false);
+  const [isSetupGuideOpen, setIsSetupGuideOpen] = useState<boolean>(false);
   const [match, params] = useRoute("/:username");
   const [matchPublic] = useRoute("/public/:token");
   
@@ -142,6 +144,9 @@ export default function AuthPage() {
               {t('auth.loginInfo')}
             </p>
           </div>
+          
+          {/* Firebase Setup Guide Dialog */}
+          <FirebaseSetupGuide open={isSetupGuideOpen} onOpenChange={setIsSetupGuideOpen} />
 
           <div className="mt-8">
             {isPublicProfile ? (
@@ -160,6 +165,17 @@ export default function AuthPage() {
                       Este método de inicio de sesión es exclusivamente para audiencia que quiere votar o sugerir ideas. 
                       Si eres creador de contenido, usa el registro con nombre de usuario y contraseña.
                     </p>
+                    <div className="mt-2 pt-2 border-t border-yellow-200 dark:border-yellow-800">
+                      <Button 
+                        variant="ghost" 
+                        size="sm" 
+                        className="w-full flex items-center justify-center gap-1 text-xs"
+                        onClick={() => setIsSetupGuideOpen(true)}
+                      >
+                        <HelpCircle className="h-3 w-3" />
+                        ¿Problemas con el login? Ver guía de configuración
+                      </Button>
+                    </div>
                   </div>
                   
                   <GoogleSignInButton 
