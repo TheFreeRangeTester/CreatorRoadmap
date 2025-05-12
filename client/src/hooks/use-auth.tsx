@@ -65,9 +65,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     queryKey: ["/api/user"],
     queryFn: async () => {
       try {
-        const res = await fetch("/api/user", {
-          credentials: "include"
-        });
+        const res = await apiRequest("GET", "/api/user");
         
         // Not authenticated
         if (res.status === 401) {
@@ -95,12 +93,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   // Handle login
   const loginMutation = useMutation({
     mutationFn: async (credentials: LoginData) => {
-      const res = await fetch("/api/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(credentials),
-        credentials: "include"
-      });
+      const res = await apiRequest("POST", "/api/login", credentials);
       
       if (!res.ok) {
         const errorData = await res.text();
@@ -131,12 +124,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   // Handle registration
   const registerMutation = useMutation({
     mutationFn: async (userData: InsertUser) => {
-      const res = await fetch("/api/register", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(userData),
-        credentials: "include"
-      });
+      const res = await apiRequest("POST", "/api/register", userData);
       
       if (!res.ok) {
         const errorData = await res.text();
@@ -167,10 +155,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   // Handle logout
   const logoutMutation = useMutation({
     mutationFn: async () => {
-      const res = await fetch("/api/logout", {
-        method: "POST",
-        credentials: "include"
-      });
+      const res = await apiRequest("POST", "/api/logout");
       
       if (!res.ok) {
         const errorData = await res.text();
@@ -202,12 +187,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   // Handle role update (audience -> creator)
   const updateRoleMutation = useMutation({
     mutationFn: async () => {
-      const res = await fetch("/api/user/role", {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ userRole: "creator" }),
-        credentials: "include"
-      });
+      const res = await apiRequest("PATCH", "/api/user/role", { userRole: "creator" });
       
       if (!res.ok) {
         const errorData = await res.text();
