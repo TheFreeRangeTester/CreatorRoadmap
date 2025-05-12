@@ -30,8 +30,8 @@ try {
 // Función para manejar la autenticación de Google
 export async function handleGoogleAuth(req: Request, res: Response) {
   try {
-    // Extraer el ID token del cuerpo de la solicitud
-    const { idToken } = req.body;
+    // Extraer el ID token y rol del cuerpo de la solicitud
+    const { idToken, userRole = 'audience' } = req.body;
     
     if (!idToken) {
       return res.status(400).json({ message: "No se proporcionó un token de ID" });
@@ -69,7 +69,8 @@ export async function handleGoogleAuth(req: Request, res: Response) {
         email: email,
         profileDescription: `Google user: ${name || username}`,
         logoUrl: picture || undefined,
-        isGoogleUser: true
+        isGoogleUser: true,
+        userRole // Usamos el rol proporcionado en la solicitud
       };
       
       // Crear el usuario en nuestra base de datos
@@ -96,7 +97,8 @@ export async function handleGoogleAuth(req: Request, res: Response) {
       id: user.id,
       username: user.username,
       profileDescription: user.profileDescription,
-      logoUrl: user.logoUrl
+      logoUrl: user.logoUrl,
+      userRole: user.userRole // Incluimos el rol en la respuesta
     });
     
   } catch (error) {

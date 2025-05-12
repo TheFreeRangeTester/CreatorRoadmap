@@ -21,7 +21,8 @@ export default function GoogleSignInButton({
   redirectPath,
   onSuccess,
   variant = "secondary",
-  size = "default"
+  size = "default",
+  userRole = "audience"  // Por defecto, audiencia
 }: GoogleSignInButtonProps) {
   const { t } = useTranslation();
   const { toast } = useToast();
@@ -49,7 +50,8 @@ export default function GoogleSignInButton({
       
       // Send the token to our backend to verify and login/register
       const response = await apiRequest("POST", "/api/auth/google", {
-        idToken
+        idToken,
+        userRole // Incluimos el rol del usuario
       });
       
       if (!response.ok) {
