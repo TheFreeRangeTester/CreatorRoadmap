@@ -6,8 +6,8 @@ import {
   useQueryClient,
 } from "@tanstack/react-query";
 import { insertUserSchema, InsertUser } from "@shared/schema";
-import { apiRequest } from "../lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
+import i18n from "../i18n";
 
 // Define the structure of our user object
 type UserResponse = {
@@ -122,11 +122,18 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       // Update cache with user data
       queryClient.setQueryData(["/api/user"], userData);
       
+      // Invalidate and refetch user data to ensure it's fresh
+      queryClient.invalidateQueries({ queryKey: ["/api/user"] });
+      refetchUser();
+      
       // Show success message
       toast({
-        title: "Login successful",
-        description: `Welcome back, ${userData.username}!`,
+        title: i18n.t("auth.loginSuccess", "Login successful"),
+        description: i18n.t("auth.welcomeBack", { username: userData.username }, `Welcome back, ${userData.username}!`),
       });
+      
+      // Log login success for debugging
+      console.log("Login successful, user data:", userData);
     },
     onError: (error: Error) => {
       toast({
@@ -179,7 +186,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   // Handle logout
   const logoutMutation = useMutation({
     mutationFn: async () => {
-      const res = await apiRequest("POST", "/api/logout");
+      const res = await fetch("/api/logout", {
+        method: "POST",
+        headers: {
+          "X-Requested-With": "XMLHttpRequest"
+        },
+        credentials: "same-origin"
+      });
       
       if (!res.ok) {
         const errorData = await res.text();
@@ -211,7 +224,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   // Handle role update (audience -> creator)
   const updateRoleMutation = useMutation({
     mutationFn: async () => {
-      const res = await apiRequest("PATCH", "/api/user/role", { userRole: "creator" });
+      const res = await fetch("/api/user/role", {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          "X-Requested-With": "XMLHttpRequest"
+        },
+        body: JSON.stringify({ userRole: "creator" }),
+        credentials: "same-origin"
+      });
       
       if (!res.ok) {
         const errorData = await res.text();
