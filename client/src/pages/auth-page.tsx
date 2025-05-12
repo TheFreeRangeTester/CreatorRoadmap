@@ -36,6 +36,14 @@ export default function AuthPage() {
   useEffect(() => {
     const searchParams = new URLSearchParams(window.location.search);
     const referrer = searchParams.get('referrer');
+    const directAccess = searchParams.get('direct') === 'true';
+    
+    // Si hay un parámetro 'direct=true', es acceso directo desde la landing page
+    if (directAccess) {
+      setIsPublicProfile(false);
+      setAuthSource('/dashboard');
+      return;
+    }
     
     if (referrer) {
       setAuthSource(referrer);
@@ -53,6 +61,10 @@ export default function AuthPage() {
         setAuthSource(`/public/${pathSegments[2]}`);
         setIsPublicProfile(true);
       }
+    } else {
+      // Si no hay referrer ni match, es acceso directo desde la landing page
+      setIsPublicProfile(false);
+      setAuthSource('/dashboard');
     }
   }, [match, params, matchPublic]);
 
@@ -136,12 +148,20 @@ export default function AuthPage() {
               // For public profiles, only show Google Sign-In
               <Card>
                 <CardHeader>
-                  <CardTitle>{t('auth.loginToVote')}</CardTitle>
+                  <CardTitle>Iniciar sesión para votar</CardTitle>
                   <CardDescription>
-                    {t('auth.googleLoginDescription')}
+                    Como miembro del público, usa tu cuenta de Google para votar ideas o sugerir nuevas sin necesidad de registrarte.
                   </CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-4">
+                  <div className="mb-4 py-3 px-4 bg-yellow-50 dark:bg-yellow-900 border border-yellow-200 dark:border-yellow-800 rounded-md">
+                    <h4 className="text-sm font-medium text-yellow-800 dark:text-yellow-200 mb-1">Solo para votantes y audiencia</h4>
+                    <p className="text-xs text-yellow-700 dark:text-yellow-300">
+                      Este método de inicio de sesión es exclusivamente para audiencia que quiere votar o sugerir ideas. 
+                      Si eres creador de contenido, usa el registro con nombre de usuario y contraseña.
+                    </p>
+                  </div>
+                  
                   <GoogleSignInButton 
                     className="w-full" 
                     redirectPath={getRedirectDestination()} 
@@ -162,10 +182,15 @@ export default function AuthPage() {
                 <TabsContent value="login">
                   <Card>
                     <CardHeader>
-                      <CardTitle>{t('common.login')}</CardTitle>
+                      <CardTitle>Iniciar sesión como creador</CardTitle>
                       <CardDescription>
-                        {t('auth.loginInfo')}
+                        Accede a tu cuenta para gestionar tus ideas y ver estadísticas.
                       </CardDescription>
+                      <div className="mt-3 py-2 px-3 bg-blue-50 dark:bg-blue-900 border border-blue-200 dark:border-blue-800 rounded-md">
+                        <p className="text-xs text-blue-700 dark:text-blue-300">
+                          Esta opción es para creadores de contenido que quieren gestionar un leaderboard de ideas.
+                        </p>
+                      </div>
                     </CardHeader>
                     <CardContent>
                       <Form {...loginForm}>
@@ -238,10 +263,15 @@ export default function AuthPage() {
                 <TabsContent value="register">
                   <Card>
                     <CardHeader>
-                      <CardTitle>{t('common.register')}</CardTitle>
+                      <CardTitle>Registrarse como creador</CardTitle>
                       <CardDescription>
-                        {t('auth.registerInfo')}
+                        Crea una cuenta para gestionar tu propio leaderboard de ideas.
                       </CardDescription>
+                      <div className="mt-3 py-2 px-3 bg-green-50 dark:bg-green-900 border border-green-200 dark:border-green-800 rounded-md">
+                        <p className="text-xs text-green-700 dark:text-green-300">
+                          Crea tu cuenta de creador con nombre de usuario y contraseña. Esta cuenta te permitirá crear tu propio leaderboard de ideas y gestionar las sugerencias de tu audiencia.
+                        </p>
+                      </div>
                     </CardHeader>
                     <CardContent>
                       <Form {...registerForm}>
