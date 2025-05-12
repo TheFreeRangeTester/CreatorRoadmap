@@ -340,10 +340,10 @@ export default function LandingPage() {
               <LanguageToggle />
               <ThemeToggle />
               <div className="flex gap-2">
-                <Link href="/auth">
+                <Link href="/auth?direct=true">
                   <Button variant="outline">{t('landing.cta.login')}</Button>
                 </Link>
-                <Link href="/auth">
+                <Link href="/auth?direct=true&register=true">
                   <Button>{t('landing.cta.register')}</Button>
                 </Link>
               </div>
@@ -395,7 +395,7 @@ export default function LandingPage() {
             
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <div ref={heroButtonRef}>
-                <Link href="/auth">
+                <Link href="/auth?direct=true&register=true">
                   <Button size="lg" className="font-medium text-base bg-gradient-to-r from-primary to-blue-600 hover:from-primary/90 hover:to-blue-700 text-white">
                     {t('landing.cta.startFree')}
                     <ArrowRight className="h-4 w-4 ml-2" />
@@ -829,7 +829,7 @@ export default function LandingPage() {
               {t('landing.cta.subtitle')}
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Link href="/auth">
+              <Link href="/auth?direct=true&register=true">
                 <Button size="lg" className="font-medium text-base bg-gradient-to-r from-primary to-blue-600 hover:from-primary/90 hover:to-blue-700 text-white">
                   {t('landing.cta.startButton')}
                   <ArrowRight className="h-4 w-4 ml-2" />
