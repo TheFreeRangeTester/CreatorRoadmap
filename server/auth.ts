@@ -33,6 +33,8 @@ async function comparePasswords(supplied: string, stored: string) {
 export function setupAuth(app: Express) {
   const sessionSecret = process.env.SESSION_SECRET || "idea-leaderboard-secret";
   
+  const isProduction = process.env.NODE_ENV === "production";
+  
   const sessionSettings: session.SessionOptions = {
     secret: sessionSecret,
     resave: true,
@@ -40,13 +42,15 @@ export function setupAuth(app: Express) {
     store: storage.sessionStore,
     name: 'ideas.sid',
     cookie: {
-      secure: process.env.NODE_ENV === "production",
-      maxAge: 7 * 24 * 60 * 60 * 1000, // 1 week
+      secure: isProduction, // Solo usar secure en producción
+      maxAge: 30 * 24 * 60 * 60 * 1000, // 30 días
       httpOnly: true,
       sameSite: 'lax',
       path: '/'
     }
   };
+  
+  console.log("Session settings configured, environment:", process.env.NODE_ENV);
 
   app.set("trust proxy", 1);
   app.use(session(sessionSettings));
@@ -100,7 +104,18 @@ export function setupAuth(app: Express) {
 
       req.login(user, (err) => {
         if (err) return next(err);
-        res.status(201).json(userWithoutPassword);
+        console.log("User registered and logged in:", userWithoutPassword);
+        console.log("Session ID:", req.sessionID);
+        
+        // Guardar la sesión explícitamente para asegurar que se almacene
+        req.session.save((err) => {
+          if (err) {
+            console.error("Error saving session:", err);
+            return next(err);
+          }
+          
+          res.status(201).json(userWithoutPassword);
+        });
       });
     } catch (error) {
       if (error instanceof ZodError) {
@@ -128,7 +143,24 @@ export function setupAuth(app: Express) {
         
         // Strip password from response
         const { password, ...userWithoutPassword } = user;
-        return res.status(200).json(userWithoutPassword);
+        
+        console.log("User logged in:", userWithoutPassword);
+        console.log("Session ID:", req.sessionID);
+        
+        // Guardar la sesión explícitamente para asegurar que se almacene
+        req.session.save((err) => {
+          if (err) {
+            console.error("Error saving session:", err);
+            return next(err);
+          }
+          
+          // Enviar una respuesta con el usuario
+          return res.status(200).json({
+            ...userWithoutPassword,
+            authenticated: true,
+            sessionId: req.sessionID
+          });
+        });
       });
     })(req, res, next);
   });
@@ -141,13 +173,27 @@ export function setupAuth(app: Express) {
   });
 
   app.get("/api/user", (req, res) => {
+    console.log("GET /api/user - Auth check:", req.isAuthenticated());
+    console.log("Session ID:", req.sessionID);
+    console.log("Session data:", req.session);
+    console.log("Cookies:", req.headers.cookie);
+    
     if (!req.isAuthenticated()) {
-      return res.sendStatus(401);
+      console.log("User not authenticated");
+      return res.status(401).json({ 
+        message: "Not authenticated",
+        authenticated: false 
+      });
     }
+    
+    console.log("User is authenticated:", req.user?.username);
     
     // Strip password from response
     const { password, ...userWithoutPassword } = req.user as SelectUser;
-    res.json(userWithoutPassword);
+    res.json({
+      ...userWithoutPassword,
+      authenticated: true
+    });
   });
   
   app.patch("/api/user/profile", async (req, res, next) => {
