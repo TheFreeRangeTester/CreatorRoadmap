@@ -30,75 +30,49 @@ export default function GoogleSignInButton({
     try {
       setIsLoading(true);
       
-      // Sign in with Google using Firebase
-      const googleUser = await signInWithGoogle();
-      
-      if (!googleUser) {
-        // Este mensaje indica que debes añadir el dominio de Replit a tu proyecto de Firebase
-        toast({
-          title: t('auth.googleSignInError'),
-          description: "Error de dominio no autorizado. Por favor, añade el dominio actual a la lista de dominios autorizados en la consola de Firebase (Authentication > Settings > Authorized domains).",
-          variant: "destructive",
-        });
-        return;
-      }
-      
-      // Get the ID token from the Google user
-      const idToken = await googleUser.getIdToken();
-      
-      // Send the token to our backend to verify and login/register
-      const response = await apiRequest("POST", "/api/auth/google", {
-        idToken
-      });
-      
-      if (!response.ok) {
-        const errorText = await response.text();
-        throw new Error(`Error al autenticar con el servidor: ${errorText}`);
-      }
-      
-      // Parse the user data returned from our backend
-      const userData = await response.json();
-      
-      toast({
-        title: t('auth.googleSignInSuccess'),
-        description: t('auth.googleSignInSuccessDesc'),
-        variant: "default",
-        className: "bg-gradient-to-r from-green-50 to-emerald-50 border-green-200 dark:from-green-900/30 dark:to-emerald-900/30 dark:border-green-800",
-      });
-      
-      // Reload to get the user session
+      // Add redirectTo parameter for after auth flow
+      let redirectParam = '';
       if (redirectPath) {
-        window.location.href = redirectPath;
-      } else if (onSuccess) {
-        onSuccess();
-      } else {
-        // Trigger a reload to refresh the auth state
-        window.location.reload();
+        // Store redirect URL in query param for after auth process
+        redirectParam = `redirectTo=${encodeURIComponent(redirectPath)}`;
       }
       
+      // Sign in with Google using Firebase
+      try {
+        // This will handle both popup and redirect scenarios
+        await signInWithGoogle();
+        // If using redirect, this function won't return as the page will reload
+        // If using popup, the FirebaseAuthHandler will process the result
+      } catch (error) {
+        // Only handle Firebase errors here - the actual auth will be handled by FirebaseAuthHandler
+        const firebaseError = error as any;
+        
+        if (firebaseError.code === 'auth/unauthorized-domain') {
+          // Get current domain for error message
+          const currentDomain = window.location.hostname;
+          
+          toast({
+            title: t('auth.unauthorizedDomain'),
+            description: `${t('auth.unauthorizedDomainDesc')} Agrega "${currentDomain}" a los dominios autorizados en Firebase Console > Authentication > Settings > Authorized domains.`,
+            variant: "destructive",
+          });
+          
+          console.error(`Firebase Auth Error: Domain "${currentDomain}" is not authorized. Please add it to the list of authorized domains in Firebase console.`);
+        } else if (firebaseError.code !== 'auth/popup-closed-by-user' && 
+                  firebaseError.code !== 'auth/cancelled-popup-request') {
+          // Don't show errors for user cancellation
+          toast({
+            title: t('auth.googleSignInError'),
+            description: (error as Error).message || t('auth.googleSignInErrorDesc'),
+            variant: "destructive",
+          });
+        }
+        
+        throw error; // Rethrow to handle in the catch block
+      }
     } catch (error) {
-      console.error("Error during Google sign in:", error);
-      
-      // Check if it's a firebase error
-      const firebaseError = error as any;
-      if (firebaseError.code === 'auth/unauthorized-domain') {
-        // Get current domain
-        const currentDomain = window.location.hostname;
-        
-        toast({
-          title: t('auth.unauthorizedDomain'),
-          description: `${t('auth.unauthorizedDomainDesc')} Agrega "${currentDomain}" a los dominios autorizados en Firebase Console > Authentication > Settings > Authorized domains.`,
-          variant: "destructive",
-        });
-        
-        console.error(`Firebase Auth Error: Domain "${currentDomain}" is not authorized. Please add it to the list of authorized domains in Firebase console.`);
-      } else {
-        toast({
-          title: t('auth.googleSignInError'),
-          description: (error as Error).message || t('auth.googleSignInErrorDesc'),
-          variant: "destructive",
-        });
-      }
+      console.error("Error during Google sign in flow:", error);
+      // Error already handled in inner try/catch
     } finally {
       setIsLoading(false);
     }

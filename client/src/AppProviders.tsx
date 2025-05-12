@@ -17,6 +17,7 @@ export default function AppProviders({ children }: AppProvidersProps) {
       <QueryClientProvider client={queryClient}>
         <AuthProvider>
           <AchievementsProvider>
+            <FirebaseAuthHandler />
             {children}
             <Toaster />
           </AchievementsProvider>

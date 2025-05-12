@@ -12,7 +12,6 @@ export function FirebaseAuthHandler() {
   const [isProcessing, setIsProcessing] = useState(false);
   
   // Extract URL parameters to handle redirects after auth
-  const [location] = useLocation();
   const searchParams = new URLSearchParams(window.location.search);
   const redirectTo = searchParams.get("redirectTo") || null;
 
