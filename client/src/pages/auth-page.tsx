@@ -2,7 +2,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { useLocation, useRoute } from "wouter";
-import { CloudLightning } from "lucide-react";
+import { CloudLightning, HelpCircle } from "lucide-react";
 import { insertUserSchema } from "@shared/schema";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -16,6 +16,7 @@ import { useTranslation } from "react-i18next";
 import { useEffect, useState } from "react";
 import GoogleSignInButton from "@/components/google-sign-in-button";
 import { Separator } from "@/components/ui/separator";
+import FirebaseSetupGuide from "@/components/firebase-setup-guide";
 
 // Extend schema for validation
 const formSchema = insertUserSchema.extend({
@@ -29,6 +30,7 @@ export default function AuthPage() {
   const { t } = useTranslation();
   const [authSource, setAuthSource] = useState<string | null>(null);
   const [isPublicProfile, setIsPublicProfile] = useState<boolean>(false);
+  const [isSetupGuideOpen, setIsSetupGuideOpen] = useState<boolean>(false);
   const [match, params] = useRoute("/:username");
   const [matchPublic] = useRoute("/public/:token");
   
@@ -142,6 +144,9 @@ export default function AuthPage() {
               {t('auth.loginInfo')}
             </p>
           </div>
+          
+          {/* Firebase Setup Guide */}
+          <FirebaseSetupGuide open={isSetupGuideOpen} onOpenChange={setIsSetupGuideOpen} />
 
           <div className="mt-8">
             {isPublicProfile ? (
@@ -161,6 +166,21 @@ export default function AuthPage() {
                       navigate(getRedirectDestination());
                     }}
                   />
+                  
+                  <div className="mt-4 pt-4 border-t border-gray-200 dark:border-gray-800">
+                    <p className="text-xs text-gray-600 dark:text-gray-400 mb-2">
+                      ¿Problemas con el inicio de sesión de Google?
+                    </p>
+                    <Button 
+                      variant="outline" 
+                      size="sm" 
+                      className="w-full flex items-center justify-center gap-2"
+                      onClick={() => setIsSetupGuideOpen(true)}
+                    >
+                      <HelpCircle className="h-4 w-4" />
+                      Guía de configuración de Firebase
+                    </Button>
+                  </div>
                 </CardContent>
               </Card>
             ) : (
