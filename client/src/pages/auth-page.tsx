@@ -149,50 +149,11 @@ export default function AuthPage() {
           <FirebaseSetupGuide open={isSetupGuideOpen} onOpenChange={setIsSetupGuideOpen} />
 
           <div className="mt-8">
-            {isPublicProfile ? (
-              // For public profiles, only show Google Sign-In
-              <Card>
-                <CardHeader>
-                  <CardTitle>Iniciar sesión para votar</CardTitle>
-                  <CardDescription>
-                    Como miembro del público, usa tu cuenta de Google para votar ideas o sugerir nuevas sin necesidad de registrarte.
-                  </CardDescription>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  <div className="mb-4 py-3 px-4 bg-yellow-50 dark:bg-yellow-900 border border-yellow-200 dark:border-yellow-800 rounded-md">
-                    <h4 className="text-sm font-medium text-yellow-800 dark:text-yellow-200 mb-1">Solo para votantes y audiencia</h4>
-                    <p className="text-xs text-yellow-700 dark:text-yellow-300">
-                      Este método de inicio de sesión es exclusivamente para audiencia que quiere votar o sugerir ideas. 
-                      Si eres creador de contenido, usa el registro con nombre de usuario y contraseña.
-                    </p>
-                    <div className="mt-2 pt-2 border-t border-yellow-200 dark:border-yellow-800">
-                      <Button 
-                        variant="ghost" 
-                        size="sm" 
-                        className="w-full flex items-center justify-center gap-1 text-xs"
-                        onClick={() => setIsSetupGuideOpen(true)}
-                      >
-                        <HelpCircle className="h-3 w-3" />
-                        ¿Problemas con el login? Ver guía de configuración
-                      </Button>
-                    </div>
-                  </div>
-                  
-                  <GoogleSignInButton 
-                    className="w-full" 
-                    redirectPath={getRedirectDestination()} 
-                    onSuccess={() => {
-                      navigate(getRedirectDestination());
-                    }}
-                  />
-                </CardContent>
-              </Card>
-            ) : (
-              // For landing page, show both login and register options
+            {/* Always show login/register options with tabs */}
               <Tabs defaultValue="login" className="w-full">
                 <TabsList className="grid w-full grid-cols-2">
-                  <TabsTrigger value="login">{t('common.login')}</TabsTrigger>
-                  <TabsTrigger value="register">{t('common.register')}</TabsTrigger>
+                  <TabsTrigger value="login">Iniciar sesión</TabsTrigger>
+                  <TabsTrigger value="register">Registrarse</TabsTrigger>
                 </TabsList>
                 
                 <TabsContent value="login">
@@ -357,7 +318,7 @@ export default function AuthPage() {
                   </Card>
                 </TabsContent>
               </Tabs>
-            )}
+            
           </div>
         </div>
       </div>
