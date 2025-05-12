@@ -2,7 +2,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { useLocation, useRoute } from "wouter";
-import { CloudLightning, HelpCircle } from "lucide-react";
+import { CloudLightning } from "lucide-react";
 import { insertUserSchema } from "@shared/schema";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -14,9 +14,6 @@ import { ThemeToggle } from "@/components/theme-toggle";
 import { LanguageToggle } from "@/components/language-toggle";
 import { useTranslation } from "react-i18next";
 import { useEffect, useState } from "react";
-import GoogleSignInButton from "@/components/google-sign-in-button";
-import { Separator } from "@/components/ui/separator";
-import FirebaseSetupGuide from "@/components/firebase-setup-guide";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 import { FormDescription } from "@/components/ui/form";
@@ -25,186 +22,151 @@ import { FormDescription } from "@/components/ui/form";
 const formSchema = insertUserSchema.extend({
   username: z.string().min(1, { message: "Username is required" }),
   password: z.string().min(6, { message: "Password must be at least 6 characters" }),
+  email: z.string().email({ message: "Please enter a valid email" }).optional(),
+  userRole: z.enum(["creator", "audience"]),
 });
 
 export default function AuthPage() {
+  const { t } = useTranslation();
   const { user, loginMutation, registerMutation } = useAuth();
   const [, navigate] = useLocation();
-  const { t } = useTranslation();
-  const [authSource, setAuthSource] = useState<string | null>(null);
-  const [isPublicProfile, setIsPublicProfile] = useState<boolean>(false);
-  const [isSetupGuideOpen, setIsSetupGuideOpen] = useState<boolean>(false);
-  const [activeTab, setActiveTab] = useState<string>("login");
-  const [match, params] = useRoute("/:username");
-  const [matchPublic] = useRoute("/public/:token");
-  
-  // Determine the referrer source on component mount
+  const [isPublicProfile, setIsPublicProfile] = useState(false);
+  const [, params] = useRoute('/creators/:username?');
+  const [voteIntent, setVoteIntent] = useState<{ideaId: number, redirect: string} | null>(null);
+
+  // Define forms
+  const loginForm = useForm({
+    resolver: zodResolver(formSchema.pick({ username: true, password: true })),
+    defaultValues: {
+      username: "",
+      password: "",
+    },
+  });
+
+  const registerForm = useForm({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      username: "",
+      password: "",
+      email: "",
+      userRole: isPublicProfile ? "audience" : "creator",
+    },
+  });
+
+  // Check if user was redirected from a public profile
   useEffect(() => {
-    const searchParams = new URLSearchParams(window.location.search);
-    const referrer = searchParams.get('referrer');
-    const directAccess = searchParams.get('direct') === 'true';
-    const register = searchParams.get('register') === 'true';
-    
-    // Set active tab based on URL parameter
-    if (register) {
-      setActiveTab("register");
-    }
-    
-    // Si hay un parámetro 'direct=true', es acceso directo desde la landing page
-    if (directAccess) {
-      setIsPublicProfile(false);
-      setAuthSource('/dashboard');
-      return;
-    }
-    
-    if (referrer) {
-      setAuthSource(referrer);
-      // Check if coming from a creator or public profile
-      setIsPublicProfile(!!referrer.match(/^\/([\w-]+|public\/[\w-]+)/));
-    } else if (match && params?.username) {
-      // Coming from a creator profile page
-      setAuthSource(`/${params.username}`);
+    if (params?.username) {
       setIsPublicProfile(true);
-    } else if (matchPublic) {
-      // Coming from a public token page
-      const path = window.location.pathname;
-      const pathSegments = path.split('/');
-      if (pathSegments.length >= 2) {
-        setAuthSource(`/public/${pathSegments[2]}`);
-        setIsPublicProfile(true);
-      }
-    } else {
-      // Si no hay referrer ni match, es acceso directo desde la landing page
-      setIsPublicProfile(false);
-      setAuthSource('/dashboard');
-    }
-  }, [match, params, matchPublic]);
-
-  // Login form
-  const loginForm = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
-    defaultValues: {
-      username: "",
-      password: "",
-    },
-  });
-
-  // Register form
-  const registerForm = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
-    defaultValues: {
-      username: "",
-      password: "",
-      userRole: isPublicProfile ? "audience" : "creator", // Si viene del perfil público, rol audiencia por defecto
-    },
-  });
-
-  // Get redirect destination based on auth source and user role
-  const getRedirectDestination = (userRole?: string) => {
-    // Si hay un authSource (viene de un perfil o link público), prioritario
-    if (authSource) {
-      return authSource;
+      registerForm.setValue('userRole', 'audience');
     }
     
-    // Para acceso directo, dirigir según el rol
-    if (userRole === "audience") {
-      // Los miembros de audiencia van a la landing page
-      return "/";
-    } else {
-      // Los creadores van al dashboard
-      return "/dashboard";
+    // Check if there's a vote intent in localStorage
+    const storedVoteIntent = localStorage.getItem('voteIntent');
+    if (storedVoteIntent) {
+      const parsedIntent = JSON.parse(storedVoteIntent);
+      setVoteIntent(parsedIntent);
     }
-  };
+  }, [params]);
 
-  // Login form submission
+  // Redirect if already logged in
+  useEffect(() => {
+    if (user) {
+      // Handle vote intent if exists
+      if (voteIntent) {
+        const { ideaId, redirect } = voteIntent;
+        // Process vote with the server
+        fetch(`/api${redirect}/ideas/${ideaId}/vote`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+        })
+          .then(res => {
+            if (res.ok) {
+              // Clear vote intent from localStorage
+              localStorage.removeItem('voteIntent');
+              // Redirect back to the original page
+              navigate(redirect);
+            }
+          })
+          .catch(err => {
+            console.error("Error processing vote:", err);
+          });
+      } else {
+        // Standard redirect
+        navigate(getRedirectDestination());
+      }
+    }
+  }, [user, voteIntent]);
+
+  // Handle form submission
   function onLoginSubmit(values: z.infer<typeof formSchema>) {
-    loginMutation.mutate(values, {
-      onSuccess: (user) => {
-        const destination = getRedirectDestination(user.userRole);
-        navigate(destination);
-      },
-    });
+    loginMutation.mutate(values);
   }
 
-  // Register form submission
   function onRegisterSubmit(values: z.infer<typeof formSchema>) {
-    registerMutation.mutate(values, {
-      onSuccess: (user) => {
-        const destination = getRedirectDestination(user.userRole);
-        navigate(destination);
-      },
-    });
+    registerMutation.mutate(values);
   }
-  
-  // If user is already logged in, redirect appropriately
-  if (user) {
-    const destination = getRedirectDestination();
-    // Using setTimeout to avoid React warning about state updates during render
-    setTimeout(() => navigate(destination), 0);
-    // Render a loading state while redirect is happening
-    return <div className="flex justify-center items-center min-h-screen">Redirecting...</div>;
+
+  // Determine redirect destination
+  function getRedirectDestination() {
+    // Check for stored redirect in local storage
+    const redirectTo = localStorage.getItem('redirectAfterAuth');
+    if (redirectTo) {
+      localStorage.removeItem('redirectAfterAuth');
+      return redirectTo;
+    }
+    
+    // Default redirects based on role
+    if (user?.userRole === 'creator') {
+      return '/dashboard';
+    } else if (params?.username) {
+      return `/creators/${params.username}`;
+    }
+    return '/';
   }
 
   return (
-    <div className="flex min-h-screen bg-gray-50 dark:bg-gray-950">
-      <div className="flex flex-1 flex-col justify-center py-12 px-4 sm:px-6 lg:flex-none lg:px-20 xl:px-24">
-        <div className="mx-auto w-full max-w-sm lg:w-96">
-          <div className="flex flex-col items-center">
-            <div className="flex justify-end w-full mb-4 gap-2">
-              <LanguageToggle />
-              <ThemeToggle />
+    <div className="min-h-screen flex flex-col">
+      <header className="border-b">
+        <div className="container flex items-center justify-between h-14 px-4">
+          <div className="flex items-center gap-4">
+            <CloudLightning className="h-6 w-6" />
+            <span className="text-lg font-semibold">Fanlist</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <LanguageToggle />
+            <ThemeToggle />
+          </div>
+        </div>
+      </header>
+
+      <main className="flex-1 flex items-center justify-center p-6">
+        <div className="mx-auto grid w-full max-w-[1200px] gap-6 md:grid-cols-2 lg:gap-12">
+          <div className="flex flex-col justify-center space-y-4">
+            <div className="space-y-2 text-center md:text-left">
+              <h1 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl">{t('auth.hero.title')}</h1>
+              <p className="mx-auto max-w-[600px] md:mx-0 text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
+                {t('auth.hero.subtitle')}
+              </p>
             </div>
-            <CloudLightning className="h-10 w-10 text-primary" />
-            <h2 className="mt-6 text-3xl font-bold tracking-tight text-gray-900 dark:text-white">
-              {t('auth.welcome')}
-            </h2>
-            <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
-              {t('auth.loginInfo')}
-            </p>
           </div>
           
-          {/* Firebase Setup Guide Dialog */}
-          <FirebaseSetupGuide open={isSetupGuideOpen} onOpenChange={setIsSetupGuideOpen} />
-
-          <div className="mt-8">
-            {/* Always show login/register options with tabs */}
-              <Tabs defaultValue={activeTab} value={activeTab} onValueChange={setActiveTab} className="w-full">
+          <div className="mx-auto w-full max-w-md">
+            <div className="flex justify-end w-full">
+              <Tabs defaultValue="login" className="w-full">
                 <TabsList className="grid w-full grid-cols-2">
-                  <TabsTrigger value="login">Iniciar sesión</TabsTrigger>
-                  <TabsTrigger value="register">Registrarse</TabsTrigger>
+                  <TabsTrigger value="login">{t('auth.login')}</TabsTrigger>
+                  <TabsTrigger value="register">{t('auth.register')}</TabsTrigger>
                 </TabsList>
                 
                 <TabsContent value="login">
                   <Card>
                     <CardHeader>
-                      <CardTitle>
-                        {isPublicProfile 
-                          ? "Iniciar sesión para votar" 
-                          : "Iniciar sesión como creador"}
-                      </CardTitle>
-                      <CardDescription>
-                        {isPublicProfile 
-                          ? "Accede a tu cuenta para votar ideas y enviar sugerencias."
-                          : "Accede a tu cuenta para gestionar tus ideas y ver estadísticas."}
-                      </CardDescription>
-                      <div className={`mt-3 py-2 px-3 ${isPublicProfile 
-                        ? "bg-green-50 dark:bg-green-900 border border-green-200 dark:border-green-800" 
-                        : "bg-blue-50 dark:bg-blue-900 border border-blue-200 dark:border-blue-800"} rounded-md`}>
-                        <p className={`text-xs ${isPublicProfile 
-                          ? "text-green-700 dark:text-green-300" 
-                          : "text-blue-700 dark:text-blue-300"}`}>
-                          {isPublicProfile 
-                            ? "Accede con tu cuenta para votar ideas y enviar sugerencias a este creador."
-                            : "Esta opción es para creadores de contenido que quieren gestionar un leaderboard de ideas."}
-                        </p>
-                      </div>
+                      <CardTitle>{t('auth.loginTitle')}</CardTitle>
+                      <CardDescription>{t('auth.loginSubtitle')}</CardDescription>
                     </CardHeader>
                     <CardContent>
                       <Form {...loginForm}>
-                        <form
-                          onSubmit={loginForm.handleSubmit(onLoginSubmit)}
-                          className="space-y-4"
-                        >
+                        <form onSubmit={loginForm.handleSubmit(onLoginSubmit)} className="space-y-4">
                           <FormField
                             control={loginForm.control}
                             name="username"
@@ -242,25 +204,6 @@ export default function AuthPage() {
                           >
                             {loginMutation.isPending ? t('auth.loginCta') + "..." : t('auth.loginCta')}
                           </Button>
-                          
-                          <div className="relative my-4">
-                            <div className="absolute inset-0 flex items-center">
-                              <Separator className="w-full" />
-                            </div>
-                            <div className="relative flex justify-center text-xs uppercase">
-                              <span className="bg-background px-2 text-muted-foreground">
-                                {t('auth.orContinueWith')}
-                              </span>
-                            </div>
-                          </div>
-                          
-                          <GoogleSignInButton 
-                            className="w-full" 
-                            redirectPath={getRedirectDestination()} 
-                            onSuccess={() => {
-                              navigate(getRedirectDestination());
-                            }}
-                          />
                         </form>
                       </Form>
                     </CardContent>
@@ -272,30 +215,25 @@ export default function AuthPage() {
                     <CardHeader>
                       <CardTitle>
                         {isPublicProfile 
-                          ? "Registrarse para participar" 
-                          : "Registrarse como creador"}
+                          ? t('auth.registerAudienceTitle')
+                          : t('auth.registerCreatorTitle')}
                       </CardTitle>
                       <CardDescription>
                         {isPublicProfile 
-                          ? "Crea una cuenta para votar ideas y enviar sugerencias a tus creadores favoritos."
-                          : "Crea una cuenta para gestionar tu propio leaderboard de ideas."}
+                          ? t('auth.registerAudienceSubtitle')
+                          : t('auth.registerCreatorSubtitle')}
                       </CardDescription>
-                      <div className={`mt-3 py-2 px-3 ${isPublicProfile 
-                        ? "bg-green-50 dark:bg-green-900 border border-green-200 dark:border-green-800" 
-                        : "bg-green-50 dark:bg-green-900 border border-green-200 dark:border-green-800"} rounded-md`}>
+                      <div className={`mt-3 py-2 px-3 bg-green-50 dark:bg-green-900 border border-green-200 dark:border-green-800 rounded-md`}>
                         <p className="text-xs text-green-700 dark:text-green-300">
                           {isPublicProfile 
-                            ? "Al registrarte como audiencia, podrás votar ideas y sugerir contenido a tus creadores favoritos."
-                            : "Crea tu cuenta de creador con nombre de usuario y contraseña. Esta cuenta te permitirá crear tu propio leaderboard de ideas y gestionar las sugerencias de tu audiencia."}
+                            ? t('auth.registerAudienceDescription')
+                            : t('auth.registerCreatorDescription')}
                         </p>
                       </div>
                     </CardHeader>
                     <CardContent>
                       <Form {...registerForm}>
-                        <form
-                          onSubmit={registerForm.handleSubmit(onRegisterSubmit)}
-                          className="space-y-4"
-                        >
+                        <form onSubmit={registerForm.handleSubmit(onRegisterSubmit)} className="space-y-4">
                           <FormField
                             control={registerForm.control}
                             name="username"
@@ -311,16 +249,28 @@ export default function AuthPage() {
                           />
                           <FormField
                             control={registerForm.control}
+                            name="email"
+                            render={({ field }) => (
+                              <FormItem>
+                                <FormLabel>{t('common.email')}</FormLabel>
+                                <FormControl>
+                                  <Input type="email" placeholder={t('common.email')} {...field} />
+                                </FormControl>
+                                <FormDescription>
+                                  {t('auth.emailOptional')}
+                                </FormDescription>
+                                <FormMessage />
+                              </FormItem>
+                            )}
+                          />
+                          <FormField
+                            control={registerForm.control}
                             name="password"
                             render={({ field }) => (
                               <FormItem>
                                 <FormLabel>{t('common.password')}</FormLabel>
                                 <FormControl>
-                                  <Input
-                                    type="password"
-                                    placeholder="******"
-                                    {...field}
-                                  />
+                                  <Input type="password" placeholder="******" {...field} />
                                 </FormControl>
                                 <FormMessage />
                               </FormItem>
@@ -331,27 +281,56 @@ export default function AuthPage() {
                             control={registerForm.control}
                             name="userRole"
                             render={({ field }) => (
-                              <FormItem className="space-y-3">
-                                <FormLabel>Tipo de cuenta</FormLabel>
+                              <FormItem>
+                                <FormLabel>{t('auth.selectRole')}</FormLabel>
                                 <FormControl>
                                   <RadioGroup
                                     onValueChange={field.onChange}
                                     defaultValue={field.value}
-                                    className="flex flex-col space-y-1"
+                                    value={field.value}
+                                    className="grid grid-cols-2 gap-4"
                                   >
-                                    <div className="flex items-center space-x-2">
-                                      <RadioGroupItem value="creator" id="creator" />
-                                      <Label htmlFor="creator">Creador de contenido</Label>
+                                    <div>
+                                      <RadioGroupItem
+                                        value="creator"
+                                        id="creator"
+                                        className="peer sr-only"
+                                        disabled={isPublicProfile}
+                                      />
+                                      <Label
+                                        htmlFor="creator"
+                                        className={`flex flex-col items-center justify-between rounded-md border-2 border-muted bg-transparent p-4 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary ${
+                                          isPublicProfile ? "opacity-50 cursor-not-allowed" : ""
+                                        }`}
+                                      >
+                                        <div className="mb-3 text-center font-semibold">
+                                          {t('auth.creatorRole')}
+                                        </div>
+                                        <div className="text-xs text-center text-muted-foreground">
+                                          {t('auth.creatorRoleDescription')}
+                                        </div>
+                                      </Label>
                                     </div>
-                                    <div className="flex items-center space-x-2">
-                                      <RadioGroupItem value="audience" id="audience" />
-                                      <Label htmlFor="audience">Miembro de audiencia</Label>
+                                    <div>
+                                      <RadioGroupItem
+                                        value="audience"
+                                        id="audience"
+                                        className="peer sr-only"
+                                      />
+                                      <Label
+                                        htmlFor="audience"
+                                        className="flex flex-col items-center justify-between rounded-md border-2 border-muted bg-transparent p-4 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary"
+                                      >
+                                        <div className="mb-3 text-center font-semibold">
+                                          {t('auth.audienceRole')}
+                                        </div>
+                                        <div className="text-xs text-center text-muted-foreground">
+                                          {t('auth.audienceRoleDescription')}
+                                        </div>
+                                      </Label>
                                     </div>
                                   </RadioGroup>
                                 </FormControl>
-                                <FormDescription>
-                                  Los creadores pueden gestionar ideas y su perfil. La audiencia puede votar y sugerir.
-                                </FormDescription>
                                 <FormMessage />
                               </FormItem>
                             )}
@@ -364,25 +343,6 @@ export default function AuthPage() {
                           >
                             {registerMutation.isPending ? t('auth.registerCta') + "..." : t('auth.registerCta')}
                           </Button>
-                          
-                          <div className="relative my-4">
-                            <div className="absolute inset-0 flex items-center">
-                              <Separator className="w-full" />
-                            </div>
-                            <div className="relative flex justify-center text-xs uppercase">
-                              <span className="bg-background px-2 text-muted-foreground">
-                                {t('auth.orContinueWith')}
-                              </span>
-                            </div>
-                          </div>
-                          
-                          <GoogleSignInButton 
-                            className="w-full" 
-                            redirectPath={getRedirectDestination()} 
-                            onSuccess={() => {
-                              navigate(getRedirectDestination());
-                            }}
-                          />
                         </form>
                       </Form>
                     </CardContent>
@@ -391,47 +351,9 @@ export default function AuthPage() {
               </Tabs>
             
           </div>
-        </div>
-      </div>
-      
-      <div className="relative hidden w-0 flex-1 lg:block">
-        <div className="absolute inset-0 h-full w-full bg-gradient-to-r from-primary to-primary-700">
-          <div className="flex flex-col justify-center h-full px-12 text-white">
-            <h1 className="text-4xl font-bold mb-4">
-              Share your ideas with the world
-            </h1>
-            <p className="text-lg opacity-90 mb-6">
-              Create, vote, and track the most popular ideas in your community. See which ideas rise to the top and help shape the future.
-            </p>
-            <ul className="space-y-3 text-lg">
-              <li className="flex items-center">
-                <svg className="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
-                </svg>
-                Submit creative ideas
-              </li>
-              <li className="flex items-center">
-                <svg className="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
-                </svg>
-                Vote for your favorites
-              </li>
-              <li className="flex items-center">
-                <svg className="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
-                </svg>
-                Track changes in position
-              </li>
-              <li className="flex items-center">
-                <svg className="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
-                </svg>
-                Build a community around ideas
-              </li>
-            </ul>
           </div>
         </div>
-      </div>
+      </main>
     </div>
   );
 }
