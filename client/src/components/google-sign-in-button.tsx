@@ -51,13 +51,34 @@ export default function GoogleSignInButton({
           // Get current domain for error message
           const currentDomain = window.location.hostname;
           
+          // Guardar el error en sessionStorage para mostrar modal informativo
+          sessionStorage.setItem("firebase_domain_error", "true");
+          
           toast({
             title: t('auth.unauthorizedDomain'),
-            description: `${t('auth.unauthorizedDomainDesc')} Agrega "${currentDomain}" a los dominios autorizados en Firebase Console > Authentication > Settings > Authorized domains.`,
+            description: `${t('auth.unauthorizedDomainDesc')} Es necesario agregar "${currentDomain}" a los dominios autorizados en Firebase Console > Authentication > Settings > Authorized domains.`,
             variant: "destructive",
+            duration: 10000, // Mostrar por más tiempo para que el usuario pueda leer
           });
           
           console.error(`Firebase Auth Error: Domain "${currentDomain}" is not authorized. Please add it to the list of authorized domains in Firebase console.`);
+          
+          // Mostrar un mensaje adicional en la consola para desarrolladores
+          console.log(`
+=====================================================================
+FIREBASE AUTH ERROR: UNAUTHORIZED DOMAIN
+=====================================================================
+Para solucionar este problema:
+
+1. Ve a la consola de Firebase: https://console.firebase.google.com/
+2. Selecciona tu proyecto
+3. Ve a Authentication > Settings > Authorized domains
+4. Agrega el siguiente dominio: "${currentDomain}"
+
+El error ocurre porque Firebase requiere autorizar explícitamente 
+todos los dominios desde los que se realizan autenticaciones.
+=====================================================================
+          `);
         } else if (firebaseError.code !== 'auth/popup-closed-by-user' && 
                   firebaseError.code !== 'auth/cancelled-popup-request') {
           // Don't show errors for user cancellation

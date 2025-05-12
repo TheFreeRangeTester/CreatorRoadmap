@@ -9,6 +9,7 @@ import CreatorQAProfile from "@/pages/creator-qa-profile";
 import { ProtectedRoute } from "./lib/protected-route";
 import { ThemeToggle } from "./components/theme-toggle";
 import { LanguageToggle } from "./components/language-toggle";
+import FirebaseDomainErrorModal from "@/components/firebase-domain-error-modal";
 // Importación directa sin usar alias @
 import CreatorPublicPage from "./pages/creator-public-page";
 
@@ -20,6 +21,9 @@ function App() {
         <LanguageToggle />
         <ThemeToggle />
       </div>
+      
+      {/* Modal de error de dominio en Firebase */}
+      <FirebaseDomainErrorModal />
       
       {/* Router principal */}
       <Switch>
