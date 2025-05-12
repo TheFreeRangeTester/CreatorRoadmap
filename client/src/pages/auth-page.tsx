@@ -256,13 +256,23 @@ export default function AuthPage() {
                 <TabsContent value="register">
                   <Card>
                     <CardHeader>
-                      <CardTitle>Registrarse como creador</CardTitle>
+                      <CardTitle>
+                        {isPublicProfile 
+                          ? "Registrarse para participar" 
+                          : "Registrarse como creador"}
+                      </CardTitle>
                       <CardDescription>
-                        Crea una cuenta para gestionar tu propio leaderboard de ideas.
+                        {isPublicProfile 
+                          ? "Crea una cuenta para votar ideas y enviar sugerencias a tus creadores favoritos."
+                          : "Crea una cuenta para gestionar tu propio leaderboard de ideas."}
                       </CardDescription>
-                      <div className="mt-3 py-2 px-3 bg-green-50 dark:bg-green-900 border border-green-200 dark:border-green-800 rounded-md">
+                      <div className={`mt-3 py-2 px-3 ${isPublicProfile 
+                        ? "bg-green-50 dark:bg-green-900 border border-green-200 dark:border-green-800" 
+                        : "bg-green-50 dark:bg-green-900 border border-green-200 dark:border-green-800"} rounded-md`}>
                         <p className="text-xs text-green-700 dark:text-green-300">
-                          Crea tu cuenta de creador con nombre de usuario y contraseña. Esta cuenta te permitirá crear tu propio leaderboard de ideas y gestionar las sugerencias de tu audiencia.
+                          {isPublicProfile 
+                            ? "Al registrarte como audiencia, podrás votar ideas y sugerir contenido a tus creadores favoritos."
+                            : "Crea tu cuenta de creador con nombre de usuario y contraseña. Esta cuenta te permitirá crear tu propio leaderboard de ideas y gestionar las sugerencias de tu audiencia."}
                         </p>
                       </div>
                     </CardHeader>
