@@ -17,6 +17,7 @@ import { useEffect, useState } from "react";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 import { FormDescription } from "@/components/ui/form";
+import { Separator } from "@/components/ui/separator";
 
 // Extend schema for validation
 const formSchema = insertUserSchema.extend({
@@ -98,7 +99,7 @@ export default function AuthPage() {
   }, [user, voteIntent]);
 
   // Handle form submission
-  function onLoginSubmit(values: z.infer<typeof formSchema>) {
+  function onLoginSubmit(values: { username: string; password: string }) {
     loginMutation.mutate(values);
   }
 
