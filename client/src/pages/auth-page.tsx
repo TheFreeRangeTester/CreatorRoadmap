@@ -24,7 +24,7 @@ const formSchema = insertUserSchema.extend({
   username: z.string().min(1, { message: "Username is required" }),
   password: z.string().min(6, { message: "Password must be at least 6 characters" }),
   email: z.string().email({ message: "Please enter a valid email" }).optional(),
-  userRole: z.enum(["creator", "audience"]),
+  userRole: z.enum(["creator", "audience"] as const),
 });
 
 export default function AuthPage() {
@@ -44,13 +44,18 @@ export default function AuthPage() {
     },
   });
 
-  const registerForm = useForm({
+  const registerForm = useForm<{
+    username: string;
+    password: string;
+    email: string;
+    userRole: "audience" | "creator";
+  }>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       username: "",
       password: "",
       email: "",
-      userRole: isPublicProfile ? "audience" : "creator",
+      userRole: isPublicProfile ? "audience" as const : "creator" as const,
     },
   });
 
@@ -103,7 +108,12 @@ export default function AuthPage() {
     loginMutation.mutate(values);
   }
 
-  function onRegisterSubmit(values: z.infer<typeof formSchema>) {
+  function onRegisterSubmit(values: { 
+    username: string; 
+    password: string; 
+    email?: string;
+    userRole: "creator" | "audience";
+  }) {
     registerMutation.mutate(values);
   }
 

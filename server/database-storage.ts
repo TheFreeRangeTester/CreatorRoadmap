@@ -62,10 +62,8 @@ export class DatabaseStorage implements IStorage {
         profileBackground: profileData.profileBackground ?? currentUser.profileBackground,
         // Campos de rol
         userRole: profileData.userRole ?? currentUser.userRole,
-        // Campos de Google
-        googleId: profileData.googleId !== undefined ? profileData.googleId : currentUser.googleId,
-        email: profileData.email !== undefined ? profileData.email : currentUser.email,
-        isGoogleUser: profileData.isGoogleUser !== undefined ? profileData.isGoogleUser : currentUser.isGoogleUser
+        // Email field
+        email: profileData.email !== undefined ? profileData.email : currentUser.email
       })
       .where(eq(users.id, id))
       .returning();
