@@ -145,21 +145,40 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Create new idea
   app.post("/api/ideas", async (req: Request, res: Response) => {
     try {
+      console.log("POST /api/ideas - Request received");
+      console.log("Authentication state:", req.isAuthenticated());
+      console.log("Session ID:", req.sessionID);
+      console.log("Session:", req.session);
+      console.log("Cookies:", req.headers.cookie);
+      
       if (!req.isAuthenticated()) {
+        console.log("Authentication failed, user is not authenticated");
         return res.status(401).json({ message: "Authentication required to create ideas" });
       }
+      
+      console.log("User authenticated:", req.user);
+      
+      // Verificar el rol del usuario
+      if (req.user!.userRole !== 'creator') {
+        console.log("User is not a creator, role:", req.user!.userRole);
+        return res.status(403).json({ message: "Only creators can add ideas" });
+      }
 
+      console.log("User is a valid creator, proceeding");
       const validatedData = insertIdeaSchema.parse(req.body);
       const creatorId = req.user!.id;
 
+      console.log("Creating idea for creator:", creatorId);
       const idea = await storage.createIdea(validatedData, creatorId);
       const ideasWithPositions = await storage.getIdeasWithPositions();
       const createdIdeaWithPosition = ideasWithPositions.find(i => i.id === idea.id);
 
+      console.log("Idea created successfully:", idea.id);
       res.status(201).json(createdIdeaWithPosition);
     } catch (error) {
       if (error instanceof ZodError) {
         const validationError = fromZodError(error);
+        console.log("Validation error:", validationError.message);
         return res.status(400).json({ message: validationError.message });
       }
       console.error("Error creating idea:", error);

@@ -47,7 +47,23 @@ export default function IdeaForm({ isOpen, idea, onClose }: IdeaFormProps) {
   // Create idea mutation
   const createMutation = useMutation({
     mutationFn: async (values: z.infer<typeof insertIdeaSchema>) => {
-      const res = await apiRequest("POST", "/api/ideas", values);
+      console.log("Creating idea with values:", values);
+      const res = await fetch("/api/ideas", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "X-Requested-With": "XMLHttpRequest"
+        },
+        body: JSON.stringify(values),
+        credentials: "same-origin"
+      });
+      
+      if (!res.ok) {
+        const errorData = await res.text();
+        console.error("Error creating idea:", errorData);
+        throw new Error(errorData || "Failed to create idea");
+      }
+      
       return await res.json();
     },
     onSuccess: () => {
@@ -71,7 +87,23 @@ export default function IdeaForm({ isOpen, idea, onClose }: IdeaFormProps) {
   // Update idea mutation
   const updateMutation = useMutation({
     mutationFn: async (values: z.infer<typeof insertIdeaSchema>) => {
-      const res = await apiRequest("PUT", `/api/ideas/${idea?.id}`, values);
+      console.log("Updating idea with values:", values);
+      const res = await fetch(`/api/ideas/${idea?.id}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          "X-Requested-With": "XMLHttpRequest"
+        },
+        body: JSON.stringify(values),
+        credentials: "same-origin"
+      });
+      
+      if (!res.ok) {
+        const errorData = await res.text();
+        console.error("Error updating idea:", errorData);
+        throw new Error(errorData || "Failed to update idea");
+      }
+      
       return await res.json();
     },
     onSuccess: () => {

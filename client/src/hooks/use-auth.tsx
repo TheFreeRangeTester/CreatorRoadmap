@@ -129,7 +129,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       // Show success message
       toast({
         title: i18n.t("auth.loginSuccess", "Login successful"),
-        description: i18n.t("auth.welcomeBack", { username: userData.username }, `Welcome back, ${userData.username}!`),
+        description: i18n.t("auth.welcomeBack", "Welcome back, {{username}}!", { username: userData.username }),
       });
       
       // Log login success for debugging
