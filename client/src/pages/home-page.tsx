@@ -474,8 +474,8 @@ export default function HomePage() {
       </header>
 
       <main className="container mx-auto px-4 sm:px-6 lg:px-8 py-6">
-        {/* Creator Controls (always visible when logged in) */}
-        {user && <CreatorControls onAddIdea={handleAddIdea} />}
+        {/* Creator Controls (solo visible para creadores) */}
+        {user && user.userRole === 'creator' && <CreatorControls onAddIdea={handleAddIdea} />}
         
         {/* Main content for both authenticated and non-authenticated users */}
         <div className="mt-6">
@@ -486,29 +486,36 @@ export default function HomePage() {
               <div className="lg:col-span-2 space-y-6">
                 <LeaderboardInfo />
                 
-                {/* Tabs for ideas view */}
-                <Tabs defaultValue="published" className="w-full">
-                  <div className="flex justify-between items-center mb-6">
-                    <TabsList className="grid grid-cols-2 w-60">
-                      <TabsTrigger value="published" className="flex items-center gap-1">
-                        <ListFilter className="w-4 h-4" />
-                        {t('dashboard.myIdeas', 'Mis Ideas')}
-                      </TabsTrigger>
-                      <TabsTrigger value="suggested" className="flex items-center gap-1">
-                        <Lightbulb className="w-4 h-4" />
-                        {t('dashboard.suggested', 'Sugeridas')}
-                      </TabsTrigger>
-                    </TabsList>
-                  </div>
-                  
-                  <TabsContent value="published" className="mt-0 space-y-4">
+                {/* Tabs for ideas view - Only for creators */}
+                {user.userRole === 'creator' ? (
+                  <Tabs defaultValue="published" className="w-full">
+                    <div className="flex justify-between items-center mb-6">
+                      <TabsList className="grid grid-cols-2 w-60">
+                        <TabsTrigger value="published" className="flex items-center gap-1">
+                          <ListFilter className="w-4 h-4" />
+                          {t('dashboard.myIdeas', 'Mis Ideas')}
+                        </TabsTrigger>
+                        <TabsTrigger value="suggested" className="flex items-center gap-1">
+                          <Lightbulb className="w-4 h-4" />
+                          {t('dashboard.suggested', 'Sugeridas')}
+                        </TabsTrigger>
+                      </TabsList>
+                    </div>
+                    
+                    <TabsContent value="published" className="mt-0 space-y-4">
+                      <IdeasTabView mode="published" />
+                    </TabsContent>
+                    
+                    <TabsContent value="suggested" className="mt-0 space-y-4">
+                      <IdeasTabView mode="suggested" />
+                    </TabsContent>
+                  </Tabs>
+                ) : (
+                  // Para usuarios no creadores, solo mostrar la lista de ideas
+                  <div className="mt-0 space-y-4">
                     <IdeasTabView mode="published" />
-                  </TabsContent>
-                  
-                  <TabsContent value="suggested" className="mt-0 space-y-4">
-                    <IdeasTabView mode="suggested" />
-                  </TabsContent>
-                </Tabs>
+                  </div>
+                )}
               </div>
               
               {/* Sidebar for sharing (1/3 width on larger screens) */}

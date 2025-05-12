@@ -226,6 +226,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(401).json({ message: "Authentication required to delete ideas" });
       }
 
+      // Esta ruta puede ser utilizada tanto por creadores (para borrar sus propias ideas)
+      // como por creadores que rechazan ideas pendientes
       const id = Number(req.params.id);
       if (isNaN(id)) {
         return res.status(400).json({ message: "Invalid idea ID" });
@@ -237,9 +239,20 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(404).json({ message: "Idea not found" });
       }
 
-      // Check if the user is the creator of the idea
-      if (existingIdea.creatorId !== req.user!.id) {
-        return res.status(403).json({ message: "You can only delete your own ideas" });
+      // Verificar los permisos según el rol y situación:
+      // 1. Si es creador y es una idea suya, puede eliminarla
+      // 2. Si es creador y es una idea pendiente sugerida para él, puede rechazarla (eliminarla)
+      if (req.user.userRole === 'creator') {
+        // Si la idea tiene al creador como creatorId, puede eliminarla (es suya)
+        // O si es una idea pendiente sugerida para este creador, puede eliminarla (rechazarla)
+        if (existingIdea.creatorId === req.user!.id) {
+          // Todo ok, puede eliminarla
+        } else {
+          return res.status(403).json({ message: "You can only delete your own ideas" });
+        }
+      } else {
+        // No es un creador, no puede eliminar ideas
+        return res.status(403).json({ message: "Only creators can delete ideas" });
       }
 
       await storage.deleteIdea(id);
@@ -538,6 +551,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       if (!req.isAuthenticated()) {
         return res.status(401).json({ message: "Authentication required to approve ideas" });
+      }
+      
+      // Verificar que el usuario tenga rol de creador
+      if (req.user.userRole !== 'creator') {
+        return res.status(403).json({ message: "Only creators can approve ideas" });
       }
       
       const id = Number(req.params.id);
