@@ -123,8 +123,8 @@ export class MemStorage implements IStorage {
       websiteUrl: null,
       profileBackground: "gradient-1",
       email: insertUser.email || null,
-      googleId: insertUser.googleId || null,
-      isGoogleUser: insertUser.isGoogleUser || false
+      // No longer using Google ID
+      // No longer using Google authentication
     };
     this.users.set(id, user);
     return user;
@@ -146,9 +146,9 @@ export class MemStorage implements IStorage {
       websiteUrl: profileData.websiteUrl !== undefined ? profileData.websiteUrl : user.websiteUrl,
       profileBackground: profileData.profileBackground !== undefined ? profileData.profileBackground : user.profileBackground,
       // Campos de Google
-      googleId: profileData.googleId !== undefined ? profileData.googleId : user.googleId,
+      // No longer using Google ID
       email: profileData.email !== undefined ? profileData.email : user.email,
-      isGoogleUser: profileData.isGoogleUser !== undefined ? profileData.isGoogleUser : user.isGoogleUser
+      // No longer using Google authentication
     };
     
     this.users.set(id, updatedUser);
