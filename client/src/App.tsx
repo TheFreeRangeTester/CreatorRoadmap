@@ -8,12 +8,21 @@ import LandingPage from "@/pages/landing-page";
 import CreatorQAProfile from "@/pages/creator-qa-profile";
 import { ProtectedRoute } from "./lib/protected-route";
 import { ThemeToggle } from "./components/theme-toggle";
+import { LanguageToggle } from "./components/language-toggle";
 // Importación directa sin usar alias @
 import CreatorPublicPage from "./pages/creator-public-page";
 
 function App() {
   return (
     <>
+      {/* Selector de idioma y tema en la esquina superior derecha */}
+      <div className="fixed top-4 right-4 z-50 flex items-center space-x-2">
+        <LanguageToggle />
+        <ThemeToggle />
+      </div>
+      
+      {/* Espacio para modales */}
+      
       {/* Router principal */}
       <Switch>
         <Route path="/" component={LandingPage} />
