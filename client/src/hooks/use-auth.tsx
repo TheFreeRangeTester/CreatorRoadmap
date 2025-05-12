@@ -61,14 +61,22 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     data: user,
     error,
     isLoading,
+    refetch: refetchUser,
   } = useQuery<UserResponse | null>({
     queryKey: ["/api/user"],
     queryFn: async () => {
       try {
-        const res = await apiRequest("GET", "/api/user");
+        const res = await fetch("/api/user", {
+          method: "GET",
+          headers: {
+            "X-Requested-With": "XMLHttpRequest"
+          },
+          credentials: "same-origin"
+        });
         
         // Not authenticated
         if (res.status === 401) {
+          console.log("User not authenticated");
           return null;
         }
         
@@ -93,7 +101,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   // Handle login
   const loginMutation = useMutation({
     mutationFn: async (credentials: LoginData) => {
-      const res = await apiRequest("POST", "/api/login", credentials);
+      const res = await fetch("/api/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "X-Requested-With": "XMLHttpRequest"
+        },
+        body: JSON.stringify(credentials),
+        credentials: "same-origin"
+      });
       
       if (!res.ok) {
         const errorData = await res.text();
@@ -124,7 +140,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   // Handle registration
   const registerMutation = useMutation({
     mutationFn: async (userData: InsertUser) => {
-      const res = await apiRequest("POST", "/api/register", userData);
+      const res = await fetch("/api/register", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "X-Requested-With": "XMLHttpRequest"
+        },
+        body: JSON.stringify(userData),
+        credentials: "same-origin"
+      });
       
       if (!res.ok) {
         const errorData = await res.text();
