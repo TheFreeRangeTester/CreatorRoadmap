@@ -143,9 +143,15 @@ export default function SuggestIdeaModal({
               <h3 className="text-sm font-semibold mb-2">
                 {t('suggestIdea.loginRequired', 'Login required')}
               </h3>
-              <p className="text-sm">
+              <p className="text-sm mb-3">
                 {t('suggestIdea.loginRequiredDesc', 'You need an account to suggest ideas to this creator.')}
               </p>
+              <Link href={`/auth?referrer=/${username}`}>
+                <Button variant="default" size="sm" className="w-full bg-amber-600 hover:bg-amber-700 dark:bg-amber-700 dark:hover:bg-amber-800">
+                  <LogIn className="h-4 w-4 mr-2" />
+                  {t('suggestIdea.goToLoginButton', 'Login or create account')}
+                </Button>
+              </Link>
             </div>
             
             <div className="flex justify-end">

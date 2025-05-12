@@ -465,7 +465,14 @@ export default function CreatorQAProfile() {
                 {user.username?.substring(0, 2).toUpperCase()}
               </AvatarFallback>
             </Avatar>
-            <span className="text-sm font-medium">{user.username}</span>
+            <div className="flex flex-col">
+              <span className="text-sm font-medium">{user.username}</span>
+              {user.userRole === "audience" && (
+                <span className="text-xs text-gray-500 dark:text-gray-400 -mt-0.5">
+                  {t('roles.audience', 'Audience member')}
+                </span>
+              )}
+            </div>
           </div>
         )}
         <div className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-full flex gap-1 p-1 shadow-sm border border-gray-100 dark:border-gray-700">
@@ -520,13 +527,21 @@ export default function CreatorQAProfile() {
           <div className="flex gap-2">
             <Button 
               onClick={() => setSuggestDialogOpen(true)} 
-              variant="outline" 
+              variant={user ? "default" : "outline"}
               size="sm"
-              className="flex items-center gap-1.5"
+              className={`flex items-center gap-1.5 ${!user ? "border-dashed" : ""}`}
             >
               <Plus className="h-4 w-4" />
-              <span className="hidden sm:inline">{t('suggestIdea.button')}</span>
-              <span className="sm:hidden">{t('common.suggest', 'Suggest')}</span>
+              <span className="hidden sm:inline">
+                {user 
+                  ? t('suggestIdea.button') 
+                  : t('suggestIdea.loginToSuggest', 'Login to suggest')}
+              </span>
+              <span className="sm:hidden">
+                {user 
+                  ? t('common.suggest', 'Suggest') 
+                  : t('common.login', 'Login')}
+              </span>
             </Button>
             
             <Button 
