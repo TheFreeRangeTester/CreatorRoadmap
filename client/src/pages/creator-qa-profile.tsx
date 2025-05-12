@@ -128,13 +128,15 @@ export default function CreatorQAProfile() {
   const sortedIdeas = [...ideas].sort((a, b) => b.votes - a.votes);
 
   const handleVote = async (ideaId: number) => {
-    // Si el usuario no está autenticado, mostrar un mensaje
+    // Si el usuario no está autenticado, redirigir a la página de login con estado de regreso
     if (!user) {
-      toast({
-        title: t('common.loginRequired'),
-        description: t('common.loginRequiredDesc'),
-        variant: "destructive",
-      });
+      // Guardar la idea en la que el usuario quería votar para recuperarla después
+      localStorage.setItem("pendingVoteIdeaId", ideaId.toString());
+      localStorage.setItem("pendingVoteUsername", username as string);
+      
+      // Redirigir a la página de autenticación, indicando que debe regresar aquí
+      navigate(`/auth?referrer=/${username}`);
+      
       return;
     }
     
@@ -153,7 +155,12 @@ export default function CreatorQAProfile() {
       
       const endpoint = `/api/creators/${username}/ideas/${ideaId}/vote`;
       
-      await apiRequest("POST", endpoint);
+      // Importante: incluir las credenciales para que la sesión se mantenga
+      const response = await apiRequest("POST", endpoint);
+      
+      if (!response.ok) {
+        throw new Error(await response.text());
+      }
       
       // Actualizar el estado local de votaciones
       setVotedIdeas(prev => {
@@ -186,12 +193,28 @@ export default function CreatorQAProfile() {
       console.error("Vote error details:", error);
       
       // Si el error es porque ya votó, actualizamos el estado local
-      if ((error as Error).message?.includes("Ya has votado")) {
+      if ((error as Error).message?.includes("Ya has votado") || 
+          (error as Error).message?.includes("already voted")) {
         setVotedIdeas(prev => {
           const newSet = new Set(prev);
           newSet.add(ideaId);
           return newSet;
         });
+      } else if ((error as Error).message?.includes("401") || 
+                 (error as Error).message?.includes("Authentication required")) {
+        // Error de autenticación - sesión expirada o no válida
+        toast({
+          title: t('common.sessionExpired'),
+          description: t('common.pleaseLoginAgain'),
+          variant: "destructive",
+        });
+        
+        // Almacenar datos para volver a intentar después de iniciar sesión
+        localStorage.setItem("pendingVoteIdeaId", ideaId.toString());
+        localStorage.setItem("pendingVoteUsername", username as string);
+        
+        // Redirigir a autenticación
+        setTimeout(() => navigate(`/auth?referrer=/${username}`), 1500);
       } else {
         // Otros errores
         toast({
