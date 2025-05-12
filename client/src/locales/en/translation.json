@@ -1,0 +1,423 @@
+{
+  "common": {
+    "login": "Login",
+    "register": "Register",
+    "logout": "Logout",
+    "username": "Username",
+    "password": "Password",
+    "share": "Share",
+    "suggest": "Suggest",
+    "vote": "Vote",
+    "voted": "Voted",
+    "voting": "Voting...",
+    "loginToVote": "Login to vote",
+    "thankYou": "Thank you for your vote!",
+    "yourOpinionMatters": "Your opinion is important to the creator.",
+    "alreadyVoted": "You have already voted",
+    "alreadyVotedDesc": "You have already registered your vote for this idea.",
+    "loginRequired": "Login required",
+    "loginRequiredDesc": "You need an account to vote for ideas.",
+    "copySuccess": "Link copied",
+    "copyDesc": "Shareable link: {{url}}",
+    "copyError": "Could not copy link",
+    "copyErrorDesc": "We couldn't copy the link automatically.",
+    "copyManualDesc": "You can manually copy this link: {{url}}",
+    "copyExecCommandError": "Could not copy using execCommand",
+    "refresh": "Refresh",
+    "votes": "votes",
+    "save": "Save",
+    "saving": "Saving...",
+    "reset": "Reset",
+    "error": "Error",
+    "website": "Website",
+    "back": "Back to Dashboard",
+    "joinFanlist": "Join Fanlist",
+    "noDescription": "No description available",
+    "cancel": "Cancel"
+  },
+  "homepage": {
+    "title": "Content Roadmap",
+    "subtitle": "Vote for the content you want to see next",
+    "info": "This roadmap shows ideas ordered by votes. Your opinion helps determine which content will be created first.",
+    "suggestIdea": "Suggest an idea",
+    "noIdeasYet": "No ideas yet",
+    "noIdeasDesc": "This creator hasn't added any content ideas yet."
+  },
+  "dashboard": {
+    "yourPublicProfile": "Your Public Profile",
+    "shareProfileDesc": "Share this link so others can view and vote for your content ideas.",
+    "aboutPublicProfile": "About your public profile:",
+    "publicProfileVisibility": "This page is visible to anyone with the link, even if they don't have an account on the platform.",
+    "visitorVoting": "Visitors can view your ideas and vote for them, helping you determine what content to create first.",
+    "copied": "Copied",
+    "copyLink": "Copy link",
+    "viewProfile": "View profile",
+    "shareProfile": "Share profile",
+    "sharingTips": "Sharing tips:",
+    "shareTip1": "Share your link on social media to get more votes",
+    "shareTip2": "Include the link in the description of your videos or posts",
+    "shareTip3": "Encourage your audience to vote to influence your next content",
+    "creatorDashboard": "Creator Dashboard",
+    "myIdeas": "My Ideas",
+    "suggested": "Suggested",
+    "topIdeas": "Top Ideas",
+    "voteDescription": "Vote for your favorite ideas or submit your own"
+  },
+  "ideas": {
+    "noPublishedIdeas": "No published ideas yet",
+    "createFirstIdea": "Get started by creating your first idea",
+    "noSuggestedIdeas": "No suggested ideas yet",
+    "suggestedIdeasWillAppear": "Ideas suggested by your audience will appear here",
+    "loadError": "Failed to load ideas. Please try again.",
+    "votingFailed": "Voting failed",
+    "addIdea": "Add an idea",
+    "loginToAdd": "Login to add an idea",
+    "noIdeasYet": "No ideas yet",
+    "getStarted": "Get started by creating a new idea.",
+    "confirmDelete": "Are you sure you want to delete this idea? This action cannot be undone and all votes will be lost.",
+    "deleteTitle": "Delete idea",
+    "delete": "Delete",
+    "deleting": "Deleting...",
+    "deleted": "Idea deleted",
+    "deletedSuccess": "Your idea has been deleted successfully.",
+    "deleteError": "Delete failed",
+    "approved": "Idea approved",
+    "approvedSuccess": "The idea has been approved and published to your leaderboard",
+    "approveError": "Approval error",
+    "approveErrorDesc": "Could not approve idea",
+    "rejected": "Idea rejected",
+    "rejectedSuccess": "The idea has been rejected",
+    "rejectError": "Rejection error",
+    "rejectErrorDesc": "Could not reject idea",
+    "pending": "Pending",
+    "suggestedBy": "Suggested by",
+    "reject": "Reject",
+    "approve": "Approve"
+  },
+  "creator": {
+    "voted": "Voted",
+    "votedSuccess": "Voted!",
+    "voteHeaderTitle": "Vote which content you want first!",
+    "roadmapDescription": "This roadmap shows ideas ordered by votes. Your opinion helps determine which content will be created first.",
+    "noIdeasYet": "No ideas yet",
+    "noIdeasDescription": "This creator hasn't added any content ideas yet.",
+    "voteError": "Could not register your vote",
+    "voteErrorDesc": "An error occurred while processing your vote",
+    "voteSuccess": "Thank you for your vote!",
+    "voteSuccessDesc": "Your opinion is important to the creator.",
+    "loadError": "Failed to load creator page",
+    "defaultProfileDescription": "QA Engineer and content creator focused on software testing, automation, and quality control best practices."
+  },
+  "share": {
+    "title": "Content Roadmap by {{username}}",
+    "text": "Check out {{username}}'s content roadmap and vote for what you'd like to see next!"
+  },
+  "login": {
+    "requiredToVote": "Login to vote"
+  },
+  "publicLeaderboard": {
+    "title": "Public Leaderboard",
+    "description": "This leaderboard is publicly accessible. You can vote for your favorite ideas!",
+    "noIdeasYet": "No ideas yet",
+    "noIdeasDescription": "There are no ideas in this leaderboard yet.",
+    "errorLoading": "Failed to load leaderboard",
+    "rank": "Rank",
+    "na": "N/A",
+    "votes": "votes"
+  },
+  "badges": {
+    "new": "New",
+    "equal": "Same",
+    "votes": "votes"
+  },
+  "auth": {
+    "welcome": "Welcome to the platform",
+    "registerInfo": "Register to keep track of your votes and suggest new ideas to creators",
+    "loginInfo": "Login to continue your experience",
+    "registerCta": "Create account",
+    "loginCta": "Sign in",
+    "orContinueWith": "or continue with",
+    "signInWithGoogle": "Sign in with Google",
+    "googleSignInSuccess": "Successfully signed in",
+    "googleSignInSuccessDesc": "Welcome back to the platform!",
+    "googleSignInError": "Google sign-in failed",
+    "googleSignInErrorDesc": "There was an error signing in with Google. Please try again."
+  },
+  "ideaForm": {
+    "title": "Title",
+    "description": "Description",
+    "submitIdea": "Submit Idea",
+    "titlePlaceholder": "Enter a title for your idea",
+    "descriptionPlaceholder": "Describe your idea in detail"
+  },
+  "suggestIdea": {
+    "button": "Suggest idea",
+    "title": "Suggest idea to {{username}}",
+    "description": "What would you like the creator to publish next?",
+    "titleLabel": "Idea title",
+    "titlePlaceholder": "Write a concise title",
+    "descriptionLabel": "Description",
+    "descriptionPlaceholder": "Describe your idea in detail for the creator",
+    "cancel": "Cancel",
+    "submit": "Submit suggestion",
+    "sending": "Sending...",
+    "loginRequired": "Login to suggest ideas",
+    "loginRequiredDesc": "You need an account to suggest ideas to this creator.",
+    "incompleteFields": "Incomplete fields",
+    "incompleteFieldsDesc": "Please complete all fields in the form.",
+    "invalidFields": "Invalid fields",
+    "invalidFieldsDesc": "Please correctly complete all fields in the form.",
+    "thankYou": "Thank you for your suggestion",
+    "thankYouDesc": "Your idea has been sent to the creator for approval.",
+    "error": "Error submitting suggestion",
+    "errorDesc": "An error occurred while sending your suggestion. Check your connection and try again.",
+    "titleMinLength": "Title must be at least 3 characters",
+    "titleMaxLength": "Title cannot exceed 100 characters",
+    "descriptionMinLength": "Description must be at least 10 characters",
+    "descriptionMaxLength": "Description cannot exceed 500 characters",
+    "beFirstToSuggest": "Be the first to suggest a content idea",
+    "achievementText": "Your idea has been sent to @{{username}}!"
+  },
+  "ideaPosition": {
+    "new": "New",
+    "same": "Same",
+    "suggestedBy": "Suggested by {{username}}",
+    "voting": "Voting",
+    "voted": "Voted",
+    "vote": "Vote"
+  },
+  "badges": {
+    "votes": "votes",
+    "vote": "vote",
+    "new": "New",
+    "same": "Same",
+    "up": "Up",
+    "down": "Down"
+  },
+  "profile": {
+    "editProfile": "Edit Profile",
+    "editProfileDesc": "Customize your profile information and social links",
+    "description": "About you",
+    "descriptionPlaceholder": "Tell your audience about yourself and your content",
+    "logoUrl": "Profile image URL",
+    "logoUrlPlaceholder": "https://example.com/your-logo.png",
+    "logoUrlHelp": "Add a link to your profile image or logo",
+    "socialLinks": "Social Media Links",
+    "background": "Profile Background",
+    "backgroundDesc": "Choose a background for your public profile. The pattern will automatically adapt to light/dark mode.",
+    "gradient1": "Subtle",
+    "gradient2": "Blue/Indigo",
+    "gradient3": "Green/Teal",
+    "gradient4": "Rose/Orange",
+    "pattern1": "Dots",
+    "pattern2": "Grid",
+    "updateSuccess": "Profile updated",
+    "updateSuccessDesc": "Your profile has been updated successfully",
+    "updateError": "Update failed",
+    "updateErrorDesc": "There was an error updating your profile. Please try again."
+  },
+  "landing": {
+    "menu": {
+      "features": "Features",
+      "pricing": "Pricing",
+      "testimonials": "Testimonials"
+    },
+    "cta": {
+      "title": "Connect with your audience today",
+      "subtitle": "Join thousands of creators already using IdeaVote to create more relevant content and increase their engagement.",
+      "startButton": "Start for free",
+      "dashboardButton": "Go to Dashboard",
+      "demoButton": "See demo",
+      "noCreditCard": "No credit card required to start",
+      "startFree": "Start for free",
+      "seeDemo": "See demo",
+      "tryFree": "Try free for 14 days",
+      "goDashboard": "Go to Dashboard",
+      "login": "Login",
+      "register": "Register"
+    },
+    "hero": {
+      "tagline": "The platform preferred by content creators",
+      "title": "Connect with your audience and create impactful content",
+      "subtitle": "Discover exactly what content your audience wants to see with our interactive voting and leaderboard platform. Generate more engagement and keep your audience involved.",
+      "noCreditCard": "No credit card required to start",
+      "leaderboardPreview": "Leaderboard preview",
+      "seeFullDemo": "See full demo"
+    },
+    "stats": {
+      "activeCreators": "Active creators",
+      "votesMonthly": "Monthly votes",
+      "satisfaction": "Satisfaction",
+      "engagement": "↑ in engagement"
+    },
+    "features": {
+      "title": "All the tools you need to connect with your audience",
+      "subtitle": "Specifically designed for content creators who want to grow their community and involve their audience in the creative process",
+      "leaderboards": {
+        "title": "Interactive leaderboards",
+        "description": "Create engaging leaderboards where your audience can vote for their favorite ideas and see the results in real time."
+      },
+      "suggestions": {
+        "title": "Community suggestions",
+        "description": "Allow your audience to suggest ideas directly on your leaderboard, enhancing participation and community sense."
+      },
+      "analytics": {
+        "title": "Detailed analytics",
+        "description": "Get valuable insights about what content your audience prefers and how these preferences evolve over time."
+      },
+      "customization": {
+        "title": "Advanced customization",
+        "description": "Adapt the appearance of your leaderboards to match your personal brand, including colors, logos, and styles."
+      },
+      "multiple": {
+        "title": "Multiple leaderboards",
+        "description": "Organize different types of content or categories in separate leaderboards to keep everything organized."
+      },
+      "sharing": {
+        "title": "Shareable anywhere",
+        "description": "Easily integrate your leaderboards on your website, social media, or newsletters to maximize their reach."
+      }
+    },
+    "showcase": {
+      "title": "Data-driven decisions for your content",
+      "description": "Know exactly what your audience wants to see and create content that resonates with them, generating more engagement and growth for your personal brand.",
+      "bullet1": "Higher audience engagement with interactive voting",
+      "bullet2": "Real-time data about your followers' preferences",
+      "bullet3": "Complete customization to adapt to your brand"
+    },
+    "howItWorks": {
+      "title": "How Fanlist works",
+      "subtitle": "A simple process to keep your fans connected",
+      "step1": {
+        "title": "Create your leaderboard",
+        "description": "Quickly set up a personalized leaderboard for your audience to interact with"
+      },
+      "step2": {
+        "title": "Share with your audience",
+        "description": "Share the unique link with your followers on your social media or website"
+      },
+      "step3": {
+        "title": "Get feedback and grow",
+        "description": "Analyze the results and use the feedback to create content that truly connects"
+      }
+    },
+    "pricing": {
+      "title": "Plans that adapt to your growth",
+      "subtitle": "From creators who are just starting out to professionals with large communities, we have a plan for every stage of your journey.",
+      "freePlan": {
+        "name": "Free Plan",
+        "price": "Free",
+        "description": "Ideal for creators just starting out",
+        "features": [
+          "1 active leaderboard",
+          "Up to 10 visible ideas",
+          "100 votes/month limit",
+          "Basic customization",
+          "Basic analytics",
+          "App domain (yourvote.app/creator)"
+        ],
+        "ctaText": "Start for free"
+      },
+      "proPlan": {
+        "name": "Pro Plan",
+        "price": "$9",
+        "description": "For active creators with regular content",
+        "features": [
+          "Up to 3 active leaderboards",
+          "Up to 50 ideas per leaderboard",
+          "5,000 votes/month",
+          "Intermediate customization",
+          "Social media integration",
+          "More detailed analytics",
+          "CSV export",
+          "No platform branding"
+        ],
+        "ctaText": "Try free for 14 days"
+      },
+      "creatorProPlan": {
+        "name": "Creator Pro",
+        "price": "$29",
+        "description": "For creators who monetize their content",
+        "features": [
+          "Unlimited leaderboards",
+          "Unlimited ideas",
+          "Unlimited votes",
+          "Embedding on own sites",
+          "Custom domain",
+          "Team collaboration",
+          "Monetization integrations",
+          "Priority support",
+          "Access to beta features"
+        ],
+        "ctaText": "Contact sales"
+      },
+      "price": {
+        "free": "Free",
+        "proMonthly": "$9",
+        "creatorProMonthly": "$29",
+        "perMonth": "/month"
+      },
+      "cta": {
+        "startFree": "Start for free",
+        "tryFree": "Try free for 14 days",
+        "contactUs": "Contact us"
+      },
+      "popular": "MOST POPULAR"
+    },
+    "testimonials": {
+      "title": "What our creators say",
+      "subtitle": "Join thousands of content creators who have already transformed the way they connect with their audience.",
+      "testimonial1": {
+        "quote": "Since I started using IdeaVote, my audience engagement has increased by 40%. I now really know what they want to see and my channel has grown much faster.",
+        "author": "Carlos Martinez",
+        "role": "Tech YouTuber"
+      },
+      "testimonial2": {
+        "quote": "My followers love being able to vote and suggest topics for my podcast. IdeaVote has become an essential part of my content strategy.",
+        "author": "Sofia Gomez",
+        "role": "Podcaster"
+      },
+      "testimonial3": {
+        "quote": "The ease of integrating leaderboards on my website and the customization capabilities are incredible. My community feels more involved than ever.",
+        "author": "Javier Rodriguez",
+        "role": "Streamer"
+      }
+    },
+    "demo": {
+      "title": "IdeaVote Demonstration",
+      "description": "See how our platform works for content creators",
+      "details": "In this video you can see all the main features of the platform, including idea creation, the voting system, and the creator's dashboard.",
+      "alt": "IdeaVote Demo"
+    },
+    "footer": {
+      "product": {
+        "title": "Product",
+        "features": "Features",
+        "pricing": "Pricing",
+        "demo": "Demo",
+        "roadmap": "Roadmap"
+      },
+      "resources": {
+        "title": "Resources",
+        "blog": "Blog",
+        "documentation": "Documentation",
+        "guides": "Guides",
+        "success": "Success stories"
+      },
+      "company": {
+        "title": "Company",
+        "about": "About us",
+        "team": "Team",
+        "contact": "Contact",
+        "careers": "Careers"
+      },
+      "legal": {
+        "title": "Legal",
+        "terms": "Terms of service",
+        "privacy": "Privacy policy",
+        "cookies": "Cookies"
+      },
+      "copyright": "All rights reserved."
+    }
+  }
+}
