@@ -43,28 +43,24 @@ export default function GoogleSignInButton({
         await signInWithGoogle();
         // If using redirect, this function won't return as the page will reload
         // If using popup, the FirebaseAuthHandler will process the result
-      } catch (error) {
+      } catch (error: any) {
         // Only handle Firebase errors here - the actual auth will be handled by FirebaseAuthHandler
-        const firebaseError = error as any;
         
-        if (firebaseError.code === 'auth/unauthorized-domain') {
-          // Get current domain for error message
-          const currentDomain = window.location.hostname;
-          
-          // Guardar el error en sessionStorage para mostrar modal informativo
+        // Get current domain for error messages
+        const currentDomain = window.location.hostname;
+        
+        if (error.code === 'auth/unauthorized-domain') {
+          // Domain not authorized in Firebase
           sessionStorage.setItem("firebase_domain_error", "true");
           
           toast({
             title: t('auth.unauthorizedDomain'),
             description: `${t('auth.unauthorizedDomainDesc')} Es necesario agregar "${currentDomain}" a los dominios autorizados en Firebase Console > Authentication > Settings > Authorized domains.`,
             variant: "destructive",
-            duration: 10000, // Mostrar por más tiempo para que el usuario pueda leer
+            duration: 10000,
           });
           
-          console.error(`Firebase Auth Error: Domain "${currentDomain}" is not authorized. Please add it to the list of authorized domains in Firebase console.`);
-          
-          // Mostrar un mensaje adicional en la consola para desarrolladores
-          console.log(`
+          console.error(`
 =====================================================================
 FIREBASE AUTH ERROR: UNAUTHORIZED DOMAIN
 =====================================================================
@@ -79,12 +75,45 @@ El error ocurre porque Firebase requiere autorizar explícitamente
 todos los dominios desde los que se realizan autenticaciones.
 =====================================================================
           `);
-        } else if (firebaseError.code !== 'auth/popup-closed-by-user' && 
-                  firebaseError.code !== 'auth/cancelled-popup-request') {
+        } else if (error.message && error.message.includes("redirect_uri_mismatch")) {
+          // OAuth redirect URI mismatch error
+          sessionStorage.setItem("firebase_redirect_error", "true");
+          
+          toast({
+            title: "Error de redirección OAuth",
+            description: `Necesitas configurar las URIs de redirección en la consola de Google Cloud. Agrega: "${window.location.origin}/__/auth/handler" a las URIs autorizadas.`,
+            variant: "destructive",
+            duration: 15000,
+          });
+          
+          console.error(`
+=====================================================================
+FIREBASE AUTH ERROR: REDIRECT URI MISMATCH
+=====================================================================
+Para solucionar este problema:
+
+1. Ve a la Consola de Firebase: https://console.firebase.google.com/
+2. Selecciona tu proyecto
+3. Ve a Project Settings (⚙️) > General
+4. Desplázate hasta tu aplicación web y anota el ID de cliente OAuth
+5. Ve a Google Cloud Console: https://console.cloud.google.com/
+6. Selecciona el mismo proyecto
+7. Ve a APIs & Services > Credentials
+8. Encuentra y edita el ID de cliente OAuth
+9. Agrega estas URIs de redirección:
+   - ${window.location.origin}/__/auth/handler
+   - https://${currentDomain}/__/auth/handler
+   - http://${currentDomain}/__/auth/handler
+
+Este error ocurre porque Firebase requiere URIs de redirección explícitamente autorizadas.
+=====================================================================
+          `);
+        } else if (error.code !== 'auth/popup-closed-by-user' && 
+                  error.code !== 'auth/cancelled-popup-request') {
           // Don't show errors for user cancellation
           toast({
             title: t('auth.googleSignInError'),
-            description: (error as Error).message || t('auth.googleSignInErrorDesc'),
+            description: error.message || t('auth.googleSignInErrorDesc'),
             variant: "destructive",
           });
         }
