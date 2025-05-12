@@ -26,9 +26,17 @@ export async function apiRequest(
   
   const res = await fetch(apiUrl, {
     method,
-    headers: data ? { "Content-Type": "application/json" } : {},
+    headers: data ? { 
+      "Content-Type": "application/json",
+      // Asegúrate de que la API sabe que esta es una solicitud AJAX
+      "X-Requested-With": "XMLHttpRequest" 
+    } : {
+      // Incluso sin datos, añade el encabezado X-Requested-With
+      "X-Requested-With": "XMLHttpRequest"
+    },
     body: data ? JSON.stringify(data) : undefined,
-    credentials: "include",
+    // Esto es crucial - asegura que las cookies de sesión se envían con cada solicitud
+    credentials: "same-origin",
   });
 
   await throwIfResNotOk(res);
@@ -42,7 +50,12 @@ export const getQueryFn: <T>(options: {
   ({ on401: unauthorizedBehavior }) =>
   async ({ queryKey }) => {
     const res = await fetch(queryKey[0] as string, {
-      credentials: "include",
+      headers: {
+        // Añadir encabezado para indicar que es una solicitud AJAX
+        "X-Requested-With": "XMLHttpRequest"
+      },
+      // Usar same-origin para consistencia con apiRequest
+      credentials: "same-origin",
     });
 
     if (unauthorizedBehavior === "returnNull" && res.status === 401) {
