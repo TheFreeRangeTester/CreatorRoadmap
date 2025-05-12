@@ -82,11 +82,16 @@ export default function GoogleSignInButton({
       // Check if it's a firebase error
       const firebaseError = error as any;
       if (firebaseError.code === 'auth/unauthorized-domain') {
+        // Get current domain
+        const currentDomain = window.location.hostname;
+        
         toast({
           title: t('auth.unauthorizedDomain'),
-          description: t('auth.unauthorizedDomainDesc'),
+          description: `${t('auth.unauthorizedDomainDesc')} Agrega "${currentDomain}" a los dominios autorizados en Firebase Console > Authentication > Settings > Authorized domains.`,
           variant: "destructive",
         });
+        
+        console.error(`Firebase Auth Error: Domain "${currentDomain}" is not authorized. Please add it to the list of authorized domains in Firebase console.`);
       } else {
         toast({
           title: t('auth.googleSignInError'),
