@@ -13,6 +13,7 @@ import { useToast } from "@/hooks/use-toast";
 type UserResponse = {
   id: number;
   username: string;
+  userRole: 'creator' | 'audience';  // Agregamos el campo de rol
   profileDescription?: string | null;
   logoUrl?: string | null;
   twitterUrl?: string | null;

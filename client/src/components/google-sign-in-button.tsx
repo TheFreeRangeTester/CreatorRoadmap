@@ -32,52 +32,18 @@ export default function GoogleSignInButton({
     try {
       setIsLoading(true);
       
-      // Sign in with Google using Firebase
-      const googleUser = await signInWithGoogle();
+      // Sign in with Google using Firebase - redirige al usuario y retorna
+      await signInWithGoogle();
       
-      if (!googleUser) {
-        // Este mensaje indica que debes añadir el dominio de Replit a tu proyecto de Firebase
-        toast({
-          title: t('auth.googleSignInError'),
-          description: "Error de dominio no autorizado. Por favor, añade el dominio actual a la lista de dominios autorizados en la consola de Firebase (Authentication > Settings > Authorized domains).",
-          variant: "destructive",
-        });
-        return;
-      }
-      
-      // Get the ID token from the Google user
-      const idToken = await googleUser.getIdToken();
-      
-      // Send the token to our backend to verify and login/register
-      const response = await apiRequest("POST", "/api/auth/google", {
-        idToken,
-        userRole // Incluimos el rol del usuario
-      });
-      
-      if (!response.ok) {
-        const errorText = await response.text();
-        throw new Error(`Error al autenticar con el servidor: ${errorText}`);
-      }
-      
-      // Parse the user data returned from our backend
-      const userData = await response.json();
-      
+      // Mostramos un mensaje al usuario
       toast({
-        title: t('auth.googleSignInSuccess'),
-        description: t('auth.googleSignInSuccessDesc'),
+        title: "Redirigiendo a Google",
+        description: "Te estamos redirigiendo para iniciar sesión con Google...",
         variant: "default",
-        className: "bg-gradient-to-r from-green-50 to-emerald-50 border-green-200 dark:from-green-900/30 dark:to-emerald-900/30 dark:border-green-800",
       });
       
-      // Reload to get the user session
-      if (redirectPath) {
-        window.location.href = redirectPath;
-      } else if (onSuccess) {
-        onSuccess();
-      } else {
-        // Trigger a reload to refresh the auth state
-        window.location.reload();
-      }
+      // No hay más código aquí porque el usuario será redirigido a Google
+      // El resultado se manejará cuando el usuario regrese
       
     } catch (error) {
       console.error("Error during Google sign in:", error);

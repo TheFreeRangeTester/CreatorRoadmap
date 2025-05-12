@@ -2,14 +2,17 @@ import { useAuth } from "@/hooks/use-auth";
 import { Loader2 } from "lucide-react";
 import { Redirect, Route } from "wouter";
 
+// Para asegurarnos de tener el tipo correcto
+type UserRole = 'creator' | 'audience';
+
 export function ProtectedRoute({
   path,
   component: Component,
-  requiredRole = "creator", // Por defecto, requerimos rol de creador
+  requiredRole = "creator" as UserRole, // Por defecto, requerimos rol de creador
 }: {
   path: string;
   component: () => React.JSX.Element;
-  requiredRole?: "creator" | "audience";
+  requiredRole?: UserRole;
 }) {
   const { user, isLoading } = useAuth();
 
