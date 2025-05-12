@@ -92,21 +92,28 @@ export default function AuthPage() {
     },
   });
 
-  // Get redirect destination based on auth source
-  const getRedirectDestination = () => {
+  // Get redirect destination based on auth source and user role
+  const getRedirectDestination = (userRole?: string) => {
+    // Si hay un authSource (viene de un perfil o link público), prioritario
     if (authSource) {
-      // If coming from a profile page or public link, go back there
       return authSource;
     }
-    // Default redirect to dashboard for direct logins
-    return "/dashboard";
+    
+    // Para acceso directo, dirigir según el rol
+    if (userRole === "audience") {
+      // Los miembros de audiencia van a la landing page
+      return "/";
+    } else {
+      // Los creadores van al dashboard
+      return "/dashboard";
+    }
   };
 
   // Login form submission
   function onLoginSubmit(values: z.infer<typeof formSchema>) {
     loginMutation.mutate(values, {
-      onSuccess: () => {
-        const destination = getRedirectDestination();
+      onSuccess: (user) => {
+        const destination = getRedirectDestination(user.userRole);
         navigate(destination);
       },
     });
@@ -115,8 +122,8 @@ export default function AuthPage() {
   // Register form submission
   function onRegisterSubmit(values: z.infer<typeof formSchema>) {
     registerMutation.mutate(values, {
-      onSuccess: () => {
-        const destination = getRedirectDestination();
+      onSuccess: (user) => {
+        const destination = getRedirectDestination(user.userRole);
         navigate(destination);
       },
     });
