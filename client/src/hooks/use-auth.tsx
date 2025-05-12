@@ -33,6 +33,7 @@ type AuthContextType = {
   loginMutation: UseMutationResult<UserResponse, Error, LoginData>;
   logoutMutation: UseMutationResult<void, Error, void>;
   registerMutation: UseMutationResult<UserResponse, Error, InsertUser>;
+  updateRoleMutation: UseMutationResult<UserResponse, Error, void>; // Nueva función para actualizar el rol
 };
 
 // Define what data we need for login

@@ -84,6 +84,35 @@ export default function ProfilePage() {
               
               <ProfileEditor />
               
+              {/* Sección para convertirse en creator (solo si es audience) */}
+              {user?.userRole === "audience" && (
+                <div className="mt-8 bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-950/50 dark:to-indigo-950/50 rounded-xl shadow-sm border border-blue-200 dark:border-indigo-900/50 p-6">
+                  <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                    <div>
+                      <h2 className="text-xl font-semibold text-blue-700 dark:text-blue-300 mb-2">
+                        {t('profile.becomeCreator', '¿Quieres ser creador?')}
+                      </h2>
+                      <p className="text-blue-600 dark:text-blue-400 text-sm">
+                        {t('profile.becomeCreatorDesc', 'Como creador, podrás gestionar tu propio leaderboard de ideas y recibir sugerencias de tu audiencia.')}
+                      </p>
+                    </div>
+                    <Button 
+                      variant="default"
+                      className="bg-blue-600 hover:bg-blue-700 text-white dark:bg-blue-700 dark:hover:bg-blue-800 self-start md:self-center"
+                      onClick={() => {
+                        // Implementaremos esta función
+                        const confirmed = window.confirm(t('profile.becomeCreatorConfirm', '¿Estás seguro de que quieres convertirte en creador? Podrás comenzar a gestionar tu propio leaderboard de ideas.'));
+                        if (confirmed) {
+                          // Aquí irá la llamada a la API
+                        }
+                      }}
+                    >
+                      {t('profile.becomeCreatorButton', 'Convertirme en creador')}
+                    </Button>
+                  </div>
+                </div>
+              )}
+              
               {/* Sección de Logros */}
               <div className="mt-12 bg-white dark:bg-gray-800 rounded-xl shadow-sm border dark:border-gray-700 p-6">
                 <div className="flex justify-between items-center mb-4">
