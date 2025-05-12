@@ -34,6 +34,7 @@ export default function AuthPage() {
   const [authSource, setAuthSource] = useState<string | null>(null);
   const [isPublicProfile, setIsPublicProfile] = useState<boolean>(false);
   const [isSetupGuideOpen, setIsSetupGuideOpen] = useState<boolean>(false);
+  const [activeTab, setActiveTab] = useState<string>("login");
   const [match, params] = useRoute("/:username");
   const [matchPublic] = useRoute("/public/:token");
   
@@ -42,6 +43,12 @@ export default function AuthPage() {
     const searchParams = new URLSearchParams(window.location.search);
     const referrer = searchParams.get('referrer');
     const directAccess = searchParams.get('direct') === 'true';
+    const register = searchParams.get('register') === 'true';
+    
+    // Set active tab based on URL parameter
+    if (register) {
+      setActiveTab("register");
+    }
     
     // Si hay un parámetro 'direct=true', es acceso directo desde la landing page
     if (directAccess) {
@@ -161,7 +168,7 @@ export default function AuthPage() {
 
           <div className="mt-8">
             {/* Always show login/register options with tabs */}
-              <Tabs defaultValue="login" className="w-full">
+              <Tabs defaultValue={activeTab} value={activeTab} onValueChange={setActiveTab} className="w-full">
                 <TabsList className="grid w-full grid-cols-2">
                   <TabsTrigger value="login">Iniciar sesión</TabsTrigger>
                   <TabsTrigger value="register">Registrarse</TabsTrigger>
