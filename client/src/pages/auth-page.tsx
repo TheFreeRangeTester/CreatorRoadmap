@@ -142,6 +142,12 @@ export default function AuthPage() {
       return referrer;
     }
     
+    // Check for returnTo parameter in URL
+    const returnTo = searchParams.get('returnTo');
+    if (returnTo && returnTo.startsWith('/')) {
+      return returnTo;
+    }
+    
     // If we came from a creator profile, go back to that profile
     if (params?.username) {
       return `/creators/${params.username}`;
@@ -179,7 +185,7 @@ export default function AuthPage() {
           
           <div className="mx-auto w-full max-w-md">
             <div className="flex justify-end w-full">
-              <Tabs defaultValue="login" className="w-full">
+              <Tabs defaultValue={new URLSearchParams(window.location.search).get('mode') === 'register' ? 'register' : 'login'} className="w-full">
                 <TabsList className={`grid w-full ${loginOnly ? 'grid-cols-1' : 'grid-cols-2'}`}>
                   <TabsTrigger value="login">{t('auth.login')}</TabsTrigger>
                   {!loginOnly && <TabsTrigger value="register">{t('auth.register')}</TabsTrigger>}

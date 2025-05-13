@@ -98,42 +98,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     staleTime: 1000 * 60 * 5, // 5 minutes
   });
 
-  // Handle login
+  // Handle login - redirects to Replit Auth
   const loginMutation = useMutation({
     mutationFn: async (credentials: LoginData) => {
-      const res = await fetch("/api/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "X-Requested-With": "XMLHttpRequest"
-        },
-        body: JSON.stringify(credentials),
-        credentials: "same-origin"
-      });
+      // Con Replit Auth, no necesitamos hacer una petición fetch aquí
+      // En su lugar, redirigimos al usuario a la página de autenticación de Replit
+      window.location.href = "/api/login";
       
-      if (!res.ok) {
-        const errorData = await res.text();
-        throw new Error(errorData || "Login failed");
-      }
-      
-      return res.json() as Promise<UserResponse>;
-    },
-    onSuccess: (userData) => {
-      // Update cache with user data
-      queryClient.setQueryData(["/api/auth/user"], userData);
-      
-      // Invalidate and refetch user data to ensure it's fresh
-      queryClient.invalidateQueries({ queryKey: ["/api/auth/user"] });
-      refetchUser();
-      
-      // Show success message
-      toast({
-        title: i18n.t("auth.loginSuccess", "Login successful"),
-        description: i18n.t("auth.welcomeBack", "Welcome back, {{username}}!", { username: userData.username }),
-      });
-      
-      // Log login success for debugging
-      console.log("Login successful, user data:", userData);
+      // Esta promise nunca se resolverá porque redireccionamos
+      return new Promise<UserResponse>(() => {});
     },
     onError: (error: Error) => {
       toast({
@@ -144,35 +117,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     },
   });
 
-  // Handle registration
+  // Handle registration - redirects to Replit Auth with signup=true
   const registerMutation = useMutation({
     mutationFn: async (userData: InsertUser) => {
-      const res = await fetch("/api/register", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "X-Requested-With": "XMLHttpRequest"
-        },
-        body: JSON.stringify(userData),
-        credentials: "same-origin"
-      });
+      // Con Replit Auth, redirigimos al usuario a la página de registro
+      window.location.href = "/api/login?signup=true";
       
-      if (!res.ok) {
-        const errorData = await res.text();
-        throw new Error(errorData || "Registration failed");
-      }
-      
-      return res.json() as Promise<UserResponse>;
-    },
-    onSuccess: (userData) => {
-      // Update cache with user data
-      queryClient.setQueryData(["/api/user"], userData);
-      
-      // Show success message
-      toast({
-        title: "Registration successful",
-        description: `Welcome, ${userData.username}!`,
-      });
+      // Esta promise nunca se resolverá porque redireccionamos
+      return new Promise<UserResponse>(() => {});
     },
     onError: (error: Error) => {
       toast({
@@ -183,34 +135,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     },
   });
 
-  // Handle logout
+  // Handle logout - redirects to Replit Auth logout
   const logoutMutation = useMutation({
     mutationFn: async () => {
-      const res = await fetch("/api/logout", {
-        method: "POST",
-        headers: {
-          "X-Requested-With": "XMLHttpRequest"
-        },
-        credentials: "same-origin"
-      });
+      // Con Replit Auth, no necesitamos hacer un POST
+      // Simplemente redirigimos a la ruta de cierre de sesión
+      window.location.href = "/api/logout";
       
-      if (!res.ok) {
-        const errorData = await res.text();
-        throw new Error(errorData || "Logout failed");
-      }
-    },
-    onSuccess: () => {
-      // Clear user from cache
-      queryClient.setQueryData(["/api/auth/user"], null);
-      
-      // Invalidate to force refetch any user-dependent queries
-      queryClient.invalidateQueries({ queryKey: ["/api/auth/user"] });
-      
-      // Show success message
-      toast({
-        title: "Logged out",
-        description: "You have been logged out successfully.",
-      });
+      // Esta promise nunca se resolverá porque redireccionamos
+      return new Promise<void>(() => {});
     },
     onError: (error: Error) => {
       toast({
