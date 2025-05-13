@@ -15,14 +15,24 @@ import CreatorPublicPage from "./pages/creator-public-page";
 function App() {
   return (
     <>
-      {/* Selector de idioma y tema en la esquina superior derecha */}
-      <div className="fixed top-4 right-4 z-50 flex items-center space-x-2">
+      {/* Header con controles de usuario */}
+      <div className="fixed top-4 right-4 z-50 flex items-center gap-3 bg-background/50 backdrop-blur-sm p-2 rounded-lg border border-border/50">
+        {user && (
+          <>
+            <div className="flex items-center gap-2">
+              <User className="h-4 w-4 text-primary" />
+              <span className="text-sm font-medium">{user.username}</span>
+            </div>
+            <div className="w-px h-6 bg-border/50" />
+          </>
+        )}
         <LanguageToggle />
+        <div className="w-px h-6 bg-border/50" />
         <ThemeToggle />
       </div>
-      
+
       {/* Espacio para modales */}
-      
+
       {/* Router principal */}
       <Switch>
         <Route path="/" component={LandingPage} />
