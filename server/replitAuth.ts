@@ -1,26 +1,9 @@
-import * as client from "openid-client";
-import { Strategy, type VerifyFunction } from "openid-client/passport";
 import passport from "passport";
 import session from "express-session";
 import type { Express, RequestHandler } from "express";
-import memoize from "memoizee";
 import connectPg from "connect-pg-simple";
 import { storage } from "./storage";
 import { pool } from "./db";
-
-if (!process.env.REPLIT_DOMAINS) {
-  console.warn("Environment variable REPLIT_DOMAINS not provided - using hostname from request");
-}
-
-const getOidcConfig = memoize(
-  async () => {
-    return await client.discovery(
-      new URL(process.env.ISSUER_URL ?? "https://replit.com/oidc"),
-      process.env.REPL_ID!
-    );
-  },
-  { maxAge: 3600 * 1000 }
-);
 
 // Session setup
 export function getSession() {
@@ -45,51 +28,6 @@ export function getSession() {
   });
 }
 
-function updateUserSession(
-  user: any,
-  tokens: client.TokenEndpointResponse & client.TokenEndpointResponseHelpers
-) {
-  user.claims = tokens.claims();
-  user.access_token = tokens.access_token;
-  user.refresh_token = tokens.refresh_token;
-  user.expires_at = user.claims?.exp;
-}
-
-async function upsertUser(
-  claims: any,
-) {
-  const replitId = claims["sub"];
-  // Comprobamos si el usuario ya existe
-  let user = await storage.getUserByReplitId(replitId);
-  
-  // Si no existe, creamos un nuevo usuario
-  if (!user) {
-    // A los nuevos usuarios se les asigna un username aleatorio temporal
-    const tempUsername = `user_${replitId.substring(0, 8)}`;
-    user = await storage.createUser({
-      username: tempUsername,
-      replitId: replitId,
-      firstName: claims["first_name"],
-      lastName: claims["last_name"],
-      email: claims["email"],
-      userRole: 'audience', // Por defecto, rol de audiencia
-    });
-  } else {
-    // Actualizamos la información del usuario si ha cambiado
-    if (claims["first_name"] !== user.firstName || 
-        claims["last_name"] !== user.lastName || 
-        claims["email"] !== user.email) {
-      user = await storage.updateUserProfile(user.id, {
-        firstName: claims["first_name"],
-        lastName: claims["last_name"],
-        email: claims["email"],
-      });
-    }
-  }
-  
-  return user;
-}
-
 export async function setupAuth(app: Express) {
   // Configure Express for sessions
   app.set("trust proxy", 1);
@@ -97,140 +35,148 @@ export async function setupAuth(app: Express) {
   app.use(passport.initialize());
   app.use(passport.session());
 
-  const config = await getOidcConfig();
-
-  const verify: VerifyFunction = async (
-    tokens: client.TokenEndpointResponse & client.TokenEndpointResponseHelpers,
-    verified: passport.AuthenticateCallback
-  ) => {
-    const user = {};
-    updateUserSession(user, tokens);
-    // Registramos/actualizamos al usuario en nuestra base de datos
-    const dbUser = await upsertUser(tokens.claims());
-    // Combinamos la información de la sesión con los datos de la BD
-    const combinedUser = { ...user, ...dbUser };
-    verified(null, combinedUser);
-  };
-
-  // Estrategia para manejar múltiples dominios
-  const setupStrategy = (domain: string) => {
-    const strategy = new Strategy(
-      {
-        name: `replitauth:${domain}`,
-        client: new client.Client({
-          issuer: config.issuer,
-          client_id: process.env.REPL_ID!,
-          redirect_uris: [`https://${domain}/api/callback`],
-          response_types: ['code'],
-        }),
-        scope: "openid email profile offline_access",
-        usePKCE: false,
-      },
-      verify,
-    );
-    passport.use(strategy);
-  };
-
-  // Si tenemos REPLIT_DOMAINS, configuramos estrategia para cada dominio
-  if (process.env.REPLIT_DOMAINS) {
-    for (const domain of process.env.REPLIT_DOMAINS.split(",")) {
-      setupStrategy(domain.trim());
-    }
-  }
-  
-  // Si no hay dominios configurados, manejamos el dominio dinámicamente
-  passport.serializeUser((user: Express.User, cb) => cb(null, user));
-  passport.deserializeUser((user: Express.User, cb) => cb(null, user));
-
-  // Configura el inicio de sesión
-  app.get("/api/login", (req, res, next) => {
-    // Usa el dominio de la solicitud si no hay REPLIT_DOMAINS
-    const domain = req.get('host') || '';
-    
-    // Comprueba si hay una estrategia para este dominio, si no, usa una genérica
-    const strategyName = passport.Authenticator.prototype._strategy(`replitauth:${domain}`) 
-      ? `replitauth:${domain}` 
-      : Object.keys(passport._strategies).find(s => s.startsWith('replitauth:'));
-    
-    if (!strategyName) {
-      // Si no hay ninguna estrategia configurada, crea una para este dominio
-      setupStrategy(domain);
-    }
-    
-    passport.authenticate(strategyName || `replitauth:${domain}`, {
-      prompt: "login consent",
-      scope: ["openid", "email", "profile", "offline_access"],
-    })(req, res, next);
+  // Simple session serialization
+  passport.serializeUser((user: any, done) => {
+    done(null, user.id);
   });
 
-  // Callback después de la autenticación
-  app.get("/api/callback", (req, res, next) => {
-    const domain = req.get('host') || '';
-    const strategyName = passport.Authenticator.prototype._strategy(`replitauth:${domain}`) 
-      ? `replitauth:${domain}` 
-      : Object.keys(passport._strategies).find(s => s.startsWith('replitauth:'));
+  passport.deserializeUser(async (id: number, done) => {
+    try {
+      const user = await storage.getUser(id);
+      done(null, user);
+    } catch (error) {
+      done(error);
+    }
+  });
+
+  // Configuración simplificada para desarrollo
+  // En producción, esto se reemplazaría con integración completa con Replit Auth
+  app.get("/api/login", (req, res) => {
+    // Determinar si es modo registro o inicio de sesión
+    const isSignup = req.query.signup === 'true';
+    
+    // En desarrollo, redirigimos a la página de autenticación
+    if (isSignup) {
+      res.redirect('/auth?mode=register');
+    } else {
+      res.redirect('/auth');
+    }
+  });
+
+  // Ruta simplificada para login manual - Se reemplazaría con Replit Auth en producción
+  app.post('/api/auth/login', async (req, res) => {
+    try {
+      const { username, password } = req.body;
       
-    passport.authenticate(strategyName || `replitauth:${domain}`, {
-      successReturnToOrRedirect: "/",
-      failureRedirect: "/auth",
-    })(req, res, next);
+      // Buscar usuario por nombre de usuario
+      const user = await storage.getUserByUsername(username);
+      
+      if (!user) {
+        return res.status(401).json({ 
+          success: false, 
+          message: 'Credenciales inválidas' 
+        });
+      }
+      
+      req.login(user, (err) => {
+        if (err) {
+          return res.status(500).json({ 
+            success: false, 
+            message: 'Error de autenticación' 
+          });
+        }
+        
+        return res.json({ 
+          success: true, 
+          user: {
+            id: user.id,
+            username: user.username,
+            userRole: user.userRole
+          }
+        });
+      });
+    } catch (error) {
+      res.status(500).json({ 
+        success: false, 
+        message: 'Error en el servidor' 
+      });
+    }
   });
 
-  // Cierre de sesión
-  app.get("/api/logout", (req, res) => {
+  // Ruta para registro de usuarios
+  app.post('/api/auth/register', async (req, res) => {
+    try {
+      const { username, password, userRole } = req.body;
+      
+      // Verificar si el usuario ya existe
+      const existingUser = await storage.getUserByUsername(username);
+      
+      if (existingUser) {
+        return res.status(409).json({ 
+          success: false, 
+          message: 'El nombre de usuario ya está en uso' 
+        });
+      }
+      
+      // Crear nuevo usuario
+      const newUser = await storage.createUser({
+        username,
+        password,
+        userRole: userRole || 'audience',
+      });
+      
+      // Iniciar sesión automáticamente después de registro
+      req.login(newUser, (err) => {
+        if (err) {
+          return res.status(500).json({ 
+            success: false, 
+            message: 'Error al iniciar sesión después del registro' 
+          });
+        }
+        
+        return res.json({ 
+          success: true, 
+          user: {
+            id: newUser.id,
+            username: newUser.username,
+            userRole: newUser.userRole
+          }
+        });
+      });
+    } catch (error) {
+      res.status(500).json({ 
+        success: false, 
+        message: 'Error en el servidor' 
+      });
+    }
+  });
+
+  // Logout route
+  app.get('/api/logout', (req, res) => {
     req.logout(() => {
-      res.redirect(
-        client.buildEndSessionUrl(config, {
-          client_id: process.env.REPL_ID!,
-          post_logout_redirect_uri: `${req.protocol}://${req.get('host')}`,
-        }).href
-      );
+      res.redirect('/');
     });
   });
 
   // Obtener usuario actual
-  app.get('/api/auth/user', isAuthenticated, async (req: any, res) => {
-    try {
-      const userId = req.user.id;
-      const user = await storage.getUser(userId);
-      res.json(user);
-    } catch (error) {
-      console.error("Error fetching user:", error);
-      res.status(500).json({ message: "Failed to fetch user" });
+  app.get('/api/auth/user', (req, res) => {
+    if (req.isAuthenticated()) {
+      const user = req.user as any;
+      return res.json({
+        ...user,
+        authenticated: true
+      });
+    } else {
+      return res.status(401).json({ authenticated: false });
     }
   });
 }
 
 // Authentication middleware
-export const isAuthenticated: RequestHandler = async (req, res, next) => {
-  const user = req.user as any;
-
-  if (!req.isAuthenticated() || !user.expires_at) {
-    return res.status(401).json({ authenticated: false });
-  }
-
-  const now = Math.floor(Date.now() / 1000);
-  if (now <= user.expires_at) {
+export const isAuthenticated: RequestHandler = (req, res, next) => {
+  if (req.isAuthenticated()) {
     return next();
   }
-
-  const refreshToken = user.refresh_token;
-  if (!refreshToken) {
-    return res.redirect("/api/login");
-  }
-
-  try {
-    const config = await getOidcConfig();
-    const client = new client.Client({
-      issuer: config.issuer,
-      client_id: process.env.REPL_ID!,
-      redirect_uris: [`https://${req.get('host')}/api/callback`],
-      response_types: ['code'],
-    });
-    const tokenSet = await client.refresh(refreshToken);
-    updateUserSession(user, tokenSet);
-    return next();
-  } catch (error) {
-    return res.redirect("/api/login");
-  }
+  
+  res.status(401).json({ authenticated: false });
 };

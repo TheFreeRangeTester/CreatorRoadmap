@@ -19,6 +19,7 @@ import { Label } from "@/components/ui/label";
 import { FormDescription } from "@/components/ui/form";
 import { Separator } from "@/components/ui/separator";
 import { ReplitAuthButton } from "@/components/replit-auth-button";
+import { ReplitRegisterButton } from "@/components/replit-register-button";
 
 // Extend schema for validation
 const formSchema = insertUserSchema.extend({
@@ -237,7 +238,7 @@ export default function AuthPage() {
                             <p className="text-sm">{t('auth.selectRoleReplit', 'Podrás seleccionar tu rol en tu perfil después de iniciar sesión.')}</p>
                           </div>
                           
-                          <ReplitAuthButton 
+                          <ReplitRegisterButton 
                             className="w-full" 
                             returnTo={getRedirectDestination()}
                           />
