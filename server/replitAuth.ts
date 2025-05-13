@@ -54,9 +54,7 @@ function updateUserSession(
   user.expires_at = user.claims?.exp;
 }
 
-async function upsertUser(
-  claims: any,
-) {
+async function upsertUser(claims: any) {
   // Transformamos el ID numérico de Replit a string para almacenarlo en nuestra BD
   const replitUserId = claims["sub"];
   
@@ -75,10 +73,11 @@ async function upsertUser(
     // Actualizar el usuario existente
     return await storage.updateUserProfile(existingUser.id, {
       email: claims["email"],
-      firstName: claims["first_name"],
-      lastName: claims["last_name"],
-      logoUrl: claims["profile_image_url"],
+      // Usar el tipado correcto para los campos de UpdateProfile
       replitId: replitUserId,
+      firstName: claims["first_name"] || null,
+      lastName: claims["last_name"] || null,
+      logoUrl: claims["profile_image_url"] || null,
     });
   } else {
     // Verificar si el username ya existe y ajustarlo si es necesario
@@ -89,15 +88,19 @@ async function upsertUser(
       counter++;
     }
     
-    // Crear nuevo usuario
+    // Crear nuevo usuario con los campos requeridos
+    const profileDescription = `${claims["first_name"] || ''} ${claims["last_name"] || ''}`.trim();
+    
     return await storage.createUser({
       username: uniqueUsername,
       password: "", // No necesitamos contraseña para usuarios de Replit Auth
-      email: claims["email"],
-      logoUrl: claims["profile_image_url"],
-      profileDescription: `${claims["first_name"] || ''} ${claims["last_name"] || ''}`.trim(),
-      replitId: replitUserId,
       userRole: "audience", // Por defecto todos los usuarios son 'audience'
+      email: claims["email"] || "",
+      logoUrl: claims["profile_image_url"] || null,
+      profileDescription: profileDescription || null,
+      replitId: replitUserId,
+      firstName: claims["first_name"] || null,
+      lastName: claims["last_name"] || null,
     });
   }
 }
@@ -145,7 +148,11 @@ export async function setupAuth(app: Express) {
   app.get("/api/login", (req, res, next) => {
     // Redirección a la que volver después del login
     const redirectTo = req.query.redirect || "/";
-    req.session.returnTo = redirectTo;
+    
+    // Almacenar la URL de redirección en la sesión
+    if (req.session) {
+      (req.session as any).returnTo = redirectTo;
+    }
     
     passport.authenticate(`replitauth:${req.hostname}`, {
       prompt: "login consent",
@@ -156,11 +163,18 @@ export async function setupAuth(app: Express) {
   app.get("/api/callback", (req, res, next) => {
     passport.authenticate(`replitauth:${req.hostname}`, {
       failureRedirect: "/auth?error=authentication_failed",
-    })(req, res, (err) => {
-      if (err) return next(err);
-      const returnTo = (req.session as any).returnTo || "/";
-      delete (req.session as any).returnTo;
-      res.redirect(returnTo);
+    })(req, res, (error: Error | null) => {
+      if (error) return next(error);
+      
+      // Obtener la URL de redirección de la sesión
+      const returnTo = (req.session as any)?.returnTo || "/";
+      
+      // Limpiar la URL de redirección de la sesión
+      if (req.session) {
+        delete (req.session as any).returnTo;
+      }
+      
+      res.redirect(returnTo as string);
     });
   });
 
