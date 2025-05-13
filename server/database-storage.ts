@@ -36,6 +36,11 @@ export class DatabaseStorage implements IStorage {
     const [user] = await db.select().from(users).where(eq(users.email, email));
     return user;
   }
+  
+  async getUserByReplitId(replitId: string): Promise<User | undefined> {
+    const [user] = await db.select().from(users).where(eq(users.replitId, replitId));
+    return user;
+  }
 
   async createUser(insertUser: InsertUser): Promise<User> {
     const [user] = await db.insert(users).values(insertUser).returning();
@@ -63,7 +68,11 @@ export class DatabaseStorage implements IStorage {
         // Campos de rol
         userRole: profileData.userRole ?? currentUser.userRole,
         // Email field
-        email: profileData.email !== undefined ? profileData.email : currentUser.email
+        email: profileData.email !== undefined ? profileData.email : currentUser.email,
+        // Campos para Replit Auth
+        replitId: profileData.replitId !== undefined ? profileData.replitId : currentUser.replitId,
+        firstName: profileData.firstName !== undefined ? profileData.firstName : currentUser.firstName,
+        lastName: profileData.lastName !== undefined ? profileData.lastName : currentUser.lastName
       })
       .where(eq(users.id, id))
       .returning();
