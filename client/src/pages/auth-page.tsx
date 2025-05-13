@@ -32,6 +32,7 @@ export default function AuthPage() {
   const { user, loginMutation, registerMutation } = useAuth();
   const [, navigate] = useLocation();
   const [isPublicProfile, setIsPublicProfile] = useState(false);
+  const [loginOnly, setLoginOnly] = useState(false);
   const [, params] = useRoute('/creators/:username?');
   const [voteIntent, setVoteIntent] = useState<{ideaId: number, redirect: string} | null>(null);
 
@@ -61,6 +62,12 @@ export default function AuthPage() {
 
   // Check if user was redirected from a public profile
   useEffect(() => {
+    // Check URL parameters for login=true
+    const searchParams = new URLSearchParams(window.location.search);
+    if (searchParams.get('login') === 'true') {
+      setLoginOnly(true);
+    }
+    
     if (params?.username) {
       setIsPublicProfile(true);
       registerForm.setValue('userRole', 'audience');
@@ -164,16 +171,20 @@ export default function AuthPage() {
           <div className="mx-auto w-full max-w-md">
             <div className="flex justify-end w-full">
               <Tabs defaultValue="login" className="w-full">
-                <TabsList className="grid w-full grid-cols-2">
+                <TabsList className={`grid w-full ${loginOnly ? 'grid-cols-1' : 'grid-cols-2'}`}>
                   <TabsTrigger value="login">{t('auth.login')}</TabsTrigger>
-                  <TabsTrigger value="register">{t('auth.register')}</TabsTrigger>
+                  {!loginOnly && <TabsTrigger value="register">{t('auth.register')}</TabsTrigger>}
                 </TabsList>
                 
                 <TabsContent value="login">
                   <Card>
                     <CardHeader>
                       <CardTitle>{t('auth.loginTitle')}</CardTitle>
-                      <CardDescription>{t('auth.loginSubtitle')}</CardDescription>
+                      <CardDescription>
+                        {loginOnly 
+                          ? t('auth.loginSubtitlePublic', 'Inicia sesión para votar en este perfil de creador') 
+                          : t('auth.loginSubtitle')}
+                      </CardDescription>
                     </CardHeader>
                     <CardContent>
                       <Form {...loginForm}>
@@ -221,7 +232,7 @@ export default function AuthPage() {
                   </Card>
                 </TabsContent>
                 
-                <TabsContent value="register">
+                {!loginOnly && <TabsContent value="register">
                   <Card>
                     <CardHeader>
                       <CardTitle>
@@ -360,8 +371,7 @@ export default function AuthPage() {
                   </Card>
                 </TabsContent>
               </Tabs>
-            
-          </div>
+            </div>
           </div>
         </div>
       </main>
