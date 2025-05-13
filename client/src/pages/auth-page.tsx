@@ -133,9 +133,16 @@ export default function AuthPage() {
       return redirectTo;
     }
     
+    // Check URL parameters for referring creator
+    const searchParams = new URLSearchParams(window.location.search);
+    const referrer = searchParams.get('referrer');
+    if (referrer && referrer.startsWith('/')) {
+      return referrer;
+    }
+    
     // If we came from a creator profile, go back to that profile
     if (params?.username) {
-      return `/${params.username}`;
+      return `/creators/${params.username}`;
     }
     
     // Default redirects based on role

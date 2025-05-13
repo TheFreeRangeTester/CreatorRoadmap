@@ -172,9 +172,9 @@ export default function CreatorPublicPage() {
       
       // Redirect to login page with referrer parameter to come back to this profile
       // Store current location for redirect after auth
-      localStorage.setItem('redirectAfterAuth', `/${username}`);
+      localStorage.setItem('redirectAfterAuth', `/creators/${username}`);
       setTimeout(() => {
-        navigate(`/auth?referrer=/${username}&login=true`);
+        navigate(`/auth?referrer=/creators/${username}`);
       }, 1500);
       return;
     }
@@ -352,7 +352,7 @@ export default function CreatorPublicPage() {
                   </Link>
                 </div>
               ) : (
-                <Link to={`/auth?referrer=/${username}&login=true`} className="flex items-center gap-1.5 hover:text-white/80">
+                <Link to={`/auth?referrer=/creators/${username}`} className="flex items-center gap-1.5 hover:text-white/80">
                   <LogIn className="h-3.5 w-3.5" />
                   <span>{t('common.loginToVote')}</span>
                 </Link>
