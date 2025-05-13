@@ -116,11 +116,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         }
         
         const data = await res.json();
+        console.log("Login response:", data);
         
-        if (data.redirectTo) {
-          window.location.href = data.redirectTo;
-        }
-        
+        // No redirigir automáticamente, manejar en la UI
         return data.user as UserResponse;
       } else {
         // En producción redireccionamos a Replit Auth
@@ -128,9 +126,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         return new Promise<UserResponse>(() => {});
       }
     },
-    onSuccess: () => {
-      // Refresh user data
-      queryClient.invalidateQueries({ queryKey: ["/api/auth/user"] });
+    onSuccess: (userData) => {
+      console.log("Login successful, user data:", userData);
+      
+      // Actualizar caché con datos del usuario
+      queryClient.setQueryData(["/api/auth/user"], userData);
+      
+      // Forzar refetch después para asegurarnos que los datos están actualizados
+      setTimeout(() => {
+        refetchUser();
+      }, 100);
     },
     onError: (error: Error) => {
       toast({
@@ -159,11 +164,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         }
         
         const data = await res.json();
+        console.log("Register response:", data);
         
-        if (data.redirectTo) {
-          window.location.href = data.redirectTo;
-        }
-        
+        // No redirigir automáticamente, manejar en la UI
         return data.user as UserResponse;
       } else {
         // En producción redireccionamos a Replit Auth
@@ -171,9 +174,22 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         return new Promise<UserResponse>(() => {});
       }
     },
-    onSuccess: () => {
-      // Refresh user data
-      queryClient.invalidateQueries({ queryKey: ["/api/auth/user"] });
+    onSuccess: (userData) => {
+      console.log("Registration successful, user data:", userData);
+      
+      // Actualizar caché con datos del usuario
+      queryClient.setQueryData(["/api/auth/user"], userData);
+      
+      // Forzar refetch después para asegurarnos que los datos están actualizados
+      setTimeout(() => {
+        refetchUser();
+      }, 100);
+      
+      // Mostrar mensaje de éxito
+      toast({
+        title: "Registro exitoso",
+        description: "Tu cuenta ha sido creada correctamente",
+      });
     },
     onError: (error: Error) => {
       toast({
