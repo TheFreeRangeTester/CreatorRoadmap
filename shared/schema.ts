@@ -1,11 +1,22 @@
-import { pgTable, text, serial, integer, timestamp, boolean } from "drizzle-orm/pg-core";
+import { pgTable, text, serial, integer, timestamp, boolean, varchar, jsonb, index } from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
+
+// Session storage table para Replit Auth
+export const sessions = pgTable(
+  "sessions",
+  {
+    sid: varchar("sid").primaryKey(),
+    sess: jsonb("sess").notNull(),
+    expire: timestamp("expire").notNull(),
+  },
+  (table) => [index("IDX_session_expire").on(table.expire)],
+);
 
 export const users = pgTable("users", {
   id: serial("id").primaryKey(),
   username: text("username").notNull().unique(),
-  password: text("password").notNull(),
+  password: text("password"), // Ya no es requerido para usuarios de Replit Auth
   userRole: text("user_role").notNull().default("audience"), // 'creator' o 'audience'
   profileDescription: text("profile_description"),
   logoUrl: text("logo_url"),
@@ -17,6 +28,10 @@ export const users = pgTable("users", {
   websiteUrl: text("website_url"),
   profileBackground: text("profile_background").default("gradient-1"),
   email: text("email").unique(),
+  // Campos para Replit Auth
+  replitId: text("replit_id").unique(), // ID de usuario de Replit
+  firstName: text("first_name"),
+  lastName: text("last_name"),
 });
 
 export const ideas = pgTable("ideas", {
@@ -61,6 +76,9 @@ export const insertUserSchema = createInsertSchema(users).pick({
   email: z.string().email().optional(),
   logoUrl: z.string().optional(),
   profileDescription: z.string().optional(),
+  replitId: z.string().optional(),
+  firstName: z.string().optional(),
+  lastName: z.string().optional(),
 });
 
 export const userResponseSchema = z.object({
@@ -77,6 +95,9 @@ export const userResponseSchema = z.object({
   websiteUrl: z.string().nullable().optional(),
   profileBackground: z.string().default("gradient-1"),
   email: z.string().email().optional(),
+  replitId: z.string().optional(),
+  firstName: z.string().nullable().optional(),
+  lastName: z.string().nullable().optional(),
 });
 
 // Idea schemas
@@ -162,6 +183,10 @@ export const updateProfileSchema = z.object({
   // Campo para actualizar el rol
   userRole: z.enum(['creator', 'audience']).optional(),
   email: z.string().email().optional(),
+  // Campos para Replit Auth
+  replitId: z.string().optional(),
+  firstName: z.string().optional().nullable(),
+  lastName: z.string().optional().nullable(),
 });
 
 // Types
