@@ -13,6 +13,7 @@ import DeleteConfirmation from "@/components/delete-confirmation";
 import CreatorControls from "@/components/creator-controls";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { LanguageToggle } from "@/components/language-toggle";
+import { MobileMenu } from "@/components/mobile-menu";
 import LeaderboardInfo from "@/components/leaderboard-info";
 import EmptyState from "@/components/empty-state";
 import ShareProfile from "@/components/share-profile";
@@ -437,38 +438,43 @@ export default function HomePage() {
                 </div>
               </div>
             </div>
-            <div className="flex items-center gap-4">
+            
+            {/* Desktop menu */}
+            <div className="hidden md:flex items-center gap-4">
               {user ? (
-                <>
-                  <div className="flex items-center gap-4">
-                    <Link href="/profile">
-                      <Badge variant="outline" className="bg-blue-50 text-blue-700 border-blue-200 dark:bg-blue-900/20 dark:text-blue-300 dark:border-blue-800/50 px-3 py-1 transition-all duration-300 hover:shadow-md hover:-translate-y-0.5 cursor-pointer">
-                        <User className="h-3.5 w-3.5 mr-1.5 text-blue-500 dark:text-blue-400" />
-                        <span className="font-medium">{user.username}</span>
-                      </Badge>
-                    </Link>
-                    <LanguageToggle />
-                    <ThemeToggle />
-                    <button
-                      onClick={handleLogout}
-                      className="inline-flex items-center px-4 py-2 border border-gray-300 dark:border-gray-700 rounded-md shadow-sm text-sm font-medium text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary dark:focus:ring-offset-gray-900"
-                    >
-                      {t('common.logout', 'Log out')}
-                    </button>
-                  </div>
-                </>
+                <div className="flex items-center gap-4">
+                  <Link href="/profile">
+                    <Badge variant="outline" className="bg-blue-50 text-blue-700 border-blue-200 dark:bg-blue-900/20 dark:text-blue-300 dark:border-blue-800/50 px-3 py-1 transition-all duration-300 hover:shadow-md hover:-translate-y-0.5 cursor-pointer">
+                      <User className="h-3.5 w-3.5 mr-1.5 text-blue-500 dark:text-blue-400" />
+                      <span className="font-medium">{user.username}</span>
+                    </Badge>
+                  </Link>
+                  <LanguageToggle />
+                  <ThemeToggle />
+                  <Button
+                    variant="outline"
+                    onClick={handleLogout}
+                    size="sm"
+                    className="border-gray-300 dark:border-gray-700 text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700"
+                  >
+                    {t('common.logout', 'Log out')}
+                  </Button>
+                </div>
               ) : (
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-3">
                   <LanguageToggle />
                   <ThemeToggle />
                   <Link href="/auth">
-                    <button className="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-primary hover:bg-primary-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary dark:focus:ring-offset-gray-900">
+                    <Button size="sm" className="ml-1">
                       {t('common.login', 'Log in')}
-                    </button>
+                    </Button>
                   </Link>
                 </div>
               )}
             </div>
+            
+            {/* Mobile menu */}
+            <MobileMenu onLogout={handleLogout} />
           </div>
         </div>
       </header>
