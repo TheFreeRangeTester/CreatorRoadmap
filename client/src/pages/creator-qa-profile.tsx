@@ -563,14 +563,20 @@ export default function CreatorQAProfile() {
       <div className="fixed inset-0 pointer-events-none z-[9999]">
         <AchievementsContainer />
       </div>
-      {/* Header con controles y estado de usuario */}
-      <div className="fixed top-4 right-4 flex items-center gap-3 z-10">
-        {user && (
-          <div className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-full px-4 py-2 flex items-center shadow-sm border border-gray-100 dark:border-gray-700">
-            <span className="text-sm font-medium text-gray-600 dark:text-gray-300 mr-2">
+
+      {/* Header centrado con saludo y nombre de usuario */}
+      {user && (
+        <div className="fixed top-4 left-1/2 transform -translate-x-1/2 z-10">
+          <motion.div
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.3 }}
+            className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-full px-6 py-2 flex items-center shadow-sm border border-gray-100 dark:border-gray-700"
+          >
+            <span className="text-sm font-medium text-gray-600 dark:text-gray-300">
               {t("common.greeting", "👋🏻Hi")} {user.username}
             </span>
-            <Avatar className="h-6 w-6">
+            <Avatar className="h-6 w-6 ml-2">
               <AvatarImage src={user.logoUrl || ""} />
               <AvatarFallback className="text-xs bg-primary/20 text-primary">
                 {user.username?.substring(0, 2).toUpperCase()}
@@ -581,9 +587,9 @@ export default function CreatorQAProfile() {
                 {t("roles.audience", "Audience member")}
               </span>
             )}
-          </div>
-        )}
-      </div>
+          </motion.div>
+        </div>
+      )}
 
       {/* Sección de Perfil */}
       <div className="container mx-auto px-4 py-4 pt-16">
