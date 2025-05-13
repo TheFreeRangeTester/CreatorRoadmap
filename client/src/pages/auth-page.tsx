@@ -232,144 +232,146 @@ export default function AuthPage() {
                   </Card>
                 </TabsContent>
                 
-                {!loginOnly && <TabsContent value="register">
-                  <Card>
-                    <CardHeader>
-                      <CardTitle>
-                        {isPublicProfile 
-                          ? t('auth.registerAudienceTitle')
-                          : t('auth.registerCreatorTitle')}
-                      </CardTitle>
-                      <CardDescription>
-                        {isPublicProfile 
-                          ? t('auth.registerAudienceSubtitle')
-                          : t('auth.registerCreatorSubtitle')}
-                      </CardDescription>
-                      <div className={`mt-3 py-2 px-3 bg-green-50 dark:bg-green-900 border border-green-200 dark:border-green-800 rounded-md`}>
-                        <p className="text-xs text-green-700 dark:text-green-300">
+                {!loginOnly && (
+                  <TabsContent value="register">
+                    <Card>
+                      <CardHeader>
+                        <CardTitle>
                           {isPublicProfile 
-                            ? t('auth.registerAudienceDescription')
-                            : t('auth.registerCreatorDescription')}
-                        </p>
-                      </div>
-                    </CardHeader>
-                    <CardContent>
-                      <Form {...registerForm}>
-                        <form onSubmit={registerForm.handleSubmit(onRegisterSubmit)} className="space-y-4">
-                          <FormField
-                            control={registerForm.control}
-                            name="username"
-                            render={({ field }) => (
-                              <FormItem>
-                                <FormLabel>{t('common.username')}</FormLabel>
-                                <FormControl>
-                                  <Input placeholder={t('common.username')} {...field} />
-                                </FormControl>
-                                <FormMessage />
-                              </FormItem>
-                            )}
-                          />
-                          <FormField
-                            control={registerForm.control}
-                            name="email"
-                            render={({ field }) => (
-                              <FormItem>
-                                <FormLabel>{t('common.email')}</FormLabel>
-                                <FormControl>
-                                  <Input type="email" placeholder={t('common.email')} {...field} />
-                                </FormControl>
-                                <FormDescription>
-                                  {t('auth.emailOptional')}
-                                </FormDescription>
-                                <FormMessage />
-                              </FormItem>
-                            )}
-                          />
-                          <FormField
-                            control={registerForm.control}
-                            name="password"
-                            render={({ field }) => (
-                              <FormItem>
-                                <FormLabel>{t('common.password')}</FormLabel>
-                                <FormControl>
-                                  <Input type="password" placeholder="******" {...field} />
-                                </FormControl>
-                                <FormMessage />
-                              </FormItem>
-                            )}
-                          />
-                          
-                          <FormField
-                            control={registerForm.control}
-                            name="userRole"
-                            render={({ field }) => (
-                              <FormItem>
-                                <FormLabel>{t('auth.selectRole')}</FormLabel>
-                                <FormControl>
-                                  <RadioGroup
-                                    onValueChange={field.onChange}
-                                    defaultValue={field.value}
-                                    value={field.value}
-                                    className="grid grid-cols-2 gap-4"
-                                  >
-                                    <div>
-                                      <RadioGroupItem
-                                        value="creator"
-                                        id="creator"
-                                        className="peer sr-only"
-                                        disabled={isPublicProfile}
-                                      />
-                                      <Label
-                                        htmlFor="creator"
-                                        className={`flex flex-col items-center justify-between rounded-md border-2 border-muted bg-transparent p-4 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary ${
-                                          isPublicProfile ? "opacity-50 cursor-not-allowed" : ""
-                                        }`}
-                                      >
-                                        <div className="mb-3 text-center font-semibold">
-                                          {t('auth.creatorRole')}
-                                        </div>
-                                        <div className="text-xs text-center text-muted-foreground">
-                                          {t('auth.creatorRoleDescription')}
-                                        </div>
-                                      </Label>
-                                    </div>
-                                    <div>
-                                      <RadioGroupItem
-                                        value="audience"
-                                        id="audience"
-                                        className="peer sr-only"
-                                      />
-                                      <Label
-                                        htmlFor="audience"
-                                        className="flex flex-col items-center justify-between rounded-md border-2 border-muted bg-transparent p-4 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary"
-                                      >
-                                        <div className="mb-3 text-center font-semibold">
-                                          {t('auth.audienceRole')}
-                                        </div>
-                                        <div className="text-xs text-center text-muted-foreground">
-                                          {t('auth.audienceRoleDescription')}
-                                        </div>
-                                      </Label>
-                                    </div>
-                                  </RadioGroup>
-                                </FormControl>
-                                <FormMessage />
-                              </FormItem>
-                            )}
-                          />
-                          
-                          <Button 
-                            type="submit" 
-                            className="w-full"
-                            disabled={registerMutation.isPending}
-                          >
-                            {registerMutation.isPending ? t('auth.registerCta') + "..." : t('auth.registerCta')}
-                          </Button>
-                        </form>
-                      </Form>
-                    </CardContent>
-                  </Card>
-                </TabsContent>
+                            ? t('auth.registerAudienceTitle')
+                            : t('auth.registerCreatorTitle')}
+                        </CardTitle>
+                        <CardDescription>
+                          {isPublicProfile 
+                            ? t('auth.registerAudienceSubtitle')
+                            : t('auth.registerCreatorSubtitle')}
+                        </CardDescription>
+                        <div className={`mt-3 py-2 px-3 bg-green-50 dark:bg-green-900 border border-green-200 dark:border-green-800 rounded-md`}>
+                          <p className="text-xs text-green-700 dark:text-green-300">
+                            {isPublicProfile 
+                              ? t('auth.registerAudienceDescription')
+                              : t('auth.registerCreatorDescription')}
+                          </p>
+                        </div>
+                      </CardHeader>
+                      <CardContent>
+                        <Form {...registerForm}>
+                          <form onSubmit={registerForm.handleSubmit(onRegisterSubmit)} className="space-y-4">
+                            <FormField
+                              control={registerForm.control}
+                              name="username"
+                              render={({ field }) => (
+                                <FormItem>
+                                  <FormLabel>{t('common.username')}</FormLabel>
+                                  <FormControl>
+                                    <Input placeholder={t('common.username')} {...field} />
+                                  </FormControl>
+                                  <FormMessage />
+                                </FormItem>
+                              )}
+                            />
+                            <FormField
+                              control={registerForm.control}
+                              name="email"
+                              render={({ field }) => (
+                                <FormItem>
+                                  <FormLabel>{t('common.email')}</FormLabel>
+                                  <FormControl>
+                                    <Input type="email" placeholder={t('common.email')} {...field} />
+                                  </FormControl>
+                                  <FormDescription>
+                                    {t('auth.emailOptional')}
+                                  </FormDescription>
+                                  <FormMessage />
+                                </FormItem>
+                              )}
+                            />
+                            <FormField
+                              control={registerForm.control}
+                              name="password"
+                              render={({ field }) => (
+                                <FormItem>
+                                  <FormLabel>{t('common.password')}</FormLabel>
+                                  <FormControl>
+                                    <Input type="password" placeholder="******" {...field} />
+                                  </FormControl>
+                                  <FormMessage />
+                                </FormItem>
+                              )}
+                            />
+                            
+                            <FormField
+                              control={registerForm.control}
+                              name="userRole"
+                              render={({ field }) => (
+                                <FormItem>
+                                  <FormLabel>{t('auth.selectRole')}</FormLabel>
+                                  <FormControl>
+                                    <RadioGroup
+                                      onValueChange={field.onChange}
+                                      defaultValue={field.value}
+                                      value={field.value}
+                                      className="grid grid-cols-2 gap-4"
+                                    >
+                                      <div>
+                                        <RadioGroupItem
+                                          value="creator"
+                                          id="creator"
+                                          className="peer sr-only"
+                                          disabled={isPublicProfile}
+                                        />
+                                        <Label
+                                          htmlFor="creator"
+                                          className={`flex flex-col items-center justify-between rounded-md border-2 border-muted bg-transparent p-4 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary ${
+                                            isPublicProfile ? "opacity-50 cursor-not-allowed" : ""
+                                          }`}
+                                        >
+                                          <div className="mb-3 text-center font-semibold">
+                                            {t('auth.creatorRole')}
+                                          </div>
+                                          <div className="text-xs text-center text-muted-foreground">
+                                            {t('auth.creatorRoleDescription')}
+                                          </div>
+                                        </Label>
+                                      </div>
+                                      <div>
+                                        <RadioGroupItem
+                                          value="audience"
+                                          id="audience"
+                                          className="peer sr-only"
+                                        />
+                                        <Label
+                                          htmlFor="audience"
+                                          className="flex flex-col items-center justify-between rounded-md border-2 border-muted bg-transparent p-4 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary"
+                                        >
+                                          <div className="mb-3 text-center font-semibold">
+                                            {t('auth.audienceRole')}
+                                          </div>
+                                          <div className="text-xs text-center text-muted-foreground">
+                                            {t('auth.audienceRoleDescription')}
+                                          </div>
+                                        </Label>
+                                      </div>
+                                    </RadioGroup>
+                                  </FormControl>
+                                  <FormMessage />
+                                </FormItem>
+                              )}
+                            />
+                            
+                            <Button 
+                              type="submit" 
+                              className="w-full"
+                              disabled={registerMutation.isPending}
+                            >
+                              {registerMutation.isPending ? t('auth.registerCta') + "..." : t('auth.registerCta')}
+                            </Button>
+                          </form>
+                        </Form>
+                      </CardContent>
+                    </Card>
+                  </TabsContent>
+                )}
               </Tabs>
             </div>
           </div>
