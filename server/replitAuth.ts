@@ -329,14 +329,29 @@ export async function setupAuth(app: Express) {
           // Obtener el rol de usuario de la sesión o usar el proporcionado
           const userRole = req.session.userRole || providedRole || 'audience';
           
-          // Verificar si el usuario ya existe
-          const existingUser = await storage.getUserByUsername(username);
-          
-          if (existingUser) {
+          // Verificar si el usuario ya existe por nombre de usuario
+          const existingUserByName = await storage.getUserByUsername(username);
+          if (existingUserByName) {
             return res.status(409).json({ 
               success: false, 
               message: 'El nombre de usuario ya está en uso' 
             });
+          }
+          
+          // Verificar si el email ya existe (si se proporcionó un email)
+          if (email) {
+            try {
+              const existingUserByEmail = await storage.getUserByEmail(email);
+              if (existingUserByEmail) {
+                return res.status(409).json({ 
+                  success: false, 
+                  message: 'El correo electrónico ya está registrado' 
+                });
+              }
+            } catch (err) {
+              // Si hay un error al buscar por email, simplemente continuamos
+              console.log("Error al verificar email, continuando:", err);
+            }
           }
           
           console.log(`Registrando nuevo usuario: ${username} con rol: ${userRole}`);
@@ -346,7 +361,7 @@ export async function setupAuth(app: Express) {
             username,
             password,
             userRole,
-            email
+            email: email || undefined // Asegurarse de no pasar email como null
           });
           
           // Iniciar sesión automáticamente después de registro
@@ -376,11 +391,21 @@ export async function setupAuth(app: Express) {
               redirectTo
             });
           });
-        } catch (error) {
+        } catch (error: any) {
           console.error("Error en registro:", error);
+          
+          // Verificar error específico de email duplicado
+          if (error && error.code === '23505' && error.constraint === 'users_email_key') {
+            return res.status(409).json({ 
+              success: false, 
+              message: 'El correo electrónico ya está registrado' 
+            });
+          }
+          
+          // Error genérico
           res.status(500).json({ 
             success: false, 
-            message: 'Error en el servidor' 
+            message: 'Error en el servidor. Por favor intenta con un correo electrónico diferente.' 
           });
         }
       });
