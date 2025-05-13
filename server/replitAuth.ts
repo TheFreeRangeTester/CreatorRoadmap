@@ -158,14 +158,16 @@ export async function setupAuth(app: Express) {
       }
     };
 
-    // Si no tenemos REPLIT_DOMAINS en modo de desarrollo, usamos localhost
+    // Determinar si estamos en desarrollo o producción
+    // En desarrollo o con NODE_ENV diferente de 'production', usamos auth local
+    const isDevelopment = process.env.NODE_ENV !== 'production';
+    
+    console.log(`Configurando auth para entorno: ${isDevelopment ? 'desarrollo' : 'producción'}`);
+    
+    // Lista de dominios para Replit Auth en producción
     const domains = process.env.REPLIT_DOMAINS 
       ? process.env.REPLIT_DOMAINS.split(",") 
-      : ["localhost:5000"];
-
-    // En entorno de desarrollo (localhost), solo implementamos un auth básico
-    // para facilitar la prueba sin requerir Replit Auth completo
-    const isDevelopment = domains.includes("localhost:5000");
+      : [];
 
     if (isDevelopment) {
       // En desarrollo, configuración simplificada para pruebas locales
@@ -478,8 +480,11 @@ export const isAuthenticated: RequestHandler = async (req, res, next) => {
       // Actualizar la sesión con el nuevo token
       if (req.session && req.session.passport && req.session.passport.user) {
         const sessionUser = req.session.passport.user;
-        sessionUser.expires_at = tokenResponse.claims().exp;
-        sessionUser.refresh_token = tokenResponse.refresh_token;
+        if (sessionUser && tokenResponse) {
+          const claims = tokenResponse.claims();
+          sessionUser.expires_at = claims?.exp;
+          sessionUser.refresh_token = tokenResponse.refresh_token || '';
+        }
       }
       
       return next();
