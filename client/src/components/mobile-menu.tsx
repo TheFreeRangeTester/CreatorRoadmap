@@ -99,9 +99,9 @@ export const MobileMenu = ({
                   
                   {user ? (
                     <div className="w-full text-center flex flex-col space-y-4">
-                      <div className={`rounded-md text-sm flex items-center justify-center gap-1.5 py-2 ${transparent ? 'bg-white/10 text-white' : 'bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-300'}`}>
-                        <span>{t('common.logged', 'Conectado como')}: </span>
-                        <span className="font-medium">{user.username}</span>
+                      <div className={`rounded-md text-sm flex items-center justify-center gap-2 py-2.5 ${transparent ? 'bg-white/25 text-white shadow-md border border-white/20' : 'bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-300'}`}>
+                        <User className="h-4 w-4 text-blue-200" />
+                        <span className="font-semibold text-base">{user.username}</span>
                       </div>
                       
                       <Button 

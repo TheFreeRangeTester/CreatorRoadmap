@@ -363,11 +363,12 @@ export default function CreatorPublicPage() {
             {/* Lado derecho: escritorio - usuario, tema e idioma */}
             <div className="hidden md:flex items-center gap-2">
               {/* Estado de inicio de sesión */}
-              <div className="bg-white/10 backdrop-blur-sm px-2 py-1 rounded-md text-white text-xs flex items-center border border-white/10">
+              <div className="bg-white/20 backdrop-blur-sm px-3 py-1.5 rounded-md text-white text-xs flex items-center border border-white/20 shadow-sm">
                 {user ? (
-                  <div className="flex items-center gap-1.5">
-                    <span>{t('common.logged', 'Logged in')}: {user.username}</span>
-                    <Link to="/" className="hover:text-white/80">
+                  <div className="flex items-center gap-2">
+                    <User className="h-3.5 w-3.5 text-blue-200" />
+                    <span className="font-medium">{user.username}</span>
+                    <Link to="/" className="hover:text-white/80 ml-1">
                       <LogOut className="h-3.5 w-3.5" />
                     </Link>
                   </div>
