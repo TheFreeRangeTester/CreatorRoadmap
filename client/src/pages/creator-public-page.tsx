@@ -174,7 +174,7 @@ export default function CreatorPublicPage() {
       // Store current location for redirect after auth
       localStorage.setItem('redirectAfterAuth', `/${username}`);
       setTimeout(() => {
-        navigate('/auth');
+        navigate(`/auth?referrer=/${username}&login=true`);
       }, 1500);
       return;
     }
@@ -347,12 +347,12 @@ export default function CreatorPublicPage() {
               {user ? (
                 <div className="flex items-center gap-1.5">
                   <span>{t('common.logged', 'Logged in')}: {user.username}</span>
-                  <Link to="/auth" className="hover:text-white/80">
+                  <Link to="/" className="hover:text-white/80">
                     <LogOut className="h-3.5 w-3.5" />
                   </Link>
                 </div>
               ) : (
-                <Link to={`/auth?referrer=/${username}`} className="flex items-center gap-1.5 hover:text-white/80">
+                <Link to={`/auth?referrer=/${username}&login=true`} className="flex items-center gap-1.5 hover:text-white/80">
                   <LogIn className="h-3.5 w-3.5" />
                   <span>{t('common.loginToVote')}</span>
                 </Link>
@@ -711,7 +711,8 @@ export default function CreatorPublicPage() {
           </div>
           
           {/* Footer */}
-          <div className="text-center mt-10 text-white/50 text-xs">
+          <div className="text-center mt-10 text-white/50 text-xs space-y-2">
+            <p>{t('creator.wantLeaderboard', '¿Quieres tener tu propio Leaderboard?')} <Link href="/" className="hover:text-white transition-colors underline">{t('creator.getStarted', 'Comenzar ahora')}</Link></p>
             <p>Powered by <Link href="/" className="hover:text-white transition-colors">Fanlist</Link></p>
           </div>
         </div>
