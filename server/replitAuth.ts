@@ -129,18 +129,17 @@ export async function setupAuth(app: Express) {
     }
   };
 
-  for (const domain of process.env.REPLIT_DOMAINS!.split(",")) {
-    const strategy = new Strategy(
-      {
-        name: `replitauth:${domain}`,
-        config,
-        scope: "openid email profile offline_access",
-        callbackURL: `/api/callback`,
-      },
-      verify,
-    );
-    passport.use(strategy);
-  }
+  // Usar una sola estrategia con un nombre fijo en lugar de generar múltiples
+  const strategy = new Strategy(
+    {
+      name: "replitauth",
+      config,
+      scope: "openid email profile offline_access",
+      callbackURL: `/api/callback`,
+    },
+    verify,
+  );
+  passport.use(strategy);
 
   passport.serializeUser((user: Express.User, cb) => cb(null, user));
   passport.deserializeUser((user: Express.User, cb) => cb(null, user));
@@ -154,11 +153,11 @@ export async function setupAuth(app: Express) {
       (req.session as any).returnTo = redirectTo;
     }
     
-    passport.authenticate(`replitauth:${req.hostname}`)(req, res, next);
+    passport.authenticate("replitauth")(req, res, next);
   });
 
   app.get("/api/callback", (req, res, next) => {
-    passport.authenticate(`replitauth:${req.hostname}`, {
+    passport.authenticate("replitauth", {
       failureRedirect: "/auth?error=authentication_failed",
     })(req, res, (error: Error | null) => {
       if (error) return next(error);
