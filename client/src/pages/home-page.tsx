@@ -502,8 +502,6 @@ export default function HomePage() {
                       <span className="font-medium">{user.username}</span>
                     </Badge>
                   </Link>
-                  <LanguageToggle />
-                  <ThemeToggle />
                   <Button
                     variant="outline"
                     onClick={handleLogout}
@@ -515,8 +513,6 @@ export default function HomePage() {
                 </div>
               ) : (
                 <div className="flex items-center gap-3">
-                  <LanguageToggle />
-                  <ThemeToggle />
                   <Link href="/auth">
                     <Button size="sm" className="ml-1">
                       {t("common.login", "Log in")}
