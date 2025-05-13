@@ -347,6 +347,7 @@ export default function CreatorPublicPage() {
             <motion.div
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.9 }}
+              className="hidden md:block"
             >
               <Button 
                 variant="ghost" 
@@ -359,8 +360,8 @@ export default function CreatorPublicPage() {
               </Button>
             </motion.div>
             
-            {/* Lado derecho: usuario, tema e idioma */}
-            <div className="flex items-center gap-2">
+            {/* Lado derecho: escritorio - usuario, tema e idioma */}
+            <div className="hidden md:flex items-center gap-2">
               {/* Estado de inicio de sesión */}
               <div className="bg-white/10 backdrop-blur-sm px-2 py-1 rounded-md text-white text-xs flex items-center border border-white/10">
                 {user ? (
@@ -379,6 +380,31 @@ export default function CreatorPublicPage() {
               </div>
               <ThemeToggle />
               <LanguageToggle />
+            </div>
+            
+            {/* Menú móvil */}
+            <div className="flex items-center justify-between w-full md:hidden">
+              <motion.div
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.9 }}
+              >
+                <Button 
+                  variant="ghost" 
+                  size="icon"
+                  onClick={() => refetch()} 
+                  aria-label={t('common.refresh')}
+                  className="bg-white/20 text-white hover:bg-white/30 backdrop-blur-sm"
+                >
+                  <RefreshCcw className="h-4 w-4" />
+                </Button>
+              </motion.div>
+              
+              <MobileMenu 
+                isCreatorProfile={true} 
+                onRefresh={() => refetch()} 
+                username={username} 
+                transparent={true} 
+              />
             </div>
           </div>
           
