@@ -154,20 +154,14 @@ export async function setupAuth(app: Express) {
       (req.session as any).returnTo = redirectTo;
     }
     
-    // Obtener el nombre del host de manera segura
-    const host = req.headers.host?.split(':')[0] || 'localhost';
-    
-    passport.authenticate(`replitauth:${host}`, {
+    passport.authenticate("replitauth", {
       prompt: "login consent",
       scope: ["openid", "email", "profile", "offline_access"],
     })(req, res, next);
   });
 
   app.get("/api/callback", (req, res, next) => {
-    // Obtener el nombre del host de manera segura
-    const host = req.headers.host?.split(':')[0] || 'localhost';
-    
-    passport.authenticate(`replitauth:${host}`, {
+    passport.authenticate("replitauth", {
       failureRedirect: "/auth?error=authentication_failed",
     })(req, res, (error: Error | null) => {
       if (error) return next(error);
@@ -187,10 +181,15 @@ export async function setupAuth(app: Express) {
   app.get("/api/logout", (req, res) => {
     const returnTo = req.query.redirect || "/";
     req.logout(() => {
+      // Construir URL absoluta para redirect
+      const protocol = req.headers['x-forwarded-proto'] || req.protocol;
+      const host = req.headers.host || '';
+      const fullUrl = `${protocol}://${host}${returnTo}`;
+      
       res.redirect(
         client.buildEndSessionUrl(config, {
           client_id: process.env.REPL_ID!,
-          post_logout_redirect_uri: `${req.protocol}://${req.hostname}${returnTo}`,
+          post_logout_redirect_uri: fullUrl,
         }).href
       );
     });
