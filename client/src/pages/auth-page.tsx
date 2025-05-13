@@ -126,9 +126,9 @@ export default function AuthPage() {
       return redirectTo;
     }
     
-    // If we are on a creator profile page, go back to that profile
+    // If we came from a creator profile, go back to that profile
     if (params?.username) {
-      return `/creators/${params.username}`;
+      return `/${params.username}`;
     }
     
     // Default redirects based on role

@@ -171,8 +171,10 @@ export default function CreatorPublicPage() {
       });
       
       // Redirect to login page with referrer parameter to come back to this profile
+      // Store current location for redirect after auth
+      localStorage.setItem('redirectAfterAuth', `/${username}`);
       setTimeout(() => {
-        navigate(`/auth?referrer=/${username}`);
+        navigate('/auth');
       }, 1500);
       return;
     }
