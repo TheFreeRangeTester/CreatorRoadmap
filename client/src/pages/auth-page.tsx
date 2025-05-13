@@ -202,7 +202,7 @@ export default function AuthPage() {
                         />
                         
                         <p className="text-center text-sm text-muted-foreground mt-2">
-                          {t('auth.replitLoginInfo', 'Inicia sesión de manera segura con tu cuenta de Replit')}
+                          {t('auth.replitLoginInfo', 'Inicia sesión de manera segura en tu cuenta')}
                         </p>
                       </div>
                     </CardContent>
@@ -234,7 +234,7 @@ export default function AuthPage() {
                       <CardContent>
                         <div className="flex flex-col space-y-4">
                           <div className="text-center mb-2">
-                            <p className="text-sm">{t('auth.selectRoleReplit', 'Al registrarte con Replit, podrás seleccionar tu rol en tu perfil después de iniciar sesión.')}</p>
+                            <p className="text-sm">{t('auth.selectRoleReplit', 'Podrás seleccionar tu rol en tu perfil después de iniciar sesión.')}</p>
                           </div>
                           
                           <ReplitAuthButton 
@@ -243,7 +243,7 @@ export default function AuthPage() {
                           />
                           
                           <p className="text-center text-sm text-muted-foreground mt-2">
-                            {t('auth.replitRegisterInfo', 'Regístrate de manera segura con tu cuenta de Replit')}
+                            {t('auth.replitRegisterInfo', 'Crea una cuenta de forma segura')}
                           </p>
                         </div>
                       </CardContent>
