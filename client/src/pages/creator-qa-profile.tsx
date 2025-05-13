@@ -566,23 +566,21 @@ export default function CreatorQAProfile() {
       {/* Header con controles y estado de usuario */}
       <div className="fixed top-4 right-4 flex items-center gap-3 z-10">
         {user && (
-          <div className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-full px-3 py-1.5 flex items-center shadow-sm border border-gray-100 dark:border-gray-700">
-            <Avatar className="h-6 w-6 mr-2">
+          <div className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-full px-4 py-2 flex items-center shadow-sm border border-gray-100 dark:border-gray-700">
+            <span className="text-sm font-medium text-gray-600 dark:text-gray-300 mr-2">
+              {t("common.greeting", "👋🏻Hi")} {user.username}
+            </span>
+            <Avatar className="h-6 w-6">
               <AvatarImage src={user.logoUrl || ""} />
               <AvatarFallback className="text-xs bg-primary/20 text-primary">
                 {user.username?.substring(0, 2).toUpperCase()}
               </AvatarFallback>
             </Avatar>
-            <div className="flex flex-col">
-              <span className="text-sm font-medium leading-tight">
-                {user.username}
+            {user.userRole === "audience" && (
+              <span className="text-[10px] text-gray-500 dark:text-gray-400 ml-2">
+                {t("roles.audience", "Audience member")}
               </span>
-              {user.userRole === "audience" && (
-                <span className="text-[10px] text-gray-500 dark:text-gray-400">
-                  {t("roles.audience", "Audience member")}
-                </span>
-              )}
-            </div>
+            )}
           </div>
         )}
       </div>

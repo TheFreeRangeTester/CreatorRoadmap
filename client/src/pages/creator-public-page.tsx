@@ -367,30 +367,11 @@ export default function CreatorPublicPage() {
       <div className="bg-gradient-to-b from-blue-600 to-indigo-900 min-h-screen pb-16">
         <div className="container mx-auto px-4 max-w-3xl pt-6">
           {/* Barra superior con controles de utilidad (minimalista) */}
-          <div className="flex justify-between items-center mb-10 pt-2">
+          <div className="flex justify-between items-center mb-6 pt-2">
             {/* Contenedor para vista desktop */}
             <div className="hidden md:flex justify-between items-center w-full">
-              {/* Lado izquierdo: usuario y botón de recargar */}
+              {/* Lado izquierdo: botón de recargar */}
               <div className="flex items-center gap-3">
-                {/* Estado de inicio de sesión */}
-                {user ? (
-                  <div className="bg-white/20 backdrop-blur-sm px-4 py-2 rounded-lg text-white flex items-center gap-2 border border-white/20 shadow-lg">
-                    <User className="h-4 w-4 text-blue-200" />
-                    <span className="font-medium text-sm">{user.username}</span>
-                    <Link to="/" className="hover:text-white/80 ml-1">
-                      <LogOut className="h-4 w-4" />
-                    </Link>
-                  </div>
-                ) : (
-                  <Link
-                    to={`/auth?referrer=/creators/${username}`}
-                    className="bg-white/20 backdrop-blur-sm px-4 py-2 rounded-lg text-white flex items-center gap-2 hover:bg-white/30 transition-colors border border-white/20 shadow-lg"
-                  >
-                    <LogIn className="h-4 w-4" />
-                    <span className="text-sm">{t("common.loginToVote")}</span>
-                  </Link>
-                )}
-
                 <motion.div
                   whileHover={{ scale: 1.1 }}
                   whileTap={{ scale: 0.9 }}
@@ -407,46 +388,21 @@ export default function CreatorPublicPage() {
                 </motion.div>
               </div>
 
-              {/* Lado derecho: tema e idioma */}
+              {/* Lado derecho: menú móvil */}
               <div className="flex items-center gap-2">
-                <motion.div
-                  whileHover={{ scale: 1.1 }}
-                  whileTap={{ scale: 0.9 }}
-                >
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    onClick={() => refetch()}
-                    aria-label={t("common.refresh")}
-                    className="bg-white/20 text-white hover:bg-white/30 backdrop-blur-sm"
-                  >
-                    <RefreshCcw className="h-4 w-4" />
-                  </Button>
-                </motion.div>
+                <MobileMenu
+                  isCreatorProfile={true}
+                  onRefresh={() => refetch()}
+                  username={username}
+                  transparent={true}
+                />
               </div>
             </div>
 
             {/* Contenedor para vista móvil */}
             <div className="flex items-center justify-between w-full md:hidden">
-              {/* Lado izquierdo: usuario y botón de recargar */}
+              {/* Lado izquierdo: botón de recargar */}
               <div className="flex items-center gap-2">
-                {user ? (
-                  <div className="bg-white/20 backdrop-blur-sm px-3 py-1.5 rounded-lg text-white flex items-center gap-2 border border-white/20 shadow-lg max-w-[60%]">
-                    <User className="h-3.5 w-3.5 text-blue-200 flex-shrink-0" />
-                    <span className="font-medium text-xs truncate">
-                      {user.username}
-                    </span>
-                  </div>
-                ) : (
-                  <Link
-                    to={`/auth?referrer=/creators/${username}`}
-                    className="bg-white/20 backdrop-blur-sm px-3 py-1.5 rounded-lg text-white flex items-center gap-1.5 hover:bg-white/30 transition-colors border border-white/20 shadow-lg"
-                  >
-                    <LogIn className="h-3.5 w-3.5 flex-shrink-0" />
-                    <span className="text-xs">{t("common.loginToVote")}</span>
-                  </Link>
-                )}
-
                 <motion.div
                   whileHover={{ scale: 1.1 }}
                   whileTap={{ scale: 0.9 }}
@@ -473,6 +429,36 @@ export default function CreatorPublicPage() {
                 />
               </div>
             </div>
+          </div>
+
+          {/* Estado de usuario logueado centrado */}
+          <div className="flex justify-center mb-8">
+            {user ? (
+              <motion.div
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="bg-white/20 backdrop-blur-sm px-6 py-3 rounded-full text-white flex items-center gap-3 border border-white/20 shadow-lg"
+              >
+                <User className="h-4 w-4 text-blue-200" />
+                <span className="font-medium">{user.username}</span>
+                <Link to="/" className="hover:text-white/80">
+                  <LogOut className="h-4 w-4" />
+                </Link>
+              </motion.div>
+            ) : (
+              <motion.div
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+              >
+                <Link
+                  to={`/auth?referrer=/creators/${username}`}
+                  className="bg-white/20 backdrop-blur-sm px-6 py-3 rounded-full text-white flex items-center gap-3 hover:bg-white/30 transition-colors border border-white/20 shadow-lg"
+                >
+                  <LogIn className="h-4 w-4" />
+                  <span>{t("common.loginToVote")}</span>
+                </Link>
+              </motion.div>
+            )}
           </div>
 
           {/* Perfil del creador simplificado al estilo Linktree */}

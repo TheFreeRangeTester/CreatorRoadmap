@@ -1,5 +1,6 @@
 {
   "common": {
+    "greeting": "👋🏻Hola",
     "login": "Iniciar sesión",
     "register": "Registrarse",
     "logout": "Cerrar sesión",

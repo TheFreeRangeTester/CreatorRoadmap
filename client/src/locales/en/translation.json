@@ -1,5 +1,6 @@
 {
   "common": {
+    "greeting": "👋🏻Hi",
     "login": "Login",
     "register": "Register",
     "logout": "Logout",
