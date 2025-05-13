@@ -129,18 +129,18 @@ export async function setupAuth(app: Express) {
     }
   };
 
-  for (const domain of process.env.REPLIT_DOMAINS!.split(",")) {
-    const strategy = new Strategy(
-      {
-        name: `replitauth:${domain}`,
-        config,
-        scope: "openid email profile offline_access",
-        callbackURL: `https://${domain}/api/callback`,
-      },
-      verify,
-    );
-    passport.use(strategy);
-  }
+  // Crear una única estrategia para todos los dominios
+  const strategy = new Strategy(
+    {
+      name: "replitauth",
+      config,
+      scope: "openid email profile offline_access",
+      // La URL de callback se resolverá relativamente
+      callbackURL: "/api/callback",
+    },
+    verify,
+  );
+  passport.use(strategy);
 
   passport.serializeUser((user: Express.User, cb) => cb(null, user));
   passport.deserializeUser((user: Express.User, cb) => cb(null, user));
@@ -154,14 +154,20 @@ export async function setupAuth(app: Express) {
       (req.session as any).returnTo = redirectTo;
     }
     
-    passport.authenticate(`replitauth:${req.hostname}`, {
+    // Obtener el nombre del host de manera segura
+    const host = req.headers.host?.split(':')[0] || 'localhost';
+    
+    passport.authenticate(`replitauth:${host}`, {
       prompt: "login consent",
       scope: ["openid", "email", "profile", "offline_access"],
     })(req, res, next);
   });
 
   app.get("/api/callback", (req, res, next) => {
-    passport.authenticate(`replitauth:${req.hostname}`, {
+    // Obtener el nombre del host de manera segura
+    const host = req.headers.host?.split(':')[0] || 'localhost';
+    
+    passport.authenticate(`replitauth:${host}`, {
       failureRedirect: "/auth?error=authentication_failed",
     })(req, res, (error: Error | null) => {
       if (error) return next(error);

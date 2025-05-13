@@ -8,8 +8,8 @@ import { ZodError } from "zod";
 import { fromZodError } from "zod-validation-error";
 
 export async function registerRoutes(app: Express): Promise<Server> {
-  // Set up authentication routes (local authentication)
-  setupAuth(app);
+  // Set up authentication routes (local authentication) - Desactivado para usar solo Replit Auth
+  // setupAuth(app);
   
   // Set up Replit Auth
   await setupReplitAuth(app);
