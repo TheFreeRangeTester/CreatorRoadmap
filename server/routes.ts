@@ -98,13 +98,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
       
       // Si el usuario está autenticado, filtramos según su rol
       if (req.isAuthenticated()) {
-        // Si el usuario es creador, solo mostrar sus propias ideas y las sugeridas para él
+        // Si el usuario es creador, solo mostrar sus propias ideas APROBADAS
+        // Las ideas pendientes (sugeridas) solo se deben mostrar en el endpoint específico /api/pending-ideas
         if (req.user.userRole === 'creator') {
           ideas = allIdeas.filter(idea => 
-            // Ideas que el creador ha creado
-            idea.creatorId === req.user.id || 
-            // Ideas que fueron sugeridas para este creador
-            (idea.suggestedBy !== null && idea.creatorId === req.user.id)
+            // Ideas APROBADAS que el creador ha creado
+            idea.creatorId === req.user.id && idea.status === 'approved'
           );
         } else {
           // Para usuarios con rol 'audience', mostrar todas las ideas aprobadas
