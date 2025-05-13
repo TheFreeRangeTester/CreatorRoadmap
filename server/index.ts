@@ -1,6 +1,13 @@
 import express, { type Request, Response, NextFunction } from "express";
 import { registerRoutes } from "./routes";
 import { setupVite, serveStatic, log } from "./vite";
+import { randomBytes } from "crypto";
+
+// Asegurar que tenemos SESSION_SECRET para el entorno de desarrollo
+if (process.env.NODE_ENV === "development" && !process.env.SESSION_SECRET) {
+  process.env.SESSION_SECRET = randomBytes(32).toString('hex');
+  log("Generated SESSION_SECRET for development");
+}
 
 const app = express();
 app.use(express.json());

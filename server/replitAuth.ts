@@ -27,18 +27,18 @@ export function getSession() {
   const pgStore = connectPg(session);
   const sessionStore = new pgStore({
     conString: process.env.DATABASE_URL,
-    createTableIfMissing: true,
+    createTableIfMissing: false,
     ttl: sessionTtl,
     tableName: "sessions",
   });
   return session({
-    secret: process.env.SESSION_SECRET || 'replit_session_secret',
+    secret: process.env.SESSION_SECRET || "devSessionSecret",
     store: sessionStore,
     resave: false,
     saveUninitialized: false,
     cookie: {
       httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
+      secure: process.env.NODE_ENV === "production",
       maxAge: sessionTtl,
     },
   });
@@ -129,18 +129,18 @@ export async function setupAuth(app: Express) {
     }
   };
 
-  // Crear una única estrategia para todos los dominios
-  const strategy = new Strategy(
-    {
-      name: "replitauth",
-      config,
-      scope: "openid email profile offline_access",
-      // La URL de callback se resolverá relativamente
-      callbackURL: "/api/callback",
-    },
-    verify,
-  );
-  passport.use(strategy);
+  for (const domain of process.env.REPLIT_DOMAINS!.split(",")) {
+    const strategy = new Strategy(
+      {
+        name: `replitauth:${domain}`,
+        config,
+        scope: "openid email profile offline_access",
+        callbackURL: `/api/callback`,
+      },
+      verify,
+    );
+    passport.use(strategy);
+  }
 
   passport.serializeUser((user: Express.User, cb) => cb(null, user));
   passport.deserializeUser((user: Express.User, cb) => cb(null, user));
@@ -154,14 +154,11 @@ export async function setupAuth(app: Express) {
       (req.session as any).returnTo = redirectTo;
     }
     
-    passport.authenticate("replitauth", {
-      prompt: "login consent",
-      scope: ["openid", "email", "profile", "offline_access"],
-    })(req, res, next);
+    passport.authenticate(`replitauth:${req.hostname}`)(req, res, next);
   });
 
   app.get("/api/callback", (req, res, next) => {
-    passport.authenticate("replitauth", {
+    passport.authenticate(`replitauth:${req.hostname}`, {
       failureRedirect: "/auth?error=authentication_failed",
     })(req, res, (error: Error | null) => {
       if (error) return next(error);
@@ -179,19 +176,8 @@ export async function setupAuth(app: Express) {
   });
 
   app.get("/api/logout", (req, res) => {
-    const returnTo = req.query.redirect || "/";
     req.logout(() => {
-      // Construir URL absoluta para redirect
-      const protocol = req.headers['x-forwarded-proto'] || req.protocol;
-      const host = req.headers.host || '';
-      const fullUrl = `${protocol}://${host}${returnTo}`;
-      
-      res.redirect(
-        client.buildEndSessionUrl(config, {
-          client_id: process.env.REPL_ID!,
-          post_logout_redirect_uri: fullUrl,
-        }).href
-      );
+      res.redirect("/");
     });
   });
   
@@ -210,26 +196,9 @@ export async function setupAuth(app: Express) {
 }
 
 export const isAuthenticated: RequestHandler = async (req: any, res, next) => {
-  if (!req.isAuthenticated() || !req.user?.expires_at) {
+  if (!req.isAuthenticated() || !req.user?.databaseUser) {
     return res.status(401).json({ message: "Unauthorized" });
   }
-
-  const now = Math.floor(Date.now() / 1000);
-  if (now <= req.user.expires_at) {
-    return next();
-  }
-
-  const refreshToken = req.user.refresh_token;
-  if (!refreshToken) {
-    return res.redirect("/api/login");
-  }
-
-  try {
-    const config = await getOidcConfig();
-    const tokenResponse = await client.refreshTokenGrant(config, refreshToken);
-    updateUserSession(req.user, tokenResponse);
-    return next();
-  } catch (error) {
-    return res.redirect("/api/login");
-  }
+  
+  return next();
 };

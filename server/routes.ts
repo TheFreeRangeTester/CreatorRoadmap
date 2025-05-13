@@ -1,18 +1,14 @@
 import type { Express, Request, Response } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
-import { setupAuth } from "./auth";
-import { setupAuth as setupReplitAuth, isAuthenticated } from "./replitAuth";
+import { setupAuth, isAuthenticated } from "./replitAuth";
 import { insertIdeaSchema, updateIdeaSchema, insertVoteSchema, insertPublicLinkSchema, suggestIdeaSchema, updateProfileSchema } from "@shared/schema";
 import { ZodError } from "zod";
 import { fromZodError } from "zod-validation-error";
 
 export async function registerRoutes(app: Express): Promise<Server> {
-  // Set up authentication routes (local authentication) - Desactivado para usar solo Replit Auth
-  // setupAuth(app);
-  
   // Set up Replit Auth
-  await setupReplitAuth(app);
+  await setupAuth(app);
 
   // La ruta de autenticación de usuario se ha movido a replitAuth.ts
   
