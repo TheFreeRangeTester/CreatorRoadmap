@@ -1,8 +1,16 @@
 import { useState } from "react";
 import { useQuery, useMutation } from "@tanstack/react-query";
-import { 
-  Loader2, CloudLightning, Share2, CheckCircle, XCircle, 
-  Lightbulb, Clock, ChevronRight, User, ListFilter 
+import {
+  Loader2,
+  CloudLightning,
+  Share2,
+  CheckCircle,
+  XCircle,
+  Lightbulb,
+  Clock,
+  ChevronRight,
+  User,
+  ListFilter,
 } from "lucide-react";
 import { useAuth } from "@/hooks/use-auth";
 import { useToast } from "@/hooks/use-toast";
@@ -17,7 +25,14 @@ import { MobileMenu } from "@/components/mobile-menu";
 import LeaderboardInfo from "@/components/leaderboard-info";
 import EmptyState from "@/components/empty-state";
 import ShareProfile from "@/components/share-profile";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Badge } from "@/components/ui/badge";
@@ -26,7 +41,11 @@ import { IdeaResponse } from "@shared/schema";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useTranslation } from "react-i18next";
 
-function IdeasTabView({ mode = "published" }: { mode: "published" | "suggested" }) {
+function IdeasTabView({
+  mode = "published",
+}: {
+  mode: "published" | "suggested";
+}) {
   const { user } = useAuth();
   const { toast } = useToast();
   const { t } = useTranslation();
@@ -35,21 +54,21 @@ function IdeasTabView({ mode = "published" }: { mode: "published" | "suggested" 
   const [currentIdea, setCurrentIdea] = useState<IdeaResponse | null>(null);
 
   // Fetch published ideas
-  const { 
-    data: ideas, 
-    isLoading: isLoadingIdeas, 
-    isError: isErrorIdeas 
+  const {
+    data: ideas,
+    isLoading: isLoadingIdeas,
+    isError: isErrorIdeas,
   } = useQuery<IdeaResponse[]>({
     queryKey: ["/api/ideas"],
     enabled: mode === "published",
   });
 
   // Fetch pending ideas
-  const { 
-    data: pendingIdeas, 
-    isLoading: isLoadingPending, 
+  const {
+    data: pendingIdeas,
+    isLoading: isLoadingPending,
     isError: isErrorPending,
-    refetch: refetchPending
+    refetch: refetchPending,
   } = useQuery<IdeaResponse[]>({
     queryKey: ["/api/pending-ideas"],
     enabled: mode === "suggested" && !!user,
@@ -62,13 +81,13 @@ function IdeasTabView({ mode = "published" }: { mode: "published" | "suggested" 
   const voteMutation = useMutation({
     mutationFn: async (ideaId: number) => {
       // Add ideaId to the set of ideas being voted on
-      setVotingIdeaIds(prev => new Set(prev).add(ideaId));
+      setVotingIdeaIds((prev) => new Set(prev).add(ideaId));
       try {
         await apiRequest("POST", `/api/ideas/${ideaId}/vote`);
       } finally {
         // Remove ideaId from the set when done (success or error)
         setTimeout(() => {
-          setVotingIdeaIds(prev => {
+          setVotingIdeaIds((prev) => {
             const newSet = new Set(prev);
             newSet.delete(ideaId);
             return newSet;
@@ -113,14 +132,18 @@ function IdeasTabView({ mode = "published" }: { mode: "published" | "suggested" 
   const approveMutation = useMutation({
     mutationFn: async (ideaId: number) => {
       setProcessingIdea(ideaId);
-      const response = await apiRequest("PATCH", `/api/ideas/${ideaId}/approve`);
+      const response = await apiRequest(
+        "PATCH",
+        `/api/ideas/${ideaId}/approve`
+      );
       return await response.json();
     },
     onSuccess: () => {
       toast({
-        title: t('ideas.approved'),
-        description: t('ideas.approvedSuccess'),
-        className: "bg-gradient-to-r from-green-50 to-emerald-50 border-green-200 dark:from-green-900/30 dark:to-emerald-900/30 dark:border-green-800",
+        title: t("ideas.approved"),
+        description: t("ideas.approvedSuccess"),
+        className:
+          "bg-gradient-to-r from-green-50 to-emerald-50 border-green-200 dark:from-green-900/30 dark:to-emerald-900/30 dark:border-green-800",
       });
       // Refresh pending and approved ideas lists
       refetchPending();
@@ -128,14 +151,14 @@ function IdeasTabView({ mode = "published" }: { mode: "published" | "suggested" 
     },
     onError: (error: Error) => {
       toast({
-        title: t('ideas.approveError'),
-        description: error.message || t('ideas.approveErrorDesc'),
+        title: t("ideas.approveError"),
+        description: error.message || t("ideas.approveErrorDesc"),
         variant: "destructive",
       });
     },
     onSettled: () => {
       setProcessingIdea(null);
-    }
+    },
   });
 
   // Reject idea mutation
@@ -146,22 +169,22 @@ function IdeasTabView({ mode = "published" }: { mode: "published" | "suggested" 
     },
     onSuccess: () => {
       toast({
-        title: t('ideas.rejected'),
-        description: t('ideas.rejectedSuccess'),
+        title: t("ideas.rejected"),
+        description: t("ideas.rejectedSuccess"),
       });
       // Refresh the list of pending ideas
       refetchPending();
     },
     onError: (error: Error) => {
       toast({
-        title: t('ideas.rejectError'),
-        description: error.message || t('ideas.rejectErrorDesc'),
+        title: t("ideas.rejectError"),
+        description: error.message || t("ideas.rejectErrorDesc"),
         variant: "destructive",
       });
     },
     onSettled: () => {
       setProcessingIdea(null);
-    }
+    },
   });
 
   // Handle functions
@@ -170,7 +193,7 @@ function IdeasTabView({ mode = "published" }: { mode: "published" | "suggested" 
   };
 
   const handleDeleteIdea = (ideaId: number) => {
-    if (window.confirm(t('ideas.confirmDelete'))) {
+    if (window.confirm(t("ideas.confirmDelete"))) {
       deleteMutation.mutate(ideaId);
     }
   };
@@ -205,7 +228,7 @@ function IdeasTabView({ mode = "published" }: { mode: "published" | "suggested" 
   if (isError) {
     return (
       <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded">
-        {t('ideas.loadError')}
+        {t("ideas.loadError")}
       </div>
     );
   }
@@ -215,14 +238,14 @@ function IdeasTabView({ mode = "published" }: { mode: "published" | "suggested" 
     return (
       <div className="text-center py-8 px-4">
         <p className="text-lg font-medium text-gray-700 dark:text-gray-300 mb-2">
-          {mode === "published" 
-            ? t('ideas.noPublishedIdeas') 
-            : t('ideas.noSuggestedIdeas')}
+          {mode === "published"
+            ? t("ideas.noPublishedIdeas")
+            : t("ideas.noSuggestedIdeas")}
         </p>
         <p className="text-muted-foreground text-sm mb-6">
-          {mode === "published" 
-            ? t('ideas.createFirstIdea') 
-            : t('ideas.suggestedIdeasWillAppear')}
+          {mode === "published"
+            ? t("ideas.createFirstIdea")
+            : t("ideas.suggestedIdeasWillAppear")}
         </p>
       </div>
     );
@@ -238,13 +261,19 @@ function IdeasTabView({ mode = "published" }: { mode: "published" | "suggested" 
               key={idea.id}
               idea={idea}
               onVote={handleVote}
-              onEdit={user && idea.creatorId === user.id ? handleEditIdea : undefined}
-              onDelete={user && idea.creatorId === user.id ? handleDeleteIdea : undefined}
+              onEdit={
+                user && idea.creatorId === user.id ? handleEditIdea : undefined
+              }
+              onDelete={
+                user && idea.creatorId === user.id
+                  ? handleDeleteIdea
+                  : undefined
+              }
               isVoting={votingIdeaIds.has(idea.id)}
             />
           ))}
         </div>
-        
+
         {/* Idea Form Modal */}
         <IdeaForm
           isOpen={isIdeaFormOpen}
@@ -260,27 +289,38 @@ function IdeasTabView({ mode = "published" }: { mode: "published" | "suggested" 
     <>
       <div className="grid gap-6 grid-cols-1 md:grid-cols-2">
         {displayedIdeas.map((idea) => (
-          <div key={idea.id} className="border border-gray-200 dark:border-gray-700 rounded-xl p-4 bg-white dark:bg-gray-800 shadow-sm hover:shadow-md transition-shadow">
+          <div
+            key={idea.id}
+            className="border border-gray-200 dark:border-gray-700 rounded-xl p-4 bg-white dark:bg-gray-800 shadow-sm hover:shadow-md transition-shadow"
+          >
             <div className="mb-2 flex justify-between items-start">
-              <h3 className="font-medium text-lg dark:text-white">{idea.title}</h3>
-              <Badge variant="outline" className="bg-amber-100 text-amber-700 border-amber-200 dark:bg-amber-900/30 dark:text-amber-300 dark:border-amber-800">
-                <Clock className="h-3 w-3 mr-1" /> {t('ideas.pending')}
+              <h3 className="font-medium text-lg dark:text-white">
+                {idea.title}
+              </h3>
+              <Badge
+                variant="outline"
+                className="bg-amber-100 text-amber-700 border-amber-200 dark:bg-amber-900/30 dark:text-amber-300 dark:border-amber-800"
+              >
+                <Clock className="h-3 w-3 mr-1" /> {t("ideas.pending")}
               </Badge>
             </div>
-            
-            <p className="text-gray-600 dark:text-gray-300 mb-3">{idea.description}</p>
-            
+
+            <p className="text-gray-600 dark:text-gray-300 mb-3">
+              {idea.description}
+            </p>
+
             {idea.suggestedByUsername && (
               <div className="text-xs text-gray-500 dark:text-gray-400 mb-3 inline-flex items-center gap-1 bg-gray-100 dark:bg-gray-700 px-2 py-1 rounded-full">
                 <User className="h-3 w-3" />
-                {t('ideas.suggestedBy')}: <span className="font-medium">{idea.suggestedByUsername}</span>
+                {t("ideas.suggestedBy")}:{" "}
+                <span className="font-medium">{idea.suggestedByUsername}</span>
               </div>
             )}
-            
+
             <div className="flex justify-end gap-2 mt-3">
-              <Button 
-                variant="outline" 
-                size="sm" 
+              <Button
+                variant="outline"
+                size="sm"
                 className="border-red-200 text-red-600 hover:text-red-700 hover:bg-red-50 dark:border-red-900 dark:text-red-400 dark:hover:bg-red-900/30"
                 onClick={() => handleReject(idea.id)}
                 disabled={processingIdea === idea.id}
@@ -290,11 +330,11 @@ function IdeasTabView({ mode = "published" }: { mode: "published" | "suggested" 
                 ) : (
                   <XCircle className="h-3 w-3 mr-1" />
                 )}
-                {t('ideas.reject')}
+                {t("ideas.reject")}
               </Button>
-              <Button 
-                variant="outline" 
-                size="sm" 
+              <Button
+                variant="outline"
+                size="sm"
                 className="border-green-200 text-green-600 hover:text-green-700 hover:bg-green-50 dark:border-green-900 dark:text-green-400 dark:hover:bg-green-900/30"
                 onClick={() => handleApprove(idea.id)}
                 disabled={processingIdea === idea.id}
@@ -304,13 +344,13 @@ function IdeasTabView({ mode = "published" }: { mode: "published" | "suggested" 
                 ) : (
                   <CheckCircle className="h-3 w-3 mr-1" />
                 )}
-                {t('ideas.approve')}
+                {t("ideas.approve")}
               </Button>
             </div>
           </div>
         ))}
       </div>
-      
+
       {/* Idea Form Modal */}
       <IdeaForm
         isOpen={isIdeaFormOpen}
@@ -331,7 +371,11 @@ export default function HomePage() {
   const [ideaToDelete, setIdeaToDelete] = useState<number | null>(null);
 
   // Fetch ideas
-  const { data: ideas, isLoading, isError } = useQuery<IdeaResponse[]>({
+  const {
+    data: ideas,
+    isLoading,
+    isError,
+  } = useQuery<IdeaResponse[]>({
     queryKey: ["/api/ideas"],
   });
 
@@ -342,13 +386,13 @@ export default function HomePage() {
   const voteMutation = useMutation({
     mutationFn: async (ideaId: number) => {
       // Add ideaId to the set of ideas being voted on
-      setVotingIdeaIds(prev => new Set(prev).add(ideaId));
+      setVotingIdeaIds((prev) => new Set(prev).add(ideaId));
       try {
         await apiRequest("POST", `/api/ideas/${ideaId}/vote`);
       } finally {
         // Remove ideaId from the set when done (success or error)
         setTimeout(() => {
-          setVotingIdeaIds(prev => {
+          setVotingIdeaIds((prev) => {
             const newSet = new Set(prev);
             newSet.delete(ideaId);
             return newSet;
@@ -377,13 +421,16 @@ export default function HomePage() {
       setIsDeleteModalOpen(false);
       queryClient.invalidateQueries({ queryKey: ["/api/ideas"] });
       toast({
-        title: t('ideas.deleted', "Idea deleted"),
-        description: t('ideas.deletedSuccess', "Your idea has been deleted successfully."),
+        title: t("ideas.deleted", "Idea deleted"),
+        description: t(
+          "ideas.deletedSuccess",
+          "Your idea has been deleted successfully."
+        ),
       });
     },
     onError: (error) => {
       toast({
-        title: t('ideas.deleteError', "Delete failed"),
+        title: t("ideas.deleteError", "Delete failed"),
         description: error.message,
         variant: "destructive",
       });
@@ -429,22 +476,28 @@ export default function HomePage() {
               <CloudLightning className="h-8 w-8 text-primary" />
               <div className="ml-2">
                 <h1 className="text-xl font-bold text-neutral-800 dark:text-white">
-                  {t('dashboard.creatorDashboard', 'Idea Leaderboard')}
+                  {t("dashboard.creatorDashboard", "Idea Leaderboard")}
                 </h1>
                 <div className="text-xs text-muted-foreground flex items-center">
-                  <Badge variant="outline" className="bg-primary/10 text-primary dark:bg-primary-900/30 dark:text-primary-300 h-5 rounded-sm">
-                    {t('dashboard.creatorView', 'Panel de creador')}
+                  <Badge
+                    variant="outline"
+                    className="bg-primary/10 text-primary dark:bg-primary-900/30 dark:text-primary-300 h-5 rounded-sm"
+                  >
+                    {t("dashboard.creatorView", "Panel de creador")}
                   </Badge>
                 </div>
               </div>
             </div>
-            
+
             {/* Desktop menu */}
             <div className="hidden md:flex items-center gap-4">
               {user ? (
                 <div className="flex items-center gap-4">
                   <Link href="/profile">
-                    <Badge variant="outline" className="bg-blue-50 text-blue-700 border-blue-200 dark:bg-blue-900/20 dark:text-blue-300 dark:border-blue-800/50 px-3 py-1 transition-all duration-300 hover:shadow-md hover:-translate-y-0.5 cursor-pointer">
+                    <Badge
+                      variant="outline"
+                      className="bg-blue-50 text-blue-700 border-blue-200 dark:bg-blue-900/20 dark:text-blue-300 dark:border-blue-800/50 px-3 py-1 transition-all duration-300 hover:shadow-md hover:-translate-y-0.5 cursor-pointer"
+                    >
                       <User className="h-3.5 w-3.5 mr-1.5 text-blue-500 dark:text-blue-400" />
                       <span className="font-medium">{user.username}</span>
                     </Badge>
@@ -457,7 +510,7 @@ export default function HomePage() {
                     size="sm"
                     className="border-gray-300 dark:border-gray-700 text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700"
                   >
-                    {t('common.logout', 'Log out')}
+                    {t("common.logout", "Log out")}
                   </Button>
                 </div>
               ) : (
@@ -466,13 +519,13 @@ export default function HomePage() {
                   <ThemeToggle />
                   <Link href="/auth">
                     <Button size="sm" className="ml-1">
-                      {t('common.login', 'Log in')}
+                      {t("common.login", "Log in")}
                     </Button>
                   </Link>
                 </div>
               )}
             </div>
-            
+
             {/* Mobile menu */}
             <MobileMenu onLogout={handleLogout} />
           </div>
@@ -481,8 +534,10 @@ export default function HomePage() {
 
       <main className="container mx-auto px-4 sm:px-6 lg:px-8 py-6">
         {/* Creator Controls (solo visible para creadores) */}
-        {user && user.userRole === 'creator' && <CreatorControls onAddIdea={handleAddIdea} />}
-        
+        {user && user.userRole === "creator" && (
+          <CreatorControls onAddIdea={handleAddIdea} />
+        )}
+
         {/* Main content for both authenticated and non-authenticated users */}
         <div className="mt-6">
           {user ? (
@@ -491,27 +546,33 @@ export default function HomePage() {
               {/* Main content area (2/3 width on larger screens) */}
               <div className="lg:col-span-2 space-y-6">
                 <LeaderboardInfo />
-                
+
                 {/* Tabs for ideas view - Only for creators */}
-                {user.userRole === 'creator' ? (
+                {user.userRole === "creator" ? (
                   <Tabs defaultValue="published" className="w-full">
                     <div className="flex justify-between items-center mb-6">
                       <TabsList className="grid grid-cols-2 w-60">
-                        <TabsTrigger value="published" className="flex items-center gap-1">
+                        <TabsTrigger
+                          value="published"
+                          className="flex items-center gap-1"
+                        >
                           <ListFilter className="w-4 h-4" />
-                          {t('dashboard.myIdeas', 'Mis Ideas')}
+                          {t("dashboard.myIdeas", "Mis Ideas")}
                         </TabsTrigger>
-                        <TabsTrigger value="suggested" className="flex items-center gap-1">
+                        <TabsTrigger
+                          value="suggested"
+                          className="flex items-center gap-1"
+                        >
                           <Lightbulb className="w-4 h-4" />
-                          {t('dashboard.suggested', 'Sugeridas')}
+                          {t("dashboard.suggested", "Sugeridas")}
                         </TabsTrigger>
                       </TabsList>
                     </div>
-                    
+
                     <TabsContent value="published" className="mt-0 space-y-4">
                       <IdeasTabView mode="published" />
                     </TabsContent>
-                    
+
                     <TabsContent value="suggested" className="mt-0 space-y-4">
                       <IdeasTabView mode="suggested" />
                     </TabsContent>
@@ -523,7 +584,7 @@ export default function HomePage() {
                   </div>
                 )}
               </div>
-              
+
               {/* Sidebar for sharing (1/3 width on larger screens) */}
               <div className="lg:col-span-1 space-y-6">
                 <ShareProfile />
@@ -533,7 +594,7 @@ export default function HomePage() {
             // For non-authenticated users, show full-width leaderboard
             <div className="space-y-6">
               <LeaderboardInfo />
-              
+
               {/* Ideas listing for non-authenticated users */}
               {isLoading ? (
                 <div className="flex justify-center py-10">
@@ -541,7 +602,7 @@ export default function HomePage() {
                 </div>
               ) : isError ? (
                 <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded">
-                  {t('ideas.loadError')}
+                  {t("ideas.loadError")}
                 </div>
               ) : ideas && ideas.length > 0 ? (
                 <div className="grid gap-6 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
