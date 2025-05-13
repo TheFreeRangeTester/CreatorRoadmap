@@ -63,10 +63,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     isLoading,
     refetch: refetchUser,
   } = useQuery<UserResponse | null>({
-    queryKey: ["/api/user"],
+    queryKey: ["/api/auth/user"],
     queryFn: async () => {
       try {
-        const res = await fetch("/api/user", {
+        const res = await fetch("/api/auth/user", {
           method: "GET",
           headers: {
             "X-Requested-With": "XMLHttpRequest"
@@ -120,10 +120,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     },
     onSuccess: (userData) => {
       // Update cache with user data
-      queryClient.setQueryData(["/api/user"], userData);
+      queryClient.setQueryData(["/api/auth/user"], userData);
       
       // Invalidate and refetch user data to ensure it's fresh
-      queryClient.invalidateQueries({ queryKey: ["/api/user"] });
+      queryClient.invalidateQueries({ queryKey: ["/api/auth/user"] });
       refetchUser();
       
       // Show success message
@@ -201,10 +201,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     },
     onSuccess: () => {
       // Clear user from cache
-      queryClient.setQueryData(["/api/user"], null);
+      queryClient.setQueryData(["/api/auth/user"], null);
       
       // Invalidate to force refetch any user-dependent queries
-      queryClient.invalidateQueries({ queryKey: ["/api/user"] });
+      queryClient.invalidateQueries({ queryKey: ["/api/auth/user"] });
       
       // Show success message
       toast({
@@ -243,7 +243,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     },
     onSuccess: (userData) => {
       // Update cache with updated user data
-      queryClient.setQueryData(["/api/user"], userData);
+      queryClient.setQueryData(["/api/auth/user"], userData);
       
       // Show success message
       toast({

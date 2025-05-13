@@ -14,6 +14,51 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Set up Replit Auth
   await setupReplitAuth(app);
 
+  // User authentication checking route
+  app.get('/api/auth/user', async (req: any, res) => {
+    try {
+      console.log("GET /api/auth/user - Auth check:", req.isAuthenticated());
+      
+      if (!req.isAuthenticated()) {
+        console.log("User not authenticated");
+        return res.status(401).json({ 
+          message: "Not authenticated",
+          authenticated: false 
+        });
+      }
+      
+      // Determinar el tipo de autenticación y obtener el usuario adecuado
+      let user;
+      
+      if (req.user.claims && req.user.claims.sub) {
+        // Es un usuario de Replit Auth
+        const replitUserId = req.user.claims.sub;
+        user = await storage.getUserByReplitId(replitUserId);
+        console.log("User authenticated via Replit Auth:", user?.username);
+      } else {
+        // Es un usuario con autenticación local
+        user = req.user;
+        console.log("User authenticated via local auth:", user?.username);
+      }
+      
+      if (!user) {
+        return res.status(404).json({ message: "User record not found" });
+      }
+      
+      // Eliminar campos sensibles
+      const { password, ...userWithoutPassword } = user;
+      
+      // Devolver los datos del usuario autenticado
+      res.json({
+        ...userWithoutPassword,
+        authenticated: true
+      });
+    } catch (error) {
+      console.error("Error fetching user:", error);
+      res.status(500).json({ message: "Failed to fetch user" });
+    }
+  });
+  
   // User profile update route
   app.patch("/api/user/profile", async (req: Request, res: Response) => {
     try {
