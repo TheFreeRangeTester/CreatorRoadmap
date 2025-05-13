@@ -98,15 +98,39 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     staleTime: 1000 * 60 * 5, // 5 minutes
   });
 
-  // Handle login - redirects to Replit Auth
+  // Handle login - local auth for development, redirects to Replit Auth in production
   const loginMutation = useMutation({
     mutationFn: async (credentials: LoginData) => {
-      // Con Replit Auth, no necesitamos hacer una petición fetch aquí
-      // En su lugar, redirigimos al usuario a la página de autenticación de Replit
-      window.location.href = "/api/login";
-      
-      // Esta promise nunca se resolverá porque redireccionamos
-      return new Promise<UserResponse>(() => {});
+      // En desarrollo usamos autenticación local
+      if (process.env.NODE_ENV === 'development' || window.location.hostname === 'localhost') {
+        const res = await fetch("/api/auth/login", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(credentials),
+          credentials: "same-origin"
+        });
+        
+        if (!res.ok) {
+          const errorData = await res.text();
+          throw new Error(errorData || "Failed to login");
+        }
+        
+        const data = await res.json();
+        
+        if (data.redirectTo) {
+          window.location.href = data.redirectTo;
+        }
+        
+        return data.user as UserResponse;
+      } else {
+        // En producción redireccionamos a Replit Auth
+        window.location.href = "/api/login";
+        return new Promise<UserResponse>(() => {});
+      }
+    },
+    onSuccess: () => {
+      // Refresh user data
+      queryClient.invalidateQueries({ queryKey: ["/api/auth/user"] });
     },
     onError: (error: Error) => {
       toast({
@@ -117,14 +141,39 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     },
   });
 
-  // Handle registration - redirects to Replit Auth with signup=true
+  // Handle registration - local auth for development, redirects to Replit Auth in production
   const registerMutation = useMutation({
     mutationFn: async (userData: InsertUser) => {
-      // Con Replit Auth, redirigimos al usuario a la página de registro
-      window.location.href = "/api/login?signup=true";
-      
-      // Esta promise nunca se resolverá porque redireccionamos
-      return new Promise<UserResponse>(() => {});
+      // En desarrollo usamos registro local
+      if (process.env.NODE_ENV === 'development' || window.location.hostname === 'localhost') {
+        const res = await fetch("/api/auth/register", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(userData),
+          credentials: "same-origin"
+        });
+        
+        if (!res.ok) {
+          const errorData = await res.text();
+          throw new Error(errorData || "Failed to register");
+        }
+        
+        const data = await res.json();
+        
+        if (data.redirectTo) {
+          window.location.href = data.redirectTo;
+        }
+        
+        return data.user as UserResponse;
+      } else {
+        // En producción redireccionamos a Replit Auth
+        window.location.href = "/api/login?signup=true";
+        return new Promise<UserResponse>(() => {});
+      }
+    },
+    onSuccess: () => {
+      // Refresh user data
+      queryClient.invalidateQueries({ queryKey: ["/api/auth/user"] });
     },
     onError: (error: Error) => {
       toast({

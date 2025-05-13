@@ -262,6 +262,13 @@ export async function setupAuth(app: Express) {
         try {
           const { username, password } = req.body;
           
+          if (!username) {
+            return res.status(400).json({ 
+              success: false, 
+              message: 'El nombre de usuario es requerido' 
+            });
+          }
+          
           // Buscar usuario por nombre de usuario
           const user = await storage.getUserByUsername(username);
           
@@ -272,8 +279,10 @@ export async function setupAuth(app: Express) {
             });
           }
           
+          // En modo desarrollo, permitimos iniciar sesión sin verificar contraseña
           req.login(user, (err) => {
             if (err) {
+              console.error("Error durante login:", err);
               return res.status(500).json({ 
                 success: false, 
                 message: 'Error de autenticación' 
@@ -283,6 +292,8 @@ export async function setupAuth(app: Express) {
             // Redirigir a la página que se especificó originalmente
             const redirectTo = req.session.returnTo || '/';
             delete req.session.returnTo;
+            
+            console.log(`Usuario autenticado: ${user.username}, redirección a: ${redirectTo}`);
             
             return res.json({ 
               success: true, 
@@ -295,6 +306,7 @@ export async function setupAuth(app: Express) {
             });
           });
         } catch (error) {
+          console.error("Error en login:", error);
           res.status(500).json({ 
             success: false, 
             message: 'Error en el servidor' 
@@ -305,10 +317,17 @@ export async function setupAuth(app: Express) {
       // Ruta para registro de usuarios local
       app.post('/api/auth/register', async (req, res) => {
         try {
-          const { username, password } = req.body;
+          const { username, password, userRole: providedRole, email } = req.body;
+          
+          if (!username) {
+            return res.status(400).json({ 
+              success: false, 
+              message: 'El nombre de usuario es requerido' 
+            });
+          }
           
           // Obtener el rol de usuario de la sesión o usar el proporcionado
-          const userRole = req.session.userRole || req.body.userRole || 'audience';
+          const userRole = req.session.userRole || providedRole || 'audience';
           
           // Verificar si el usuario ya existe
           const existingUser = await storage.getUserByUsername(username);
@@ -320,16 +339,20 @@ export async function setupAuth(app: Express) {
             });
           }
           
+          console.log(`Registrando nuevo usuario: ${username} con rol: ${userRole}`);
+          
           // Crear nuevo usuario
           const newUser = await storage.createUser({
             username,
             password,
             userRole,
+            email
           });
           
           // Iniciar sesión automáticamente después de registro
           req.login(newUser, (err) => {
             if (err) {
+              console.error("Error al iniciar sesión después del registro:", err);
               return res.status(500).json({ 
                 success: false, 
                 message: 'Error al iniciar sesión después del registro' 
@@ -340,17 +363,21 @@ export async function setupAuth(app: Express) {
             const redirectTo = req.session.returnTo || '/';
             delete req.session.returnTo;
             
+            console.log(`Usuario registrado: ${newUser.username}, redirección a: ${redirectTo}`);
+            
             return res.json({ 
               success: true, 
               user: {
                 id: newUser.id,
                 username: newUser.username,
-                userRole: newUser.userRole
+                userRole: newUser.userRole,
+                email: newUser.email
               },
               redirectTo
             });
           });
         } catch (error) {
+          console.error("Error en registro:", error);
           res.status(500).json({ 
             success: false, 
             message: 'Error en el servidor' 
