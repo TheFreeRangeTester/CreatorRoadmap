@@ -43,7 +43,7 @@ export function ReplitAuthButton({
         </>
       ) : (
         <>
-          {t("auth.loginWithReplit", "Iniciar sesión con Replit")}
+          {t("auth.loginWithReplit", "Iniciar sesión")}
         </>
       )}
     </Button>
