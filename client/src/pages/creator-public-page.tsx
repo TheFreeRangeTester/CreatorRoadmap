@@ -341,24 +341,8 @@ export default function CreatorPublicPage() {
       <div className="bg-gradient-to-b from-blue-600 to-indigo-900 min-h-screen pb-16">
         <div className="container mx-auto px-4 max-w-3xl pt-6">
           {/* Barra superior con controles de utilidad (minimalista) */}
-          <div className="absolute top-4 right-4 flex items-center gap-2 z-50">
-            {/* Estado de inicio de sesión */}
-            <div className="bg-white/10 backdrop-blur-sm px-2 py-1 rounded-md text-white text-xs mr-1 flex items-center border border-white/10">
-              {user ? (
-                <div className="flex items-center gap-1.5">
-                  <span>{t('common.logged', 'Logged in')}: {user.username}</span>
-                  <Link to="/" className="hover:text-white/80">
-                    <LogOut className="h-3.5 w-3.5" />
-                  </Link>
-                </div>
-              ) : (
-                <Link to={`/auth?referrer=/creators/${username}`} className="flex items-center gap-1.5 hover:text-white/80">
-                  <LogIn className="h-3.5 w-3.5" />
-                  <span>{t('common.loginToVote')}</span>
-                </Link>
-              )}
-            </div>
-            
+          <div className="flex justify-between items-center mb-10 pt-2">
+            {/* Lado izquierdo: botón de recargar */}
             <motion.div
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.9 }}
@@ -373,8 +357,28 @@ export default function CreatorPublicPage() {
                 <RefreshCcw className="h-4 w-4" />
               </Button>
             </motion.div>
-            <ThemeToggle />
-            <LanguageToggle />
+            
+            {/* Lado derecho: usuario, tema e idioma */}
+            <div className="flex items-center gap-2">
+              {/* Estado de inicio de sesión */}
+              <div className="bg-white/10 backdrop-blur-sm px-2 py-1 rounded-md text-white text-xs flex items-center border border-white/10">
+                {user ? (
+                  <div className="flex items-center gap-1.5">
+                    <span>{t('common.logged', 'Logged in')}: {user.username}</span>
+                    <Link to="/" className="hover:text-white/80">
+                      <LogOut className="h-3.5 w-3.5" />
+                    </Link>
+                  </div>
+                ) : (
+                  <Link to={`/auth?referrer=/creators/${username}`} className="flex items-center gap-1.5 hover:text-white/80">
+                    <LogIn className="h-3.5 w-3.5" />
+                    <span>{t('common.loginToVote')}</span>
+                  </Link>
+                )}
+              </div>
+              <ThemeToggle />
+              <LanguageToggle />
+            </div>
           </div>
           
           {/* Perfil del creador simplificado al estilo Linktree */}
