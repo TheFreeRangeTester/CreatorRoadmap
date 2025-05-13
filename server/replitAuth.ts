@@ -8,6 +8,19 @@ import connectPg from "connect-pg-simple";
 import { storage } from "./storage";
 import { db, pool } from "./db";
 
+// Extender la interfaz Session para incluir nuestros campos personalizados
+declare module 'express-session' {
+  interface SessionData {
+    returnTo?: string;
+    userRole?: string;
+    authRedirect?: string;
+    authRole?: string;
+    passport?: {
+      user?: any;
+    };
+  }
+}
+
 if (!process.env.REPLIT_DOMAINS) {
   console.warn("Advertencia: Variable de entorno REPLIT_DOMAINS no proporcionada. Algunas características pueden no funcionar correctamente.");
 }
@@ -56,47 +69,56 @@ function updateUserSession(
 }
 
 async function upsertUser(claims: any, role?: string) {
-  // Buscar si el usuario ya existe por su replitId
-  const existingUser = await storage.getUserByReplitId(claims["sub"]);
-  
-  if (existingUser) {
-    // Actualizar información del usuario existente
-    return await storage.updateUserProfile(existingUser.id, {
-      email: claims["email"],
-      firstName: claims["first_name"],
-      lastName: claims["last_name"],
-      profileImageUrl: claims["profile_image_url"],
-    });
-  } else {
-    // Crear un nuevo usuario
-    // Generamos un nombre de usuario a partir del email si está disponible, o del ID de Replit
-    const emailUsername = claims["email"] ? claims["email"].split('@')[0].replace(/[^a-zA-Z0-9]/g, '') : null;
-    const username = emailUsername || `user${claims["sub"]}`;
+  try {
+    // Buscar si el usuario ya existe por su replitId
+    const existingUser = await storage.getUserByReplitId(claims["sub"]);
     
-    // Verificar si ya existe un usuario con ese nombre, agregar sufijo si es necesario
-    let finalUsername = username;
-    let counter = 1;
-    let usernameTaken = true;
-    
-    while (usernameTaken) {
-      const existingUsername = await storage.getUserByUsername(finalUsername);
-      if (!existingUsername) {
-        usernameTaken = false;
-      } else {
-        finalUsername = `${username}${counter++}`;
+    if (existingUser) {
+      // Actualizar información del usuario existente
+      return await storage.updateUserProfile(existingUser.id, {
+        email: claims["email"],
+        firstName: claims["first_name"],
+        lastName: claims["last_name"],
+        logoUrl: claims["profile_image_url"], // Usamos logoUrl para la imagen de perfil
+      });
+    } else {
+      // Crear un nuevo usuario
+      // Generamos un nombre de usuario a partir del email si está disponible, o del ID de Replit
+      const emailUsername = claims["email"] ? claims["email"].split('@')[0].replace(/[^a-zA-Z0-9]/g, '') : null;
+      const username = emailUsername || `user${claims["sub"]}`;
+      
+      // Verificar si ya existe un usuario con ese nombre, agregar sufijo si es necesario
+      let finalUsername = username;
+      let counter = 1;
+      let usernameTaken = true;
+      
+      while (usernameTaken) {
+        const existingUsername = await storage.getUserByUsername(finalUsername);
+        if (!existingUsername) {
+          usernameTaken = false;
+        } else {
+          finalUsername = `${username}${counter++}`;
+        }
       }
+      
+      // Validar el rol de usuario
+      const userRole = (role === 'creator' ? 'creator' : 'audience') as 'creator' | 'audience';
+      
+      // Crear el usuario con los datos de Replit
+      return await storage.createUser({
+        username: finalUsername,
+        replitId: claims["sub"],
+        email: claims["email"],
+        firstName: claims["first_name"],
+        lastName: claims["last_name"],
+        logoUrl: claims["profile_image_url"],
+        userRole: userRole,
+        password: null, // No se requiere password con Replit Auth
+      });
     }
-    
-    return await storage.createUser({
-      username: finalUsername,
-      replitId: claims["sub"],
-      email: claims["email"],
-      firstName: claims["first_name"],
-      lastName: claims["last_name"],
-      logoUrl: claims["profile_image_url"],
-      userRole: role || "audience", // Por defecto es audience a menos que se especifique
-      password: null, // No se requiere password con Replit Auth
-    });
+  } catch (error) {
+    console.error("Error en upsertUser:", error);
+    throw error;
   }
 }
 
@@ -141,17 +163,28 @@ export async function setupAuth(app: Express) {
       ? process.env.REPLIT_DOMAINS.split(",") 
       : ["localhost:5000"];
 
-    for (const domain of domains) {
-      const strategy = new Strategy(
-        {
-          name: `replitauth:${domain}`,
-          config,
-          scope: "openid email profile offline_access",
-          callbackURL: `https://${domain}/api/callback`,
-        },
-        verify,
-      );
-      passport.use(strategy);
+    // En entorno de desarrollo (localhost), solo implementamos un auth básico
+    // para facilitar la prueba sin requerir Replit Auth completo
+    const isDevelopment = domains.includes("localhost:5000");
+
+    if (isDevelopment) {
+      // En desarrollo, configuración simplificada para pruebas locales
+      // No hacemos la configuración completa de Replit Auth
+      console.log("Usando autenticación simplificada para desarrollo local");
+    } else {
+      // Configuración real de Replit Auth para producción
+      for (const domain of domains) {
+        const strategy = new Strategy(
+          {
+            name: `replitauth:${domain}`,
+            config,
+            scope: "openid email profile offline_access",
+            callbackURL: `https://${domain}/api/callback`,
+          },
+          verify,
+        );
+        passport.use(strategy);
+      }
     }
 
     // Serializar usuario con ID de Replit y nuestro ID interno
@@ -199,47 +232,184 @@ export async function setupAuth(app: Express) {
       }
     });
 
-    // Ruta de inicio de sesión con Replit Auth
-    app.get("/api/login", (req, res, next) => {
-      const isSignup = req.query.signup === 'true';
-      const redirect = req.query.redirect as string;
-      const role = req.query.role as string;
+    // Configuramos las rutas de autenticación según el entorno
+    if (isDevelopment) {
+      // En entorno de desarrollo, usamos rutas simplificadas que redirigen
+      // a la interfaz local de autenticación
       
-      // Guardar información para después del login
-      req.session.authRedirect = redirect || '/';
-      req.session.authRole = role;
-      
-      // Determinar prompt en función de si es registro o login
-      const promptOption = isSignup ? "login consent" : "login";
-      
-      passport.authenticate(`replitauth:${req.hostname}`, {
-        prompt: promptOption,
-        scope: ["openid", "email", "profile", "offline_access"],
-      })(req, res, next);
-    });
-
-    // Callback después de autenticación con Replit
-    app.get("/api/callback", (req, res, next) => {
-      // Recuperar la URL a la que redirigir después del login
-      const redirectTo = (req.session.authRedirect as string) || '/';
-      
-      passport.authenticate(`replitauth:${req.hostname}`, {
-        successReturnToOrRedirect: redirectTo,
-        failureRedirect: "/",
-      })(req, res, next);
-    });
-
-    // Cierre de sesión
-    app.get("/api/logout", (req, res) => {
-      req.logout(() => {
-        res.redirect(
-          client.buildEndSessionUrl(config, {
-            client_id: process.env.REPL_ID!,
-            post_logout_redirect_uri: `${req.protocol}://${req.hostname}`,
-          }).href
-        );
+      // Ruta de inicio de sesión simplificada
+      app.get("/api/login", (req, res) => {
+        const isSignup = req.query.signup === 'true';
+        const redirectTo = (req.query.redirect as string) || '/';
+        const role = (req.query.role as string) || 'audience';
+        
+        // Guardar información para después del login
+        req.session.returnTo = redirectTo;
+        req.session.userRole = role;
+        
+        // Redirigir a la página local de autenticación
+        if (isSignup) {
+          res.redirect(`/auth?mode=register&redirect=${encodeURIComponent(redirectTo)}`);
+        } else {
+          res.redirect(`/auth?redirect=${encodeURIComponent(redirectTo)}`);
+        }
       });
-    });
+      
+      // Mantenemos la ruta de API para login con credenciales local
+      app.post('/api/auth/login', async (req, res) => {
+        try {
+          const { username, password } = req.body;
+          
+          // Buscar usuario por nombre de usuario
+          const user = await storage.getUserByUsername(username);
+          
+          if (!user) {
+            return res.status(401).json({ 
+              success: false, 
+              message: 'Credenciales inválidas' 
+            });
+          }
+          
+          req.login(user, (err) => {
+            if (err) {
+              return res.status(500).json({ 
+                success: false, 
+                message: 'Error de autenticación' 
+              });
+            }
+            
+            // Redirigir a la página que se especificó originalmente
+            const redirectTo = req.session.returnTo || '/';
+            delete req.session.returnTo;
+            
+            return res.json({ 
+              success: true, 
+              user: {
+                id: user.id,
+                username: user.username,
+                userRole: user.userRole
+              },
+              redirectTo
+            });
+          });
+        } catch (error) {
+          res.status(500).json({ 
+            success: false, 
+            message: 'Error en el servidor' 
+          });
+        }
+      });
+      
+      // Ruta para registro de usuarios local
+      app.post('/api/auth/register', async (req, res) => {
+        try {
+          const { username, password } = req.body;
+          
+          // Obtener el rol de usuario de la sesión o usar el proporcionado
+          const userRole = req.session.userRole || req.body.userRole || 'audience';
+          
+          // Verificar si el usuario ya existe
+          const existingUser = await storage.getUserByUsername(username);
+          
+          if (existingUser) {
+            return res.status(409).json({ 
+              success: false, 
+              message: 'El nombre de usuario ya está en uso' 
+            });
+          }
+          
+          // Crear nuevo usuario
+          const newUser = await storage.createUser({
+            username,
+            password,
+            userRole,
+          });
+          
+          // Iniciar sesión automáticamente después de registro
+          req.login(newUser, (err) => {
+            if (err) {
+              return res.status(500).json({ 
+                success: false, 
+                message: 'Error al iniciar sesión después del registro' 
+              });
+            }
+            
+            // Redirigir a la página que se especificó originalmente
+            const redirectTo = req.session.returnTo || '/';
+            delete req.session.returnTo;
+            
+            return res.json({ 
+              success: true, 
+              user: {
+                id: newUser.id,
+                username: newUser.username,
+                userRole: newUser.userRole
+              },
+              redirectTo
+            });
+          });
+        } catch (error) {
+          res.status(500).json({ 
+            success: false, 
+            message: 'Error en el servidor' 
+          });
+        }
+      });
+      
+      // Logout simplificado para desarrollo
+      app.get('/api/logout', (req, res) => {
+        req.logout(() => {
+          res.redirect('/');
+        });
+      });
+    } else {
+      // En producción, usamos la autenticación completa con Replit Auth
+      
+      // Ruta de inicio de sesión con Replit Auth
+      app.get("/api/login", (req, res, next) => {
+        const isSignup = req.query.signup === 'true';
+        const redirect = req.query.redirect as string;
+        const role = req.query.role as string;
+        
+        // Guardar información para después del login
+        // @ts-ignore
+        req.session.authRedirect = redirect || '/';
+        // @ts-ignore
+        req.session.authRole = role;
+        
+        // Determinar prompt en función de si es registro o login
+        const promptOption = isSignup ? "login consent" : "login";
+        
+        passport.authenticate(`replitauth:${req.hostname}`, {
+          prompt: promptOption,
+          scope: ["openid", "email", "profile", "offline_access"],
+        })(req, res, next);
+      });
+
+      // Callback después de autenticación con Replit
+      app.get("/api/callback", (req, res, next) => {
+        // Recuperar la URL a la que redirigir después del login
+        // @ts-ignore
+        const redirectTo = req.session.authRedirect || '/';
+        
+        passport.authenticate(`replitauth:${req.hostname}`, {
+          successReturnToOrRedirect: redirectTo,
+          failureRedirect: "/",
+        })(req, res, next);
+      });
+
+      // Cierre de sesión con Replit Auth
+      app.get("/api/logout", (req, res) => {
+        req.logout(() => {
+          res.redirect(
+            client.buildEndSessionUrl(config, {
+              client_id: process.env.REPL_ID!,
+              post_logout_redirect_uri: `${req.protocol}://${req.hostname}`,
+            }).href
+          );
+        });
+      });
+    }
 
     // Obtener usuario actual
     app.get('/api/auth/user', (req, res) => {
@@ -306,12 +476,10 @@ export const isAuthenticated: RequestHandler = async (req, res, next) => {
       const tokenResponse = await client.refreshTokenGrant(config, refreshToken);
       
       // Actualizar la sesión con el nuevo token
-      if (req.session) {
-        const sessionUser = req.session.passport?.user;
-        if (sessionUser) {
-          sessionUser.expires_at = tokenResponse.claims().exp;
-          sessionUser.refresh_token = tokenResponse.refresh_token;
-        }
+      if (req.session && req.session.passport && req.session.passport.user) {
+        const sessionUser = req.session.passport.user;
+        sessionUser.expires_at = tokenResponse.claims().exp;
+        sessionUser.refresh_token = tokenResponse.refresh_token;
       }
       
       return next();
