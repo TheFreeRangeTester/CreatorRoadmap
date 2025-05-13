@@ -409,8 +409,20 @@ export default function CreatorPublicPage() {
 
               {/* Lado derecho: tema e idioma */}
               <div className="flex items-center gap-2">
-                <ThemeToggle />
-                <LanguageToggle />
+                <motion.div
+                  whileHover={{ scale: 1.1 }}
+                  whileTap={{ scale: 0.9 }}
+                >
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={() => refetch()}
+                    aria-label={t("common.refresh")}
+                    className="bg-white/20 text-white hover:bg-white/30 backdrop-blur-sm"
+                  >
+                    <RefreshCcw className="h-4 w-4" />
+                  </Button>
+                </motion.div>
               </div>
             </div>
 

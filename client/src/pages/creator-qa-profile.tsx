@@ -565,12 +565,8 @@ export default function CreatorQAProfile() {
       </div>
       {/* Header con controles y estado de usuario */}
       <div className="fixed top-4 right-4 flex items-center gap-3 z-10">
-        <div className="flex items-center gap-2">
-          <ThemeToggle />
-          <LanguageToggle />
-        </div>
         {user && (
-          <div className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-full px-3 py-1.5 flex items-center shadow-sm border border-gray-100 dark:border-gray-700 ml-2">
+          <div className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-full px-3 py-1.5 flex items-center shadow-sm border border-gray-100 dark:border-gray-700">
             <Avatar className="h-6 w-6 mr-2">
               <AvatarImage src={user.logoUrl || ""} />
               <AvatarFallback className="text-xs bg-primary/20 text-primary">

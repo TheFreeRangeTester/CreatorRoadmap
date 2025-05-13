@@ -61,11 +61,6 @@ export default function ProfilePage() {
                       <span className="font-medium">{user.username}</span>
                     </div>
                   )}
-                  
-                  <div className="flex items-center gap-2">
-                    <LanguageToggle />
-                    <ThemeToggle />
-                  </div>
                 </div>
               </div>
             </div>
