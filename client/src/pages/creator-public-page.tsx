@@ -343,69 +343,92 @@ export default function CreatorPublicPage() {
         <div className="container mx-auto px-4 max-w-3xl pt-6">
           {/* Barra superior con controles de utilidad (minimalista) */}
           <div className="flex justify-between items-center mb-10 pt-2">
-            {/* Lado izquierdo: botón de recargar */}
-            <motion.div
-              whileHover={{ scale: 1.1 }}
-              whileTap={{ scale: 0.9 }}
-              className="hidden md:block"
-            >
-              <Button 
-                variant="ghost" 
-                size="icon"
-                onClick={() => refetch()} 
-                aria-label={t('common.refresh')}
-                className="bg-white/20 text-white hover:bg-white/30 backdrop-blur-sm"
-              >
-                <RefreshCcw className="h-4 w-4" />
-              </Button>
-            </motion.div>
-            
-            {/* Lado derecho: escritorio - usuario, tema e idioma */}
-            <div className="hidden md:flex items-center gap-2">
-              {/* Estado de inicio de sesión */}
-              <div className="bg-white/20 backdrop-blur-sm px-3 py-1.5 rounded-md text-white text-xs flex items-center border border-white/20 shadow-sm">
-                {user ? (
-                  <div className="flex items-center gap-2">
-                    <User className="h-3.5 w-3.5 text-blue-200" />
-                    <span className="font-medium">{user.username}</span>
-                    <Link to="/" className="hover:text-white/80 ml-1">
-                      <LogOut className="h-3.5 w-3.5" />
+            {/* Contenedor para vista desktop */}
+            <div className="hidden md:flex justify-between items-center w-full">
+              {/* Lado izquierdo: usuario y botón de recargar */}
+              <div className="flex items-center gap-3">
+                {/* Estado de inicio de sesión */}
+                <div className="bg-white/20 backdrop-blur-sm px-3 py-1.5 rounded-md text-white text-xs flex items-center border border-white/20 shadow-sm">
+                  {user ? (
+                    <div className="flex items-center gap-2">
+                      <User className="h-3.5 w-3.5 text-blue-200" />
+                      <span className="font-medium">{user.username}</span>
+                      <Link to="/" className="hover:text-white/80 ml-1">
+                        <LogOut className="h-3.5 w-3.5" />
+                      </Link>
+                    </div>
+                  ) : (
+                    <Link to={`/auth?referrer=/creators/${username}`} className="flex items-center gap-1.5 hover:text-white/80">
+                      <LogIn className="h-3.5 w-3.5" />
+                      <span>{t('common.loginToVote')}</span>
                     </Link>
+                  )}
+                </div>
+                
+                <motion.div
+                  whileHover={{ scale: 1.1 }}
+                  whileTap={{ scale: 0.9 }}
+                >
+                  <Button 
+                    variant="ghost" 
+                    size="icon"
+                    onClick={() => refetch()} 
+                    aria-label={t('common.refresh')}
+                    className="bg-white/20 text-white hover:bg-white/30 backdrop-blur-sm"
+                  >
+                    <RefreshCcw className="h-4 w-4" />
+                  </Button>
+                </motion.div>
+              </div>
+              
+              {/* Lado derecho: tema e idioma */}
+              <div className="flex items-center gap-2">
+                <ThemeToggle />
+                <LanguageToggle />
+              </div>
+            </div>
+            
+            {/* Contenedor para vista móvil */}
+            <div className="flex items-center justify-between w-full md:hidden">
+              {/* Usuario en móvil - Lado izquierdo */}
+              <div className="bg-white/20 backdrop-blur-sm px-3 py-1.5 rounded-md text-white text-xs flex items-center border border-white/20 shadow-sm max-w-[60%]">
+                {user ? (
+                  <div className="flex items-center gap-1.5 truncate">
+                    <User className="h-3.5 w-3.5 flex-shrink-0 text-blue-200" />
+                    <span className="font-medium truncate">{user.username}</span>
                   </div>
                 ) : (
-                  <Link to={`/auth?referrer=/creators/${username}`} className="flex items-center gap-1.5 hover:text-white/80">
-                    <LogIn className="h-3.5 w-3.5" />
-                    <span>{t('common.loginToVote')}</span>
+                  <Link to={`/auth?referrer=/creators/${username}`} className="flex items-center gap-1.5 hover:text-white/80 truncate">
+                    <LogIn className="h-3.5 w-3.5 flex-shrink-0" />
+                    <span className="truncate">{t('common.loginToVote')}</span>
                   </Link>
                 )}
               </div>
-              <ThemeToggle />
-              <LanguageToggle />
-            </div>
-            
-            {/* Menú móvil */}
-            <div className="flex items-center justify-between w-full md:hidden">
-              <motion.div
-                whileHover={{ scale: 1.1 }}
-                whileTap={{ scale: 0.9 }}
-              >
-                <Button 
-                  variant="ghost" 
-                  size="icon"
-                  onClick={() => refetch()} 
-                  aria-label={t('common.refresh')}
-                  className="bg-white/20 text-white hover:bg-white/30 backdrop-blur-sm"
-                >
-                  <RefreshCcw className="h-4 w-4" />
-                </Button>
-              </motion.div>
               
-              <MobileMenu 
-                isCreatorProfile={true} 
-                onRefresh={() => refetch()} 
-                username={username} 
-                transparent={true} 
-              />
+              {/* Controles en móvil - Lado derecho */}
+              <div className="flex items-center gap-2">
+                <motion.div
+                  whileHover={{ scale: 1.1 }}
+                  whileTap={{ scale: 0.9 }}
+                >
+                  <Button 
+                    variant="ghost" 
+                    size="icon"
+                    onClick={() => refetch()} 
+                    aria-label={t('common.refresh')}
+                    className="bg-white/20 text-white hover:bg-white/30 backdrop-blur-sm"
+                  >
+                    <RefreshCcw className="h-4 w-4" />
+                  </Button>
+                </motion.div>
+                
+                <MobileMenu 
+                  isCreatorProfile={true} 
+                  onRefresh={() => refetch()} 
+                  username={username} 
+                  transparent={true} 
+                />
+              </div>
             </div>
           </div>
           
