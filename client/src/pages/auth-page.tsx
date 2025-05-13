@@ -18,6 +18,7 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 import { FormDescription } from "@/components/ui/form";
 import { Separator } from "@/components/ui/separator";
+import { ReplitAuthButton } from "@/components/replit-auth-button";
 
 // Extend schema for validation
 const formSchema = insertUserSchema.extend({
@@ -235,6 +236,22 @@ export default function AuthPage() {
                           </Button>
                         </form>
                       </Form>
+                      
+                      <div className="relative my-4">
+                        <div className="absolute inset-0 flex items-center">
+                          <Separator className="w-full" />
+                        </div>
+                        <div className="relative flex justify-center">
+                          <span className="bg-background px-2 text-muted-foreground text-xs">
+                            {t('auth.orContinueWith', 'o continuar con')}
+                          </span>
+                        </div>
+                      </div>
+                      
+                      <ReplitAuthButton 
+                        className="w-full" 
+                        returnTo={getRedirectDestination()}
+                      />
                     </CardContent>
                   </Card>
                 </TabsContent>
@@ -375,6 +392,22 @@ export default function AuthPage() {
                             </Button>
                           </form>
                         </Form>
+                        
+                        <div className="relative my-4">
+                          <div className="absolute inset-0 flex items-center">
+                            <Separator className="w-full" />
+                          </div>
+                          <div className="relative flex justify-center">
+                            <span className="bg-background px-2 text-muted-foreground text-xs">
+                              {t('auth.orContinueWith', 'o continuar con')}
+                            </span>
+                          </div>
+                        </div>
+                        
+                        <ReplitAuthButton 
+                          className="w-full" 
+                          returnTo={getRedirectDestination()}
+                        />
                       </CardContent>
                     </Card>
                   </TabsContent>

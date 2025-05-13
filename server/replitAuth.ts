@@ -75,9 +75,9 @@ async function upsertUser(claims: any) {
       email: claims["email"],
       // Usar el tipado correcto para los campos de UpdateProfile
       replitId: replitUserId,
-      firstName: claims["first_name"] || null,
-      lastName: claims["last_name"] || null,
-      logoUrl: claims["profile_image_url"] || null,
+      firstName: claims["first_name"] || undefined,
+      lastName: claims["last_name"] || undefined,
+      logoUrl: claims["profile_image_url"] || undefined,
     });
   } else {
     // Verificar si el username ya existe y ajustarlo si es necesario
@@ -96,11 +96,11 @@ async function upsertUser(claims: any) {
       password: "", // No necesitamos contraseña para usuarios de Replit Auth
       userRole: "audience", // Por defecto todos los usuarios son 'audience'
       email: claims["email"] || "",
-      logoUrl: claims["profile_image_url"] || null,
-      profileDescription: profileDescription || null,
+      logoUrl: claims["profile_image_url"] || undefined,
+      profileDescription: profileDescription || undefined,
       replitId: replitUserId,
-      firstName: claims["first_name"] || null,
-      lastName: claims["last_name"] || null,
+      firstName: claims["first_name"] || undefined,
+      lastName: claims["last_name"] || undefined,
     });
   }
 }
