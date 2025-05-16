@@ -37,12 +37,12 @@ export function setupAuth(app: Express) {
   
   const sessionSettings: session.SessionOptions = {
     secret: sessionSecret,
-    resave: true,
-    saveUninitialized: true,
+    resave: false,
+    saveUninitialized: false,
     store: storage.sessionStore,
     name: 'ideas.sid',
     cookie: {
-      secure: isProduction, // Solo usar secure en producción
+      secure: false, // Deshabilitamos secure para desarrollo
       maxAge: 30 * 24 * 60 * 60 * 1000, // 30 días
       httpOnly: true,
       sameSite: 'lax',
@@ -84,6 +84,7 @@ export function setupAuth(app: Express) {
 
   app.post("/api/auth/register", async (req, res, next) => {
     try {
+      console.log("Intento de registro con datos:", req.body);
       const validatedData = insertUserSchema.parse(req.body);
       
       const existingUser = await storage.getUserByUsername(validatedData.username);
