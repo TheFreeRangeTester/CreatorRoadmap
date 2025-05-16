@@ -463,9 +463,15 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(404).json({ message: "Creator not found" });
       }
 
-      // Get the ideas with positions for this creator - only approved ideas
-      const ideas = await storage.getIdeasWithPositions().then(ideas => 
-        ideas.filter(idea => idea.creatorId === creator.id && idea.status === 'approved')
+      // Get all ideas for this creator
+      const allIdeas = await storage.getIdeasWithPositions();
+      
+      // Filter ideas:
+      // 1. Ideas created by the creator (status: approved)
+      // 2. Ideas suggested to the creator by others (status: approved)
+      const ideas = allIdeas.filter(idea => 
+        idea.status === 'approved' && 
+        (idea.creatorId === creator.id)
       );
 
       // Enviar datos completos del creador, excluyendo la contraseña
