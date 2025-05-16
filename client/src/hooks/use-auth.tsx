@@ -66,6 +66,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     queryKey: ["/api/user"],
     queryFn: async () => {
       try {
+        console.log("Fetching user data from /api/user...");
         const res = await fetch("/api/user", {
           method: "GET",
           headers: {
@@ -73,6 +74,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           },
           credentials: "same-origin"
         });
+        
+        console.log("Response status:", res.status);
         
         // Not authenticated
         if (res.status === 401) {
@@ -82,11 +85,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         
         // Other errors
         if (!res.ok) {
+          console.error(`Error fetching user: ${res.status}: ${res.statusText}`);
           throw new Error(`${res.status}: ${res.statusText}`);
         }
         
         // Success
-        return res.json();
+        const userData = await res.json();
+        console.log("User data received:", userData);
+        return userData;
       } catch (error) {
         console.error("Failed to fetch user:", error);
         return null;

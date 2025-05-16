@@ -82,7 +82,7 @@ export function setupAuth(app: Express) {
     }
   });
 
-  app.post("/api/register", async (req, res, next) => {
+  app.post("/api/auth/register", async (req, res, next) => {
     try {
       const validatedData = insertUserSchema.parse(req.body);
       
@@ -126,7 +126,7 @@ export function setupAuth(app: Express) {
     }
   });
 
-  app.post("/api/login", (req, res, next) => {
+  app.post("/api/auth/login", (req, res, next) => {
     passport.authenticate("local", (err: Error, user: SelectUser) => {
       if (err) {
         return next(err);
