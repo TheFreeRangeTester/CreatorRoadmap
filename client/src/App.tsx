@@ -6,6 +6,7 @@ import ProfilePage from "@/pages/profile-page";
 import PublicLeaderboardPage from "@/pages/public-leaderboard-page";
 import LandingPage from "@/pages/landing-page";
 import CreatorQAProfile from "@/pages/creator-qa-profile";
+import AuthDebug from "@/pages/auth-debug";
 import { ProtectedRoute } from "./lib/protected-route";
 import { ThemeToggle } from "./components/theme-toggle";
 import { LanguageToggle } from "./components/language-toggle";
@@ -29,6 +30,7 @@ function App() {
         <ProtectedRoute path="/dashboard" component={HomePage} />
         <ProtectedRoute path="/profile" component={ProfilePage} />
         <Route path="/auth" component={AuthPage} />
+        <Route path="/auth-debug" component={AuthDebug} />
         <Route path="/public/:token" component={PublicLeaderboardPage} />
         <Route path="/creators/:username" component={CreatorPublicPage} />
         <Route path="/:username" component={CreatorQAProfile} />
