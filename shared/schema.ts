@@ -57,8 +57,17 @@ export const insertUserSchema = createInsertSchema(users).pick({
   username: true,
   password: true,
 }).extend({
+  username: z.string()
+    .min(3, { message: "El nombre de usuario debe tener al menos 3 caracteres" })
+    .max(50, { message: "El nombre de usuario no puede exceder 50 caracteres" })
+    .regex(/^[a-zA-Z0-9_-]+$/, { 
+      message: "El nombre de usuario solo puede contener letras, números, guiones y guiones bajos" 
+    }),
+  password: z.string()
+    .min(6, { message: "La contraseña debe tener al menos 6 caracteres" })
+    .max(100, { message: "La contraseña no puede exceder 100 caracteres" }),
   userRole: z.enum(['creator', 'audience']).default('audience'),
-  email: z.string().optional(), // Hemos eliminado la validación .email() para hacerlo más permisivo
+  email: z.string().optional(),
   logoUrl: z.string().optional(),
   profileDescription: z.string().optional(),
 });
