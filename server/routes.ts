@@ -16,7 +16,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     console.log("Session ID:", req.sessionID);
     console.log("Session data:", req.session);
     console.log("Cookies:", req.headers.cookie);
-    
+
     if (!req.isAuthenticated()) {
       console.log("User not authenticated");
       return res.status(401).json({ 
@@ -24,7 +24,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         authenticated: false 
       });
     }
-    
+
     try {
       const user = await storage.getUser(req.user.id);
       if (!user) {
@@ -33,7 +33,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
           authenticated: true 
         });
       }
-      
+
       // Enviar datos del usuario sin la contraseña
       const { password, ...userWithoutPassword } = user;
       return res.json(userWithoutPassword);
@@ -56,14 +56,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       // Validar datos con updateProfileSchema
       const validatedData = updateProfileSchema.parse(req.body);
-      
+
       // Actualizar el perfil del usuario
       const updatedUser = await storage.updateUserProfile(req.user.id, validatedData);
-      
+
       if (!updatedUser) {
         return res.status(404).json({ message: "User not found" });
       }
-      
+
       // Devolver el usuario actualizado
       res.json(updatedUser);
     } catch (error) {
@@ -73,12 +73,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
           errors: fromZodError(error).message 
         });
       }
-      
+
       console.error("Error updating user profile:", error);
       res.status(500).json({ message: "Failed to update profile" });
     }
   });
-  
+
   // User role update route (audience -> creator)
   app.patch("/api/user/role", async (req: Request, res: Response) => {
     try {
@@ -86,7 +86,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       if (!req.isAuthenticated()) {
         return res.status(401).json({ message: "Unauthorized" });
       }
-      
+
       // Verificar que el rol solicitado sea válido
       const { userRole } = req.body;
       if (userRole !== "creator") {
@@ -94,24 +94,24 @@ export async function registerRoutes(app: Express): Promise<Server> {
           message: "Invalid role. Only upgrading to 'creator' is allowed." 
         });
       }
-      
+
       // Verificar que el usuario actual sea 'audience'
       if (req.user.userRole !== "audience") {
         return res.status(400).json({ 
           message: "User is already a creator or has a different role." 
         });
       }
-      
+
       // Actualizar el rol del usuario
       const updatedUser = await storage.updateUserProfile(req.user.id, { userRole: "creator" });
-      
+
       if (!updatedUser) {
         return res.status(404).json({ message: "User not found" });
       }
-      
+
       // Actualizar el usuario en sesión
       req.user.userRole = "creator";
-      
+
       // Devolver el usuario actualizado
       res.json(updatedUser);
     } catch (error) {
@@ -126,20 +126,19 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       // Obtener todas las ideas con posiciones
       const allIdeas = await storage.getIdeasWithPositions();
-      
+
       // Si el usuario está autenticado y solicita incluir ideas pendientes, incluirlas
       const includePending = req.query.include_pending === 'true' && req.isAuthenticated();
-      
+
       let ideas = [];
-      
+
       // Si el usuario está autenticado, filtramos según su rol
       if (req.isAuthenticated()) {
-        // Si el usuario es creador, solo mostrar sus propias ideas APROBADAS
-        // Las ideas pendientes (sugeridas) solo se deben mostrar en el endpoint específico /api/pending-ideas
+        // Si el usuario es creador, mostrar sus propias ideas (aprobadas y pendientes)
         if (req.user.userRole === 'creator') {
           ideas = allIdeas.filter(idea => 
-            // Ideas APROBADAS que el creador ha creado
-            idea.creatorId === req.user.id && idea.status === 'approved'
+            // Ideas que el creador ha creado
+            idea.creatorId === req.user.id
           );
         } else {
           // Para usuarios con rol 'audience', mostrar todas las ideas aprobadas
@@ -149,7 +148,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         // Para usuarios no autenticados, mostrar solo ideas aprobadas
         ideas = allIdeas.filter(idea => idea.status === 'approved');
       }
-      
+
       res.json(ideas);
     } catch (error) {
       console.error("Error fetching ideas:", error);
@@ -185,14 +184,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
       console.log("Session ID:", req.sessionID);
       console.log("Session:", req.session);
       console.log("Cookies:", req.headers.cookie);
-      
+
       if (!req.isAuthenticated()) {
         console.log("Authentication failed, user is not authenticated");
         return res.status(401).json({ message: "Authentication required to create ideas" });
       }
-      
+
       console.log("User authenticated:", req.user);
-      
+
       // Verificar el rol del usuario
       if (req.user!.userRole !== 'creator') {
         console.log("User is not a creator, role:", req.user!.userRole);
@@ -234,7 +233,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
 
       const validatedData = updateIdeaSchema.parse(req.body);
-      
+
       // Check if the idea exists
       const existingIdea = await storage.getIdea(id);
       if (!existingIdea) {
@@ -368,7 +367,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       const validatedData = insertPublicLinkSchema.parse(req.body);
       const creatorId = req.user!.id;
-      
+
       const publicLink = await storage.createPublicLink(creatorId, validatedData);
       res.status(201).json(publicLink);
     } catch (error) {
@@ -422,7 +421,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Create the full URL for sharing
       const baseUrl = process.env.BASE_URL || 'http://localhost:5000';
       const url = `${baseUrl}/public/${publicLink.token}`;
-      
+
       res.json({
         ...publicLink,
         url
@@ -457,21 +456,21 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.get("/api/creators/:username", async (req: Request, res: Response) => {
     try {
       const { username } = req.params;
-      
+
       // Find the creator by username
       const creator = await storage.getUserByUsername(username);
       if (!creator) {
         return res.status(404).json({ message: "Creator not found" });
       }
-      
+
       // Get the ideas with positions for this creator - only approved ideas
       const ideas = await storage.getIdeasWithPositions().then(ideas => 
         ideas.filter(idea => idea.creatorId === creator.id && idea.status === 'approved')
       );
-      
+
       // Enviar datos completos del creador, excluyendo la contraseña
       const { password, ...creatorWithoutPassword } = creator;
-      
+
       res.json({
         ideas,
         creator: creatorWithoutPassword
@@ -481,7 +480,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.status(500).json({ message: "Failed to fetch creator page" });
     }
   });
-  
+
   // Suggest an idea to a creator
   app.post("/api/creators/:username/suggest", async (req: Request, res: Response) => {
     console.log("=========== INICIO PROCESO DE SUGERENCIA ===========");
@@ -489,54 +488,54 @@ export async function registerRoutes(app: Express): Promise<Server> {
     console.log("Headers:", req.headers);
     console.log("isAuthenticated:", req.isAuthenticated());
     console.log("session:", req.session);
-    
+
     try {
       if (!req.isAuthenticated()) {
         console.log("❌ ERROR: Usuario no autenticado");
         return res.status(401).json({ message: "Authentication required to suggest ideas" });
       }
-      
+
       console.log("✅ Usuario autenticado:", req.user);
       const { username } = req.params;
-      
+
       // Find the creator by username
       const creator = await storage.getUserByUsername(username);
       if (!creator) {
         console.log(`❌ ERROR: Creador "${username}" no encontrado`);
         return res.status(404).json({ message: "Creator not found" });
       }
-      
+
       console.log("✅ Creador encontrado:", creator);
-      
+
       // Parse and validate the idea data
       console.log("Cuerpo de la petición:", req.body);
       console.log("Datos a validar:", {
         ...req.body,
         creatorId: creator.id
       });
-      
+
       try {
         const validatedData = suggestIdeaSchema.parse({
           ...req.body,
           creatorId: creator.id
         });
-        
+
         console.log("✅ Datos validados:", validatedData);
-        
+
         // Store the suggested idea with pending status
         const idea = await storage.suggestIdea(validatedData, req.user!.id);
         console.log("✅ Idea sugerida creada:", idea);
-        
+
         // Get the username of the suggester for the response
         const suggester = await storage.getUser(req.user!.id);
         console.log("✅ Sugeridor:", suggester);
-        
+
         const response = {
           ...idea,
           suggestedByUsername: suggester!.username,
           position: { current: null, previous: null, change: null }
         };
-        
+
         console.log("✅ Enviando respuesta:", response);
         console.log("=========== FIN PROCESO DE SUGERENCIA ===========");
         return res.status(201).json(response);
@@ -557,34 +556,34 @@ export async function registerRoutes(app: Express): Promise<Server> {
       return res.status(500).json({ message: "Failed to suggest idea: " + errorMessage });
     }
   });
-  
+
   // Get pending ideas for the authenticated creator
   app.get("/api/pending-ideas", async (req: Request, res: Response) => {
     try {
       if (!req.isAuthenticated()) {
         return res.status(401).json({ message: "Authentication required to view pending ideas" });
       }
-      
+
       // Comprobar si el usuario tiene rol de creador
       if (req.user.userRole !== 'creator') {
         return res.status(403).json({ message: "Only creators can view pending ideas" });
       }
-      
+
       const creatorId = req.user!.id;
-      
+
       // Get all pending ideas for this creator
       const pendingIdeas = await storage.getPendingIdeas(creatorId);
-      
+
       // Get the username for each suggester
       const pendingIdeasWithSuggester = await Promise.all(
         pendingIdeas.map(async (idea) => {
           let suggestedByUsername = null;
-          
+
           if (idea.suggestedBy) {
             const suggester = await storage.getUser(idea.suggestedBy);
             suggestedByUsername = suggester ? suggester.username : null;
           }
-          
+
           return {
             ...idea,
             suggestedByUsername,
@@ -592,54 +591,54 @@ export async function registerRoutes(app: Express): Promise<Server> {
           };
         })
       );
-      
+
       res.json(pendingIdeasWithSuggester);
     } catch (error) {
       console.error("Error fetching pending ideas:", error);
       res.status(500).json({ message: "Failed to fetch pending ideas" });
     }
   });
-  
+
   // Approve or reject a pending idea
   app.patch("/api/ideas/:id/approve", async (req: Request, res: Response) => {
     try {
       if (!req.isAuthenticated()) {
         return res.status(401).json({ message: "Authentication required to approve ideas" });
       }
-      
+
       // Verificar que el usuario tenga rol de creador
       if (req.user.userRole !== 'creator') {
         return res.status(403).json({ message: "Only creators can approve ideas" });
       }
-      
+
       const id = Number(req.params.id);
       if (isNaN(id)) {
         return res.status(400).json({ message: "Invalid idea ID" });
       }
-      
+
       // Check if the idea exists
       const idea = await storage.getIdea(id);
       if (!idea) {
         return res.status(404).json({ message: "Idea not found" });
       }
-      
+
       // Check if the user is the creator of the idea (the one who can approve it)
       if (idea.creatorId !== req.user!.id) {
         return res.status(403).json({ message: "You can only approve ideas suggested to you" });
       }
-      
+
       // Check if the idea is pending
       if (idea.status !== 'pending') {
         return res.status(400).json({ message: "Only pending ideas can be approved" });
       }
-      
+
       // Approve the idea
       const approvedIdea = await storage.approveIdea(id);
-      
+
       // Get the approved idea with updated position 
       const ideasWithPositions = await storage.getIdeasWithPositions();
       const updatedIdeaWithPosition = ideasWithPositions.find(i => i.id === approvedIdea!.id);
-      
+
       res.json(updatedIdeaWithPosition);
     } catch (error) {
       console.error("Error approving idea:", error);
@@ -658,7 +657,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const { username, ideaId: ideaIdString } = req.params;
       const ideaId = Number(ideaIdString);
       const checkOnly = req.query.check_only === 'true';
-      
+
       if (isNaN(ideaId)) {
         return res.status(400).json({ message: "Invalid idea ID" });
       }
@@ -674,7 +673,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       if (!idea) {
         return res.status(404).json({ message: "Idea not found" });
       }
-      
+
       if (idea.creatorId !== creator.id) {
         return res.status(403).json({ message: "This idea does not belong to the specified creator" });
       }
@@ -686,7 +685,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       if (existingVote) {
         return res.status(400).json({ message: "You have already voted for this idea" });
       }
-      
+
       // If this is only a check, don't create the vote
       if (checkOnly) {
         return res.status(200).json({ message: "You have not voted for this idea yet" });
@@ -710,7 +709,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.get("/api/public/:token", async (req: Request, res: Response) => {
     try {
       const { token } = req.params;
-      
+
       // Get the public link by token
       const publicLink = await storage.getPublicLinkByToken(token);
       if (!publicLink) {
@@ -729,7 +728,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       // Get the ideas with positions
       const ideas = await storage.getIdeasWithPositions();
-      
+
       res.json({
         ideas,
         publicLink: {
@@ -754,7 +753,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const { token, ideaId: ideaIdString } = req.params;
       const ideaId = Number(ideaIdString);
       const checkOnly = req.query.check_only === 'true';
-      
+
       if (isNaN(ideaId)) {
         return res.status(400).json({ message: "Invalid idea ID" });
       }
@@ -788,7 +787,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       if (existingVote) {
         return res.status(400).json({ message: "You have already voted for this idea" });
       }
-      
+
       // If this is only a check, don't create the vote
       if (checkOnly) {
         return res.status(200).json({ message: "You have not voted for this idea yet" });
