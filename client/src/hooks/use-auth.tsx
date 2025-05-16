@@ -107,14 +107,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   // Handle login
   const loginMutation = useMutation({
     mutationFn: async (credentials: LoginData) => {
-      const res = await fetch("/api/login", {
+      const res = await fetch("/api/auth/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
           "X-Requested-With": "XMLHttpRequest"
         },
         body: JSON.stringify(credentials),
-        credentials: "same-origin"
+        credentials: "include"
       });
       
       if (!res.ok) {
@@ -153,14 +153,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   // Handle registration
   const registerMutation = useMutation({
     mutationFn: async (userData: InsertUser) => {
-      const res = await fetch("/api/register", {
+      const res = await fetch("/api/auth/register", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
           "X-Requested-With": "XMLHttpRequest"
         },
         body: JSON.stringify(userData),
-        credentials: "same-origin"
+        credentials: "include"
       });
       
       if (!res.ok) {
