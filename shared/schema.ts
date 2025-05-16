@@ -58,7 +58,7 @@ export const insertUserSchema = createInsertSchema(users).pick({
   password: true,
 }).extend({
   userRole: z.enum(['creator', 'audience']).default('audience'),
-  email: z.string().email().optional(),
+  email: z.string().optional(), // Hemos eliminado la validación .email() para hacerlo más permisivo
   logoUrl: z.string().optional(),
   profileDescription: z.string().optional(),
 });
@@ -76,7 +76,7 @@ export const userResponseSchema = z.object({
   threadsUrl: z.string().nullable().optional(),
   websiteUrl: z.string().nullable().optional(),
   profileBackground: z.string().default("gradient-1"),
-  email: z.string().email().optional(),
+  email: z.string().optional(), // Eliminada la validación de email
 });
 
 // Idea schemas
@@ -151,17 +151,17 @@ export const publicLinkResponseSchema = z.object({
 // Schema para actualizar el perfil del usuario
 export const updateProfileSchema = z.object({
   profileDescription: z.string().max(500, { message: "La descripción debe tener 500 caracteres o menos" }).optional().nullable(),
-  logoUrl: z.string().url({ message: "Debe ser una URL válida" }).optional().nullable(),
-  twitterUrl: z.string().url({ message: "Debe ser una URL válida" }).optional().nullable(),
-  instagramUrl: z.string().url({ message: "Debe ser una URL válida" }).optional().nullable(),
-  youtubeUrl: z.string().url({ message: "Debe ser una URL válida" }).optional().nullable(),
-  tiktokUrl: z.string().url({ message: "Debe ser una URL válida" }).optional().nullable(), 
-  threadsUrl: z.string().url({ message: "Debe ser una URL válida" }).optional().nullable(),
-  websiteUrl: z.string().url({ message: "Debe ser una URL válida" }).optional().nullable(),
+  logoUrl: z.string().optional().nullable(),
+  twitterUrl: z.string().optional().nullable(),
+  instagramUrl: z.string().optional().nullable(),
+  youtubeUrl: z.string().optional().nullable(),
+  tiktokUrl: z.string().optional().nullable(), 
+  threadsUrl: z.string().optional().nullable(),
+  websiteUrl: z.string().optional().nullable(),
   profileBackground: z.string().optional().nullable(),
   // Campo para actualizar el rol
   userRole: z.enum(['creator', 'audience']).optional(),
-  email: z.string().email().optional(),
+  email: z.string().optional(),
 });
 
 // Types
