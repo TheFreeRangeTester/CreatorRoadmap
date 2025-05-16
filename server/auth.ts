@@ -37,12 +37,12 @@ export function setupAuth(app: Express) {
   
   const sessionSettings: session.SessionOptions = {
     secret: sessionSecret,
-    resave: false,
-    saveUninitialized: false,
+    resave: true,
+    saveUninitialized: true,
     store: storage.sessionStore,
     name: 'ideas.sid',
     cookie: {
-      secure: false, // Deshabilitamos secure para desarrollo
+      secure: false,
       maxAge: 30 * 24 * 60 * 60 * 1000, // 30 días
       httpOnly: true,
       sameSite: 'lax',

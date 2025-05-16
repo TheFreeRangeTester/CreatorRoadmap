@@ -70,9 +70,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         const res = await fetch("/api/user", {
           method: "GET",
           headers: {
+            "Content-Type": "application/json",
             "X-Requested-With": "XMLHttpRequest"
           },
-          credentials: "same-origin"
+          credentials: "include"
         });
         
         console.log("Response status:", res.status);
