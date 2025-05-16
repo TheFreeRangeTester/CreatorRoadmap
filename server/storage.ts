@@ -14,7 +14,6 @@ export interface IStorage {
   getUser(id: number): Promise<User | undefined>;
   getUserByUsername(username: string): Promise<User | undefined>;
   getUserByEmail(email: string): Promise<User | undefined>;
-  getUserByReplitId(replitId: string): Promise<User | undefined>;
   createUser(user: InsertUser): Promise<User>;
   updateUserProfile(id: number, profileData: UpdateProfile): Promise<User | undefined>;
   
@@ -108,12 +107,6 @@ export class MemStorage implements IStorage {
       (user) => user.email === email,
     );
   }
-  
-  async getUserByReplitId(replitId: string): Promise<User | undefined> {
-    return Array.from(this.users.values()).find(
-      (user) => user.replitId === replitId,
-    );
-  }
 
   async createUser(insertUser: InsertUser): Promise<User> {
     const id = this.currentUserId++;
@@ -130,12 +123,8 @@ export class MemStorage implements IStorage {
       websiteUrl: null,
       profileBackground: "gradient-1",
       email: insertUser.email || null,
-      // Nuevos campos para Replit Auth
-      replitId: insertUser.replitId || null,
-      firstName: insertUser.firstName || null,
-      lastName: insertUser.lastName || null,
-      // Si password no se proporciona, usar una cadena vacía
-      password: insertUser.password || null,
+      // No longer using Google ID
+      // No longer using Google authentication
     };
     this.users.set(id, user);
     return user;
@@ -156,11 +145,10 @@ export class MemStorage implements IStorage {
       threadsUrl: profileData.threadsUrl !== undefined ? profileData.threadsUrl : user.threadsUrl,
       websiteUrl: profileData.websiteUrl !== undefined ? profileData.websiteUrl : user.websiteUrl,
       profileBackground: profileData.profileBackground !== undefined ? profileData.profileBackground : user.profileBackground,
+      // Campos de Google
+      // No longer using Google ID
       email: profileData.email !== undefined ? profileData.email : user.email,
-      // Campos para Replit Auth
-      replitId: profileData.replitId !== undefined ? profileData.replitId : user.replitId,
-      firstName: profileData.firstName !== undefined ? profileData.firstName : user.firstName,
-      lastName: profileData.lastName !== undefined ? profileData.lastName : user.lastName,
+      // No longer using Google authentication
     };
     
     this.users.set(id, updatedUser);

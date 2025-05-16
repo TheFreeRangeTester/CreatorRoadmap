@@ -18,8 +18,6 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 import { FormDescription } from "@/components/ui/form";
 import { Separator } from "@/components/ui/separator";
-import { ReplitAuthButton } from "@/components/replit-auth-button";
-import { ReplitRegisterButton } from "@/components/replit-register-button";
 
 // Extend schema for validation
 const formSchema = insertUserSchema.extend({
@@ -142,12 +140,6 @@ export default function AuthPage() {
       return referrer;
     }
     
-    // Check for returnTo parameter in URL
-    const returnTo = searchParams.get('returnTo');
-    if (returnTo && returnTo.startsWith('/')) {
-      return returnTo;
-    }
-    
     // If we came from a creator profile, go back to that profile
     if (params?.username) {
       return `/creators/${params.username}`;
@@ -185,7 +177,7 @@ export default function AuthPage() {
           
           <div className="mx-auto w-full max-w-md">
             <div className="flex justify-end w-full">
-              <Tabs defaultValue={new URLSearchParams(window.location.search).get('mode') === 'register' ? 'register' : 'login'} className="w-full">
+              <Tabs defaultValue="login" className="w-full">
                 <TabsList className={`grid w-full ${loginOnly ? 'grid-cols-1' : 'grid-cols-2'}`}>
                   <TabsTrigger value="login">{t('auth.login')}</TabsTrigger>
                   {!loginOnly && <TabsTrigger value="register">{t('auth.register')}</TabsTrigger>}
@@ -202,16 +194,47 @@ export default function AuthPage() {
                       </CardDescription>
                     </CardHeader>
                     <CardContent>
-                      <div className="flex flex-col space-y-4">
-                        <ReplitAuthButton 
-                          className="w-full" 
-                          returnTo={getRedirectDestination()}
-                        />
-                        
-                        <p className="text-center text-sm text-muted-foreground mt-2">
-                          {t('auth.replitLoginInfo', 'Inicia sesión de manera segura en tu cuenta')}
-                        </p>
-                      </div>
+                      <Form {...loginForm}>
+                        <form onSubmit={loginForm.handleSubmit(onLoginSubmit)} className="space-y-4">
+                          <FormField
+                            control={loginForm.control}
+                            name="username"
+                            render={({ field }) => (
+                              <FormItem>
+                                <FormLabel>{t('common.username')}</FormLabel>
+                                <FormControl>
+                                  <Input placeholder={t('common.username')} {...field} />
+                                </FormControl>
+                                <FormMessage />
+                              </FormItem>
+                            )}
+                          />
+                          <FormField
+                            control={loginForm.control}
+                            name="password"
+                            render={({ field }) => (
+                              <FormItem>
+                                <FormLabel>{t('common.password')}</FormLabel>
+                                <FormControl>
+                                  <Input
+                                    type="password"
+                                    placeholder="******"
+                                    {...field}
+                                  />
+                                </FormControl>
+                                <FormMessage />
+                              </FormItem>
+                            )}
+                          />
+                          <Button 
+                            type="submit" 
+                            className="w-full"
+                            disabled={loginMutation.isPending}
+                          >
+                            {loginMutation.isPending ? t('auth.loginCta') + "..." : t('auth.loginCta')}
+                          </Button>
+                        </form>
+                      </Form>
                     </CardContent>
                   </Card>
                 </TabsContent>
@@ -239,20 +262,119 @@ export default function AuthPage() {
                         </div>
                       </CardHeader>
                       <CardContent>
-                        <div className="flex flex-col space-y-4">
-                          <div className="text-center mb-2">
-                            <p className="text-sm">{t('auth.selectRoleReplit', 'Podrás seleccionar tu rol en tu perfil después de iniciar sesión.')}</p>
-                          </div>
-                          
-                          <ReplitRegisterButton 
-                            className="w-full" 
-                            returnTo={getRedirectDestination()}
-                          />
-                          
-                          <p className="text-center text-sm text-muted-foreground mt-2">
-                            {t('auth.replitRegisterInfo', 'Crea una cuenta de forma segura')}
-                          </p>
-                        </div>
+                        <Form {...registerForm}>
+                          <form onSubmit={registerForm.handleSubmit(onRegisterSubmit)} className="space-y-4">
+                            <FormField
+                              control={registerForm.control}
+                              name="username"
+                              render={({ field }) => (
+                                <FormItem>
+                                  <FormLabel>{t('common.username')}</FormLabel>
+                                  <FormControl>
+                                    <Input placeholder={t('common.username')} {...field} />
+                                  </FormControl>
+                                  <FormMessage />
+                                </FormItem>
+                              )}
+                            />
+                            <FormField
+                              control={registerForm.control}
+                              name="email"
+                              render={({ field }) => (
+                                <FormItem>
+                                  <FormLabel>{t('common.email')}</FormLabel>
+                                  <FormControl>
+                                    <Input type="email" placeholder={t('common.email')} {...field} />
+                                  </FormControl>
+                                  <FormDescription>
+                                    {t('auth.emailOptional')}
+                                  </FormDescription>
+                                  <FormMessage />
+                                </FormItem>
+                              )}
+                            />
+                            <FormField
+                              control={registerForm.control}
+                              name="password"
+                              render={({ field }) => (
+                                <FormItem>
+                                  <FormLabel>{t('common.password')}</FormLabel>
+                                  <FormControl>
+                                    <Input type="password" placeholder="******" {...field} />
+                                  </FormControl>
+                                  <FormMessage />
+                                </FormItem>
+                              )}
+                            />
+                            
+                            <FormField
+                              control={registerForm.control}
+                              name="userRole"
+                              render={({ field }) => (
+                                <FormItem>
+                                  <FormLabel>{t('auth.selectRole')}</FormLabel>
+                                  <FormControl>
+                                    <RadioGroup
+                                      onValueChange={field.onChange}
+                                      defaultValue={field.value}
+                                      value={field.value}
+                                      className="grid grid-cols-2 gap-4"
+                                    >
+                                      <div>
+                                        <RadioGroupItem
+                                          value="creator"
+                                          id="creator"
+                                          className="peer sr-only"
+                                          disabled={isPublicProfile}
+                                        />
+                                        <Label
+                                          htmlFor="creator"
+                                          className={`flex flex-col items-center justify-between rounded-md border-2 border-muted bg-transparent p-4 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary ${
+                                            isPublicProfile ? "opacity-50 cursor-not-allowed" : ""
+                                          }`}
+                                        >
+                                          <div className="mb-3 text-center font-semibold">
+                                            {t('auth.creatorRole')}
+                                          </div>
+                                          <div className="text-xs text-center text-muted-foreground">
+                                            {t('auth.creatorRoleDescription')}
+                                          </div>
+                                        </Label>
+                                      </div>
+                                      <div>
+                                        <RadioGroupItem
+                                          value="audience"
+                                          id="audience"
+                                          className="peer sr-only"
+                                        />
+                                        <Label
+                                          htmlFor="audience"
+                                          className="flex flex-col items-center justify-between rounded-md border-2 border-muted bg-transparent p-4 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary"
+                                        >
+                                          <div className="mb-3 text-center font-semibold">
+                                            {t('auth.audienceRole')}
+                                          </div>
+                                          <div className="text-xs text-center text-muted-foreground">
+                                            {t('auth.audienceRoleDescription')}
+                                          </div>
+                                        </Label>
+                                      </div>
+                                    </RadioGroup>
+                                  </FormControl>
+                                  <FormMessage />
+                                </FormItem>
+                              )}
+                            />
+                            
+                            <Button 
+                              type="submit" 
+                              className="w-full"
+                              disabled={registerMutation.isPending}
+                            >
+                              {registerMutation.isPending ? t('auth.registerCta') + "..." : t('auth.registerCta')}
+                            </Button>
+                          </form>
+                        </Form>
                       </CardContent>
                     </Card>
                   </TabsContent>

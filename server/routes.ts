@@ -1,17 +1,51 @@
 import type { Express, Request, Response } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
-import { setupAuth, isAuthenticated } from "./replitAuth";
+import { setupAuth } from "./auth";
 import { insertIdeaSchema, updateIdeaSchema, insertVoteSchema, insertPublicLinkSchema, suggestIdeaSchema, updateProfileSchema } from "@shared/schema";
 import { ZodError } from "zod";
 import { fromZodError } from "zod-validation-error";
 
 export async function registerRoutes(app: Express): Promise<Server> {
-  // Set up Replit Auth
-  await setupAuth(app);
+  // Set up authentication routes
+  setupAuth(app);
 
-  // La ruta de autenticación de usuario se ha movido a replitAuth.ts
-  
+  // Ruta para obtener datos del usuario actual
+  app.get("/api/user", async (req: Request, res: Response) => {
+    console.log("GET /api/user - Auth check:", req.isAuthenticated());
+    console.log("Session ID:", req.sessionID);
+    console.log("Session data:", req.session);
+    console.log("Cookies:", req.headers.cookie);
+    
+    if (!req.isAuthenticated()) {
+      console.log("User not authenticated");
+      return res.status(401).json({ 
+        message: "Not authenticated", 
+        authenticated: false 
+      });
+    }
+    
+    try {
+      const user = await storage.getUser(req.user.id);
+      if (!user) {
+        return res.status(404).json({ 
+          message: "User not found", 
+          authenticated: true 
+        });
+      }
+      
+      // Enviar datos del usuario sin la contraseña
+      const { password, ...userWithoutPassword } = user;
+      return res.json(userWithoutPassword);
+    } catch (error) {
+      console.error("Error fetching user:", error);
+      return res.status(500).json({ 
+        message: "Error fetching user data", 
+        authenticated: true 
+      });
+    }
+  });
+
   // User profile update route
   app.patch("/api/user/profile", async (req: Request, res: Response) => {
     try {

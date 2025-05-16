@@ -63,10 +63,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     isLoading,
     refetch: refetchUser,
   } = useQuery<UserResponse | null>({
-    queryKey: ["/api/auth/user"],
+    queryKey: ["/api/user"],
     queryFn: async () => {
       try {
-        const res = await fetch("/api/auth/user", {
+        const res = await fetch("/api/user", {
           method: "GET",
           headers: {
             "X-Requested-With": "XMLHttpRequest"
@@ -98,39 +98,42 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     staleTime: 1000 * 60 * 5, // 5 minutes
   });
 
-  // Handle login - local auth for development, redirects to Replit Auth in production
+  // Handle login
   const loginMutation = useMutation({
     mutationFn: async (credentials: LoginData) => {
-      // En desarrollo usamos autenticación local
-      if (process.env.NODE_ENV === 'development' || window.location.hostname === 'localhost') {
-        const res = await fetch("/api/auth/login", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(credentials),
-          credentials: "same-origin"
-        });
-        
-        if (!res.ok) {
-          const errorData = await res.text();
-          throw new Error(errorData || "Failed to login");
-        }
-        
-        const data = await res.json();
-        
-        if (data.redirectTo) {
-          window.location.href = data.redirectTo;
-        }
-        
-        return data.user as UserResponse;
-      } else {
-        // En producción redireccionamos a Replit Auth
-        window.location.href = "/api/login";
-        return new Promise<UserResponse>(() => {});
+      const res = await fetch("/api/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "X-Requested-With": "XMLHttpRequest"
+        },
+        body: JSON.stringify(credentials),
+        credentials: "same-origin"
+      });
+      
+      if (!res.ok) {
+        const errorData = await res.text();
+        throw new Error(errorData || "Login failed");
       }
+      
+      return res.json() as Promise<UserResponse>;
     },
-    onSuccess: () => {
-      // Refresh user data
-      queryClient.invalidateQueries({ queryKey: ["/api/auth/user"] });
+    onSuccess: (userData) => {
+      // Update cache with user data
+      queryClient.setQueryData(["/api/user"], userData);
+      
+      // Invalidate and refetch user data to ensure it's fresh
+      queryClient.invalidateQueries({ queryKey: ["/api/user"] });
+      refetchUser();
+      
+      // Show success message
+      toast({
+        title: i18n.t("auth.loginSuccess", "Login successful"),
+        description: i18n.t("auth.welcomeBack", "Welcome back, {{username}}!", { username: userData.username }),
+      });
+      
+      // Log login success for debugging
+      console.log("Login successful, user data:", userData);
     },
     onError: (error: Error) => {
       toast({
@@ -141,39 +144,35 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     },
   });
 
-  // Handle registration - local auth for development, redirects to Replit Auth in production
+  // Handle registration
   const registerMutation = useMutation({
     mutationFn: async (userData: InsertUser) => {
-      // En desarrollo usamos registro local
-      if (process.env.NODE_ENV === 'development' || window.location.hostname === 'localhost') {
-        const res = await fetch("/api/auth/register", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(userData),
-          credentials: "same-origin"
-        });
-        
-        if (!res.ok) {
-          const errorData = await res.text();
-          throw new Error(errorData || "Failed to register");
-        }
-        
-        const data = await res.json();
-        
-        if (data.redirectTo) {
-          window.location.href = data.redirectTo;
-        }
-        
-        return data.user as UserResponse;
-      } else {
-        // En producción redireccionamos a Replit Auth
-        window.location.href = "/api/login?signup=true";
-        return new Promise<UserResponse>(() => {});
+      const res = await fetch("/api/register", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "X-Requested-With": "XMLHttpRequest"
+        },
+        body: JSON.stringify(userData),
+        credentials: "same-origin"
+      });
+      
+      if (!res.ok) {
+        const errorData = await res.text();
+        throw new Error(errorData || "Registration failed");
       }
+      
+      return res.json() as Promise<UserResponse>;
     },
-    onSuccess: () => {
-      // Refresh user data
-      queryClient.invalidateQueries({ queryKey: ["/api/auth/user"] });
+    onSuccess: (userData) => {
+      // Update cache with user data
+      queryClient.setQueryData(["/api/user"], userData);
+      
+      // Show success message
+      toast({
+        title: "Registration successful",
+        description: `Welcome, ${userData.username}!`,
+      });
     },
     onError: (error: Error) => {
       toast({
@@ -184,15 +183,34 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     },
   });
 
-  // Handle logout - redirects to Replit Auth logout
+  // Handle logout
   const logoutMutation = useMutation({
     mutationFn: async () => {
-      // Con Replit Auth, no necesitamos hacer un POST
-      // Simplemente redirigimos a la ruta de cierre de sesión
-      window.location.href = "/api/logout";
+      const res = await fetch("/api/logout", {
+        method: "POST",
+        headers: {
+          "X-Requested-With": "XMLHttpRequest"
+        },
+        credentials: "same-origin"
+      });
       
-      // Esta promise nunca se resolverá porque redireccionamos
-      return new Promise<void>(() => {});
+      if (!res.ok) {
+        const errorData = await res.text();
+        throw new Error(errorData || "Logout failed");
+      }
+    },
+    onSuccess: () => {
+      // Clear user from cache
+      queryClient.setQueryData(["/api/user"], null);
+      
+      // Invalidate to force refetch any user-dependent queries
+      queryClient.invalidateQueries({ queryKey: ["/api/user"] });
+      
+      // Show success message
+      toast({
+        title: "Logged out",
+        description: "You have been logged out successfully.",
+      });
     },
     onError: (error: Error) => {
       toast({
@@ -225,7 +243,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     },
     onSuccess: (userData) => {
       // Update cache with updated user data
-      queryClient.setQueryData(["/api/auth/user"], userData);
+      queryClient.setQueryData(["/api/user"], userData);
       
       // Show success message
       toast({
