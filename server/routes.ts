@@ -127,26 +127,23 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Obtener todas las ideas con posiciones
       const allIdeas = await storage.getIdeasWithPositions();
 
-      // Si el usuario está autenticado y solicita incluir ideas pendientes, incluirlas
-      const includePending = req.query.include_pending === 'true' && req.isAuthenticated();
-
       let ideas = [];
 
       // Si el usuario está autenticado, filtramos según su rol
       if (req.isAuthenticated()) {
-        // Si el usuario es creador, mostrar sus propias ideas (aprobadas y pendientes)
         if (req.user.userRole === 'creator') {
+          // Para creadores: mostrar solo sus propias ideas
           ideas = allIdeas.filter(idea => 
-            // Ideas que el creador ha creado
-            idea.creatorId === req.user.id
+            idea.creatorId === req.user.id && 
+            idea.status === 'approved'
           );
         } else {
-          // Para usuarios con rol 'audience', mostrar todas las ideas aprobadas
-          ideas = allIdeas.filter(idea => idea.status === 'approved');
+          // Para usuarios 'audience': mostrar solo ideas aprobadas
+          ideas = [];
         }
       } else {
-        // Para usuarios no autenticados, mostrar solo ideas aprobadas
-        ideas = allIdeas.filter(idea => idea.status === 'approved');
+        // Para usuarios no autenticados: no mostrar ideas
+        ideas = [];
       }
 
       res.json(ideas);
