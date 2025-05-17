@@ -398,6 +398,9 @@ export default function LandingPage() {
                   {t("landing.menu.testimonials")}
                 </a>
               </div>
+              <div className="flex items-center gap-4">
+              <ThemeToggle />
+              <LanguageToggle />
               <div className="flex gap-2">
                 <Link href="/auth?direct=true">
                   <Button variant="outline">{t("landing.cta.login")}</Button>
@@ -406,6 +409,7 @@ export default function LandingPage() {
                   <Button>{t("landing.cta.register")}</Button>
                 </Link>
               </div>
+            </div>
             </div>
           </div>
         </div>
