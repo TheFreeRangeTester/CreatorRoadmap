@@ -372,7 +372,7 @@ export default function LandingPage() {
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             <div className="flex items-center">
-              <img src="/src/assets/logo.svg" alt="Logo" className="h-8 w-auto" />
+              <img src={new URL('@/assets/logo.svg', import.meta.url).href} alt="Logo" className="h-8 w-auto" />
               <h1 className="ml-2 text-xl font-bold text-neutral-800 dark:text-white">
                 Fanlist
               </h1>

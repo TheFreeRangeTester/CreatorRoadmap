@@ -1,7 +1,10 @@
 
 <svg width="200" height="200" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
-  <path d="M100 0L150 50H50L100 0Z" fill="#FF6B35"/>
-  <circle cx="50" cy="100" r="50" fill="#5B5FE3"/>
-  <circle cx="150" cy="100" r="50" fill="#5B5FE3"/>
-  <circle cx="100" cy="150" r="50" fill="#34D399"/>
+  <path d="M100 0 C40 0 0 40 0 100 C0 160 40 200 100 200 C160 200 200 160 200 100 C200 40 160 0 100 0 Z M140 140 C120 160 80 160 60 140 C40 120 40 80 60 60 C80 40 120 40 140 60 C160 80 160 120 140 140 Z" fill="url(#gradient)"/>
+  <defs>
+    <linearGradient id="gradient" x1="0" y1="0" x2="200" y2="200" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" style="stop-color:#BF40BF"/>
+      <stop offset="100%" style="stop-color:#800080"/>
+    </linearGradient>
+  </defs>
 </svg>
