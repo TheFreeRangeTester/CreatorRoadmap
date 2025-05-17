@@ -1,5 +1,7 @@
+
 import React from "react";
 import { Button } from "@/components/ui/button";
+import { useTranslation } from "react-i18next";
 
 interface BillingToggleProps {
   value: string;
@@ -7,6 +9,8 @@ interface BillingToggleProps {
 }
 
 export default function BillingToggle({ value, onChange }: BillingToggleProps) {
+  const { t } = useTranslation();
+  
   return (
     <div className="inline-flex items-center rounded-md border p-1 bg-background">
       <Button
@@ -15,7 +19,7 @@ export default function BillingToggle({ value, onChange }: BillingToggleProps) {
         className="rounded-sm px-3 py-1 transition-all"
         onClick={() => onChange("monthly")}
       >
-        Monthly
+        {t("pricing.monthly", "Monthly")}
       </Button>
       <Button
         variant={value === "yearly" ? "default" : "ghost"}
@@ -23,7 +27,7 @@ export default function BillingToggle({ value, onChange }: BillingToggleProps) {
         className="rounded-sm px-3 py-1 transition-all"
         onClick={() => onChange("yearly")}
       >
-        Yearly (20% off)
+        {t("pricing.yearly", "Yearly (20% off)")}
       </Button>
     </div>
   );

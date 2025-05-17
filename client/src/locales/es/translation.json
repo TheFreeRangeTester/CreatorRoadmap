@@ -236,6 +236,10 @@
     "updateError": "Error de actualización",
     "updateErrorDesc": "Hubo un error al actualizar tu perfil. Por favor, inténtalo de nuevo."
   },
+  "pricing": {
+    "monthly": "Mensual",
+    "yearly": "Anual (20% menos)"
+  },
   "landing": {
     "menu": {
       "features": "Características",

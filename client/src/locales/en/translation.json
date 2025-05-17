@@ -236,6 +236,10 @@
     "updateError": "Update failed",
     "updateErrorDesc": "There was an error updating your profile. Please try again."
   },
+  "pricing": {
+    "monthly": "Monthly",
+    "yearly": "Yearly (20% off)"
+  },
   "landing": {
     "menu": {
       "features": "Features",
