@@ -473,7 +473,7 @@ export default function HomePage() {
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             <div className="flex items-center">
-              <CloudLightning className="h-8 w-8 text-primary" />
+              <img src="/src/assets/logo.svg" alt="Logo" className="h-8 w-auto" />
               <div className="ml-2">
                 <h1 className="text-xl font-bold text-neutral-800 dark:text-white">
                   {t("dashboard.creatorDashboard", "Idea Leaderboard")}
