@@ -904,8 +904,18 @@ export default function LandingPage() {
           >
             <div className="flex justify-center mb-8">
               <ToggleGroup type="single" value={billingPeriod} onValueChange={(value) => value && setBillingPeriod(value)} className="border rounded-md p-1">
-                <ToggleGroupItem value="monthly" className="rounded-sm px-3 py-1" size="sm">Monthly</ToggleGroupItem>
-                <ToggleGroupItem value="yearly" className="rounded-sm px-3 py-1" size="sm">
+                <ToggleGroupItem 
+                  value="monthly" 
+                  className="rounded-sm px-3 py-1 transition-colors hover:bg-muted data-[state=on]:bg-primary data-[state-on]:text-primary-foreground" 
+                  size="sm"
+                >
+                  Monthly
+                </ToggleGroupItem>
+                <ToggleGroupItem 
+                  value="yearly" 
+                  className="rounded-sm px-3 py-1 transition-colors hover:bg-muted data-[state=on]:bg-primary data-[state-on]:text-primary-foreground" 
+                  size="sm"
+                >
                   Yearly (20% off)
                 </ToggleGroupItem>
               </ToggleGroup>
