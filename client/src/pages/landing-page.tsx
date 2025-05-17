@@ -910,32 +910,40 @@ export default function LandingPage() {
             </div>
             <div className="grid md:grid-cols-2 gap-8">
               <PricingCard
-                name={t("landing.pricing.freePlan.name")}
-                price={t("landing.pricing.freePlan.price")}
-                description={t("landing.pricing.freePlan.description")}
-                features={
-                  t("landing.pricing.freePlan.features", {
-                    returnObjects: true,
-                  }) as string[]
-                }
-                ctaText={t("landing.pricing.freePlan.ctaText")}
-                freeLabel={t("landing.pricing.freePlan.price")}
-                perMonth={t("landing.pricing.price.perMonth")}
+                name="Free Plan"
+                price="Free"
+                description="Ideal for creators just starting out"
+                features={[
+                  "1 active public leaderboard",
+                  "Up to 10 visible ideas",
+                  "100 votes/month",
+                  "App domain: fanlist.live/YourName",
+                  "Basic analytics",
+                  "Community support"
+                ]}
+                ctaText="Get started free"
+                freeLabel="Free"
+                perMonth="/month"
               />
               <PricingCard
-                name={t("landing.pricing.proPlan.name")}
+                name="Pro Plan"
                 price={billingPeriod === "monthly" ? "$5" : "$3"}
                 yearlyPrice={billingPeriod === "monthly" ? "$4" : "$2.40"}
-                description={t("landing.pricing.proPlan.description")}
-                features={
-                  t("landing.pricing.proPlan.features", {
-                    returnObjects: true,
-                  }) as string[]
-                }
+                description="For creators ready to grow"
+                features={[
+                  "1 active public leaderboard",
+                  "Up to 50 visible ideas",
+                  "5,000 votes/month",
+                  "No platform branding",
+                  "Advanced analytics",
+                  "Priority support",
+                  "CSV export",
+                  "Custom domain support"
+                ]}
                 isPopular={true}
-                ctaText={t("landing.pricing.proPlan.ctaText")}
-                freeLabel={t("landing.pricing.freePlan.price")}
-                perMonth={t("landing.pricing.price.perMonth")}
+                ctaText="Start free trial"
+                freeLabel="Free"
+                perMonth="/month"
                 savings="Save $7.20/year"
               />
             </div>
