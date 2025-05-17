@@ -1202,7 +1202,7 @@ export default function LandingPage() {
           </div>
           <div className="border-t border-gray-200 dark:border-gray-800 pt-8 flex flex-col md:flex-row justify-between items-center">
             <div className="flex items-center mb-4 md:mb-0">
-              <CloudLightning className="h-6 w-6 text-primary" />
+              <img src={new URL('@/assets/logo.png', import.meta.url).href} alt="Logo" className="h-6 w-6 object-contain" />
               <h1 className="ml-2 text-lg font-bold text-neutral-800 dark:text-white">
                 Fanlist
               </h1>
