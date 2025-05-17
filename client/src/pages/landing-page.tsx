@@ -894,31 +894,45 @@ export default function LandingPage() {
             className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto"
           >
             <PricingCard
-              name={t("landing.pricing.freePlan.name")}
-              price={t("landing.pricing.freePlan.price")}
-              description={t("landing.pricing.freePlan.description")}
-              features={
-                t("landing.pricing.freePlan.features", {
-                  returnObjects: true,
-                }) as string[]
-              }
-              ctaText={t("landing.pricing.freePlan.ctaText")}
-              freeLabel={t("landing.pricing.freePlan.price")}
-              perMonth={t("landing.pricing.price.perMonth")}
-            />
-            <PricingCard
-              name={t("landing.pricing.proPlan.name")}
-              price={t("landing.pricing.proPlan.price")}
-              description={t("landing.pricing.proPlan.description")}
-              features={
-                t("landing.pricing.proPlan.features", {
-                  returnObjects: true,
-                }) as string[]
-              }
-              isPopular={true}
-              ctaText={t("landing.pricing.proPlan.ctaText")}
-              freeLabel={t("landing.pricing.freePlan.price")}
-              perMonth={t("landing.pricing.price.perMonth")}
+              className="flex flex-col"
+            >
+              <div className="flex justify-center mb-8">
+                <ToggleGroup type="single" defaultValue="monthly">
+                  <ToggleGroupItem value="monthly">Monthly</ToggleGroupItem>
+                  <ToggleGroupItem value="yearly">
+                    Yearly (20% off)
+                  </ToggleGroupItem>
+                </ToggleGroup>
+              </div>
+              <div className="grid md:grid-cols-2 gap-8">
+                <PricingCard
+                  name={t("landing.pricing.freePlan.name")}
+                  price={t("landing.pricing.freePlan.price")}
+                  description={t("landing.pricing.freePlan.description")}
+                  features={
+                    t("landing.pricing.freePlan.features", {
+                      returnObjects: true,
+                    }) as string[]
+                  }
+                  ctaText={t("landing.pricing.freePlan.ctaText")}
+                  freeLabel={t("landing.pricing.freePlan.price")}
+                  perMonth={t("landing.pricing.price.perMonth")}
+                />
+                <PricingCard
+                  name={t("landing.pricing.proPlan.name")}
+                  price="$3"
+                  yearlyPrice="$2.40"
+                  description={t("landing.pricing.proPlan.description")}
+                  features={
+                    t("landing.pricing.proPlan.features", {
+                      returnObjects: true,
+                    }) as string[]
+                  }
+                  isPopular={true}
+                  ctaText={t("landing.pricing.proPlan.ctaText")}
+                  freeLabel={t("landing.pricing.freePlan.price")}
+                  perMonth={t("landing.pricing.price.perMonth")}
+                  savings="Save $7.20/year"
             />
           </motion.div>
         </div>
