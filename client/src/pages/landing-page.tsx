@@ -117,7 +117,7 @@ function PricingCard({
   name: string;
   price: string;
   description: string;
-  features: any; // Using any to handle i18n array return type
+  features: any;
   isPopular?: boolean;
   ctaText: string;
   freeLabel: string;
@@ -126,6 +126,12 @@ function PricingCard({
   savings?: string;
   className?: string;
 }) {
+  const priceAnimation = {
+    initial: { opacity: 0, y: 10 },
+    animate: { opacity: 1, y: 0 },
+    exit: { opacity: 0, y: -10 },
+    transition: { duration: 0.2, ease: "easeOut" }
+  };
   // Ensure features is an array
   const featuresList: string[] = Array.isArray(features) ? features : [];
   return (
@@ -149,7 +155,16 @@ function PricingCard({
           {name}
         </CardTitle>
         <div className="mt-4 text-center">
-          <span className="text-3xl font-bold dark:text-white">{price}</span>
+          <motion.div
+            key={price}
+            variants={priceAnimation}
+            initial="initial"
+            animate="animate"
+            exit="exit"
+            style={{ display: "inline-block" }}
+          >
+            <span className="text-3xl font-bold dark:text-white">{price}</span>
+          </motion.div>
           {price !== freeLabel && (
             <span className="text-gray-500 dark:text-gray-400 ml-1">
               {perMonth}
