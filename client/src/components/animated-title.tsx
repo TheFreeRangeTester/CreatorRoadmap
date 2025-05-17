@@ -18,6 +18,7 @@ export default function AnimatedTitle({
   delay = 0,
   direction = 'ltr'
 }: AnimatedTitleProps) {
+  // Para usuarios que están haciendo scroll, queremos mostrar instantáneamente el texto
   const titleRef = useRef<HTMLHeadingElement>(null);
 
   useEffect(() => {
@@ -50,12 +51,12 @@ export default function AnimatedTitle({
       }
     }
     
-    // Crear timeline
+    // Crear timeline con duración reducida
     const tl = gsap.timeline({
-      delay,
+      delay: delay * 0.5, // Reducir el delay a la mitad
       scrollTrigger: {
         trigger: titleRef.current,
-        start: 'top 80%',
+        start: 'top 95%', // Comenzar antes (95% en lugar de 80%)
         toggleActions: 'play none none reset'
       }
     });
@@ -116,44 +117,37 @@ export default function AnimatedTitle({
         break;
         
       case ANIMATION_EFFECTS.BLINKING_CURSOR:
-        // Efecto máquina de escribir
-        tl.set(charSet, { opacity: 0 })
-          .set(titleRef.current, { position: 'relative' });
-          
-        // Crear cursor
+        // Implementación mejorada - efecto de máquina de escribir ultra rápido
+        
+        // Mostrar todos los caracteres inmediatamente sin animación
+        tl.set(charSet, { opacity: 1 });
+        
+        // Aplicar un efecto de "aparecer" rápido
+        tl.fromTo(
+          titleRef.current,
+          { opacity: 0.7, scale: 0.98 },
+          { opacity: 1, scale: 1, duration: 0.3, ease: "power1.out" }
+        );
+        
+        // Opcional: Agregar un pequeño destello de cursor al final para indicar que terminó de escribir
         const cursor = document.createElement('span');
         cursor.innerHTML = '|';
-        cursor.style.position = 'absolute';
-        cursor.style.right = '-4px';
-        cursor.style.top = '0';
+        cursor.style.position = 'relative';
+        cursor.style.display = 'inline-block';
+        cursor.style.marginLeft = '4px';
         cursor.style.opacity = '1';
         titleRef.current.appendChild(cursor);
         
-        // Animar cursor
+        // Hacer que el cursor parpadee rápidamente y desaparezca
         tl.to(cursor, {
           opacity: 0,
-          duration: 0.5,
-          repeat: -1,
-          yoyo: true
-        });
-        
-        // Animar caracteres uno por uno
-        charSet.forEach((char, i) => {
-          tl.to(char, {
-            opacity: 1,
-            duration: 0.01,
-            delay: i * 0.06
-          });
-        });
-        
-        // Mover cursor mientras tipea
-        charSet.forEach((char, i) => {
-          if (i < charSet.length - 1) {
-            const nextChar = charSet[i + 1] as HTMLElement;
-            tl.to(cursor, {
-              left: nextChar.offsetLeft + 'px',
-              duration: 0.05
-            }, `>-0.05`);
+          duration: 0.2,
+          repeat: 2,
+          yoyo: true,
+          onComplete: () => {
+            if (titleRef.current?.contains(cursor)) {
+              titleRef.current.removeChild(cursor);
+            }
           }
         });
         break;
