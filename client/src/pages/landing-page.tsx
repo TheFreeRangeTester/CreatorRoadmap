@@ -34,6 +34,8 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Toggle, toggleVariants } from "@/components/ui/toggle";
+import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { LanguageToggle } from "@/components/language-toggle";
 // No necesitamos importar useAuth para la página de inicio
@@ -108,6 +110,9 @@ function PricingCard({
   ctaText,
   freeLabel,
   perMonth,
+  yearlyPrice,
+  savings,
+  className,
 }: {
   name: string;
   price: string;
@@ -117,6 +122,9 @@ function PricingCard({
   ctaText: string;
   freeLabel: string;
   perMonth: string;
+  yearlyPrice?: string;
+  savings?: string;
+  className?: string;
 }) {
   // Ensure features is an array
   const featuresList: string[] = Array.isArray(features) ? features : [];
@@ -894,12 +902,12 @@ export default function LandingPage() {
             className="max-w-4xl mx-auto"
           >
             <div className="flex justify-center mb-8">
-              <ToggleGroup type="single" defaultValue="monthly">
-                <ToggleGroupItem value="monthly">Monthly</ToggleGroupItem>
-                <ToggleGroupItem value="yearly">
+              <div className="flex items-center gap-1 border rounded-md p-1">
+                <Button variant="outline" className="rounded-sm px-3 py-1" size="sm">Monthly</Button>
+                <Button variant="ghost" className="rounded-sm px-3 py-1" size="sm">
                   Yearly (20% off)
-                </ToggleGroupItem>
-              </ToggleGroup>
+                </Button>
+              </div>
             </div>
             <div className="grid md:grid-cols-2 gap-8">
               <PricingCard
