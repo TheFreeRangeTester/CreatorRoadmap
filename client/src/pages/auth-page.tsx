@@ -158,7 +158,7 @@ export default function AuthPage() {
       <header className="border-b">
         <div className="container flex items-center justify-between h-14 px-4">
           <div className="flex items-center gap-4">
-            <CloudLightning className="h-6 w-6" />
+            <img src={new URL('@/assets/logo.png', import.meta.url).href} alt="Logo" className="h-8 w-8 object-contain" />
             <span className="text-lg font-semibold">Fanlist</span>
           </div>
         </div>
