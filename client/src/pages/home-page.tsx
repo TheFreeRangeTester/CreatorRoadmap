@@ -520,6 +520,8 @@ export default function HomePage() {
                   </Link>
                 </div>
               )}
+                           <ThemeToggle />
+              <LanguageToggle />
             </div>
 
             {/* Mobile menu */}
