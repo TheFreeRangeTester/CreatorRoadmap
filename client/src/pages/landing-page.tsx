@@ -35,7 +35,7 @@ import {
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Toggle, toggleVariants } from "@/components/ui/toggle";
-import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
+import BillingToggle from "../components/billing-toggle";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { LanguageToggle } from "@/components/language-toggle";
 // No necesitamos importar useAuth para la página de inicio
@@ -903,22 +903,10 @@ export default function LandingPage() {
             className="max-w-4xl mx-auto"
           >
             <div className="flex justify-center mb-8">
-              <ToggleGroup type="single" value={billingPeriod} onValueChange={(value) => value && setBillingPeriod(value)} className="border rounded-md p-1">
-                <ToggleGroupItem 
-                  value="monthly" 
-                  className="rounded-sm px-3 py-1 transition-colors hover:bg-muted data-[state=on]:bg-primary data-[state-on]:text-primary-foreground" 
-                  size="sm"
-                >
-                  Monthly
-                </ToggleGroupItem>
-                <ToggleGroupItem 
-                  value="yearly" 
-                  className="rounded-sm px-3 py-1 transition-colors hover:bg-muted data-[state=on]:bg-primary data-[state-on]:text-primary-foreground" 
-                  size="sm"
-                >
-                  Yearly (20% off)
-                </ToggleGroupItem>
-              </ToggleGroup>
+              <BillingToggle
+                value={billingPeriod}
+                onChange={setBillingPeriod}
+              />
             </div>
             <div className="grid md:grid-cols-2 gap-8">
               <PricingCard
