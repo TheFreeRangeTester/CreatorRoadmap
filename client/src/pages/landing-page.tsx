@@ -226,6 +226,7 @@ export default function LandingPage() {
   const isMobile = useIsMobile();
   const [, navigate] = useLocation();
   const [isDemoOpen, setIsDemoOpen] = useState(false);
+  const [billingPeriod, setBillingPeriod] = useState("monthly");
   const { t } = useTranslation();
 
   const heroTitleRef = useRef(null);
@@ -902,12 +903,12 @@ export default function LandingPage() {
             className="max-w-4xl mx-auto"
           >
             <div className="flex justify-center mb-8">
-              <div className="flex items-center gap-1 border rounded-md p-1">
-                <Button variant="outline" className="rounded-sm px-3 py-1" size="sm">Monthly</Button>
-                <Button variant="ghost" className="rounded-sm px-3 py-1" size="sm">
+              <ToggleGroup type="single" value={billingPeriod} onValueChange={(value) => value && setBillingPeriod(value)} className="border rounded-md p-1">
+                <ToggleGroupItem value="monthly" className="rounded-sm px-3 py-1" size="sm">Monthly</ToggleGroupItem>
+                <ToggleGroupItem value="yearly" className="rounded-sm px-3 py-1" size="sm">
                   Yearly (20% off)
-                </Button>
-              </div>
+                </ToggleGroupItem>
+              </ToggleGroup>
             </div>
             <div className="grid md:grid-cols-2 gap-8">
               <PricingCard
@@ -925,8 +926,8 @@ export default function LandingPage() {
               />
               <PricingCard
                 name={t("landing.pricing.proPlan.name")}
-                price="$3"
-                yearlyPrice="$2.40"
+                price={billingPeriod === "monthly" ? "$5" : "$3"}
+                yearlyPrice={billingPeriod === "monthly" ? "$4" : "$2.40"}
                 description={t("landing.pricing.proPlan.description")}
                 features={
                   t("landing.pricing.proPlan.features", {
