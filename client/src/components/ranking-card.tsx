@@ -62,7 +62,7 @@ export default function RankingCard({
         <div className="flex items-stretch">
           {/* Indicador de posición */}
           <div className={`flex items-center justify-center w-16 text-white font-bold text-xl ${gradientClass} relative`}>
-            <span className="relative z-10">#{rank}</span>
+            <span className="relative z-10">{rank > 3 ? `#${rank}` : ''}</span>
             {rank <= 3 && (
               <span 
                 className={`absolute trophy-icon text-2xl ${rank === 1 ? 'text-yellow-400' : rank === 2 ? 'text-gray-300' : 'text-amber-700'}`}
