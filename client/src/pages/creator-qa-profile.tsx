@@ -595,32 +595,32 @@ export default function CreatorQAProfile() {
       {/* Sección de Perfil */}
       <div className="container mx-auto px-4 py-4 pt-16">
         <Card className="bg-white dark:bg-gray-800 shadow-md rounded-xl overflow-hidden max-w-2xl mx-auto mb-6">
-          <CardContent className="p-4 sm:p-6 flex flex-col items-center text-center">
+          <CardContent className="relative p-3 sm:p-4">
             {/* Etiqueta de perfil público */}
             <Badge
               variant="outline"
-              className="mb-2 bg-blue-50 text-blue-700 border-blue-200 dark:bg-blue-900/20 dark:text-blue-300 dark:border-blue-800/50 text-xs"
+              className="absolute top-2 right-2 bg-blue-50 text-blue-700 border-blue-200 dark:bg-blue-900/20 dark:text-blue-300 dark:border-blue-800/50 text-xs"
             >
               {t("creator.publicProfileView", "Perfil Público")}
             </Badge>
 
-            <div className="flex items-center gap-4 w-full">
-              <Avatar className="w-16 h-16 ring-2 ring-primary/10">
+            <div className="flex flex-col sm:flex-row items-center sm:items-start gap-3 sm:gap-4">
+              <Avatar className="w-14 h-14 sm:w-16 sm:h-16 ring-2 ring-primary/10 flex-shrink-0">
                 <AvatarImage
                   src={creator.logoUrl || ""}
                   alt={creator.username}
                 />
-                <AvatarFallback className="text-xl font-bold bg-primary/20 text-primary dark:bg-primary-900/30 dark:text-primary-300">
+                <AvatarFallback className="text-lg sm:text-xl font-bold bg-primary/20 text-primary dark:bg-primary-900/30 dark:text-primary-300">
                   {getInitials()}
                 </AvatarFallback>
               </Avatar>
 
-              <div className="flex-1 text-left">
-                <h1 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white">
+              <div className="flex-1 text-center sm:text-left">
+                <h1 className="text-lg sm:text-xl font-bold text-gray-900 dark:text-white">
                   {creator.username}
                 </h1>
 
-                <p className="text-sm text-gray-600 dark:text-gray-300 line-clamp-2">
+                <p className="text-sm text-gray-600 dark:text-gray-300 line-clamp-2 mt-0.5 mb-2">
                   {creator.profileDescription ||
                     t(
                       "creator.defaultProfileDescription",
@@ -628,7 +628,7 @@ export default function CreatorQAProfile() {
                     )}
                 </p>
 
-                <div className="flex items-center gap-2 mt-2">
+                <div className="flex items-center justify-center sm:justify-start gap-2">
                   {renderSocialIcon(
                     creator.twitterUrl,
                     <svg
