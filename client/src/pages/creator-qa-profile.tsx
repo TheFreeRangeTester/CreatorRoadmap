@@ -31,6 +31,7 @@ import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { cn } from "@/lib/utils";
 import SuggestIdeaModal from "@/components/suggest-idea-modal";
+import RankingCard from "@/components/ranking-card";
 
 interface CreatorPublicPageResponse {
   ideas: IdeaResponse[];
