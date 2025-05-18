@@ -757,11 +757,7 @@ export default function CreatorQAProfile() {
           </div>
         ) : (
           <div className="space-y-4 max-w-4xl mx-auto">
-            <div className="mb-4 text-center">
-              <h2 className="text-2xl font-bold bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 bg-clip-text text-transparent">
-                🗳️ {t("creator.rankingSubtitle", "¡Vota qué contenido quieres primero!")}
-              </h2>
-            </div>
+            
             
             {sortedIdeas.map((idea, index) => (
               <RankingCard
