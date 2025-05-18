@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { gsap } from "gsap";
 import { Card } from "@/components/ui/card";
 import { ChevronUp, Loader2, ThumbsUp } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -60,8 +61,32 @@ export default function RankingCard({
       <Card className="overflow-hidden border-0 shadow-md hover:shadow-lg transition-all duration-300">
         <div className="flex items-stretch">
           {/* Indicador de posición */}
-          <div className={`flex items-center justify-center w-16 text-white font-bold text-xl ${gradientClass}`}>
-            #{rank}
+          <div className={`flex items-center justify-center w-16 text-white font-bold text-xl ${gradientClass} relative`}>
+            <span className="relative z-10">#{rank}</span>
+            {rank <= 3 && (
+              <span 
+                className={`absolute trophy-icon text-2xl ${rank === 1 ? 'text-yellow-400' : rank === 2 ? 'text-gray-300' : 'text-amber-700'}`}
+                ref={(el) => {
+                  if (el) {
+                    gsap.fromTo(el, 
+                      { scale: 0.8, opacity: 0, y: 10 },
+                      { 
+                        scale: 1, 
+                        opacity: 1, 
+                        y: 0,
+                        duration: 0.6,
+                        ease: "elastic.out(1, 0.5)",
+                        repeat: -1,
+                        yoyo: true,
+                        yoyoEase: "power2.out"
+                      }
+                    );
+                  }
+                }}
+              >
+                {rank === 1 ? '🏆' : rank === 2 ? '🥈' : '🥉'}
+              </span>
+            )}
           </div>
 
           {/* Contenido */}
