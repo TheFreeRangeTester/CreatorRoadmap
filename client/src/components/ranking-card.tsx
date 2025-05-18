@@ -35,10 +35,14 @@ export default function RankingCard({
   
   // Definir gradientes basados en el ranking
   const gradientClasses = {
-    1: "bg-gradient-to-r from-yellow-500 to-amber-500 hover:from-yellow-600 hover:to-amber-600", // Oro para el #1
-    2: "bg-gradient-to-r from-gray-400 to-gray-500 hover:from-gray-500 hover:to-gray-600", // Plata para el #2
-    3: "bg-gradient-to-r from-amber-600 to-yellow-700 hover:from-amber-700 hover:to-yellow-800", // Bronce para el #3
-    default: "bg-gradient-to-r from-blue-500 to-indigo-500 hover:from-blue-600 hover:to-indigo-600" // Default para el resto
+    1: "bg-gradient-to-r from-yellow-400 to-amber-500 hover:from-yellow-500 hover:to-amber-600", // #1 Oro
+    2: "bg-gradient-to-r from-purple-400 to-violet-600 hover:from-purple-500 hover:to-violet-700", // #2 Púrpura
+    3: "bg-gradient-to-r from-rose-400 to-pink-500 hover:from-rose-500 hover:to-pink-600", // #3 Rosa
+    4: "bg-gradient-to-r from-blue-400 to-indigo-500 hover:from-blue-500 hover:to-indigo-600", // #4 Azul
+    5: "bg-gradient-to-r from-green-400 to-emerald-500 hover:from-green-500 hover:to-emerald-600", // #5 Verde
+    6: "bg-gradient-to-r from-orange-400 to-amber-600 hover:from-orange-500 hover:to-amber-700", // #6 Naranja
+    7: "bg-gradient-to-r from-sky-400 to-cyan-500 hover:from-sky-500 hover:to-cyan-600", // #7 Celeste
+    default: "bg-gradient-to-r from-gray-400 to-slate-500 hover:from-gray-500 hover:to-slate-600" // Default para el resto
   };
 
   // Seleccionar el gradiente basado en el ranking
