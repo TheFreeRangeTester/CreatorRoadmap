@@ -756,140 +756,27 @@ export default function CreatorQAProfile() {
             </Button>
           </div>
         ) : (
-          <div className="grid grid-cols-1 gap-4">
+          <div className="space-y-4 max-w-4xl mx-auto">
+            <div className="mb-4 text-center">
+              <h2 className="text-2xl font-bold bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500 bg-clip-text text-transparent">
+                {t("creator.rankingTitle", "Ranking de Ideas")}
+              </h2>
+              <p className="mt-2 text-gray-600 dark:text-gray-300">
+                {t("creator.rankingSubtitle", "Vota por tus ideas favoritas para ayudarme a decidir mi próximo contenido")}
+              </p>
+            </div>
+            
             {sortedIdeas.map((idea, index) => (
-              <motion.div
+              <RankingCard
                 key={idea.id}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{
-                  duration: 0.4,
-                  delay: index * 0.1,
-                  ease: [0.25, 0.1, 0.25, 1.0],
-                }}
-                whileHover={{ scale: 1.02 }}
-                className="will-change-transform"
-              >
-                <Card
-                  className={`overflow-hidden transition-all duration-300 hover:shadow-lg ${
-                    index < 3
-                      ? "border-l-4 " +
-                        (index === 0
-                          ? "border-l-yellow-500"
-                          : index === 1
-                          ? "border-l-gray-400"
-                          : "border-l-amber-600")
-                      : ""
-                  }`}
-                >
-                  <CardContent className="p-0">
-                    <div className="flex p-4">
-                      <div className="flex-shrink-0 w-16 sm:w-20 flex flex-col items-center justify-center mr-4 border-r dark:border-gray-700">
-                        <div
-                          className={`text-2xl sm:text-3xl font-bold ${
-                            index === 0
-                              ? "text-yellow-500"
-                              : index === 1
-                              ? "text-gray-500"
-                              : index === 2
-                              ? "text-amber-600"
-                              : "text-gray-700 dark:text-gray-300"
-                          }`}
-                        >
-                          {idea.votes}
-                        </div>
-                        <div className="text-xs text-gray-500 dark:text-gray-400">
-                          {idea.votes === 1
-                            ? t("badges.vote", "vote")
-                            : t("badges.votes", "votes")}
-                        </div>
-                        {index < 3 && (
-                          <Badge
-                            className={`mt-2 ${
-                              index === 0
-                                ? "bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-300"
-                                : index === 1
-                                ? "bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300"
-                                : "bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-300"
-                            }`}
-                          >
-                            #{index + 1}
-                          </Badge>
-                        )}
-                      </div>
-
-                      <div className="flex-1 min-w-0">
-                        <h3 className="text-xl font-semibold text-gray-900 dark:text-white hover:text-primary dark:hover:text-primary-400 transition-colors">
-                          {idea.title}
-                        </h3>
-                        <p className="mt-2 text-gray-600 dark:text-gray-300 line-clamp-2">
-                          {idea.description}
-                        </p>
-                      </div>
-                    </div>
-                  </CardContent>
-
-                  <CardFooter className="border-t dark:border-gray-700 p-3 flex justify-end">
-                    {user ? (
-                      votedIdeas.has(idea.id) ? (
-                        <motion.div
-                          whileHover={{ scale: 1.05 }}
-                          whileTap={{ scale: 0.95 }}
-                        >
-                          <Button
-                            size="sm"
-                            disabled
-                            className="bg-gradient-to-r from-green-400 to-emerald-500 hover:from-green-500 hover:to-emerald-600 text-white shadow-md transition-all duration-300 ring-2 ring-green-200 dark:ring-green-800 pulse-success"
-                          >
-                            <ThumbsUp className="h-4 w-4 mr-2" />
-                            {t("common.voted", "Voted")}
-                          </Button>
-                        </motion.div>
-                      ) : (
-                        <motion.div
-                          whileHover={{ scale: 1.05 }}
-                          whileTap={{ scale: 0.9 }}
-                        >
-                          <Button
-                            size="sm"
-                            className={`${
-                              successVote === idea.id
-                                ? "bg-gradient-to-r from-green-400 to-emerald-500 shadow-lg scale-105 pulse-success"
-                                : "bg-blue-500 hover:bg-blue-600"
-                            } 
-                            text-white transition-all duration-300 shadow-md`}
-                            onClick={() => handleVote(idea.id)}
-                            disabled={isVoting[idea.id]}
-                          >
-                            {isVoting[idea.id] ? (
-                              <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                            ) : (
-                              <ThumbsUp className="h-4 w-4 mr-2" />
-                            )}
-                            {t("common.vote", "Vote")}
-                          </Button>
-                        </motion.div>
-                      )
-                    ) : (
-                      <Link href={`/auth?referrer=/${username}`}>
-                        <motion.div
-                          whileHover={{ scale: 1.05 }}
-                          whileTap={{ scale: 0.95 }}
-                        >
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            className="border-dashed border-gray-300 dark:border-gray-600 hover:bg-primary/10 dark:hover:bg-primary-900/20 transition-all duration-300 hover:border-primary/50 dark:hover:border-primary-400/50 float-animation"
-                          >
-                            <UserPlus className="h-4 w-4 mr-2" />
-                            {t("common.loginToVote", "Login to vote")}
-                          </Button>
-                        </motion.div>
-                      </Link>
-                    )}
-                  </CardFooter>
-                </Card>
-              </motion.div>
+                rank={index + 1}
+                idea={idea}
+                isVoting={!!isVoting[idea.id]}
+                isVoted={votedIdeas.has(idea.id)}
+                isSuccessVote={successVote === idea.id}
+                onVote={handleVote}
+                isLoggedIn={!!user}
+              />
             ))}
           </div>
         )}
