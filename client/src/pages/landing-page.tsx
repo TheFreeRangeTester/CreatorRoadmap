@@ -145,7 +145,7 @@ function PricingCard({
     >
       {isPopular && (
         <div className="bg-gradient-to-r from-primary to-blue-600 text-white text-xs font-semibold text-center py-1.5">
-          MÁS POPULAR
+          {t("landing.pricing.popular")}
         </div>
       )}
       <CardHeader
