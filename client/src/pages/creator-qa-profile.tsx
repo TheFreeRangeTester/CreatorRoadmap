@@ -758,12 +758,9 @@ export default function CreatorQAProfile() {
         ) : (
           <div className="space-y-4 max-w-4xl mx-auto">
             <div className="mb-4 text-center">
-              <h2 className="text-2xl font-bold bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500 bg-clip-text text-transparent">
-                {t("creator.rankingTitle", "Ranking de Ideas")}
+              <h2 className="text-2xl font-bold bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 bg-clip-text text-transparent">
+                🗳️ {t("creator.rankingSubtitle", "¡Vota qué contenido quieres primero!")}
               </h2>
-              <p className="mt-2 text-gray-600 dark:text-gray-300">
-                {t("creator.rankingSubtitle", "Vota por tus ideas favoritas para ayudarme a decidir mi próximo contenido")}
-              </p>
             </div>
             
             {sortedIdeas.map((idea, index) => (
