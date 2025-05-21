@@ -81,17 +81,17 @@ function FeatureCard({
   return (
     <motion.div
       variants={fadeIn}
-      className="feature-card bg-gradient-to-br from-white via-gray-50/80 to-primary/[0.02] dark:from-gray-800 dark:via-gray-900 dark:to-primary/[0.03] p-6 rounded-xl shadow-soft border border-gray-100/50 dark:border-gray-700/50 transition-all duration-300 hover:shadow-lg hover:-translate-y-1 hover:bg-gradient-to-br hover:from-white hover:via-gray-50 hover:to-primary/[0.08] dark:hover:from-gray-800 dark:hover:via-gray-900 dark:hover:to-primary/[0.12]"
+      className="feature-card bg-gradient-to-br from-emerald-50 via-emerald-100/50 to-emerald-200/30 dark:from-emerald-950 dark:via-emerald-900/50 dark:to-emerald-800/30 p-6 rounded-xl shadow-soft border border-emerald-200/50 dark:border-emerald-800/50 transition-all duration-300 hover:shadow-lg hover:-translate-y-1 hover:bg-gradient-to-br hover:from-emerald-100 hover:via-emerald-200/50 hover:to-emerald-300/30 dark:hover:from-emerald-900 dark:hover:via-emerald-800/50 dark:hover:to-emerald-700/30"
     >
       <div className="flex items-start gap-4">
-        <div className="bg-gradient-to-br from-primary/10 to-primary/5 dark:from-primary/20 dark:to-primary/10 p-3 rounded-lg transition-colors group-hover:from-primary/15 group-hover:to-primary/10 dark:group-hover:from-primary/30 dark:group-hover:to-primary/20">
+        <div className="bg-gradient-to-br from-emerald-500/20 to-emerald-600/10 dark:from-emerald-400/20 dark:to-emerald-500/10 p-3 rounded-lg transition-colors group-hover:from-emerald-500/30 group-hover:to-emerald-600/20 dark:group-hover:from-emerald-400/30 dark:group-hover:to-emerald-500/20">
           {icon}
         </div>
         <div>
-          <h3 className="text-lg font-semibold mb-2 dark:text-white">
+          <h3 className="text-lg font-semibold mb-2 text-emerald-900 dark:text-emerald-100">
             {title}
           </h3>
-          <p className="text-gray-600 dark:text-gray-300 text-sm">
+          <p className="text-emerald-800/80 dark:text-emerald-200/80 text-sm">
             {description}
           </p>
         </div>
@@ -131,7 +131,7 @@ function PricingCard({
     initial: { opacity: 0, y: 10 },
     animate: { opacity: 1, y: 0 },
     exit: { opacity: 0, y: -10 },
-    transition: { duration: 0.2, ease: "easeOut" }
+    transition: { duration: 0.2, ease: "easeOut" },
   };
   // Ensure features is an array
   const featuresList: string[] = Array.isArray(features) ? features : [];
@@ -388,7 +388,11 @@ export default function LandingPage() {
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             <div className="flex items-center">
-              <img src={new URL('@/assets/logo.png', import.meta.url).href} alt="Logo" className="h-8 w-8 object-contain" />
+              <img
+                src={new URL("@/assets/logo.png", import.meta.url).href}
+                alt="Logo"
+                className="h-8 w-8 object-contain"
+              />
               <h1 className="ml-2 text-xl font-bold text-neutral-800 dark:text-white">
                 Fanlist
               </h1>
@@ -415,17 +419,17 @@ export default function LandingPage() {
                 </a>
               </div>
               <div className="flex items-center gap-4">
-              <ThemeToggle />
-              <LanguageToggle />
-              <div className="flex gap-2">
-                <Link href="/auth?direct=true">
-                  <Button variant="outline">{t("landing.cta.login")}</Button>
-                </Link>
-                <Link href="/auth?direct=true&register=true">
-                  <Button>{t("landing.cta.register")}</Button>
-                </Link>
+                <ThemeToggle />
+                <LanguageToggle />
+                <div className="flex gap-2">
+                  <Link href="/auth?direct=true">
+                    <Button variant="outline">{t("landing.cta.login")}</Button>
+                  </Link>
+                  <Link href="/auth?direct=true&register=true">
+                    <Button>{t("landing.cta.register")}</Button>
+                  </Link>
+                </div>
               </div>
-            </div>
             </div>
           </div>
         </div>
@@ -939,7 +943,7 @@ export default function LandingPage() {
                   "100 votes/month",
                   "App domain: fanlist.live/YourName",
                   "Basic analytics",
-                  "Community support"
+                  "Community support",
                 ]}
                 ctaText="Get started free"
                 freeLabel="Free"
@@ -958,7 +962,7 @@ export default function LandingPage() {
                   "Advanced analytics",
                   "Priority support",
                   "CSV export",
-                  "Custom domain support"
+                  "Custom domain support",
                 ]}
                 isPopular={true}
                 ctaText="Start free trial"
@@ -1218,7 +1222,11 @@ export default function LandingPage() {
           </div>
           <div className="border-t border-gray-200 dark:border-gray-800 pt-8 flex flex-col md:flex-row justify-between items-center">
             <div className="flex items-center mb-4 md:mb-0">
-              <img src={new URL('@/assets/logo.png', import.meta.url).href} alt="Logo" className="h-6 w-6 object-contain" />
+              <img
+                src={new URL("@/assets/logo.png", import.meta.url).href}
+                alt="Logo"
+                className="h-6 w-6 object-contain"
+              />
               <h1 className="ml-2 text-lg font-bold text-neutral-800 dark:text-white">
                 Fanlist
               </h1>
