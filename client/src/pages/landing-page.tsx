@@ -81,10 +81,10 @@ function FeatureCard({
   return (
     <motion.div
       variants={fadeIn}
-      className="feature-card bg-white dark:bg-gray-800 p-6 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 transition-all duration-300 hover:shadow-md hover:-translate-y-1"
+      className="feature-card bg-gradient-to-br from-white to-gray-50 dark:from-gray-800 dark:to-gray-900/80 p-6 rounded-xl shadow-soft border border-gray-100/50 dark:border-gray-700/50 transition-all duration-300 hover:shadow-lg hover:-translate-y-1 hover:bg-gradient-to-br hover:from-white hover:to-primary/5 dark:hover:from-gray-800 dark:hover:to-primary/10"
     >
       <div className="flex items-start gap-4">
-        <div className="bg-primary/10 dark:bg-primary/20 p-3 rounded-lg">
+        <div className="bg-gradient-to-br from-primary/10 to-primary/5 dark:from-primary/20 dark:to-primary/10 p-3 rounded-lg transition-colors group-hover:from-primary/15 group-hover:to-primary/10 dark:group-hover:from-primary/30 dark:group-hover:to-primary/20">
           {icon}
         </div>
         <div>
