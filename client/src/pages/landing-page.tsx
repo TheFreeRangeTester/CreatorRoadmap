@@ -1081,28 +1081,28 @@ export default function LandingPage() {
                   </Link>
                 </li>
                 <li>
-                  <a
-                    href="#"
+                  <Link
+                    href="/pricing"
                     className="text-sm text-gray-600 hover:text-primary dark:text-gray-400 dark:hover:text-primary-400 transition-colors"
                   >
                     {t("landing.footer.product.pricing")}
-                  </a>
+                  </Link>
                 </li>
                 <li>
-                  <a
-                    href="#"
+                  <Link
+                    href="/demo"
                     className="text-sm text-gray-600 hover:text-primary dark:text-gray-400 dark:hover:text-primary-400 transition-colors"
                   >
                     {t("landing.footer.product.demo")}
-                  </a>
+                  </Link>
                 </li>
                 <li>
-                  <a
-                    href="#"
+                  <Link
+                    href="/roadmap"
                     className="text-sm text-gray-600 hover:text-primary dark:text-gray-400 dark:hover:text-primary-400 transition-colors"
                   >
                     {t("landing.footer.product.roadmap")}
-                  </a>
+                  </Link>
                 </li>
               </ul>
             </div>
@@ -1112,28 +1112,28 @@ export default function LandingPage() {
               </h3>
               <ul className="space-y-2">
                 <li>
-                  <a
-                    href="#"
+                  <Link
+                    href="/blog"
                     className="text-sm text-gray-600 hover:text-primary dark:text-gray-400 dark:hover:text-primary-400 transition-colors"
                   >
                     {t("landing.footer.resources.blog")}
-                  </a>
+                  </Link>
                 </li>
                 <li>
-                  <a
-                    href="#"
+                  <Link
+                    href="/documentation"
                     className="text-sm text-gray-600 hover:text-primary dark:text-gray-400 dark:hover:text-primary-400 transition-colors"
                   >
                     {t("landing.footer.resources.documentation")}
-                  </a>
+                  </Link>
                 </li>
                 <li>
-                  <a
-                    href="#"
+                  <Link
+                    href="/guides"
                     className="text-sm text-gray-600 hover:text-primary dark:text-gray-400 dark:hover:text-primary-400 transition-colors"
                   >
                     {t("landing.footer.resources.guides")}
-                  </a>
+                  </Link>
                 </li>
                 <li>
                   <a
