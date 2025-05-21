@@ -56,6 +56,31 @@ function App() {
         <Route path="/auth-debug" component={AuthDebug} />
         <Route path="/public/:token" component={PublicLeaderboardPage} />
         <Route path="/creators/:username" component={CreatorPublicPage} />
+        
+        {/* Rutas de producto */}
+        <Route path="/features" component={FeaturesPage} />
+        <Route path="/pricing" component={PricingPage} />
+        <Route path="/demo" component={DemoPage} />
+        <Route path="/roadmap" component={RoadmapPage} />
+        
+        {/* Rutas de recursos */}
+        <Route path="/blog" component={BlogPage} />
+        <Route path="/documentation" component={DocumentationPage} />
+        <Route path="/guides" component={GuidesPage} />
+        <Route path="/success-stories" component={SuccessPage} />
+        
+        {/* Rutas de compañía */}
+        <Route path="/about" component={AboutPage} />
+        <Route path="/team" component={TeamPage} />
+        <Route path="/contact" component={ContactPage} />
+        <Route path="/careers" component={CareersPage} />
+        
+        {/* Rutas legales */}
+        <Route path="/terms" component={TermsPage} />
+        <Route path="/privacy" component={PrivacyPage} />
+        <Route path="/cookies" component={CookiesPage} />
+        
+        {/* Ruta del creador debe ir al final para evitar conflictos con otras rutas */}
         <Route path="/:username" component={CreatorQAProfile} />
         <Route component={NotFound} />
       </Switch>

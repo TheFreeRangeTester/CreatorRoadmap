@@ -1073,12 +1073,12 @@ export default function LandingPage() {
               </h3>
               <ul className="space-y-2">
                 <li>
-                  <a
-                    href="#"
+                  <Link
+                    href="/features"
                     className="text-sm text-gray-600 hover:text-primary dark:text-gray-400 dark:hover:text-primary-400 transition-colors"
                   >
                     {t("landing.footer.product.features")}
-                  </a>
+                  </Link>
                 </li>
                 <li>
                   <a
