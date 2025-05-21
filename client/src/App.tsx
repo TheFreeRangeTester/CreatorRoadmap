@@ -13,6 +13,29 @@ import { LanguageToggle } from "./components/language-toggle";
 // Importación directa sin usar alias @
 import CreatorPublicPage from "./pages/creator-public-page";
 
+// Páginas de producto
+import FeaturesPage from "@/pages/features-page";
+import PricingPage from "@/pages/pricing-page";
+import DemoPage from "@/pages/demo-page";
+import RoadmapPage from "@/pages/roadmap-page";
+
+// Páginas de recursos
+import BlogPage from "@/pages/blog-page";
+import DocumentationPage from "@/pages/documentation-page";
+import GuidesPage from "@/pages/guides-page";
+import SuccessPage from "@/pages/success-page";
+
+// Páginas de compañía
+import AboutPage from "@/pages/about-page";
+import TeamPage from "@/pages/team-page";
+import ContactPage from "@/pages/contact-page";
+import CareersPage from "@/pages/careers-page";
+
+// Páginas legales
+import TermsPage from "@/pages/terms-page";
+import PrivacyPage from "@/pages/privacy-page";
+import CookiesPage from "@/pages/cookies-page";
+
 function App() {
   return (
     <>
