@@ -81,17 +81,17 @@ function FeatureCard({
   return (
     <motion.div
       variants={fadeIn}
-      className="feature-card bg-gradient-to-br from-emerald-50 via-emerald-100/50 to-emerald-200/30 dark:from-emerald-950 dark:via-emerald-900/50 dark:to-emerald-800/30 p-6 rounded-xl shadow-soft border border-emerald-200/50 dark:border-emerald-800/50 transition-all duration-300 hover:shadow-lg hover:-translate-y-1 hover:bg-gradient-to-br hover:from-emerald-100 hover:via-emerald-200/50 hover:to-emerald-300/30 dark:hover:from-emerald-900 dark:hover:via-emerald-800/50 dark:hover:to-emerald-700/30"
+      className="feature-card bg-gradient-to-br from-white via-gray-50/80 to-primary/[0.02] dark:from-gray-800 dark:via-gray-900 dark:to-primary/[0.03] p-6 rounded-xl shadow-soft border border-gray-100/50 dark:border-gray-700/50 transition-all duration-300 hover:shadow-lg hover:-translate-y-1 hover:bg-gradient-to-br hover:from-white hover:via-gray-50 hover:to-primary/[0.08] dark:hover:from-gray-800 dark:hover:via-gray-900 dark:hover:to-primary/[0.12]"
     >
       <div className="flex items-start gap-4">
-        <div className="bg-gradient-to-br from-emerald-500/20 to-emerald-600/10 dark:from-emerald-400/20 dark:to-emerald-500/10 p-3 rounded-lg transition-colors group-hover:from-emerald-500/30 group-hover:to-emerald-600/20 dark:group-hover:from-emerald-400/30 dark:group-hover:to-emerald-500/20">
+        <div className="bg-gradient-to-br from-primary/10 to-primary/5 dark:from-primary/20 dark:to-primary/10 p-3 rounded-lg transition-colors group-hover:from-primary/15 group-hover:to-primary/10 dark:group-hover:from-primary/30 dark:group-hover:to-primary/20">
           {icon}
         </div>
         <div>
-          <h3 className="text-lg font-semibold mb-2 text-emerald-900 dark:text-emerald-100">
+          <h3 className="text-lg font-semibold mb-2 dark:text-white">
             {title}
           </h3>
-          <p className="text-emerald-800/80 dark:text-emerald-200/80 text-sm">
+          <p className="text-gray-600 dark:text-gray-300 text-sm">
             {description}
           </p>
         </div>
