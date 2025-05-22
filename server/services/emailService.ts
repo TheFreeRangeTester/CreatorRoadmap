@@ -1,19 +1,19 @@
-import nodemailer from 'nodemailer';
+import { Resend } from 'resend';
 
 export class EmailService {
-  private transporter: nodemailer.Transporter;
+  private resend: Resend | null = null;
 
   constructor() {
-    this.transporter = nodemailer.createTransport({
-      service: 'gmail',
-      auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS,
-      },
-    });
+    if (process.env.RESEND_API_KEY) {
+      this.resend = new Resend(process.env.RESEND_API_KEY);
+    }
   }
 
   async sendPasswordResetEmail(email: string, token: string, lang: string = 'en'): Promise<void> {
+    if (!this.resend) {
+      console.error('Resend API key not configured. Email not sent.');
+      throw new Error('Email service not configured');
+    }
     const baseUrl = process.env.BASE_URL || 'http://localhost:5000';
     const resetUrl = `${baseUrl}/reset-password/${token}?lang=${lang}`;
 
@@ -53,15 +53,12 @@ export class EmailService {
     const subject = subjects[currentLang];
     const message = messages[currentLang];
 
-    const mailOptions = {
-      from: process.env.EMAIL_USER,
+    await this.resend!.emails.send({
+      from: 'Ideas Leaderboard <noreply@fanlist.app>',
       to: email,
       subject: subject,
-      text: message.text,
       html: message.html,
-    };
-
-    await this.transporter.sendMail(mailOptions);
+    });
   }
 }
 
