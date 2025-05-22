@@ -1,7 +1,13 @@
 {
   "auth": {
+    "email": "Email",
+    "emailPlaceholder": "Enter your email",
+    "sending": "Sending...",
+    "signIn": "Sign in",
+    "rememberPassword": "Remember your password?",
     "forgotPassword": {
       "title": "Forgot Password",
+      "description": "Enter your email address and we'll send you a link to reset your password.",
       "userNotFound": "User not found",
       "emailSent": "Password reset email sent successfully",
       "invalidToken": "Invalid or expired token",
@@ -10,7 +16,10 @@
       "confirmPassword": "Confirm Password",
       "resetPassword": "Reset Password",
       "passwordsDoNotMatch": "Passwords do not match",
-      "passwordTooShort": "Password must be at least 6 characters"
+      "passwordTooShort": "Password must be at least 6 characters",
+      "sendEmail": "Send Reset Email",
+      "networkError": "Network error. Please try again.",
+      "linkText": "Forgot your password?"
     }
   },
   "landing": {

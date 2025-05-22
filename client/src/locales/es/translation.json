@@ -1,7 +1,13 @@
 {
   "auth": {
+    "email": "Correo Electrónico",
+    "emailPlaceholder": "Ingresa tu correo",
+    "sending": "Enviando...",
+    "signIn": "Iniciar sesión",
+    "rememberPassword": "¿Recuerdas tu contraseña?",
     "forgotPassword": {
       "title": "Recuperar Contraseña",
+      "description": "Ingresa tu correo electrónico y te enviaremos un enlace para restablecer tu contraseña.",
       "userNotFound": "Usuario no encontrado",
       "emailSent": "Email de recuperación enviado exitosamente",
       "invalidToken": "Token inválido o expirado",
@@ -10,7 +16,10 @@
       "confirmPassword": "Confirmar Contraseña",
       "resetPassword": "Restablecer Contraseña",
       "passwordsDoNotMatch": "Las contraseñas no coinciden",
-      "passwordTooShort": "La contraseña debe tener al menos 6 caracteres"
+      "passwordTooShort": "La contraseña debe tener al menos 6 caracteres",
+      "sendEmail": "Enviar Email de Recuperación",
+      "networkError": "Error de red. Inténtalo de nuevo.",
+      "linkText": "¿Olvidaste tu contraseña?"
     }
   },
   "landing": {

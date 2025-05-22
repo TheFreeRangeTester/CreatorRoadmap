@@ -1,7 +1,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { useLocation, useRoute } from "wouter";
+import { useLocation, useRoute, Link } from "wouter";
 import { CloudLightning } from "lucide-react";
 import { insertUserSchema } from "@shared/schema";
 import { Button } from "@/components/ui/button";
@@ -235,6 +235,12 @@ export default function AuthPage() {
                           </Button>
                         </form>
                       </Form>
+                      
+                      <div className="mt-4 text-center">
+                        <Link href="/forgot-password" className="text-sm text-muted-foreground hover:text-primary">
+                          {t('auth.forgotPassword.linkText', 'Forgot your password?')}
+                        </Link>
+                      </div>
                     </CardContent>
                   </Card>
                 </TabsContent>
