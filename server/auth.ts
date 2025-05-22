@@ -35,9 +35,9 @@ async function comparePasswords(supplied: string, stored: string) {
 
 export function setupAuth(app: Express) {
   const sessionSecret = process.env.SESSION_SECRET || "idea-leaderboard-secret";
-  
+
   const isProduction = process.env.NODE_ENV === "production";
-  
+
   const sessionSettings: session.SessionOptions = {
     secret: sessionSecret,
     resave: true,
@@ -52,7 +52,7 @@ export function setupAuth(app: Express) {
       path: '/'
     }
   };
-  
+
   console.log("Session settings configured, environment:", process.env.NODE_ENV);
 
   app.set("trust proxy", 1);
@@ -89,14 +89,14 @@ export function setupAuth(app: Express) {
     try {
       console.log("Intento de registro con datos:", req.body);
       const validatedData = insertUserSchema.parse(req.body);
-      
+
       const existingUser = await storage.getUserByUsername(validatedData.username);
       if (existingUser) {
         return res.status(400).json({ message: "Username already exists" });
       }
 
       const hashedPassword = await hashPassword(validatedData.password);
-      
+
       const user = await storage.createUser({
         username: validatedData.username,
         password: hashedPassword,
@@ -110,14 +110,14 @@ export function setupAuth(app: Express) {
         if (err) return next(err);
         console.log("User registered and logged in:", userWithoutPassword);
         console.log("Session ID:", req.sessionID);
-        
+
         // Guardar la sesión explícitamente para asegurar que se almacene
         req.session.save((err) => {
           if (err) {
             console.error("Error saving session:", err);
             return next(err);
           }
-          
+
           res.status(201).json(userWithoutPassword);
         });
       });
@@ -135,7 +135,7 @@ export function setupAuth(app: Express) {
       if (err) {
         return next(err);
       }
-      
+
       if (!user) {
         return res.status(401).json({ message: "Invalid username or password" });
       }
@@ -144,20 +144,20 @@ export function setupAuth(app: Express) {
         if (loginErr) {
           return next(loginErr);
         }
-        
+
         // Strip password from response
         const { password, ...userWithoutPassword } = user;
-        
+
         console.log("User logged in:", userWithoutPassword);
         console.log("Session ID:", req.sessionID);
-        
+
         // Guardar la sesión explícitamente para asegurar que se almacene
         req.session.save((err) => {
           if (err) {
             console.error("Error saving session:", err);
             return next(err);
           }
-          
+
           // Enviar una respuesta con el usuario
           return res.status(200).json({
             ...userWithoutPassword,
@@ -181,7 +181,7 @@ export function setupAuth(app: Express) {
     console.log("Session ID:", req.sessionID);
     console.log("Session data:", req.session);
     console.log("Cookies:", req.headers.cookie);
-    
+
     if (!req.isAuthenticated()) {
       console.log("User not authenticated");
       return res.status(401).json({ 
@@ -189,9 +189,9 @@ export function setupAuth(app: Express) {
         authenticated: false 
       });
     }
-    
+
     console.log("User is authenticated:", req.user?.username);
-    
+
     // Strip password from response
     const { password, ...userWithoutPassword } = req.user as SelectUser;
     res.json({
@@ -199,27 +199,27 @@ export function setupAuth(app: Express) {
       authenticated: true
     });
   });
-  
+
   app.patch("/api/user/profile", async (req, res, next) => {
     try {
       if (!req.isAuthenticated()) {
         return res.status(401).json({ message: "Authentication required to update profile" });
       }
-      
+
       const validatedData = updateProfileSchema.parse(req.body);
       const userId = req.user!.id;
-      
+
       const updatedUser = await storage.updateUserProfile(userId, validatedData);
       if (!updatedUser) {
         return res.status(404).json({ message: "User not found" });
       }
-      
+
       // Actualizar la sesión del usuario
       req.login(updatedUser, (err) => {
         if (err) {
           return next(err);
         }
-        
+
         // Strip password from response
         const { password, ...userWithoutPassword } = updatedUser;
         res.json(userWithoutPassword);
@@ -249,7 +249,7 @@ export function setupAuth(app: Express) {
   app.post("/api/auth/forgot-password", async (req, res) => {
     try {
       const { email, lang } = forgotPasswordSchema.parse(req.body);
-      
+
       // Verificar si el usuario existe
       const user = await storage.getUserByEmail(email);
       if (!user) {
@@ -262,9 +262,9 @@ export function setupAuth(app: Express) {
       // Generar token y enviarlo por email
       const token = tokenService.generateToken();
       tokenService.storeToken(token, email);
-      
+
       await emailService.sendPasswordResetEmail(email, token, lang);
-      
+
       res.status(200).json({ 
         message: lang === 'es' ? 'Email de recuperación enviado exitosamente' : 'Password reset email sent successfully'
       });
@@ -283,7 +283,7 @@ export function setupAuth(app: Express) {
   app.get("/reset-password/:token", (req, res) => {
     const token = req.params.token;
     const lang = req.query.lang || 'en';
-    
+
     // Validar que el token existe
     const validation = tokenService.validateToken(token);
     if (!validation.valid) {
@@ -299,7 +299,7 @@ export function setupAuth(app: Express) {
         </html>
       `);
     }
-    
+
     // Servir el archivo HTML
     res.sendFile('reset-password.html', { root: 'public' });
   });
@@ -308,7 +308,7 @@ export function setupAuth(app: Express) {
   app.post("/api/auth/reset-password", async (req, res) => {
     try {
       const { token, newPassword, lang } = resetPasswordSchema.parse(req.body);
-      
+
       // Validar token
       const validation = tokenService.validateToken(token);
       if (!validation.valid || !validation.email) {
@@ -328,10 +328,10 @@ export function setupAuth(app: Express) {
       // Hashear nueva contraseña y actualizar
       const hashedPassword = await hashPassword(newPassword);
       await storage.updateUserPassword(user.id, hashedPassword);
-      
+
       // Eliminar token usado
       tokenService.deleteToken(token);
-      
+
       res.status(200).json({ 
         message: lang === 'es' ? 'Contraseña actualizada exitosamente' : 'Password updated successfully'
       });

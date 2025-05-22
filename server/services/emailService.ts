@@ -14,6 +14,8 @@ export class EmailService {
       console.error('Resend API key not configured. Email not sent.');
       throw new Error('Email service not configured');
     }
+    console.log('Attempting to send password reset email to:', email);
+    console.log('Using base URL:', process.env.BASE_URL);
     const baseUrl = process.env.BASE_URL || 'http://localhost:5000';
     const resetUrl = `${baseUrl}/reset-password/${token}?lang=${lang}`;
 
