@@ -8,6 +8,9 @@ import { storage } from "./storage";
 import { User as SelectUser, insertUserSchema, updateProfileSchema } from "@shared/schema";
 import { ZodError } from "zod";
 import { fromZodError } from "zod-validation-error";
+import { emailService } from "./services/emailService";
+import { tokenService } from "./services/tokenService";
+import { z } from "zod";
 
 declare global {
   namespace Express {
@@ -227,6 +230,119 @@ export function setupAuth(app: Express) {
         return res.status(400).json({ message: validationError.message });
       }
       next(error);
+    }
+  });
+
+  // Esquemas de validación para recuperación de contraseña
+  const forgotPasswordSchema = z.object({
+    email: z.string().email(),
+    lang: z.string().optional().default('en')
+  });
+
+  const resetPasswordSchema = z.object({
+    token: z.string(),
+    newPassword: z.string().min(6),
+    lang: z.string().optional().default('en')
+  });
+
+  // Ruta para solicitar recuperación de contraseña
+  app.post("/api/auth/forgot-password", async (req, res) => {
+    try {
+      const { email, lang } = forgotPasswordSchema.parse(req.body);
+      
+      // Verificar si el usuario existe
+      const user = await storage.getUserByEmail(email);
+      if (!user) {
+        // Por seguridad, no revelamos si el email existe o no
+        return res.status(200).json({ 
+          message: lang === 'es' ? 'Si el email existe, recibirás un enlace de recuperación' : 'If the email exists, you will receive a recovery link'
+        });
+      }
+
+      // Generar token y enviarlo por email
+      const token = tokenService.generateToken();
+      tokenService.storeToken(token, email);
+      
+      await emailService.sendPasswordResetEmail(email, token, lang);
+      
+      res.status(200).json({ 
+        message: lang === 'es' ? 'Email de recuperación enviado exitosamente' : 'Password reset email sent successfully'
+      });
+    } catch (error) {
+      console.error('Error in forgot-password:', error);
+      if (error instanceof ZodError) {
+        return res.status(400).json({ message: "Invalid email format" });
+      }
+      res.status(500).json({ 
+        message: req.body.lang === 'es' ? 'Error interno del servidor' : 'Internal server error'
+      });
+    }
+  });
+
+  // Ruta para servir el formulario de reset
+  app.get("/reset-password/:token", (req, res) => {
+    const token = req.params.token;
+    const lang = req.query.lang || 'en';
+    
+    // Validar que el token existe
+    const validation = tokenService.validateToken(token);
+    if (!validation.valid) {
+      const errorMessage = lang === 'es' 
+        ? 'Token inválido o expirado' 
+        : 'Invalid or expired token';
+      return res.status(400).send(`
+        <html>
+          <body style="font-family: Arial, sans-serif; text-align: center; padding: 50px;">
+            <h2 style="color: #dc3545;">${errorMessage}</h2>
+            <p><a href="/">Volver al inicio</a></p>
+          </body>
+        </html>
+      `);
+    }
+    
+    // Servir el archivo HTML
+    res.sendFile('reset-password.html', { root: 'public' });
+  });
+
+  // Ruta para procesar el reset de contraseña
+  app.post("/api/auth/reset-password", async (req, res) => {
+    try {
+      const { token, newPassword, lang } = resetPasswordSchema.parse(req.body);
+      
+      // Validar token
+      const validation = tokenService.validateToken(token);
+      if (!validation.valid || !validation.email) {
+        return res.status(400).json({ 
+          message: lang === 'es' ? 'Token inválido o expirado' : 'Invalid or expired token'
+        });
+      }
+
+      // Buscar usuario por email
+      const user = await storage.getUserByEmail(validation.email);
+      if (!user) {
+        return res.status(404).json({ 
+          message: lang === 'es' ? 'Usuario no encontrado' : 'User not found'
+        });
+      }
+
+      // Hashear nueva contraseña y actualizar
+      const hashedPassword = await hashPassword(newPassword);
+      await storage.updateUserPassword(user.id, hashedPassword);
+      
+      // Eliminar token usado
+      tokenService.deleteToken(token);
+      
+      res.status(200).json({ 
+        message: lang === 'es' ? 'Contraseña actualizada exitosamente' : 'Password updated successfully'
+      });
+    } catch (error) {
+      console.error('Error in reset-password:', error);
+      if (error instanceof ZodError) {
+        return res.status(400).json({ message: "Invalid request data" });
+      }
+      res.status(500).json({ 
+        message: req.body.lang === 'es' ? 'Error interno del servidor' : 'Internal server error'
+      });
     }
   });
 }
