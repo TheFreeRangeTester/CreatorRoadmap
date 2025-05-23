@@ -1,6 +1,8 @@
 {
   "auth": {
     "email": "Correo Electrónico",
+    "login": "Iniciar Sesión",
+    "register": "Registrarse",
     "emailPlaceholder": "Ingresa tu correo",
     "sending": "Enviando...",
     "signIn": "Iniciar sesión",

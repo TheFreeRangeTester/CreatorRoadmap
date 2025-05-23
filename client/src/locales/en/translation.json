@@ -1,6 +1,8 @@
 {
   "auth": {
     "email": "Email",
+    "login": "Login",
+    "register": "Register",
     "emailPlaceholder": "Enter your email",
     "sending": "Sending...",
     "signIn": "Sign in",
