@@ -71,6 +71,21 @@ export class DatabaseStorage implements IStorage {
     return updatedUser;
   }
 
+  async updateUserPassword(id: number, hashedPassword: string): Promise<User | undefined> {
+    try {
+      const [updatedUser] = await db
+        .update(users)
+        .set({ password: hashedPassword })
+        .where(eq(users.id, id))
+        .returning();
+      
+      return updatedUser;
+    } catch (error) {
+      console.error("Error updating user password:", error);
+      throw error;
+    }
+  }
+
   // Idea methods
   async getIdeas(): Promise<Idea[]> {
     return db.select().from(ideas).orderBy(desc(ideas.votes));

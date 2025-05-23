@@ -1,0 +1,85 @@
+Perfecto, Pato. Acá tenés un prompt claro, estructurado y orientado al agente de Replit, adaptado a tu stack (Node.js, TypeScript, i18next). Podés copiarlo y pegarlo directamente en Replit AI o usarlo con cualquier agente automatizado que construya funciones dentro de ese entorno.
+
+⸻
+
+🧠 Prompt para el Agente de Replit
+
+Quiero que construyas una funcionalidad completa de recuperación de contraseña en un proyecto Node.js con TypeScript. Estamos usando:
+	•	Express
+	•	Replit DB como base de datos
+	•	Nodemailer (con Gmail)
+	•	i18next para soporte de traducción (en inglés y español)
+	•	HTML estático para el formulario de recuperación
+
+⸻
+
+🎯 Objetivo
+
+Permitir a los usuarios recuperar su contraseña si la olvidaron, mediante un email con un enlace único que expira a la hora. Al ingresar al enlace, podrán establecer una nueva contraseña.
+
+⸻
+
+📋 Requisitos funcionales
+	1.	Ruta POST /forgot-password
+	•	Recibe un email en el body.
+	•	Verifica si el usuario existe en la base de datos.
+	•	Genera un token único y lo guarda como token_<TOKEN> en Replit DB junto con:
+	•	el email
+	•	la hora de expiración (1 hora después del momento actual).
+	•	Envía un email con un enlace de este formato:
+${BASE_URL}/reset-password/${token}
+	2.	Ruta GET /reset-password/:token
+	•	Sirve un archivo HTML (public/reset-password.html) con un formulario para nueva contraseña.
+	•	Esta vista debe funcionar tanto en inglés como en español, usando i18next.
+	3.	Ruta POST /reset-password
+	•	Recibe token y newPassword.
+	•	Valida el token (que exista y no esté expirado).
+	•	Actualiza la contraseña del usuario.
+	•	Elimina el token de la base de datos.
+	•	Responde con un mensaje traducido con i18next.
+
+⸻
+
+📦 Archivos esperados
+	•	src/routes/auth.ts – Contiene las rutas anteriores.
+	•	src/services/emailService.ts – Envío de correos usando Nodemailer.
+	•	src/services/tokenService.ts – Gestión de tokens con Replit DB.
+	•	src/locales/en/translation.json y src/locales/es/translation.json – Archivos de traducción.
+	•	public/reset-password.html – Formulario de nueva contraseña.
+
+⸻
+
+🌐 Traducción con i18next
+	•	Los mensajes como “Usuario no encontrado”, “Token inválido o expirado”, “Email enviado”, “Contraseña actualizada” deben estar localizados en en y es.
+	•	El formulario HTML debe cambiar idioma con una variable lang (?lang=es o ?lang=en en la URL).
+
+⸻
+
+🔐 Seguridad
+	•	Los tokens deben ser generados con crypto.randomBytes(32).toString('hex').
+	•	Las contraseñas deben ser hasheadas con bcrypt antes de guardarse.
+
+⸻
+
+📁 Variables de entorno esperadas (.env)
+
+EMAIL_USER=tu-email@gmail.com
+EMAIL_PASS=tu-app-password
+BASE_URL=https://tu-app.replit.app
+
+
+⸻
+
+🧪 Base de datos (Replit DB)
+	•	Usuarios guardados con su email como key, y valor como JSON string con propiedades como password.
+	•	Tokens guardados como token_<token> con valor { email, expiry }.
+
+⸻
+
+✔️ Extras
+	•	Que los mensajes del servidor se envíen traducidos dependiendo del idioma (se puede detectar con req.query.lang o req.headers['accept-language']).
+	•	El formulario HTML debe hacer POST a /reset-password con token y newPassword vía JavaScript.
+
+⸻
+
+¿Querés que también agregue tests o proteja contra reenvíos abusivos (rate limiting)?

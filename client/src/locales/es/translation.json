@@ -1,245 +1,5 @@
+
 {
-  "common": {
-    "greeting": "👋🏻Hola",
-    "login": "Iniciar sesión",
-    "register": "Registrarse",
-    "logout": "Cerrar sesión",
-    "username": "Nombre de usuario",
-    "password": "Contraseña",
-    "share": "Compartir",
-    "suggest": "Sugerir",
-    "vote": "Votar",
-    "voted": "Votado",
-    "voting": "Votando...",
-    "loginToVote": "Inicia sesión para votar",
-    "thankYou": "¡Gracias por tu voto!",
-    "yourOpinionMatters": "Tu opinión es importante para el creador.",
-    "alreadyVoted": "Ya has votado",
-    "alreadyVotedDesc": "Ya has registrado tu voto para esta idea.",
-    "loginRequired": "Inicio de sesión requerido",
-    "loginRequiredDesc": "Necesitas una cuenta para poder votar por ideas.",
-    "copySuccess": "Enlace copiado",
-    "copyDesc": "Enlace compartible: {{url}}",
-    "copyError": "No se pudo copiar el enlace",
-    "copyErrorDesc": "No pudimos copiar el enlace automáticamente.",
-    "copyManualDesc": "Puedes copiar manualmente este enlace: {{url}}",
-    "copyExecCommandError": "No se pudo copiar utilizando execCommand",
-    "refresh": "Actualizar",
-    "votes": "votos",
-    "save": "Guardar",
-    "saving": "Guardando...",
-    "reset": "Restablecer",
-    "error": "Error",
-    "website": "Sitio web",
-    "back": "Volver al Dashboard",
-    "joinFanlist": "Únete a Fanlist",
-    "noDescription": "Sin descripción disponible",
-    "cancel": "Cancelar"
-  },
-  "homepage": {
-    "title": "Roadmap de Contenido",
-    "subtitle": "Vota por el contenido que quieres ver próximamente",
-    "info": "Este roadmap muestra las ideas ordenadas por votos. Tu opinión ayuda a determinar qué contenido se creará primero.",
-    "suggestIdea": "Sugerir una idea",
-    "noIdeasYet": "Sin ideas todavía",
-    "noIdeasDesc": "Este creador aún no ha agregado ideas de contenido."
-  },
-  "dashboard": {
-    "yourPublicProfile": "Tu Perfil Público",
-    "shareProfileDesc": "Comparte este enlace para que otros puedan ver y votar por tus ideas de contenido.",
-    "aboutPublicProfile": "Acerca de tu perfil público:",
-    "publicProfileVisibility": "Esta página es visible para cualquier persona con el enlace, incluso si no tiene cuenta en la plataforma.",
-    "visitorVoting": "Los visitantes pueden ver tus ideas y votar por ellas, ayudándote a determinar qué contenido crear primero.",
-    "copied": "Copiado",
-    "copyLink": "Copiar enlace",
-    "viewProfile": "Ver perfil",
-    "shareProfile": "Compartir perfil",
-    "sharingTips": "Consejos para compartir:",
-    "shareTip1": "Comparte tu enlace en redes sociales para obtener más votos",
-    "shareTip2": "Incluye el enlace en la descripción de tus videos o posts",
-    "shareTip3": "Anima a tu audiencia a votar para influir en tu próximo contenido",
-    "creatorDashboard": "Panel del Creador",
-    "myIdeas": "Mis Ideas",
-    "suggested": "Sugeridas",
-    "topIdeas": "Ideas Principales",
-    "voteDescription": "Vota por tus ideas favoritas o propón las tuyas"
-  },
-  "ideas": {
-    "noPublishedIdeas": "No hay ideas publicadas todavía",
-    "createFirstIdea": "Comienza creando tu primera idea",
-    "noSuggestedIdeas": "No hay ideas sugeridas todavía",
-    "suggestedIdeasWillAppear": "Las ideas sugeridas por tu audiencia aparecerán aquí",
-    "loadError": "Error al cargar ideas. Por favor, inténtalo de nuevo.",
-    "votingFailed": "Error al votar",
-    "addIdea": "Añadir una idea",
-    "loginToAdd": "Inicia sesión para añadir una idea",
-    "noIdeasYet": "No hay ideas todavía",
-    "getStarted": "Comienza creando una nueva idea.",
-    "confirmDelete": "¿Estás seguro de que deseas eliminar esta idea? Esta acción no se puede deshacer y todos los votos se perderán.",
-    "deleteTitle": "Eliminar idea",
-    "delete": "Eliminar",
-    "deleting": "Eliminando...",
-    "deleted": "Idea eliminada",
-    "deletedSuccess": "Tu idea ha sido eliminada correctamente.",
-    "deleteError": "Error al eliminar",
-    "approved": "Idea aprobada",
-    "approvedSuccess": "La idea ha sido aprobada y publicada en tu leaderboard",
-    "approveError": "Error de aprobación",
-    "approveErrorDesc": "No se pudo aprobar la idea",
-    "rejected": "Idea rechazada",
-    "rejectedSuccess": "La idea ha sido rechazada",
-    "rejectError": "Error de rechazo",
-    "rejectErrorDesc": "No se pudo rechazar la idea",
-    "pending": "Pendiente",
-    "suggestedBy": "Sugerido por",
-    "reject": "Rechazar",
-    "approve": "Aprobar"
-  },
-  "creator": {
-    "voted": "Votado",
-    "votedSuccess": "¡Votado!",
-    "voteHeaderTitle": "¡Vota qué contenido quieres primero!",
-    "roadmapDescription": "Este roadmap muestra las ideas ordenadas por votos. Tu opinión ayuda a determinar qué contenido se creará primero.",
-    "noIdeasYet": "Sin ideas todavía",
-    "noIdeasDescription": "Este creador aún no ha agregado ideas de contenido.",
-    "voteError": "No se pudo registrar tu voto",
-    "voteErrorDesc": "Ocurrió un error al procesar tu voto",
-    "voteSuccess": "¡Gracias por tu voto!",
-    "voteSuccessDesc": "Tu opinión es importante para el creador.",
-    "loadError": "No se pudo cargar la página del creador",
-    "defaultProfileDescription": "Ingeniero QA y creador de contenido sobre pruebas de software, automatización y buenas prácticas en control de calidad."
-  },
-  "share": {
-    "title": "Roadmap de Contenido de {{username}}",
-    "text": "¡Echa un vistazo al roadmap de contenido de {{username}} y vota por lo que quieres ver próximamente!"
-  },
-  "login": {
-    "requiredToVote": "Inicia sesión para votar"
-  },
-  "publicLeaderboard": {
-    "title": "Leaderboard Público",
-    "description": "Este leaderboard es accesible públicamente. ¡Puedes votar por tus ideas favoritas!",
-    "noIdeasYet": "Sin ideas todavía",
-    "noIdeasDescription": "No hay ideas en este leaderboard todavía.",
-    "errorLoading": "No se pudo cargar el leaderboard",
-    "rank": "Posición",
-    "na": "N/A",
-    "votes": "votos"
-  },
-  "badges": {
-    "new": "Nuevo",
-    "equal": "Igual",
-    "votes": "votos"
-  },
-  "auth": {
-    "welcome": "Bienvenido a la plataforma",
-    "registerInfo": "Regístrate para hacer seguimiento de tus votos y sugerir nuevas ideas a creadores",
-    "loginInfo": "Inicia sesión para continuar tu experiencia",
-    "registerCta": "Crear cuenta",
-    "loginCta": "Iniciar sesión",
-    "orContinueWith": "o continuar con",
-    "login": "Iniciar sesión",
-    "register": "Registrarse",
-    "loginTitle": "Iniciar sesión",
-    "loginSubtitle": "Accede a tu cuenta para continuar",
-    "registerCreatorTitle": "Registrarse como creador",
-    "registerCreatorSubtitle": "Crea tu cuenta para gestionar tu propio leaderboard",
-    "registerCreatorDescription": "Crea tu cuenta de creador con nombre de usuario y contraseña. Esta cuenta te permitirá crear tu propio leaderboard de ideas y gestionar las sugerencias de tu audiencia.",
-    "registerAudienceTitle": "Registrarse como audiencia",
-    "registerAudienceSubtitle": "Crea tu cuenta para votar y sugerir ideas",
-    "registerAudienceDescription": "Al registrarte como audiencia, podrás votar ideas y sugerir contenido a tus creadores favoritos.",
-    "emailOptional": "El email es opcional pero recomendado",
-    "selectRole": "Selecciona tu rol",
-    "creatorRole": "Creador de contenido",
-    "creatorRoleDescription": "Crea tu propio leaderboard de ideas y recibe sugerencias",
-    "audienceRole": "Audiencia",
-    "audienceRoleDescription": "Vota y sugiere ideas a tus creadores favoritos",
-    "hero": {
-      "title": "Conecta con tus creadores favoritos",
-      "subtitle": "Vota y sugiere ideas para el contenido que quieres ver"
-    },
-    "googleSignInSuccess": "Sesión iniciada con éxito",
-    "googleSignInSuccessDesc": "¡Bienvenido de nuevo a la plataforma!",
-    "googleSignInError": "Error al iniciar sesión con Google",
-    "googleSignInErrorDesc": "Hubo un error al intentar iniciar sesión con Google. Por favor intenta de nuevo."
-  },
-  "ideaForm": {
-    "title": "Título",
-    "description": "Descripción",
-    "submitIdea": "Enviar idea",
-    "titlePlaceholder": "Ingresa un título para tu idea",
-    "descriptionPlaceholder": "Describe tu idea en detalle"
-  },
-  "suggestIdea": {
-    "button": "Sugerir idea",
-    "title": "Sugerir idea a {{username}}",
-    "description": "¿Qué te gustaría que el creador publique a continuación?",
-    "titleLabel": "Título de la idea",
-    "titlePlaceholder": "Escribe un título conciso",
-    "descriptionLabel": "Descripción",
-    "descriptionPlaceholder": "Describe con detalle tu idea para el creador",
-    "cancel": "Cancelar",
-    "submit": "Enviar sugerencia",
-    "sending": "Enviando...",
-    "loginRequired": "Inicia sesión para sugerir ideas",
-    "loginRequiredDesc": "Necesitas una cuenta para poder sugerir ideas a este creador.",
-    "incompleteFields": "Campos incompletos",
-    "incompleteFieldsDesc": "Por favor completa todos los campos del formulario.",
-    "invalidFields": "Campos inválidos",
-    "invalidFieldsDesc": "Por favor completa correctamente todos los campos del formulario.",
-    "thankYou": "Gracias por tu sugerencia",
-    "thankYouDesc": "Tu idea ha sido enviada al creador para su aprobación.",
-    "error": "Error al enviar sugerencia",
-    "errorDesc": "Ocurrió un error al enviar tu sugerencia. Verifica tu conexión e inténtalo de nuevo.",
-    "titleMinLength": "El título debe tener al menos 3 caracteres",
-    "titleMaxLength": "El título no puede exceder los 100 caracteres",
-    "descriptionMinLength": "La descripción debe tener al menos 10 caracteres",
-    "descriptionMaxLength": "La descripción no puede exceder los 500 caracteres",
-    "beFirstToSuggest": "Sé el primero en sugerir un tema para el contenido",
-    "achievementText": "¡Tu idea ha sido enviada a @{{username}}!"
-  },
-  "ideaPosition": {
-    "new": "Nuevo",
-    "same": "Igual",
-    "suggestedBy": "Sugerido por {{username}}",
-    "voting": "Votando",
-    "voted": "Votado",
-    "vote": "Votar"
-  },
-  "badges": {
-    "votes": "votos",
-    "vote": "voto",
-    "new": "Nuevo",
-    "same": "Igual",
-    "up": "Subió",
-    "down": "Bajó"
-  },
-  "profile": {
-    "editProfile": "Editar Perfil",
-    "editProfileDesc": "Personaliza tu información de perfil y enlaces sociales",
-    "description": "Acerca de ti",
-    "descriptionPlaceholder": "Cuéntale a tu audiencia sobre ti y tu contenido",
-    "logoUrl": "URL de imagen de perfil",
-    "logoUrlPlaceholder": "https://ejemplo.com/tu-logo.png",
-    "logoUrlHelp": "Añade un enlace a tu imagen de perfil o logo",
-    "socialLinks": "Enlaces de Redes Sociales",
-    "background": "Fondo del Perfil",
-    "backgroundDesc": "Elige un fondo para tu perfil público. El patrón se adaptará automáticamente al modo claro/oscuro.",
-    "gradient1": "Sutil",
-    "gradient2": "Azul/Índigo",
-    "gradient3": "Verde/Teal",
-    "gradient4": "Rosa/Naranja",
-    "pattern1": "Puntos",
-    "pattern2": "Cuadrícula",
-    "updateSuccess": "Perfil actualizado",
-    "updateSuccessDesc": "Tu perfil ha sido actualizado exitosamente",
-    "updateError": "Error de actualización",
-    "updateErrorDesc": "Hubo un error al actualizar tu perfil. Por favor, inténtalo de nuevo."
-  },
-  "pricing": {
-    "monthly": "Mensual",
-    "yearly": "Anual (20% menos)"
-  },
   "landing": {
     "menu": {
       "features": "Características",
@@ -247,202 +7,108 @@
       "testimonials": "Testimonios"
     },
     "cta": {
-      "title": "Conecta con tu audiencia hoy mismo",
-      "subtitle": "Únete a miles de creadores que ya utilizan IdeaVote para crear contenido más relevante y aumentar su engagement.",
-      "startButton": "Comenzar gratis",
-      "dashboardButton": "Ir al Dashboard",
-      "demoButton": "Ver demo",
-      "noCreditCard": "No se requiere tarjeta de crédito para comenzar",
-      "startFree": "Comenzar gratis",
-      "seeDemo": "Ver demo",
-      "tryFree": "Probar gratis por 14 días",
-      "goDashboard": "Ir al Dashboard",
-      "login": "Iniciar sesión",
-      "register": "Registrarse"
+      "login": "Iniciar Sesión",
+      "register": "Registrarse",
+      "startFree": "Comenzar Gratis",
+      "seeDemo": "Ver Demo",
+      "startButton": "Comenzar Gratis",
+      "demoButton": "Ver Demo",
+      "title": "¿Listo para empezar?",
+      "subtitle": "Únete a miles de creadores que ya están usando Fanlist",
+      "noCreditCard": "No se requiere tarjeta de crédito"
+    },
+    "cta": {
+      "login": "Iniciar Sesión",
+      "register": "Registrarse", 
+      "startFree": "Comenzar Gratis",
+      "seeDemo": "Ver Demo"
     },
     "hero": {
-      "tagline": "La plataforma preferida por creadores de contenido",
-      "title": "Conecta con tu audiencia y crea contenido que impacte",
-      "subtitle": "Descubre exactamente qué contenido quiere ver tu audiencia con nuestra plataforma de votación y leaderboard interactivo. Genera más engagement y mantén a tu audiencia involucrada.",
-      "noCreditCard": "No se requiere tarjeta de crédito para comenzar",
-      "leaderboardPreview": "Vista previa del leaderboard",
-      "seeFullDemo": "Ver demo completa"
+      "title": "Transforma Ideas en Realidad",
+      "subtitle": "La plataforma donde las mejores ideas cobran vida a través de la colaboración comunitaria",
+      "tagline": "Conecta con tu audiencia como nunca antes",
+      "noCreditCard": "No se requiere tarjeta de crédito",
+      "leaderboardPreview": "Vista previa del ranking",
+      "seeFullDemo": "Ver Demo Completo"
     },
     "stats": {
-      "activeCreators": "Creadores activos",
-      "votesMonthly": "Votos mensuales",
+      "activeCreators": "Creadores Activos",
+      "votesMonthly": "Votos Mensuales",
       "satisfaction": "Satisfacción",
-      "engagement": "↑ en engagement"
+      "engagement": "Engagement"
     },
     "features": {
-      "title": "Todas las herramientas que necesitas para conectar con tu audiencia",
-      "subtitle": "Diseñado específicamente para creadores de contenido que quieren hacer crecer su comunidad e involucrar a su audiencia en el proceso creativo",
+      "title": "Características",
+      "subtitle": "Todo lo que necesitas para gestionar tus ideas",
       "leaderboards": {
-        "title": "Leaderboards interactivos",
-        "description": "Crea leaderboards atractivos donde tu audiencia puede votar por sus ideas favoritas y ver los resultados en tiempo real."
+        "title": "Rankings Interactivos",
+        "description": "Crea y gestiona rankings personalizados"
       },
       "suggestions": {
-        "title": "Sugerencias de la comunidad",
-        "description": "Permite que tu audiencia sugiera ideas directamente en tu leaderboard, potenciando la participación y el sentido de comunidad."
+        "title": "Sugerencias de la Comunidad",
+        "description": "Recibe ideas directamente de tu audiencia"
       },
       "analytics": {
-        "title": "Analíticas detalladas",
-        "description": "Obtén insights valiosos sobre qué contenido prefiere tu audiencia y cómo evolucionan estas preferencias con el tiempo."
+        "title": "Análisis Detallado",
+        "description": "Obtén insights valiosos sobre tu audiencia"
       },
       "customization": {
-        "title": "Personalización avanzada",
-        "description": "Adapta la apariencia de tus leaderboards para que coincidan con tu marca personal, incluyendo colores, logos y estilos."
+        "title": "Personalización Total",
+        "description": "Adapta la plataforma a tu marca"
       },
       "multiple": {
-        "title": "Múltiples leaderboards",
-        "description": "Organiza diferentes tipos de contenido o categorías en leaderboards separados para mantener todo ordenado."
+        "title": "Múltiples Rankings",
+        "description": "Crea tantos rankings como necesites"
       },
       "sharing": {
-        "title": "Compartible en cualquier lugar",
-        "description": "Integra fácilmente tus leaderboards en tu sitio web, redes sociales o newsletters para maximizar su alcance."
+        "title": "Compartir Fácilmente",
+        "description": "Comparte tus rankings en cualquier plataforma"
       }
-    },
-    "showcase": {
-      "title": "Decisiones basadas en datos para tu contenido",
-      "description": "Conoce exactamente lo que tu audiencia desea ver y crea contenido que resuene con ellos, generando más engagement y crecimiento para tu marca personal.",
-      "bullet1": "Mayor engagement de tu audiencia con votaciones interactivas",
-      "bullet2": "Datos en tiempo real sobre las preferencias de tus seguidores",
-      "bullet3": "Personalización completa para adaptarse a tu marca"
-    },
-    "howItWorks": {
-      "title": "Cómo funciona Fanlist",
-      "subtitle": "Un proceso simple para mantener conectados a tus fans",
-      "step1": {
-        "title": "Crea tu leaderboard",
-        "description": "Configura rápidamente un leaderboard personalizado para que tu audiencia pueda interactuar"
-      },
-      "step2": {
-        "title": "Comparte con tu audiencia",
-        "description": "Comparte el enlace único con tus seguidores en tus redes sociales o sitio web"
-      },
-      "step3": {
-        "title": "Recibe feedback y crece",
-        "description": "Analiza los resultados y utiliza el feedback para crear contenido que realmente conecte"
-      }
-    },
-    "pricing": {
-      "title": "Planes que se adaptan a tu crecimiento",
-      "subtitle": "Desde creadores que están empezando hasta profesionales con grandes comunidades, tenemos un plan para cada etapa de tu viaje.",
-      "freePlan": {
-        "name": "Plan Gratuito",
-        "price": "Gratis",
-        "description": "Ideal para creadores que recién empiezan",
-        "features": [
-          "1 leaderboard activo",
-          "Hasta 10 ideas visibles",
-          "Límite de 100 votos/mes",
-          "Personalización básica",
-          "Analytics básicos",
-          "Dominio app (tuvoto.app/creador)"
-        ],
-        "ctaText": "Empezar gratis"
-      },
-      "proPlan": {
-        "name": "Plan Pro",
-        "price": "$9",
-        "description": "Para creadores activos con contenido regular",
-        "features": [
-          "Hasta 3 leaderboards activos",
-          "Hasta 50 ideas por leaderboard",
-          "5,000 votos/mes",
-          "Personalización intermedia",
-          "Integración con redes sociales",
-          "Analytics más detallados",
-          "Exportación CSV",
-          "Sin marca de la plataforma"
-        ],
-        "ctaText": "Probar gratis por 14 días"
-      },
-      "creatorProPlan": {
-        "name": "Creator Pro",
-        "price": "$29",
-        "description": "Para creadores que monetizan su contenido",
-        "features": [
-          "Leaderboards ilimitados",
-          "Ideas ilimitadas",
-          "Votos ilimitados",
-          "Incrustación en sitios propios",
-          "Dominio personalizado",
-          "Colaboración en equipo",
-          "Integraciones de monetización",
-          "Soporte prioritario",
-          "Acceso a funciones beta"
-        ],
-        "ctaText": "Contactar a ventas"
-      },
-      "price": {
-        "free": "Gratis",
-        "proMonthly": "$9",
-        "creatorProMonthly": "$29",
-        "perMonth": "/mes"
-      },
-      "popular": "MÁS POPULAR",
-      "cta": {
-        "startFree": "Empezar gratis",
-        "tryFree": "Probar gratis por 14 días",
-        "contactUs": "Contáctanos"
-      },
-      "popular": "MÁS POPULAR"
-    },
-    "testimonials": {
-      "title": "Lo que dicen nuestros creadores",
-      "subtitle": "Únete a miles de creadores de contenido que ya han transformado la forma en que se conectan con su audiencia.",
-      "testimonial1": {
-        "quote": "Desde que comencé a usar IdeaVote, mi engagement con la audiencia ha aumentado un 40%. Ahora realmente sé lo que quieren ver y mi canal ha crecido mucho más rápido.",
-        "author": "Carlos Martínez",
-        "role": "YouTuber de tecnología"
-      },
-      "testimonial2": {
-        "quote": "A mis seguidores les encanta poder votar y sugerir temas para mi podcast. IdeaVote se ha convertido en una parte esencial de mi estrategia de contenido.",
-        "author": "Sofía Gómez",
-        "role": "Podcaster"
-      },
-      "testimonial3": {
-        "quote": "La facilidad para integrar leaderboards en mi sitio web y las capacidades de personalización son increíbles. Mi comunidad se siente más involucrada que nunca.",
-        "author": "Javier Rodríguez",
-        "role": "Streamer"
-      }
-    },
-    "demo": {
-      "title": "Demostración de IdeaVote",
-      "description": "Mira cómo funciona nuestra plataforma para creadores de contenido",
-      "details": "En este video podrás ver todas las funcionalidades principales de la plataforma, incluyendo la creación de ideas, el sistema de votación y el panel de control del creador.",
-      "alt": "Demo de IdeaVote"
-    },
-    "footer": {
-      "product": {
-        "title": "Producto",
-        "features": "Características",
-        "pricing": "Precios",
-        "demo": "Demo",
-        "roadmap": "Roadmap"
-      },
-      "resources": {
-        "title": "Recursos",
-        "blog": "Blog",
-        "documentation": "Documentación",
-        "guides": "Guías",
-        "success": "Casos de éxito"
-      },
-      "company": {
-        "title": "Compañía",
-        "about": "Sobre nosotros",
-        "team": "Equipo",
-        "contact": "Contacto",
-        "careers": "Empleo"
-      },
-      "legal": {
-        "title": "Legal",
-        "terms": "Términos de servicio",
-        "privacy": "Política de privacidad",
-        "cookies": "Cookies"
-      },
-      "copyright": "Todos los derechos reservados."
     }
+  },
+  "auth": {
+    "email": "Correo Electrónico",
+    "login": "Iniciar Sesión",
+    "register": "Registrarse",
+    "emailPlaceholder": "Ingresa tu correo",
+    "sending": "Enviando...",
+    "signIn": "Iniciar sesión",
+    "rememberPassword": "¿Recuerdas tu contraseña?",
+    "forgotPassword": {
+      "title": "Recuperar Contraseña",
+      "description": "Ingresa tu correo electrónico y te enviaremos un enlace para restablecer tu contraseña.",
+      "userNotFound": "Usuario no encontrado",
+      "emailSent": "Email de recuperación enviado exitosamente",
+      "invalidToken": "Token inválido o expirado",
+      "passwordUpdated": "Contraseña actualizada exitosamente",
+      "newPassword": "Nueva Contraseña",
+      "confirmPassword": "Confirmar Contraseña",
+      "resetPassword": "Restablecer Contraseña",
+      "passwordsDoNotMatch": "Las contraseñas no coinciden",
+      "passwordTooShort": "La contraseña debe tener al menos 6 caracteres",
+      "sendEmail": "Enviar Email de Recuperación",
+      "networkError": "Error de red. Inténtalo de nuevo.",
+      "linkText": "¿Olvidaste tu contraseña?"
+    },
+    "hero": {
+      "title": "Únete a la Comunidad",
+      "subtitle": "Conecta con creadores y participa en el ranking de las mejores ideas"
+    },
+    "loginTitle": "Bienvenido de Vuelta",
+    "loginSubtitle": "Ingresa a tu cuenta para continuar",
+    "loginCta": "Iniciar Sesión",
+    "registerCreatorTitle": "Crear Cuenta de Creador",
+    "registerCreatorSubtitle": "Únete como creador de contenido",
+    "registerCreatorDescription": "Crea tu propio ranking de ideas y conecta con tu audiencia",
+    "registerCta": "Crear Cuenta"
+  },
+  "pricing": {
+    "monthly": "Mensual",
+    "yearly": "Anual (20% desc.)"
+  },
+  "common": {
+    "username": "Nombre de usuario",
+    "password": "Contraseña",
+    "email": "Correo electrónico"
   }
 }

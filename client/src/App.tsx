@@ -36,6 +36,9 @@ import TermsPage from "@/pages/terms-page";
 import PrivacyPage from "@/pages/privacy-page";
 import CookiesPage from "@/pages/cookies-page";
 
+// Página de recuperación de contraseña
+import ForgotPasswordPage from "@/pages/forgot-password-page";
+
 function App() {
   return (
     <>
@@ -79,6 +82,9 @@ function App() {
         <Route path="/terms" component={TermsPage} />
         <Route path="/privacy" component={PrivacyPage} />
         <Route path="/cookies" component={CookiesPage} />
+        
+        {/* Ruta de recuperación de contraseña */}
+        <Route path="/forgot-password" component={ForgotPasswordPage} />
         
         {/* Ruta del creador debe ir al final para evitar conflictos con otras rutas */}
         <Route path="/:username" component={CreatorQAProfile} />

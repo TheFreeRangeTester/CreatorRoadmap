@@ -16,6 +16,7 @@ export interface IStorage {
   getUserByEmail(email: string): Promise<User | undefined>;
   createUser(user: InsertUser): Promise<User>;
   updateUserProfile(id: number, profileData: UpdateProfile): Promise<User | undefined>;
+  updateUserPassword(id: number, hashedPassword: string): Promise<User | undefined>;
   
   // Idea operations
   getIdeas(): Promise<Idea[]>;
@@ -151,6 +152,19 @@ export class MemStorage implements IStorage {
       // No longer using Google authentication
     };
     
+    this.users.set(id, updatedUser);
+    return updatedUser;
+  }
+
+  async updateUserPassword(id: number, hashedPassword: string): Promise<User | undefined> {
+    const user = this.users.get(id);
+    if (!user) return undefined;
+
+    const updatedUser: User = {
+      ...user,
+      password: hashedPassword,
+    };
+
     this.users.set(id, updatedUser);
     return updatedUser;
   }
