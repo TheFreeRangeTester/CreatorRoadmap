@@ -62,6 +62,6 @@ export class TokenService {
 export const tokenService = new TokenService();
 
 // Limpiar tokens expirados cada 30 minutos
-setInterval(() => {
-  tokenService.cleanupExpiredTokens();
+setInterval(async () => {
+  await tokenService.cleanupExpiredTokens();
 }, 30 * 60 * 1000);
