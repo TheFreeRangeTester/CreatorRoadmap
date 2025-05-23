@@ -1,4 +1,15 @@
 {
+  "landing": {
+    "menu": {
+      "features": "Features",
+      "pricing": "Pricing",
+      "testimonials": "Testimonials"
+    },
+    "cta": {
+      "login": "Login",
+      "register": "Register"
+    }
+  },
   "auth": {
     "email": "Email",
     "login": "Login",

@@ -1,4 +1,15 @@
 {
+  "landing": {
+    "menu": {
+      "features": "Características",
+      "pricing": "Precios",
+      "testimonials": "Testimonios"
+    },
+    "cta": {
+      "login": "Iniciar Sesión",
+      "register": "Registrarse"
+    }
+  },
   "auth": {
     "email": "Correo Electrónico",
     "login": "Iniciar Sesión",
