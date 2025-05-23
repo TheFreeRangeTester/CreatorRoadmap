@@ -25,12 +25,69 @@
   "landing": {
     "title": "Welcome to Ideas Leaderboard",
     "subtitle": "Discover and vote for the best ideas",
+    "menu": {
+      "features": "Features",
+      "pricing": "Pricing",
+      "testimonials": "Testimonials"
+    },
+    "cta": {
+      "login": "Login",
+      "register": "Register",
+      "startFree": "Get Started Free",
+      "seeDemo": "See Demo"
+    },
     "hero": {
       "title": "Transform Ideas into Reality",
-      "subtitle": "The platform where the best ideas come to life through community collaboration"
+      "subtitle": "The platform where the best ideas come to life through community collaboration",
+      "tagline": "Connect with your audience like never before",
+      "noCreditCard": "No credit card required",
+      "leaderboardPreview": "Leaderboard preview",
+      "seeFullDemo": "See Full Demo"
+    },
+    "stats": {
+      "activeCreators": "Active Creators",
+      "votesMonthly": "Monthly Votes",
+      "satisfaction": "Satisfaction",
+      "engagement": "Engagement"
+    },
+    "features": {
+      "title": "Key Features",
+      "subtitle": "Everything you need to validate and develop your ideas",
+      "leaderboards": {
+        "title": "Dynamic Rankings",
+        "description": "Visualize your ideas' progress with real-time rankings"
+      },
+      "suggestions": {
+        "title": "Community Suggestions",
+        "description": "Receive valuable ideas directly from your audience"
+      },
+      "analytics": {
+        "title": "Detailed Analytics",
+        "description": "Understand your community's trends and preferences"
+      },
+      "customization": {
+        "title": "Complete Customization",
+        "description": "Adapt the platform to match your brand"
+      },
+      "multiple": {
+        "title": "Multiple Projects",
+        "description": "Manage several idea rankings simultaneously"
+      },
+      "sharing": {
+        "title": "Easy Sharing",
+        "description": "Share your rankings with custom public links"
+      }
+    },
+    "showcase": {
+      "title": "Data-driven decisions for your content",
+      "description": "Know exactly what your audience wants to see and create content that resonates with them, generating more engagement and growth for your personal brand.",
+      "bullet1": "Higher audience engagement with interactive voting",
+      "bullet2": "Real-time data on your followers' preferences",
+      "bullet3": "Complete customization to match your brand"
     },
     "howItWorks": {
       "title": "How It Works",
+      "subtitle": "A simple process to keep your fans connected",
       "step1": {
         "title": "Create your idea",
         "description": "Share your concept with the community and get valuable feedback"
@@ -119,5 +176,20 @@
   "common": {
     "username": "Username",
     "password": "Password"
+  },
+  "auth": {
+    "hero": {
+      "title": "Join the Community",
+      "subtitle": "Connect with creators and participate in ranking the best ideas"
+    },
+    "login": "Login",
+    "register": "Register",
+    "loginTitle": "Welcome Back",
+    "loginSubtitle": "Sign in to your account to continue",
+    "loginCta": "Sign In",
+    "registerCreatorTitle": "Create Creator Account",
+    "registerCreatorSubtitle": "Join as a content creator",
+    "registerCreatorDescription": "Create your own idea ranking and connect with your audience",
+    "registerCta": "Create Account"
   }
 }

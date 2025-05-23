@@ -25,12 +25,69 @@
   "landing": {
     "title": "Bienvenido al Ranking de Ideas",
     "subtitle": "Descubre y vota por las mejores ideas",
+    "menu": {
+      "features": "Características",
+      "pricing": "Precios",
+      "testimonials": "Testimonios"
+    },
+    "cta": {
+      "login": "Iniciar Sesión",
+      "register": "Registrarse",
+      "startFree": "Comenzar Gratis",
+      "seeDemo": "Ver Demo"
+    },
     "hero": {
       "title": "Transforma Ideas en Realidad",
-      "subtitle": "La plataforma donde las mejores ideas cobran vida a través de la colaboración comunitaria"
+      "subtitle": "La plataforma donde las mejores ideas cobran vida a través de la colaboración comunitaria",
+      "tagline": "Conecta con tu audiencia como nunca antes",
+      "noCreditCard": "No se requiere tarjeta de crédito",
+      "leaderboardPreview": "Vista previa del ranking",
+      "seeFullDemo": "Ver Demo Completo"
+    },
+    "stats": {
+      "activeCreators": "Creadores Activos",
+      "votesMonthly": "Votos Mensuales",
+      "satisfaction": "Satisfacción",
+      "engagement": "Engagement"
+    },
+    "features": {
+      "title": "Características Principales",
+      "subtitle": "Todo lo que necesitas para validar y desarrollar tus ideas",
+      "leaderboards": {
+        "title": "Rankings Dinámicos",
+        "description": "Visualiza el progreso de tus ideas con rankings en tiempo real"
+      },
+      "suggestions": {
+        "title": "Sugerencias de la Comunidad",
+        "description": "Recibe ideas valiosas directamente de tu audiencia"
+      },
+      "analytics": {
+        "title": "Análisis Detallados",
+        "description": "Comprende las tendencias y preferencias de tu comunidad"
+      },
+      "customization": {
+        "title": "Personalización Completa",
+        "description": "Adapta la plataforma para que coincida con tu marca"
+      },
+      "multiple": {
+        "title": "Múltiples Proyectos",
+        "description": "Gestiona varios rankings de ideas simultáneamente"
+      },
+      "sharing": {
+        "title": "Compartir Fácilmente",
+        "description": "Comparte tus rankings con enlaces públicos personalizados"
+      }
+    },
+    "showcase": {
+      "title": "Decisiones basadas en datos para tu contenido",
+      "description": "Conoce exactamente lo que tu audiencia desea ver y crea contenido que resuene con ellos, generando más engagement y crecimiento para tu marca personal.",
+      "bullet1": "Mayor engagement de tu audiencia con votaciones interactivas",
+      "bullet2": "Datos en tiempo real sobre las preferencias de tus seguidores",
+      "bullet3": "Personalización completa para adaptarse a tu marca"
     },
     "howItWorks": {
       "title": "¿Cómo Funciona?",
+      "subtitle": "Un proceso simple para mantener conectados a tus fans",
       "step1": {
         "title": "Crea tu idea",
         "description": "Comparte tu concepto con la comunidad y obtén feedback valioso"
@@ -119,5 +176,20 @@
   "common": {
     "username": "Nombre de usuario",
     "password": "Contraseña"
+  },
+  "auth": {
+    "hero": {
+      "title": "Únete a la Comunidad",
+      "subtitle": "Conecta con creadores y participa en el ranking de las mejores ideas"
+    },
+    "login": "Iniciar Sesión",
+    "register": "Registrarse",
+    "loginTitle": "Bienvenido de Vuelta",
+    "loginSubtitle": "Ingresa a tu cuenta para continuar",
+    "loginCta": "Iniciar Sesión",
+    "registerCreatorTitle": "Crear Cuenta de Creador",
+    "registerCreatorSubtitle": "Únete como creador de contenido",
+    "registerCreatorDescription": "Crea tu propio ranking de ideas y conecta con tu audiencia",
+    "registerCta": "Crear Cuenta"
   }
 }
