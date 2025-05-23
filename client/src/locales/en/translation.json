@@ -25,7 +25,64 @@
   "landing": {
     "title": "Welcome to Ideas Leaderboard",
     "subtitle": "Discover and vote for the best ideas",
+    "hero": {
+      "title": "Transform Ideas into Reality",
+      "subtitle": "The platform where the best ideas come to life through community collaboration"
+    },
+    "howItWorks": {
+      "title": "How It Works",
+      "step1": {
+        "title": "Create your idea",
+        "description": "Share your concept with the community and get valuable feedback"
+      },
+      "step2": {
+        "title": "Get votes",
+        "description": "The community votes for the most promising ideas for your website"
+      },
+      "step3": {
+        "title": "Get feedback and grow",
+        "description": "Analyze the results and use feedback to create content that truly connects"
+      }
+    },
+    "pricing": {
+      "title": "Plans and Pricing",
+      "subtitle": "Choose the perfect plan for your project",
+      "popular": "Most Popular"
+    },
+    "testimonials": {
+      "title": "What Our Users Say",
+      "subtitle": "Discover how our users have transformed their ideas",
+      "testimonial1": {
+        "quote": "This platform revolutionized how we validate our product ideas.",
+        "author": "Maria Gonzalez",
+        "role": "Founder, TechStart"
+      },
+      "testimonial2": {
+        "quote": "Community feedback helped us improve our concept before launch.",
+        "author": "Carlos Ruiz",
+        "role": "CEO, Innovate Co"
+      },
+      "testimonial3": {
+        "quote": "An essential tool for any entrepreneur wanting to validate their ideas.",
+        "author": "Ana Torres",
+        "role": "Product Manager"
+      }
+    },
+    "cta": {
+      "title": "Ready to Validate Your Idea?",
+      "subtitle": "Join thousands of entrepreneurs already using our platform",
+      "startButton": "Get Started Free",
+      "demoButton": "View Demo",
+      "noCreditCard": "No credit card required"
+    },
+    "demo": {
+      "title": "Interactive Demo",
+      "description": "Explore all the features of our platform",
+      "alt": "Platform screenshot",
+      "details": "Main application features"
+    },
     "footer": {
+      "copyright": "© 2024 Ideas Leaderboard. All rights reserved.",
       "product": {
         "title": "Product",
         "features": "Features",
@@ -54,5 +111,13 @@
         "cookies": "Cookies Policy"
       }
     }
+  },
+  "pricing": {
+    "monthly": "Monthly",
+    "yearly": "Yearly (20% off)"
+  },
+  "common": {
+    "username": "Username",
+    "password": "Password"
   }
 }

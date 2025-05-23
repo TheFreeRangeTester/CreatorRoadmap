@@ -25,7 +25,64 @@
   "landing": {
     "title": "Bienvenido al Ranking de Ideas",
     "subtitle": "Descubre y vota por las mejores ideas",
+    "hero": {
+      "title": "Transforma Ideas en Realidad",
+      "subtitle": "La plataforma donde las mejores ideas cobran vida a través de la colaboración comunitaria"
+    },
+    "howItWorks": {
+      "title": "¿Cómo Funciona?",
+      "step1": {
+        "title": "Crea tu idea",
+        "description": "Comparte tu concepto con la comunidad y obtén feedback valioso"
+      },
+      "step2": {
+        "title": "Recibe votos",
+        "description": "La comunidad vota por las ideas más prometedoras para tu sitio web"
+      },
+      "step3": {
+        "title": "Recibe feedback y crece",
+        "description": "Analiza los resultados y utiliza el feedback para crear contenido que realmente conecte"
+      }
+    },
+    "pricing": {
+      "title": "Planes y Precios",
+      "subtitle": "Elige el plan perfecto para tu proyecto",
+      "popular": "Más Popular"
+    },
+    "testimonials": {
+      "title": "Lo que Dicen Nuestros Usuarios",
+      "subtitle": "Descubre cómo nuestros usuarios han transformado sus ideas",
+      "testimonial1": {
+        "quote": "Esta plataforma revolucionó la forma en que validamos nuestras ideas de producto.",
+        "author": "María González",
+        "role": "Fundadora, TechStart"
+      },
+      "testimonial2": {
+        "quote": "El feedback de la comunidad nos ayudó a mejorar nuestro concepto antes del lanzamiento.",
+        "author": "Carlos Ruiz",
+        "role": "CEO, Innovate Co"
+      },
+      "testimonial3": {
+        "quote": "Una herramienta indispensable para cualquier emprendedor que quiera validar sus ideas.",
+        "author": "Ana Torres",
+        "role": "Product Manager"
+      }
+    },
+    "cta": {
+      "title": "¿Listo para Validar tu Idea?",
+      "subtitle": "Únete a miles de emprendedores que ya están usando nuestra plataforma",
+      "startButton": "Comenzar Gratis",
+      "demoButton": "Ver Demo",
+      "noCreditCard": "No se requiere tarjeta de crédito"
+    },
+    "demo": {
+      "title": "Demo Interactivo",
+      "description": "Explora todas las funcionalidades de nuestra plataforma",
+      "alt": "Captura de pantalla de la plataforma",
+      "details": "Funcionalidades principales de la aplicación"
+    },
     "footer": {
+      "copyright": "© 2024 Ideas Leaderboard. Todos los derechos reservados.",
       "product": {
         "title": "Producto",
         "features": "Características",
@@ -54,5 +111,13 @@
         "cookies": "Política de Cookies"
       }
     }
+  },
+  "pricing": {
+    "monthly": "Mensual",
+    "yearly": "Anual (20% desc.)"
+  },
+  "common": {
+    "username": "Nombre de usuario",
+    "password": "Contraseña"
   }
 }
