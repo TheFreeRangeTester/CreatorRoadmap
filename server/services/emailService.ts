@@ -59,6 +59,7 @@ export class EmailService {
     const message = messages[currentLang];
 
     try {
+      console.log('Intentando enviar email con dominio personalizado...');
       const response = await this.resend!.emails.send({
         from: 'Fanlist <no-reply@fanlist.live>',
         to: email,
@@ -66,8 +67,14 @@ export class EmailService {
         html: message.html,
       });
       console.log('Resend API Response:', response);
+      console.log('Email enviado exitosamente desde:', 'no-reply@fanlist.live');
     } catch (error) {
-      console.error('Resend API Error:', error);
+      console.error('Error detallado de Resend:', {
+        error,
+        code: (error as any).statusCode,
+        message: (error as any).message,
+        name: (error as any).name
+      });
       throw error;
     }
   }
