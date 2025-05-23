@@ -14,8 +14,11 @@ export class EmailService {
       console.error('Resend API key not configured. Email not sent.');
       throw new Error('Email service not configured');
     }
-    console.log('Attempting to send password reset email to:', email);
-    console.log('Using base URL:', process.env.BASE_URL);
+    console.log('=== Resend Email Attempt ===');
+    console.log('Email Service Status:', this.resend ? 'Configured' : 'Not Configured');
+    console.log('API Key Present:', !!process.env.RESEND_API_KEY);
+    console.log('Recipient:', email);
+    console.log('Base URL:', process.env.BASE_URL);
     const baseUrl = process.env.BASE_URL || 'http://localhost:5000';
     const resetUrl = `${baseUrl}/reset-password/${token}?lang=${lang}`;
 
@@ -55,12 +58,18 @@ export class EmailService {
     const subject = subjects[currentLang];
     const message = messages[currentLang];
 
-    await this.resend!.emails.send({
-      from: 'Fanlist <no-reply@fanlist.live>',
-      to: email,
-      subject: subject,
-      html: message.html,
-    });
+    try {
+      const response = await this.resend!.emails.send({
+        from: 'Fanlist <no-reply@fanlist.live>',
+        to: email,
+        subject: subject,
+        html: message.html,
+      });
+      console.log('Resend API Response:', response);
+    } catch (error) {
+      console.error('Resend API Error:', error);
+      throw error;
+    }
   }
 }
 
