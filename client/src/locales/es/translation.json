@@ -1,3 +1,4 @@
+
 {
   "landing": {
     "menu": {
@@ -11,7 +12,10 @@
       "startFree": "Comenzar Gratis",
       "seeDemo": "Ver Demo",
       "startButton": "Comenzar Gratis",
-      "demoButton": "Ver Demo"
+      "demoButton": "Ver Demo",
+      "title": "¿Listo para empezar?",
+      "subtitle": "Únete a miles de creadores que ya están usando Fanlist",
+      "noCreditCard": "No se requiere tarjeta de crédito"
     },
     "hero": {
       "title": "Transforma Ideas en Realidad",
@@ -26,6 +30,34 @@
       "votesMonthly": "Votos Mensuales",
       "satisfaction": "Satisfacción",
       "engagement": "Engagement"
+    },
+    "features": {
+      "title": "Características",
+      "subtitle": "Todo lo que necesitas para gestionar tus ideas",
+      "leaderboards": {
+        "title": "Rankings Interactivos",
+        "description": "Crea y gestiona rankings personalizados"
+      },
+      "suggestions": {
+        "title": "Sugerencias de la Comunidad",
+        "description": "Recibe ideas directamente de tu audiencia"
+      },
+      "analytics": {
+        "title": "Análisis Detallado",
+        "description": "Obtén insights valiosos sobre tu audiencia"
+      },
+      "customization": {
+        "title": "Personalización Total",
+        "description": "Adapta la plataforma a tu marca"
+      },
+      "multiple": {
+        "title": "Múltiples Rankings",
+        "description": "Crea tantos rankings como necesites"
+      },
+      "sharing": {
+        "title": "Compartir Fácilmente",
+        "description": "Comparte tus rankings en cualquier plataforma"
+      }
     }
   },
   "auth": {
@@ -70,6 +102,7 @@
   },
   "common": {
     "username": "Nombre de usuario",
-    "password": "Contraseña"
+    "password": "Contraseña",
+    "email": "Correo electrónico"
   }
 }
