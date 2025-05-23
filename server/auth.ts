@@ -263,7 +263,8 @@ export function setupAuth(app: Express) {
       const token = tokenService.generateToken();
       tokenService.storeToken(token, email);
 
-      await emailService.sendPasswordResetEmail(email, token, lang);
+      const host = req.get('host');
+      await emailService.sendPasswordResetEmail(email, token, lang, host);
 
       res.status(200).json({ 
         message: lang === 'es' ? 'Email de recuperación enviado exitosamente' : 'Password reset email sent successfully'

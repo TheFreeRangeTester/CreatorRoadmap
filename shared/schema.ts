@@ -42,6 +42,15 @@ export const votes = pgTable("votes", {
   votedAt: timestamp("voted_at").notNull().defaultNow(),
 });
 
+// Table for password reset tokens
+export const passwordResetTokens = pgTable("password_reset_tokens", {
+  id: serial("id").primaryKey(),
+  token: text("token").notNull().unique(),
+  email: text("email").notNull(),
+  expiresAt: timestamp("expires_at").notNull(),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+});
+
 // Table for public leaderboard links
 export const publicLinks = pgTable("public_links", {
   id: serial("id").primaryKey(),
@@ -134,6 +143,13 @@ export const insertVoteSchema = createInsertSchema(votes).pick({
 });
 
 // Public link schemas
+// Password reset token schemas
+export const insertPasswordResetTokenSchema = createInsertSchema(passwordResetTokens).pick({
+  token: true,
+  email: true,
+  expiresAt: true,
+});
+
 export const insertPublicLinkSchema = createInsertSchema(publicLinks)
   .omit({ 
     id: true, 
@@ -188,6 +204,9 @@ export type IdeaResponse = z.infer<typeof ideaResponseSchema>;
 
 export type InsertVote = z.infer<typeof insertVoteSchema>;
 export type Vote = typeof votes.$inferSelect;
+
+export type InsertPasswordResetToken = z.infer<typeof insertPasswordResetTokenSchema>;
+export type PasswordResetToken = typeof passwordResetTokens.$inferSelect;
 
 export type InsertPublicLink = z.infer<typeof insertPublicLinkSchema>;
 export type PublicLink = typeof publicLinks.$inferSelect;

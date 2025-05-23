@@ -9,7 +9,7 @@ export class EmailService {
     }
   }
 
-  async sendPasswordResetEmail(email: string, token: string, lang: string = 'en'): Promise<void> {
+  async sendPasswordResetEmail(email: string, token: string, lang: string = 'en', host?: string): Promise<void> {
     if (!this.resend) {
       console.error('Resend API key not configured. Email not sent.');
       throw new Error('Email service not configured');
@@ -19,7 +19,17 @@ export class EmailService {
     console.log('API Key Present:', !!process.env.RESEND_API_KEY);
     console.log('Recipient:', email);
     console.log('Base URL:', process.env.BASE_URL);
-    const baseUrl = process.env.BASE_URL || 'http://localhost:5000';
+    // Use the host from request, environment variable, or fallback
+    let baseUrl;
+    if (host) {
+      baseUrl = host.includes('localhost') ? `http://${host}` : `https://${host}`;
+    } else if (process.env.BASE_URL) {
+      baseUrl = process.env.BASE_URL;
+    } else if (process.env.REPLIT_DEV_DOMAIN) {
+      baseUrl = `https://${process.env.REPLIT_DEV_DOMAIN}`;
+    } else {
+      baseUrl = 'http://localhost:5000';
+    }
     const resetUrl = `${baseUrl}/reset-password/${token}?lang=${lang}`;
 
     const subjects = {
