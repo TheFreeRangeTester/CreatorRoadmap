@@ -34,9 +34,7 @@
     },
     "cta": {
       "login": "Login",
-      "register": "Register",
-      "login": "Login",
-      "register": "Register",
+      "register": "Register", 
       "startFree": "Get Started Free",
       "seeDemo": "See Demo"
     },
