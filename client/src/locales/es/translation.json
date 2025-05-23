@@ -35,6 +35,8 @@
     "cta": {
       "login": "Iniciar Sesión",
       "register": "Registrarse",
+      "login": "Iniciar Sesión",
+      "register": "Registrarse",
       "startFree": "Comenzar Gratis",
       "seeDemo": "Ver Demo"
     },
