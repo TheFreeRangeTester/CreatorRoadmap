@@ -16,7 +16,7 @@ export const users = pgTable("users", {
   threadsUrl: text("threads_url"),
   websiteUrl: text("website_url"),
   profileBackground: text("profile_background").default("gradient-1"),
-  email: text("email").unique(),
+  email: text("email").notNull().unique(),
 });
 
 export const ideas = pgTable("ideas", {
@@ -56,6 +56,7 @@ export const publicLinks = pgTable("public_links", {
 export const insertUserSchema = createInsertSchema(users).pick({
   username: true,
   password: true,
+  email: true,
 }).extend({
   username: z.string()
     .min(3, { message: "El nombre de usuario debe tener al menos 3 caracteres" })
@@ -67,7 +68,7 @@ export const insertUserSchema = createInsertSchema(users).pick({
     .min(6, { message: "La contraseña debe tener al menos 6 caracteres" })
     .max(100, { message: "La contraseña no puede exceder 100 caracteres" }),
   userRole: z.enum(['creator', 'audience']).default('audience'),
-  email: z.string().optional(),
+  email: z.string().email({ message: "Ingresa un email válido" }),
   logoUrl: z.string().optional(),
   profileDescription: z.string().optional(),
 });
