@@ -38,6 +38,12 @@
   "landing": {
     "title": "Welcome to Ideas Leaderboard",
     "subtitle": "Discover and vote for the best ideas",
+    "cta": {
+      "login": "Login",
+      "register": "Register",
+      "startFree": "Get Started Free",
+      "seeDemo": "See Demo"
+    },
     "menu": {
       "features": "Features",
       "pricing": "Pricing",

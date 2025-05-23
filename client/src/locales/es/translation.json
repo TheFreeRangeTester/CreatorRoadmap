@@ -17,6 +17,12 @@
       "subtitle": "Únete a miles de creadores que ya están usando Fanlist",
       "noCreditCard": "No se requiere tarjeta de crédito"
     },
+    "cta": {
+      "login": "Iniciar Sesión",
+      "register": "Registrarse", 
+      "startFree": "Comenzar Gratis",
+      "seeDemo": "Ver Demo"
+    },
     "hero": {
       "title": "Transforma Ideas en Realidad",
       "subtitle": "La plataforma donde las mejores ideas cobran vida a través de la colaboración comunitaria",
