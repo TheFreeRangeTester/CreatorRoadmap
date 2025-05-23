@@ -261,7 +261,7 @@ export function setupAuth(app: Express) {
 
       // Generar token y enviarlo por email
       const token = tokenService.generateToken();
-      tokenService.storeToken(token, email);
+      await tokenService.storeToken(token, email);
 
       const host = req.get('host');
       await emailService.sendPasswordResetEmail(email, token, lang, host);
@@ -281,12 +281,12 @@ export function setupAuth(app: Express) {
   });
 
   // Ruta para servir el formulario de reset
-  app.get("/reset-password/:token", (req, res) => {
+  app.get("/reset-password/:token", async (req, res) => {
     const token = req.params.token;
     const lang = req.query.lang || 'en';
 
     // Validar que el token existe
-    const validation = tokenService.validateToken(token);
+    const validation = await tokenService.validateToken(token);
     if (!validation.valid) {
       const errorMessage = lang === 'es' 
         ? 'Token inválido o expirado' 
@@ -311,7 +311,7 @@ export function setupAuth(app: Express) {
       const { token, newPassword, lang } = resetPasswordSchema.parse(req.body);
 
       // Validar token
-      const validation = tokenService.validateToken(token);
+      const validation = await tokenService.validateToken(token);
       if (!validation.valid || !validation.email) {
         return res.status(400).json({ 
           message: lang === 'es' ? 'Token inválido o expirado' : 'Invalid or expired token'
@@ -319,7 +319,7 @@ export function setupAuth(app: Express) {
       }
 
       // Buscar usuario por email
-      const user = await storage.getUserByEmail(validation.email);
+      const user = await storage.getUserByEmail(validation.email!);
       if (!user) {
         return res.status(404).json({ 
           message: lang === 'es' ? 'Usuario no encontrado' : 'User not found'
@@ -331,7 +331,7 @@ export function setupAuth(app: Express) {
       await storage.updateUserPassword(user.id, hashedPassword);
 
       // Eliminar token usado
-      tokenService.deleteToken(token);
+      await tokenService.deleteToken(token);
 
       res.status(200).json({ 
         message: lang === 'es' ? 'Contraseña actualizada exitosamente' : 'Password updated successfully'

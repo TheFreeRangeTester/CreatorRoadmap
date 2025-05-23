@@ -1,53 +1,61 @@
 import { randomBytes } from 'crypto';
-
-interface TokenData {
-  email: string;
-  expiry: number;
-}
+import { db } from '../db';
+import { passwordResetTokens } from '../../shared/schema';
+import { eq, lt } from 'drizzle-orm';
 
 export class TokenService {
-  private tokens: Map<string, TokenData> = new Map();
-
   generateToken(): string {
     return randomBytes(32).toString('hex');
   }
 
-  storeToken(token: string, email: string, expiryHours: number = 1): void {
-    const expiry = Date.now() + (expiryHours * 60 * 60 * 1000); // 1 hora por defecto
-    this.tokens.set(token, { email, expiry });
-  }
-
-  validateToken(token: string): { valid: boolean; email?: string } {
-    const tokenData = this.tokens.get(token);
+  async storeToken(token: string, email: string, expiryHours: number = 1): Promise<void> {
+    const expiresAt = new Date(Date.now() + (expiryHours * 60 * 60 * 1000));
     
-    if (!tokenData) {
-      return { valid: false };
-    }
-
-    if (Date.now() > tokenData.expiry) {
-      this.tokens.delete(token); // Limpiar token expirado
-      return { valid: false };
-    }
-
-    return { valid: true, email: tokenData.email };
+    await db.insert(passwordResetTokens).values({
+      token,
+      email,
+      expiresAt,
+    });
   }
 
-  deleteToken(token: string): void {
-    this.tokens.delete(token);
+  async validateToken(token: string): Promise<{ valid: boolean; email?: string }> {
+    try {
+      const result = await db
+        .select()
+        .from(passwordResetTokens)
+        .where(eq(passwordResetTokens.token, token))
+        .limit(1);
+
+      if (result.length === 0) {
+        return { valid: false };
+      }
+
+      const tokenData = result[0];
+      
+      if (new Date() > tokenData.expiresAt) {
+        // Limpiar token expirado
+        await db.delete(passwordResetTokens).where(eq(passwordResetTokens.token, token));
+        return { valid: false };
+      }
+
+      return { valid: true, email: tokenData.email };
+    } catch (error) {
+      console.error('Error validating token:', error);
+      return { valid: false };
+    }
+  }
+
+  async deleteToken(token: string): Promise<void> {
+    await db.delete(passwordResetTokens).where(eq(passwordResetTokens.token, token));
   }
 
   // Método para limpiar tokens expirados periódicamente
-  cleanupExpiredTokens(): void {
-    const now = Date.now();
-    const tokensToDelete: string[] = [];
-    
-    this.tokens.forEach((data, token) => {
-      if (now > data.expiry) {
-        tokensToDelete.push(token);
-      }
-    });
-    
-    tokensToDelete.forEach(token => this.tokens.delete(token));
+  async cleanupExpiredTokens(): Promise<void> {
+    try {
+      await db.delete(passwordResetTokens).where(lt(passwordResetTokens.expiresAt, new Date()));
+    } catch (error) {
+      console.error('Error cleaning up expired tokens:', error);
+    }
   }
 }
 
