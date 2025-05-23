@@ -56,7 +56,7 @@ export class EmailService {
     const message = messages[currentLang];
 
     await this.resend!.emails.send({
-      from: 'Ideas Leaderboard <onboarding@resend.dev>',
+      from: 'Fanlist <no-reply@fanlist.live>',
       to: email,
       subject: subject,
       html: message.html,
