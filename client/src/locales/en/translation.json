@@ -7,53 +7,14 @@
     },
     "cta": {
       "login": "Login",
-      "register": "Register"
-    }
-  },
-  "auth": {
-    "email": "Email",
-    "login": "Login",
-    "register": "Register",
-    "emailPlaceholder": "Enter your email",
-    "sending": "Sending...",
-    "signIn": "Sign in",
-    "rememberPassword": "Remember your password?",
-    "forgotPassword": {
-      "title": "Forgot Password",
-      "description": "Enter your email address and we'll send you a link to reset your password.",
-      "userNotFound": "User not found",
-      "emailSent": "Password reset email sent successfully",
-      "invalidToken": "Invalid or expired token",
-      "passwordUpdated": "Password updated successfully",
-      "newPassword": "New Password",
-      "confirmPassword": "Confirm Password",
-      "resetPassword": "Reset Password",
-      "passwordsDoNotMatch": "Passwords do not match",
-      "passwordTooShort": "Password must be at least 6 characters",
-      "sendEmail": "Send Reset Email",
-      "networkError": "Network error. Please try again.",
-      "linkText": "Forgot your password?"
-    }
-  },
-  "landing": {
-    "title": "Welcome to Ideas Leaderboard",
-    "subtitle": "Discover and vote for the best ideas",
-    "cta": {
-      "login": "Login",
       "register": "Register",
       "startFree": "Get Started Free",
-      "seeDemo": "See Demo"
-    },
-    "menu": {
-      "features": "Features",
-      "pricing": "Pricing",
-      "testimonials": "Testimonials"
-    },
-    "cta": {
-      "login": "Login",
-      "register": "Register", 
-      "startFree": "Get Started Free",
-      "seeDemo": "See Demo"
+      "seeDemo": "See Demo",
+      "startButton": "Get Started Free",
+      "demoButton": "View Demo",
+      "title": "Ready to Start?",
+      "subtitle": "Join thousands of creators already using Fanlist",
+      "noCreditCard": "No credit card required"
     },
     "hero": {
       "title": "Transform Ideas into Reality",
@@ -144,13 +105,6 @@
         "role": "Product Manager"
       }
     },
-    "cta": {
-      "title": "Ready to Validate Your Idea?",
-      "subtitle": "Join thousands of entrepreneurs already using our platform",
-      "startButton": "Get Started Free",
-      "demoButton": "View Demo",
-      "noCreditCard": "No credit card required"
-    },
     "demo": {
       "title": "Interactive Demo",
       "description": "Explore all the features of our platform",
@@ -188,21 +142,34 @@
       }
     }
   },
-  "pricing": {
-    "monthly": "Monthly",
-    "yearly": "Yearly (20% off)"
-  },
-  "common": {
-    "username": "Username",
-    "password": "Password"
-  },
   "auth": {
+    "email": "Email",
+    "login": "Login",
+    "register": "Register",
+    "emailPlaceholder": "Enter your email",
+    "sending": "Sending...",
+    "signIn": "Sign in",
+    "rememberPassword": "Remember your password?",
+    "forgotPassword": {
+      "title": "Forgot Password",
+      "description": "Enter your email address and we'll send you a link to reset your password.",
+      "userNotFound": "User not found",
+      "emailSent": "Password reset email sent successfully",
+      "invalidToken": "Invalid or expired token",
+      "passwordUpdated": "Password updated successfully",
+      "newPassword": "New Password",
+      "confirmPassword": "Confirm Password",
+      "resetPassword": "Reset Password",
+      "passwordsDoNotMatch": "Passwords do not match",
+      "passwordTooShort": "Password must be at least 6 characters",
+      "sendEmail": "Send Reset Email",
+      "networkError": "Network error. Please try again.",
+      "linkText": "Forgot your password?"
+    },
     "hero": {
       "title": "Join the Community",
       "subtitle": "Connect with creators and participate in ranking the best ideas"
     },
-    "login": "Login",
-    "register": "Register",
     "loginTitle": "Welcome Back",
     "loginSubtitle": "Sign in to your account to continue",
     "loginCta": "Sign In",
@@ -210,5 +177,14 @@
     "registerCreatorSubtitle": "Join as a content creator",
     "registerCreatorDescription": "Create your own idea ranking and connect with your audience",
     "registerCta": "Create Account"
+  },
+  "pricing": {
+    "monthly": "Monthly",
+    "yearly": "Yearly (20% off)"
+  },
+  "common": {
+    "username": "Username",
+    "password": "Password",
+    "email": "Email address"
   }
 }
