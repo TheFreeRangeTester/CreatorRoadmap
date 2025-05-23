@@ -157,10 +157,10 @@ export default function AuthPage() {
     <div className="min-h-screen flex flex-col">
       <header className="border-b">
         <div className="container flex items-center justify-between h-14 px-4">
-          <div className="flex items-center gap-4">
+          <Link href="/" className="flex items-center gap-4 hover:opacity-80 transition-opacity">
             <img src={new URL('@/assets/logo.png', import.meta.url).href} alt="Logo" className="h-8 w-8 object-contain" />
             <span className="text-lg font-semibold">Fanlist</span>
-          </div>
+          </Link>
         </div>
       </header>
 
