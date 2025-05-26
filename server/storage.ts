@@ -1,7 +1,7 @@
 import { ideas as ideasTable, users, votes as votesTable, publicLinks as publicLinksTable, 
   type User, type InsertUser, type Idea, type InsertIdea, type UpdateIdea, type SuggestIdea,
   type Vote, type InsertVote, type PublicLink, type InsertPublicLink, type PublicLinkResponse,
-  type UpdateProfile } from "@shared/schema";
+  type UpdateProfile, type UpdateSubscription } from "@shared/schema";
 import session from "express-session";
 import createMemoryStore from "memorystore";
 import { randomBytes } from "crypto";

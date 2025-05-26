@@ -39,6 +39,11 @@ import CookiesPage from "@/pages/cookies-page";
 // Página de recuperación de contraseña
 import ForgotPasswordPage from "@/pages/forgot-password-page";
 
+// Páginas de suscripción
+import SubscriptionPage from "@/pages/subscription-page";
+import SubscriptionSuccessPage from "@/pages/subscription-success-page";
+import SubscriptionCancelPage from "@/pages/subscription-cancel-page";
+
 function App() {
   return (
     <>
@@ -85,6 +90,11 @@ function App() {
         
         {/* Ruta de recuperación de contraseña */}
         <Route path="/forgot-password" component={ForgotPasswordPage} />
+        
+        {/* Rutas de suscripción */}
+        <ProtectedRoute path="/subscription" component={SubscriptionPage} />
+        <Route path="/subscription/success" component={SubscriptionSuccessPage} />
+        <Route path="/subscription/cancel" component={SubscriptionCancelPage} />
         
         {/* Ruta del creador debe ir al final para evitar conflictos con otras rutas */}
         <Route path="/:username" component={CreatorQAProfile} />
