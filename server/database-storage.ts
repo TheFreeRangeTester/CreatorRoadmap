@@ -1,7 +1,7 @@
 import { ideas, users, votes, publicLinks, 
   type User, type InsertUser, type Idea, type InsertIdea, type UpdateIdea, type SuggestIdea,
   type Vote, type InsertVote, type PublicLink, type InsertPublicLink, type PublicLinkResponse,
-  type UpdateProfile } from "@shared/schema";
+  type UpdateProfile, type UpdateSubscription } from "@shared/schema";
 import session from "express-session";
 import connectPg from "connect-pg-simple";
 import { db, pool } from "./db";
@@ -389,5 +389,43 @@ export class DatabaseStorage implements IStorage {
   
   async deletePublicLink(id: number): Promise<void> {
     await db.delete(publicLinks).where(eq(publicLinks.id, id));
+  }
+
+  // Subscription methods
+  async updateUserSubscription(id: number, subscriptionData: UpdateSubscription): Promise<User | undefined> {
+    const [updatedUser] = await db
+      .update(users)
+      .set(subscriptionData)
+      .where(eq(users.id, id))
+      .returning();
+    
+    return updatedUser;
+  }
+
+  async startUserTrial(id: number): Promise<User | undefined> {
+    const now = new Date();
+    const trialEndDate = new Date(now.getTime() + 14 * 24 * 60 * 60 * 1000); // 14 días
+
+    const [updatedUser] = await db
+      .update(users)
+      .set({
+        subscriptionStatus: 'trial',
+        hasUsedTrial: true,
+        trialStartDate: now,
+        trialEndDate: trialEndDate
+      })
+      .where(eq(users.id, id))
+      .returning();
+    
+    return updatedUser;
+  }
+
+  async getUserByStripeCustomerId(stripeCustomerId: string): Promise<User | undefined> {
+    const [user] = await db
+      .select()
+      .from(users)
+      .where(eq(users.stripeCustomerId, stripeCustomerId));
+    
+    return user;
   }
 }

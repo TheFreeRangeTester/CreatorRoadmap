@@ -2,7 +2,7 @@ import type { Express, Request, Response } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import { setupAuth } from "./auth";
-import { insertIdeaSchema, updateIdeaSchema, insertVoteSchema, insertPublicLinkSchema, suggestIdeaSchema, updateProfileSchema } from "@shared/schema";
+import { insertIdeaSchema, updateIdeaSchema, insertVoteSchema, insertPublicLinkSchema, suggestIdeaSchema, updateProfileSchema, createCheckoutSessionSchema } from "@shared/schema";
 import { ZodError } from "zod";
 import { fromZodError } from "zod-validation-error";
 
@@ -807,6 +807,113 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       console.error("Error voting for idea on public leaderboard:", error);
       res.status(500).json({ message: "Failed to register vote" });
+    }
+  });
+
+  // Subscription routes
+  
+  // Start trial
+  app.post("/api/subscription/start-trial", async (req: Request, res: Response) => {
+    try {
+      if (!req.isAuthenticated()) {
+        return res.status(401).json({ message: "Authentication required to start trial" });
+      }
+
+      const userId = req.user!.id;
+      const user = await storage.getUser(userId);
+
+      if (!user) {
+        return res.status(404).json({ message: "User not found" });
+      }
+
+      // Check if user has already used trial
+      if (user.hasUsedTrial) {
+        return res.status(400).json({ message: "Trial has already been used" });
+      }
+
+      // Start the trial
+      const updatedUser = await storage.startUserTrial(userId);
+      
+      if (!updatedUser) {
+        return res.status(500).json({ message: "Failed to start trial" });
+      }
+
+      // Return user data without password
+      const { password, ...userWithoutPassword } = updatedUser;
+      res.json(userWithoutPassword);
+    } catch (error) {
+      console.error("Error starting trial:", error);
+      res.status(500).json({ message: "Failed to start trial" });
+    }
+  });
+
+  // Create Stripe checkout session (placeholder for now)
+  app.post("/api/stripe/create-checkout-session", async (req: Request, res: Response) => {
+    try {
+      if (!req.isAuthenticated()) {
+        return res.status(401).json({ message: "Authentication required to create checkout session" });
+      }
+
+      // Validate request data
+      const validatedData = createCheckoutSessionSchema.parse(req.body);
+      const { plan, successUrl, cancelUrl } = validatedData;
+
+      // For now, return a placeholder response since we don't have Stripe keys yet
+      // This will be replaced with actual Stripe integration once keys are provided
+      res.json({
+        id: "placeholder_session",
+        status: "incomplete",
+        url: "/subscription", // Redirect back to subscription page for now
+        message: "Stripe integration pending - please provide your Stripe API keys to enable payments"
+      });
+    } catch (error) {
+      console.error("Error creating checkout session:", error);
+      if (error instanceof ZodError) {
+        const errorMessage = fromZodError(error).message;
+        return res.status(400).json({ message: errorMessage });
+      }
+      res.status(500).json({ message: "Failed to create checkout session" });
+    }
+  });
+
+  // Cancel subscription (placeholder for now)
+  app.post("/api/stripe/cancel-subscription", async (req: Request, res: Response) => {
+    try {
+      if (!req.isAuthenticated()) {
+        return res.status(401).json({ message: "Authentication required to cancel subscription" });
+      }
+
+      const userId = req.user!.id;
+      const user = await storage.getUser(userId);
+
+      if (!user) {
+        return res.status(404).json({ message: "User not found" });
+      }
+
+      if (user.subscriptionStatus !== 'premium') {
+        return res.status(400).json({ message: "No active subscription to cancel" });
+      }
+
+      // For now, just update the user status to free
+      // This will be replaced with actual Stripe cancellation once keys are provided
+      const updatedUser = await storage.updateUserSubscription(userId, {
+        subscriptionStatus: 'free',
+        subscriptionPlan: null,
+        subscriptionEndDate: null,
+        stripeSubscriptionId: null
+      });
+
+      if (!updatedUser) {
+        return res.status(500).json({ message: "Failed to cancel subscription" });
+      }
+
+      res.json({ 
+        message: "Subscription cancelled successfully",
+        status: "cancelled"
+      });
+    } catch (error) {
+      console.error("Error cancelling subscription:", error);
+      res.status(500).json({ message: "Failed to cancel subscription" });
     }
   });
 
