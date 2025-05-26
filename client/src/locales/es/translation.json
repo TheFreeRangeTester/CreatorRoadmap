@@ -1,4 +1,3 @@
-
 {
   "landing": {
     "menu": {
@@ -13,15 +12,9 @@
       "seeDemo": "Ver Demo",
       "startButton": "Comenzar Gratis",
       "demoButton": "Ver Demo",
-      "title": "¿Listo para empezar?",
-      "subtitle": "Únete a miles de creadores que ya están usando Fanlist",
+      "title": "¿Listo para Comenzar?",
+      "subtitle": "Únete a miles de creadores que ya usan Fanlist",
       "noCreditCard": "No se requiere tarjeta de crédito"
-    },
-    "cta": {
-      "login": "Iniciar Sesión",
-      "register": "Registrarse", 
-      "startFree": "Comenzar Gratis",
-      "seeDemo": "Ver Demo"
     },
     "hero": {
       "title": "Transforma Ideas en Realidad",
@@ -38,45 +31,128 @@
       "engagement": "Engagement"
     },
     "features": {
-      "title": "Características",
-      "subtitle": "Todo lo que necesitas para gestionar tus ideas",
+      "title": "Características Clave",
+      "subtitle": "Todo lo que necesitas para validar y desarrollar tus ideas",
       "leaderboards": {
-        "title": "Rankings Interactivos",
-        "description": "Crea y gestiona rankings personalizados"
+        "title": "Rankings Dinámicos",
+        "description": "Visualiza el progreso de tus ideas con rankings en tiempo real"
       },
       "suggestions": {
         "title": "Sugerencias de la Comunidad",
-        "description": "Recibe ideas directamente de tu audiencia"
+        "description": "Recibe ideas valiosas directamente de tu audiencia"
       },
       "analytics": {
-        "title": "Análisis Detallado",
-        "description": "Obtén insights valiosos sobre tu audiencia"
+        "title": "Análisis Detallados",
+        "description": "Comprende las tendencias y preferencias de tu comunidad"
       },
       "customization": {
-        "title": "Personalización Total",
-        "description": "Adapta la plataforma a tu marca"
+        "title": "Personalización Completa",
+        "description": "Adapta la plataforma para que coincida con tu marca"
       },
       "multiple": {
-        "title": "Múltiples Rankings",
-        "description": "Crea tantos rankings como necesites"
+        "title": "Múltiples Proyectos",
+        "description": "Gestiona varios rankings de ideas simultáneamente"
       },
       "sharing": {
-        "title": "Compartir Fácilmente",
-        "description": "Comparte tus rankings en cualquier plataforma"
+        "title": "Compartir Fácil",
+        "description": "Comparte tus rankings con enlaces públicos personalizados"
+      }
+    },
+    "showcase": {
+      "title": "Decisiones basadas en datos para tu contenido",
+      "description": "Conoce exactamente qué quiere ver tu audiencia y crea contenido que resuene con ellos, generando más engagement y crecimiento para tu marca personal.",
+      "bullet1": "Mayor engagement de la audiencia con votación interactiva",
+      "bullet2": "Datos en tiempo real sobre las preferencias de tus seguidores",
+      "bullet3": "Personalización completa para coincidir con tu marca"
+    },
+    "howItWorks": {
+      "title": "Cómo Funciona",
+      "subtitle": "Un proceso simple para mantener a tus fans conectados",
+      "step1": {
+        "title": "Crea tu idea",
+        "description": "Comparte tu concepto con la comunidad y recibe comentarios valiosos"
+      },
+      "step2": {
+        "title": "Obtén votos",
+        "description": "La comunidad vota por las ideas más prometedoras para tu sitio web"
+      },
+      "step3": {
+        "title": "Recibe comentarios y crece",
+        "description": "Analiza los resultados y usa los comentarios para crear contenido que realmente conecte"
+      }
+    },
+    "pricing": {
+      "title": "Planes y Precios",
+      "subtitle": "Elige el plan perfecto para tu proyecto",
+      "popular": "Más Popular"
+    },
+    "testimonials": {
+      "title": "Lo Que Dicen Nuestros Usuarios",
+      "subtitle": "Descubre cómo nuestros usuarios han transformado sus ideas",
+      "testimonial1": {
+        "quote": "Esta plataforma revolucionó cómo validamos nuestras ideas de producto.",
+        "author": "María González",
+        "role": "Fundadora, TechStart"
+      },
+      "testimonial2": {
+        "quote": "Los comentarios de la comunidad nos ayudaron a mejorar nuestro concepto antes del lanzamiento.",
+        "author": "Carlos Ruiz",
+        "role": "CEO, Innovate Co"
+      },
+      "testimonial3": {
+        "quote": "Una herramienta esencial para cualquier emprendedor que quiera validar sus ideas.",
+        "author": "Ana Torres",
+        "role": "Product Manager"
+      }
+    },
+    "demo": {
+      "title": "Demo Interactivo",
+      "description": "Explora todas las características de nuestra plataforma",
+      "alt": "Captura de pantalla de la plataforma",
+      "details": "Características principales de la aplicación"
+    },
+    "footer": {
+      "copyright": "© 2024 Ideas Leaderboard. Todos los derechos reservados.",
+      "product": {
+        "title": "Producto",
+        "features": "Características",
+        "pricing": "Precios",
+        "demo": "Demo",
+        "roadmap": "Roadmap"
+      },
+      "resources": {
+        "title": "Recursos",
+        "blog": "Blog",
+        "documentation": "Documentación",
+        "guides": "Guías",
+        "success": "Historias de Éxito"
+      },
+      "company": {
+        "title": "Empresa",
+        "about": "Acerca de Nosotros",
+        "team": "Nuestro Equipo",
+        "contact": "Contáctanos",
+        "careers": "Carreras"
+      },
+      "legal": {
+        "title": "Legal",
+        "terms": "Términos de Servicio",
+        "privacy": "Política de Privacidad",
+        "cookies": "Política de Cookies"
       }
     }
   },
   "auth": {
-    "email": "Correo Electrónico",
+    "email": "Email",
     "login": "Iniciar Sesión",
     "register": "Registrarse",
-    "emailPlaceholder": "Ingresa tu correo",
+    "emailPlaceholder": "Ingresa tu email",
     "sending": "Enviando...",
     "signIn": "Iniciar sesión",
     "rememberPassword": "¿Recuerdas tu contraseña?",
     "forgotPassword": {
-      "title": "Recuperar Contraseña",
-      "description": "Ingresa tu correo electrónico y te enviaremos un enlace para restablecer tu contraseña.",
+      "title": "Olvidé mi Contraseña",
+      "description": "Ingresa tu dirección de email y te enviaremos un enlace para restablecer tu contraseña.",
       "userNotFound": "Usuario no encontrado",
       "emailSent": "Email de recuperación enviado exitosamente",
       "invalidToken": "Token inválido o expirado",
@@ -87,7 +163,7 @@
       "passwordsDoNotMatch": "Las contraseñas no coinciden",
       "passwordTooShort": "La contraseña debe tener al menos 6 caracteres",
       "sendEmail": "Enviar Email de Recuperación",
-      "networkError": "Error de red. Inténtalo de nuevo.",
+      "networkError": "Error de red. Por favor intenta de nuevo.",
       "linkText": "¿Olvidaste tu contraseña?"
     },
     "hero": {
@@ -95,7 +171,7 @@
       "subtitle": "Conecta con creadores y participa en el ranking de las mejores ideas"
     },
     "loginTitle": "Bienvenido de Vuelta",
-    "loginSubtitle": "Ingresa a tu cuenta para continuar",
+    "loginSubtitle": "Inicia sesión en tu cuenta para continuar",
     "loginCta": "Iniciar Sesión",
     "registerCreatorTitle": "Crear Cuenta de Creador",
     "registerCreatorSubtitle": "Únete como creador de contenido",
@@ -104,12 +180,12 @@
   },
   "pricing": {
     "monthly": "Mensual",
-    "yearly": "Anual (20% desc.)"
+    "yearly": "Anual (20% descuento)"
   },
   "common": {
     "username": "Nombre de usuario",
     "password": "Contraseña",
-    "email": "Correo electrónico",
+    "email": "Dirección de email",
     "error": "Error",
     "vote": "Votar",
     "voting": "Votando...",
@@ -130,24 +206,24 @@
     "thankYou": "¡Gracias!",
     "yourOpinionMatters": "Tu opinión es importante para este creador",
     "sessionExpired": "Sesión expirada",
-    "pleaseLoginAgain": "Por favor inicia sesión de nuevo",
+    "pleaseLoginAgain": "Por favor inicia sesión nuevamente",
     "loginToVote": "Inicia sesión para votar"
   },
   "creator": {
     "voteSuccess": "¡Voto registrado!",
     "voteSuccessDesc": "Tu voto ha sido registrado exitosamente",
-    "voteError": "Error al votar",
-    "voteErrorDesc": "No se pudo registrar tu voto. Inténtalo de nuevo.",
+    "voteError": "Fallo en el voto",
+    "voteErrorDesc": "No se pudo registrar tu voto. Por favor intenta de nuevo.",
     "loadError": "Error al cargar la página del creador",
     "publicProfileView": "Perfil Público",
     "voteHeaderTitle": "Vota por Ideas de Contenido",
-    "defaultProfileDescription": "Ingeniero de QA y creador de contenido enfocado en pruebas de software, automatización y mejores prácticas de control de calidad."
+    "defaultProfileDescription": "Ingeniero QA y creador de contenido enfocado en testing de software, automatización y mejores prácticas de control de calidad."
   },
   "roles": {
-    "audience": "Miembro de audiencia"
+    "audience": "Miembro de la audiencia"
   },
   "share": {
-    "title": "¡Revisa las ideas de {{username}}!",
+    "title": "¡Mira las ideas de {{username}}!",
     "text": "Vota por las próximas ideas de contenido de {{username}}"
   },
   "suggestIdea": {
@@ -155,7 +231,7 @@
     "beFirstToSuggest": "Sé el primero en sugerir una idea de contenido",
     "loginToSuggest": "Inicia sesión para sugerir",
     "title": "Sugerir una Idea",
-    "description": "¿Qué te gustaría que publique el creador a continuación?",
+    "description": "¿Qué te gustaría que el creador publique a continuación?",
     "loginRequired": "Inicio de sesión requerido",
     "loginRequiredDesc": "Necesitas una cuenta para sugerir ideas a este creador.",
     "goToLoginButton": "Iniciar sesión o crear cuenta",
@@ -178,12 +254,6 @@
     "achievementText": "¡Tu idea ha sido enviada a @{{username}}!",
     "ideaSent": "¡Tu idea ha sido enviada!",
     "ideaSentDesc": "El creador la revisará pronto. ¡Gracias por tu contribución!"
-  }, a continuación?",
-    "loginRequired": "Inicio de sesión requerido",
-    "loginRequiredDesc": "Necesitas una cuenta para sugerir ideas a este creador.",
-    "goToLoginButton": "Iniciar sesión o crear cuenta",
-    "cancel": "Cancelar",
-    "login": "Iniciar Sesión"
   },
   "ideas": {
     "noSuggestedIdeas": "Aún no hay ideas sugeridas",
