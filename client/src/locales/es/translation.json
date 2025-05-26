@@ -109,6 +109,106 @@
   "common": {
     "username": "Nombre de usuario",
     "password": "Contraseña",
-    "email": "Correo electrónico"
+    "email": "Correo electrónico",
+    "error": "Error",
+    "vote": "Votar",
+    "voting": "Votando...",
+    "voted": "¡Votado!",
+    "share": "Compartir",
+    "login": "Iniciar Sesión",
+    "cancel": "Cancelar",
+    "suggest": "Sugerir",
+    "greeting": "👋🏻 Hola",
+    "copySuccess": "¡Enlace copiado!",
+    "copyDesc": "Enlace copiado al portapapeles: {{url}}",
+    "copyError": "Error al copiar",
+    "copyErrorDesc": "No se pudo copiar al portapapeles",
+    "copyManualDesc": "Por favor copia manualmente: {{url}}",
+    "copyExecCommandError": "No se pudo copiar usando execCommand",
+    "alreadyVoted": "Ya votaste",
+    "alreadyVotedDesc": "Ya has votado por esta idea",
+    "thankYou": "¡Gracias!",
+    "yourOpinionMatters": "Tu opinión es importante para este creador",
+    "sessionExpired": "Sesión expirada",
+    "pleaseLoginAgain": "Por favor inicia sesión de nuevo",
+    "loginToVote": "Inicia sesión para votar"
+  },
+  "creator": {
+    "voteSuccess": "¡Voto registrado!",
+    "voteSuccessDesc": "Tu voto ha sido registrado exitosamente",
+    "voteError": "Error al votar",
+    "voteErrorDesc": "No se pudo registrar tu voto. Inténtalo de nuevo.",
+    "loadError": "Error al cargar la página del creador",
+    "publicProfileView": "Perfil Público",
+    "voteHeaderTitle": "Vota por Ideas de Contenido",
+    "defaultProfileDescription": "Ingeniero de QA y creador de contenido enfocado en pruebas de software, automatización y mejores prácticas de control de calidad."
+  },
+  "roles": {
+    "audience": "Miembro de audiencia"
+  },
+  "share": {
+    "title": "¡Revisa las ideas de {{username}}!",
+    "text": "Vota por las próximas ideas de contenido de {{username}}"
+  },
+  "suggestIdea": {
+    "button": "Sugerir Idea",
+    "beFirstToSuggest": "Sé el primero en sugerir una idea de contenido",
+    "loginToSuggest": "Inicia sesión para sugerir",
+    "title": "Sugerir una Idea",
+    "description": "¿Qué te gustaría que publique el creador a continuación?",
+    "loginRequired": "Inicio de sesión requerido",
+    "loginRequiredDesc": "Necesitas una cuenta para sugerir ideas a este creador.",
+    "goToLoginButton": "Iniciar sesión o crear cuenta",
+    "cancel": "Cancelar",
+    "login": "Iniciar Sesión"
+  },
+  "ideas": {
+    "noSuggestedIdeas": "Aún no hay ideas sugeridas",
+    "addIdea": "Agregar Nueva Idea",
+    "deleteTitle": "Eliminar idea",
+    "confirmDelete": "¿Estás seguro de que quieres eliminar esta idea? Esta acción no se puede deshacer y se perderán todos los votos.",
+    "delete": "Eliminar"
+  },
+  "dashboard": {
+    "topIdeas": "Ideas Principales",
+    "voteDescription": "Vota por tus ideas favoritas o envía las tuyas",
+    "yourPublicProfile": "Tu Perfil Público",
+    "publicView": "Enlace Público",
+    "shareProfileDesc": "Este enlace dirige a tus seguidores a la versión pública de tu perfil, donde pueden ver y votar por tus ideas de contenido.",
+    "aboutPublicProfile": "Acerca de tu perfil público:",
+    "publicProfileVisibility": "Esta página es visible para cualquier persona con el enlace, incluso si no tiene cuenta en la plataforma.",
+    "visitorVoting": "Los visitantes pueden ver tus ideas y votar por ellas, ayudándote a determinar qué contenido crear primero.",
+    "copyLink": "Copiar enlace",
+    "viewProfile": "Ver perfil",
+    "shareProfile": "Compartir perfil",
+    "sharingTips": "Consejos para compartir:",
+    "shareTip1": "Comparte tu enlace en redes sociales para obtener más votos",
+    "shareTip2": "Incluye el enlace en la descripción de tus videos o posts",
+    "shareTip3": "Anima a tu audiencia a votar para influir en tu próximo contenido"
+  },
+  "ideaForm": {
+    "addTitle": "Agregar nueva idea",
+    "addDescription": "Comparte tu idea con la comunidad. ¡Sé claro y conciso para obtener más votos!",
+    "submitIdea": "Guardar idea"
+  },
+  "badges": {
+    "votes": "votos",
+    "vote": "voto",
+    "up": "↑{{change}}",
+    "down": "↓{{change}}",
+    "same": "Igual",
+    "new": "Nueva"
+  },
+  "publicLeaderboard": {
+    "title": "Ranking Público",
+    "description": "Vota por las mejores ideas de la comunidad",
+    "errorLoading": "Error al cargar el ranking",
+    "noIdeasYet": "Aún no hay ideas",
+    "noIdeasDescription": "¡Sé el primero en sugerir una idea!",
+    "rank": "Posición",
+    "na": "N/A"
+  },
+  "login": {
+    "requiredToVote": "Inicio de sesión requerido para votar"
   }
 }

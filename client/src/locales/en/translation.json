@@ -185,6 +185,106 @@
   "common": {
     "username": "Username",
     "password": "Password",
-    "email": "Email address"
+    "email": "Email address",
+    "error": "Error",
+    "vote": "Vote",
+    "voting": "Voting...",
+    "voted": "Voted!",
+    "share": "Share",
+    "login": "Login",
+    "cancel": "Cancel",
+    "suggest": "Suggest",
+    "greeting": "👋🏻 Hi",
+    "copySuccess": "Link copied!",
+    "copyDesc": "Link copied to clipboard: {{url}}",
+    "copyError": "Copy failed",
+    "copyErrorDesc": "Could not copy to clipboard",
+    "copyManualDesc": "Please copy manually: {{url}}",
+    "copyExecCommandError": "Could not copy using execCommand",
+    "alreadyVoted": "Already voted",
+    "alreadyVotedDesc": "You have already voted for this idea",
+    "thankYou": "Thank you!",
+    "yourOpinionMatters": "Your opinion matters to this creator",
+    "sessionExpired": "Session expired",
+    "pleaseLoginAgain": "Please login again",
+    "loginToVote": "Login to vote"
+  },
+  "creator": {
+    "voteSuccess": "Vote registered!",
+    "voteSuccessDesc": "Your vote has been registered successfully",
+    "voteError": "Vote failed",
+    "voteErrorDesc": "Could not register your vote. Please try again.",
+    "loadError": "Failed to load creator page",
+    "publicProfileView": "Public Profile",
+    "voteHeaderTitle": "Vote for Content Ideas",
+    "defaultProfileDescription": "QA Engineer and content creator focused on software testing, automation, and quality control best practices."
+  },
+  "roles": {
+    "audience": "Audience member"
+  },
+  "share": {
+    "title": "Check out {{username}}'s ideas!",
+    "text": "Vote for {{username}}'s next content ideas"
+  },
+  "suggestIdea": {
+    "button": "Suggest Idea",
+    "beFirstToSuggest": "Be the first to suggest a content idea",
+    "loginToSuggest": "Login to suggest",
+    "title": "Suggest an Idea",
+    "description": "What would you like the creator to publish next?",
+    "loginRequired": "Login required",
+    "loginRequiredDesc": "You need an account to suggest ideas to this creator.",
+    "goToLoginButton": "Login or create account",
+    "cancel": "Cancel",
+    "login": "Login"
+  },
+  "ideas": {
+    "noSuggestedIdeas": "No suggested ideas yet",
+    "addIdea": "Add New Idea",
+    "deleteTitle": "Delete idea",
+    "confirmDelete": "Are you sure you want to delete this idea? This action cannot be undone and all votes will be lost.",
+    "delete": "Delete"
+  },
+  "dashboard": {
+    "topIdeas": "Top Ideas",
+    "voteDescription": "Vote for your favorite ideas or submit your own",
+    "yourPublicProfile": "Your Public Profile",
+    "publicView": "Public Link",
+    "shareProfileDesc": "This link directs your followers to the public version of your profile, where they can view and vote for your content ideas.",
+    "aboutPublicProfile": "About your public profile:",
+    "publicProfileVisibility": "This page is visible to anyone with the link, even if they don't have an account on the platform.",
+    "visitorVoting": "Visitors can view your ideas and vote for them, helping you determine what content to create first.",
+    "copyLink": "Copy link",
+    "viewProfile": "View profile",
+    "shareProfile": "Share profile",
+    "sharingTips": "Sharing tips:",
+    "shareTip1": "Share your link on social media to get more votes",
+    "shareTip2": "Include the link in your video or post descriptions",
+    "shareTip3": "Encourage your audience to vote to influence your next content"
+  },
+  "ideaForm": {
+    "addTitle": "Add new idea",
+    "addDescription": "Share your idea with the community. Be clear and concise to get more votes!",
+    "submitIdea": "Save idea"
+  },
+  "badges": {
+    "votes": "votes",
+    "vote": "vote",
+    "up": "↑{{change}}",
+    "down": "↓{{change}}",
+    "same": "Same",
+    "new": "New"
+  },
+  "publicLeaderboard": {
+    "title": "Public Leaderboard",
+    "description": "Vote for the best ideas from the community",
+    "errorLoading": "Failed to load leaderboard",
+    "noIdeasYet": "No ideas yet",
+    "noIdeasDescription": "Be the first to suggest an idea!",
+    "rank": "Rank",
+    "na": "N/A"
+  },
+  "login": {
+    "requiredToVote": "Login required to vote"
   }
 }
