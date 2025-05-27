@@ -376,6 +376,14 @@
     "navigation": {
       "backToDashboard": "Volver al Dashboard",
       "dashboard": "Dashboard"
+    },
+    "trial": {
+      "activateButton": "🎉 Activar 14 Días de Prueba Gratis",
+      "upgradeButton": "🚀 Actualizar a Premium",
+      "activating": "Activando...",
+      "upgrading": "Actualizando...",
+      "unlockFeatures": "Desbloquea todas las funciones premium",
+      "noCommitment": "Sin compromiso, cancela en cualquier momento"
     }
   }
 }
