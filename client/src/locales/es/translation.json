@@ -176,7 +176,16 @@
     "registerCreatorTitle": "Crear Cuenta de Creador",
     "registerCreatorSubtitle": "Únete como creador de contenido",
     "registerCreatorDescription": "Crea tu propio ranking de ideas y conecta con tu audiencia",
-    "registerCta": "Crear Cuenta"
+    "registerCta": "Crear Cuenta",
+    "registerAudienceTitle": "Crear Cuenta de Audiencia",
+    "registerAudienceSubtitle": "Únete como miembro de la audiencia",
+    "registerAudienceDescription": "Vota por las ideas de tu creador favorito y ayúdalos a decidir qué crear después",
+    "emailOptional": "El email es opcional",
+    "selectRole": "Selecciona tu rol",
+    "creatorRole": "Creador",
+    "creatorRoleDescription": "Comparte ideas y recibe comentarios de tu audiencia",
+    "audienceRole": "Audiencia",
+    "audienceRoleDescription": "Vota por las ideas de tu creador favorito"
   },
   "pricing": {
     "monthly": "Mensual",
@@ -303,5 +312,78 @@
   },
   "login": {
     "requiredToVote": "Inicio de sesión requerido para votar"
+  },
+  "subscription": {
+    "title": "Suscripción",
+    "subtitle": "Desbloquea todo el potencial de tu plataforma",
+    "currentStatus": "Estado Actual",
+    "status": "Estado",
+    "plan": "Plan",
+    "daysRemaining": "Días restantes",
+    "days": "días",
+    "cancelSubscription": "Cancelar Suscripción",
+    "freeTrialTitle": "Prueba Gratuita de 14 Días",
+    "freeTrialDescription": "Experimenta todas las funciones premium sin compromiso",
+    "startFreeTrial": "Comenzar Trial Gratuito",
+    "trialActivated": "¡Trial activado!",
+    "trialActivatedDesc": "Tienes 14 días para probar todas las funciones premium.",
+    "subscriptionCancelled": "Suscripción cancelada",
+    "subscriptionCancelledDesc": "Tu suscripción se cancelará al final del período de facturación.",
+    "error": "Error",
+    "createSessionError": "No se pudo crear la sesión de pago. Inténtalo de nuevo.",
+    "startTrialError": "No se pudo activar el trial. Inténtalo de nuevo.",
+    "cancelError": "No se pudo cancelar la suscripción. Inténtalo de nuevo.",
+    "loading": "Cargando...",
+    "monthlyPlan": "Plan Mensual",
+    "annualPlan": "Plan Anual",
+    "perMonth": "/mes",
+    "perYear": "/año",
+    "savePerYear": "Ahorra $24/año",
+    "subscribeMonthly": "Suscribirse Mensual",
+    "subscribeAnnual": "Suscribirse Anual",
+    "premiumFeaturesActive": "Funciones Premium Activas",
+    "upToIdeas": "Hasta 50 ideas visibles",
+    "unlimitedVotes": "Votos ilimitados",
+    "noPlatformBranding": "Sin marca de la plataforma",
+    "advancedAnalytics": "Analíticas avanzadas",
+    "prioritySupport": "Soporte prioritario",
+    "csvExport": "Exportación CSV",
+    "customDomain": "Soporte de dominio personalizado",
+    "badges": {
+      "premium": "Premium",
+      "freeTrial": "Trial Gratuito",
+      "freePlan": "Plan Gratuito"
+    },
+    "paymentSuccess": {
+      "title": "¡Pago Exitoso!",
+      "subtitle": "¡Ahora eres Premium!",
+      "description": "Tu suscripción se ha activado correctamente. Ya puedes disfrutar de todas las funciones premium.",
+      "featuresUnlocked": "Funciones desbloqueadas:",
+      "goToDashboard": "Ir al Dashboard",
+      "viewSubscription": "Ver Suscripción",
+      "confirmationEmail": "Recibirás un email de confirmación con los detalles de tu suscripción."
+    },
+    "paymentCancelled": {
+      "title": "Pago Cancelado",
+      "subtitle": "No te preocupes",
+      "description": "El proceso de pago fue cancelado. Tu cuenta permanece sin cambios y puedes intentar nuevamente cuando estés listo.",
+      "needHelp": "¿Necesitas ayuda?",
+      "needHelpDesc": "Si tienes alguna pregunta sobre nuestros planes o necesitas asistencia, no dudes en contactarnos.",
+      "backToSubscription": "Volver a Suscripción",
+      "goToDashboard": "Ir al Dashboard",
+      "tryAgainLater": "Siempre puedes cambiar de opinión y suscribirte más tarde."
+    },
+    "navigation": {
+      "backToDashboard": "Volver al Dashboard",
+      "dashboard": "Dashboard"
+    },
+    "trial": {
+      "activateButton": "🎉 Activar 14 Días de Prueba Gratis",
+      "upgradeButton": "🚀 Actualizar a Premium",
+      "activating": "Activando...",
+      "upgrading": "Actualizando...",
+      "unlockFeatures": "Desbloquea todas las funciones premium",
+      "noCommitment": "Sin compromiso, cancela en cualquier momento"
+    }
   }
 }

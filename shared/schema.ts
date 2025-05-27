@@ -17,6 +17,16 @@ export const users = pgTable("users", {
   websiteUrl: text("website_url"),
   profileBackground: text("profile_background").default("gradient-1"),
   email: text("email").notNull().unique(),
+  // Campos para suscripciones premium
+  subscriptionStatus: text("subscription_status").notNull().default("free"), // 'free', 'trial', 'premium'
+  hasUsedTrial: boolean("has_used_trial").notNull().default(false),
+  trialStartDate: timestamp("trial_start_date"),
+  trialEndDate: timestamp("trial_end_date"),
+  stripeCustomerId: text("stripe_customer_id"),
+  stripeSubscriptionId: text("stripe_subscription_id"),
+  subscriptionPlan: text("subscription_plan"), // 'monthly', 'yearly'
+  subscriptionStartDate: timestamp("subscription_start_date"),
+  subscriptionEndDate: timestamp("subscription_end_date"),
 });
 
 export const ideas = pgTable("ideas", {
@@ -96,6 +106,14 @@ export const userResponseSchema = z.object({
   websiteUrl: z.string().nullable().optional(),
   profileBackground: z.string().default("gradient-1"),
   email: z.string().optional(), // Eliminada la validación de email
+  // Campos de suscripción
+  subscriptionStatus: z.enum(['free', 'trial', 'premium']).default('free'),
+  hasUsedTrial: z.boolean().default(false),
+  trialStartDate: z.date().nullable().optional(),
+  trialEndDate: z.date().nullable().optional(),
+  subscriptionPlan: z.enum(['monthly', 'yearly']).nullable().optional(),
+  subscriptionStartDate: z.date().nullable().optional(),
+  subscriptionEndDate: z.date().nullable().optional(),
 });
 
 // Idea schemas
@@ -190,6 +208,31 @@ export const updateProfileSchema = z.object({
   email: z.string().optional(),
 });
 
+// Schemas para suscripciones
+export const createCheckoutSessionSchema = z.object({
+  plan: z.enum(['monthly', 'yearly']),
+  successUrl: z.string().url().optional(),
+  cancelUrl: z.string().url().optional(),
+});
+
+export const updateSubscriptionSchema = z.object({
+  subscriptionStatus: z.enum(['free', 'trial', 'premium']).optional(),
+  hasUsedTrial: z.boolean().optional(),
+  trialStartDate: z.date().nullable().optional(),
+  trialEndDate: z.date().nullable().optional(),
+  stripeCustomerId: z.string().optional(),
+  stripeSubscriptionId: z.string().optional(),
+  subscriptionPlan: z.enum(['monthly', 'yearly']).nullable().optional(),
+  subscriptionStartDate: z.date().nullable().optional(),
+  subscriptionEndDate: z.date().nullable().optional(),
+});
+
+export const subscriptionResponseSchema = z.object({
+  id: z.string(),
+  status: z.string(),
+  url: z.string().optional(),
+});
+
 // Types
 export type InsertUser = z.infer<typeof insertUserSchema>;
 export type User = typeof users.$inferSelect;
@@ -211,3 +254,7 @@ export type PasswordResetToken = typeof passwordResetTokens.$inferSelect;
 export type InsertPublicLink = z.infer<typeof insertPublicLinkSchema>;
 export type PublicLink = typeof publicLinks.$inferSelect;
 export type PublicLinkResponse = z.infer<typeof publicLinkResponseSchema>;
+
+export type CreateCheckoutSession = z.infer<typeof createCheckoutSessionSchema>;
+export type UpdateSubscription = z.infer<typeof updateSubscriptionSchema>;
+export type SubscriptionResponse = z.infer<typeof subscriptionResponseSchema>;

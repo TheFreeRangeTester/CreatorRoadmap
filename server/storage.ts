@@ -1,7 +1,7 @@
 import { ideas as ideasTable, users, votes as votesTable, publicLinks as publicLinksTable, 
   type User, type InsertUser, type Idea, type InsertIdea, type UpdateIdea, type SuggestIdea,
   type Vote, type InsertVote, type PublicLink, type InsertPublicLink, type PublicLinkResponse,
-  type UpdateProfile } from "@shared/schema";
+  type UpdateProfile, type UpdateSubscription } from "@shared/schema";
 import session from "express-session";
 import createMemoryStore from "memorystore";
 import { randomBytes } from "crypto";
@@ -44,6 +44,11 @@ export interface IStorage {
   getUserPublicLinks(creatorId: number): Promise<PublicLinkResponse[]>;
   togglePublicLinkStatus(id: number, isActive: boolean): Promise<PublicLink | undefined>;
   deletePublicLink(id: number): Promise<void>;
+  
+  // Subscription operations
+  updateUserSubscription(id: number, subscriptionData: UpdateSubscription): Promise<User | undefined>;
+  startUserTrial(id: number): Promise<User | undefined>;
+  getUserByStripeCustomerId(stripeCustomerId: string): Promise<User | undefined>;
   
   // Session store
   sessionStore: any;
@@ -441,6 +446,43 @@ export class MemStorage implements IStorage {
   
   async deletePublicLink(id: number): Promise<void> {
     this.publicLinks.delete(id);
+  }
+
+  // Subscription methods
+  async updateUserSubscription(id: number, subscriptionData: UpdateSubscription): Promise<User | undefined> {
+    const user = this.users.get(id);
+    if (!user) return undefined;
+
+    const updatedUser: User = {
+      ...user,
+      ...subscriptionData
+    };
+
+    this.users.set(id, updatedUser);
+    return updatedUser;
+  }
+
+  async startUserTrial(id: number): Promise<User | undefined> {
+    const user = this.users.get(id);
+    if (!user) return undefined;
+
+    const now = new Date();
+    const trialEndDate = new Date(now.getTime() + 14 * 24 * 60 * 60 * 1000); // 14 días
+
+    const updatedUser: User = {
+      ...user,
+      subscriptionStatus: 'trial',
+      hasUsedTrial: true,
+      trialStartDate: now,
+      trialEndDate: trialEndDate
+    };
+
+    this.users.set(id, updatedUser);
+    return updatedUser;
+  }
+
+  async getUserByStripeCustomerId(stripeCustomerId: string): Promise<User | undefined> {
+    return Array.from(this.users.values()).find(user => user.stripeCustomerId === stripeCustomerId);
   }
 }
 
