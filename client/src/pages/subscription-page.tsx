@@ -61,8 +61,8 @@ export default function SubscriptionPage() {
     },
     onError: (error) => {
       toast({
-        title: "Error",
-        description: "No se pudo crear la sesión de pago. Inténtalo de nuevo.",
+        title: t("subscription.error"),
+        description: t("subscription.createSessionError"),
         variant: "destructive",
       });
     },
@@ -82,14 +82,14 @@ export default function SubscriptionPage() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/user"] });
       toast({
-        title: "¡Trial activado!",
-        description: "Tienes 14 días para probar todas las funciones premium.",
+        title: t("subscription.trialActivated"),
+        description: t("subscription.trialActivatedDesc"),
       });
     },
     onError: (error) => {
       toast({
-        title: "Error",
-        description: "No se pudo activar el trial. Inténtalo de nuevo.",
+        title: t("subscription.error"),
+        description: t("subscription.startTrialError"),
         variant: "destructive",
       });
     },
@@ -109,14 +109,14 @@ export default function SubscriptionPage() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/user"] });
       toast({
-        title: "Suscripción cancelada",
-        description: "Tu suscripción se cancelará al final del período de facturación.",
+        title: t("subscription.subscriptionCancelled"),
+        description: t("subscription.subscriptionCancelledDesc"),
       });
     },
     onError: (error) => {
       toast({
-        title: "Error",
-        description: "No se pudo cancelar la suscripción. Inténtalo de nuevo.",
+        title: t("subscription.error"),
+        description: t("subscription.cancelError"),
         variant: "destructive",
       });
     },
@@ -139,11 +139,11 @@ export default function SubscriptionPage() {
     
     switch (user.subscriptionStatus) {
       case 'premium':
-        return <Badge className="bg-gradient-to-r from-yellow-400 to-orange-500 text-white"><Crown className="w-3 h-3 mr-1" />Premium</Badge>;
+        return <Badge className="bg-gradient-to-r from-yellow-400 to-orange-500 text-white"><Crown className="w-3 h-3 mr-1" />{t("subscription.badges.premium")}</Badge>;
       case 'trial':
-        return <Badge variant="secondary"><Zap className="w-3 h-3 mr-1" />Trial Gratuito</Badge>;
+        return <Badge variant="secondary"><Zap className="w-3 h-3 mr-1" />{t("subscription.badges.freeTrial")}</Badge>;
       default:
-        return <Badge variant="outline">Plan Gratuito</Badge>;
+        return <Badge variant="outline">{t("subscription.badges.freePlan")}</Badge>;
     }
   };
 
@@ -164,7 +164,7 @@ export default function SubscriptionPage() {
   if (userLoading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-gray-50 to-white dark:from-gray-900 dark:to-gray-800 flex items-center justify-center">
-        <div className="animate-pulse text-gray-500">Cargando...</div>
+        <div className="animate-pulse text-gray-500">{t("subscription.loading")}</div>
       </div>
     );
   }
@@ -181,11 +181,11 @@ export default function SubscriptionPage() {
           {/* Header */}
           <motion.div variants={fadeIn} className="text-center mb-12">
             <div className="flex items-center justify-center gap-2 mb-4">
-              <h1 className="text-4xl font-bold dark:text-white">Suscripción</h1>
+              <h1 className="text-4xl font-bold dark:text-white">{t("subscription.title")}</h1>
               {getStatusBadge()}
             </div>
             <p className="text-lg text-gray-600 dark:text-gray-300">
-              Desbloquea todo el potencial de tu plataforma
+              {t("subscription.subtitle")}
             </p>
           </motion.div>
 

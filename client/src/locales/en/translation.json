@@ -312,5 +312,66 @@
   },
   "login": {
     "requiredToVote": "Login required to vote"
+  },
+  "subscription": {
+    "title": "Subscription",
+    "subtitle": "Unlock the full potential of your platform",
+    "currentStatus": "Current Status",
+    "status": "Status",
+    "plan": "Plan",
+    "daysRemaining": "Days remaining",
+    "days": "days",
+    "cancelSubscription": "Cancel Subscription",
+    "freeTrialTitle": "14-Day Free Trial",
+    "freeTrialDescription": "Experience all premium features without commitment",
+    "startFreeTrial": "Start Free Trial",
+    "trialActivated": "Trial activated!",
+    "trialActivatedDesc": "You have 14 days to try all premium features.",
+    "subscriptionCancelled": "Subscription cancelled",
+    "subscriptionCancelledDesc": "Your subscription will be cancelled at the end of the billing period.",
+    "error": "Error",
+    "createSessionError": "Could not create payment session. Please try again.",
+    "startTrialError": "Could not activate trial. Please try again.",
+    "cancelError": "Could not cancel subscription. Please try again.",
+    "loading": "Loading...",
+    "monthlyPlan": "Monthly Plan",
+    "annualPlan": "Annual Plan",
+    "perMonth": "/month",
+    "perYear": "/year",
+    "savePerYear": "Save $24/year",
+    "subscribeMonthly": "Subscribe Monthly",
+    "subscribeAnnual": "Subscribe Annual",
+    "premiumFeaturesActive": "Active Premium Features",
+    "upToIdeas": "Up to 50 visible ideas",
+    "unlimitedVotes": "Unlimited votes",
+    "noPlatformBranding": "No platform branding",
+    "advancedAnalytics": "Advanced analytics",
+    "prioritySupport": "Priority support",
+    "csvExport": "CSV export",
+    "customDomain": "Custom domain support",
+    "badges": {
+      "premium": "Premium",
+      "freeTrial": "Free Trial",
+      "freePlan": "Free Plan"
+    },
+    "paymentSuccess": {
+      "title": "Payment Successful!",
+      "subtitle": "You are now Premium!",
+      "description": "Your subscription has been activated successfully. You can now enjoy all premium features.",
+      "featuresUnlocked": "Features unlocked:",
+      "goToDashboard": "Go to Dashboard",
+      "viewSubscription": "View Subscription",
+      "confirmationEmail": "You will receive a confirmation email with your subscription details."
+    },
+    "paymentCancelled": {
+      "title": "Payment Cancelled",
+      "subtitle": "Don't worry",
+      "description": "The payment process was cancelled. Your account remains unchanged and you can try again when you're ready.",
+      "needHelp": "Need help?",
+      "needHelpDesc": "If you have any questions about our plans or need assistance, don't hesitate to contact us.",
+      "backToSubscription": "Back to Subscription",
+      "goToDashboard": "Go to Dashboard",
+      "tryAgainLater": "You can always change your mind and subscribe later."
+    }
   }
 }
