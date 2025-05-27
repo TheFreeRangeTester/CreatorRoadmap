@@ -7,6 +7,10 @@ import dotenv from "dotenv";
 dotenv.config();
 
 const app = express();
+
+// Raw body middleware for Stripe webhooks - must come before express.json()
+app.use('/api/stripe/webhook', express.raw({ type: 'application/json' }));
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 

@@ -8,9 +8,7 @@ import { fromZodError } from "zod-validation-error";
 import Stripe from "stripe";
 
 // Initialize Stripe
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  apiVersion: '2024-06-20',
-});
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // Set up authentication routes
@@ -1013,9 +1011,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Update user subscription status
       const updatedUser = await storage.updateUserSubscription(userId, {
         subscriptionStatus: 'free',
-        subscriptionPlan: null,
-        subscriptionEndDate: null,
-        stripeSubscriptionId: null
+        subscriptionPlan: undefined,
+        subscriptionEndDate: undefined,
+        stripeSubscriptionId: undefined
       });
 
       if (!updatedUser) {
@@ -1065,7 +1063,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
           const plan = subscription.metadata?.plan || 'monthly';
           
           // Calculate end date
-          const endDate = new Date(subscription.current_period_end * 1000);
+          const endDate = new Date((subscription as any).current_period_end * 1000);
           
           // Update user subscription
           await storage.updateUserSubscription(user.id, {
@@ -1094,9 +1092,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
           // Cancel user subscription
           await storage.updateUserSubscription(user.id, {
             subscriptionStatus: 'free',
-            subscriptionPlan: null,
-            subscriptionEndDate: null,
-            stripeSubscriptionId: null
+            subscriptionPlan: undefined,
+            subscriptionEndDate: undefined,
+            stripeSubscriptionId: undefined
           });
 
           console.log(`Cancelled subscription for user ${user.id}`);
