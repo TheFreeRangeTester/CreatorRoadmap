@@ -12,6 +12,7 @@ import BillingToggle from "@/components/billing-toggle";
 import { apiRequest } from "@/lib/queryClient";
 import { UserResponse } from "@shared/schema";
 import { useToast } from "@/hooks/use-toast";
+import logoImage from "@/assets/logo.png";
 
 const fadeIn = {
   hidden: { opacity: 0, y: 20 },
@@ -178,9 +179,11 @@ export default function SubscriptionPage() {
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <div className="w-8 h-8 bg-gradient-to-r from-primary to-blue-600 rounded-lg flex items-center justify-center">
-                <Star className="w-5 h-5 text-white fill-white" />
-              </div>
+              <img 
+                src={logoImage} 
+                alt="Fanlist Logo" 
+                className="w-8 h-8 rounded-lg"
+              />
               <span className="text-xl font-bold text-gray-900 dark:text-white">Fanlist</span>
             </div>
             <Button 
