@@ -372,6 +372,10 @@
       "backToSubscription": "Volver a Suscripción",
       "goToDashboard": "Ir al Dashboard",
       "tryAgainLater": "Siempre puedes cambiar de opinión y suscribirte más tarde."
+    },
+    "navigation": {
+      "backToDashboard": "Volver al Dashboard",
+      "dashboard": "Dashboard"
     }
   }
 }

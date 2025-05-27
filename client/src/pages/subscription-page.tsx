@@ -1,12 +1,13 @@
 import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
+import { useLocation } from "wouter";
 import { motion } from "framer-motion";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
-import { CheckCircle, Crown, Zap, Star, CreditCard, Calendar, X } from "lucide-react";
+import { CheckCircle, Crown, Zap, Star, CreditCard, Calendar, X, ArrowLeft } from "lucide-react";
 import BillingToggle from "@/components/billing-toggle";
 import { apiRequest } from "@/lib/queryClient";
 import { UserResponse } from "@shared/schema";
@@ -31,6 +32,7 @@ export default function SubscriptionPage() {
   const { t } = useTranslation();
   const { toast } = useToast();
   const queryClient = useQueryClient();
+  const [, navigate] = useLocation();
   const [billingPeriod, setBillingPeriod] = useState("monthly");
 
   // Obtener datos del usuario
@@ -171,6 +173,28 @@ export default function SubscriptionPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-white dark:from-gray-900 dark:to-gray-800">
+      {/* Navigation Header */}
+      <header className="border-b border-gray-200 dark:border-gray-700 bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm">
+        <div className="container mx-auto px-4 py-4">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className="w-8 h-8 bg-gradient-to-r from-primary to-blue-600 rounded-lg flex items-center justify-center">
+                <Star className="w-5 h-5 text-white fill-white" />
+              </div>
+              <span className="text-xl font-bold text-gray-900 dark:text-white">Fanlist</span>
+            </div>
+            <Button 
+              variant="outline" 
+              onClick={() => navigate("/dashboard")}
+              className="flex items-center gap-2"
+            >
+              <ArrowLeft className="w-4 h-4" />
+              {t("subscription.navigation.backToDashboard")}
+            </Button>
+          </div>
+        </div>
+      </header>
+
       <div className="container mx-auto px-4 py-12">
         <motion.div
           initial="hidden"

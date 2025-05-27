@@ -372,6 +372,10 @@
       "backToSubscription": "Back to Subscription",
       "goToDashboard": "Go to Dashboard",
       "tryAgainLater": "You can always change your mind and subscribe later."
+    },
+    "navigation": {
+      "backToDashboard": "Back to Dashboard",
+      "dashboard": "Dashboard"
     }
   }
 }
