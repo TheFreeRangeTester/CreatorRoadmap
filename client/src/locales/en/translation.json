@@ -176,7 +176,16 @@
     "registerCreatorTitle": "Create Creator Account",
     "registerCreatorSubtitle": "Join as a content creator",
     "registerCreatorDescription": "Create your own idea ranking and connect with your audience",
-    "registerCta": "Create Account"
+    "registerCta": "Create Account",
+    "registerAudienceTitle": "Create Audience Account",
+    "registerAudienceSubtitle": "Join as audience member",
+    "registerAudienceDescription": "Vote for your favorite creator's ideas and help them decide what to create next",
+    "emailOptional": "Email is optional",
+    "selectRole": "Select your role",
+    "creatorRole": "Creator",
+    "creatorRoleDescription": "Share ideas and get feedback from your audience",
+    "audienceRole": "Audience",
+    "audienceRoleDescription": "Vote for your favorite creator's ideas"
   },
   "pricing": {
     "monthly": "Monthly",
