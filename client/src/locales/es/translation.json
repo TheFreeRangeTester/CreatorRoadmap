@@ -269,7 +269,9 @@
     "addIdea": "Agregar Nueva Idea",
     "deleteTitle": "Eliminar idea",
     "confirmDelete": "¿Estás seguro de que quieres eliminar esta idea? Esta acción no se puede deshacer y se perderán todos los votos.",
-    "delete": "Eliminar"
+    "delete": "Eliminar",
+    "noPublishedIdeas": "Aún no hay ideas publicadas",
+    "createFirstIdea": "Crea tu primera idea para comenzar"
   },
   "dashboard": {
     "topIdeas": "Ideas Principales",
