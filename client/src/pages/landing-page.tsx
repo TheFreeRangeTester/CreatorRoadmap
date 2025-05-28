@@ -44,6 +44,8 @@ import { useTranslation } from "react-i18next";
 import DemoDialog from "@/components/demo-dialog";
 import demoGifPath from "@assets/DemoGIF.gif";
 import { MobileMenu } from "@/components/mobile-menu";
+import { BottomBar } from "@/components/bottom-bar";
+import { ProfileFAB } from "@/components/profile-fab";
 
 const fadeIn = {
   hidden: { opacity: 0, y: 20 },
@@ -1242,6 +1244,12 @@ export default function LandingPage() {
           </div>
         </div>
       </footer>
+
+      {/* Barra inferior para móvil */}
+      <BottomBar />
+
+      {/* Botón flotante de perfil para móvil */}
+      <ProfileFAB />
     </div>
   );
 }

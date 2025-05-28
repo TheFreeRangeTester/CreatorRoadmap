@@ -1,13 +1,10 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Menu, X, User, LogOut, RefreshCcw, LogIn } from "lucide-react";
+import { Menu, X, LogOut, RefreshCcw, LogIn } from "lucide-react";
 import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
-import { ThemeToggle } from "@/components/theme-toggle";
-import { LanguageToggle } from "@/components/language-toggle";
 import { useTranslation } from "react-i18next";
 import { useAuth } from "@/hooks/use-auth";
-import { Badge } from "@/components/ui/badge";
 
 interface MobileMenuProps {
   onLogout?: () => void;
@@ -102,40 +99,16 @@ export const MobileMenu = ({
                     </Button>
                   )}
 
-                  <div className="flex flex-col items-center space-y-4 w-full">
-                    <div className="flex justify-center w-full">
-                      <ThemeToggle />
-                    </div>
-                    <div className="flex justify-center w-full">
-                      <LanguageToggle />
-                    </div>
-                  </div>
-
                   {user ? (
-                    <div className="w-full text-center flex flex-col space-y-4">
-                      <div
-                        className={`rounded-md text-sm flex items-center justify-center gap-2 py-2.5 ${
-                          transparent
-                            ? "bg-white/25 text-white shadow-md border border-white/20"
-                            : "bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-300"
-                        }`}
-                      >
-                        <User className="h-4 w-4 text-blue-200" />
-                        <span className="font-semibold text-base">
-                          {user.username}
-                        </span>
-                      </div>
-
-                      <Button
-                        onClick={handleLogout}
-                        className="w-full justify-center"
-                        variant={transparent ? "ghost" : "outline"}
-                        size="sm"
-                      >
-                        <LogOut className="h-4 w-4 mr-2" />
-                        {t("common.logout", "Cerrar sesión")}
-                      </Button>
-                    </div>
+                    <Button
+                      onClick={handleLogout}
+                      className="w-full justify-center"
+                      variant={transparent ? "ghost" : "outline"}
+                      size="sm"
+                    >
+                      <LogOut className="h-4 w-4 mr-2" />
+                      {t("common.logout", "Cerrar sesión")}
+                    </Button>
                   ) : (
                     <Link
                       to={`/auth?referrer=/creators/${username}`}
@@ -156,25 +129,6 @@ export const MobileMenu = ({
               ) : // Vista para el dashboard y demás páginas
               user ? (
                 <div className="w-full flex flex-col items-center space-y-6">
-                  <Link href="/profile" onClick={() => setIsOpen(false)}>
-                    <Badge
-                      variant="outline"
-                      className="bg-blue-50 text-blue-700 border-blue-200 dark:bg-blue-900/20 dark:text-blue-300 dark:border-blue-800/50 px-4 py-2 transition-all duration-300 hover:shadow-md hover:-translate-y-0.5 cursor-pointer"
-                    >
-                      <User className="h-4 w-4 mr-2 text-blue-500 dark:text-blue-400" />
-                      <span className="font-medium">{user.username}</span>
-                    </Badge>
-                  </Link>
-
-                  <div className="flex flex-col items-center space-y-4 w-full">
-                    <div className="flex justify-center w-full">
-                      <ThemeToggle />
-                    </div>
-                    <div className="flex justify-center w-full">
-                      <LanguageToggle />
-                    </div>
-                  </div>
-
                   <Button
                     onClick={handleLogout}
                     className="w-full justify-center"
@@ -186,15 +140,6 @@ export const MobileMenu = ({
                 </div>
               ) : (
                 <div className="w-full flex flex-col items-center space-y-6">
-                  <div className="flex flex-col items-center space-y-4 w-full">
-                    <div className="flex justify-center w-full">
-                      <ThemeToggle />
-                    </div>
-                    <div className="flex justify-center w-full">
-                      <LanguageToggle />
-                    </div>
-                  </div>
-
                   <Link href="/auth" onClick={() => setIsOpen(false)}>
                     <Button className="w-full justify-center max-w-xs">
                       <LogIn className="h-4 w-4 mr-2" />
