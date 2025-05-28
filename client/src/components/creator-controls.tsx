@@ -135,7 +135,6 @@ export default function CreatorControls({ onAddIdea }: CreatorControlsProps) {
             <h2 className="text-base sm:text-lg font-medium text-neutral-800 dark:text-white">
               {t("dashboard.creatorDashboard", "Creator Dashboard")}
             </h2>
-            <SharingTipsTooltip />
           </div>
           <Button onClick={onAddIdea} className="w-full sm:w-auto" size="sm">
             <PlusCircle className="w-4 h-4 mr-2" />

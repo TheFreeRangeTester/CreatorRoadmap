@@ -84,6 +84,7 @@ export default function ShareProfile() {
             <CardTitle className="text-2xl font-bold">
               {t("dashboard.yourPublicProfile", "Tu Perfil Público")}
             </CardTitle>
+            <SharingTipsTooltip />
             <Badge
               variant="secondary"
               className="bg-blue-50 text-blue-700 dark:bg-blue-900/20 dark:text-blue-300"
@@ -154,17 +155,14 @@ export default function ShareProfile() {
             {t("dashboard.viewProfile", "Ver perfil")}
           </Button>
 
-          <div className="flex items-center gap-2 flex-1 sm:flex-none">
-            <Button
-              variant="default"
-              className="w-full bg-gradient-to-r from-primary to-blue-600 hover:from-primary/90 hover:to-blue-700 dark:text-white"
-              onClick={handleShare}
-            >
-              <Share2 className="mr-2 h-4 w-4" />
-              {t("dashboard.shareProfile", "Compartir perfil")}
-            </Button>
-            <SharingTipsTooltip />
-          </div>
+          <Button
+            variant="default"
+            className="flex-1 w-full sm:flex-none bg-gradient-to-r from-primary to-blue-600 hover:from-primary/90 hover:to-blue-700 dark:text-white"
+            onClick={handleShare}
+          >
+            <Share2 className="mr-2 h-4 w-4" />
+            {t("dashboard.shareProfile", "Compartir perfil")}
+          </Button>
         </CardFooter>
       </Card>
     </div>
