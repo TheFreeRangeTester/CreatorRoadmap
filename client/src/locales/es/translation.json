@@ -219,7 +219,8 @@
     "loginToVote": "Inicia sesión para votar",
     "reset": "Restablecer",
     "save": "Guardar",
-    "saving": "Guardando..."
+    "saving": "Guardando...",
+    "back": "Volver al Dashboard"
   },
   "creator": {
     "voteSuccess": "¡Voto registrado!",

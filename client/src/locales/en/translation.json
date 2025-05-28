@@ -219,7 +219,8 @@
     "loginToVote": "Login to vote",
     "reset": "Reset",
     "save": "Save",
-    "saving": "Saving..."
+    "saving": "Saving...",
+    "back": "Back to Dashboard"
   },
   "creator": {
     "voteSuccess": "Vote registered!",
