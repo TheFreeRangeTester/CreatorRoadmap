@@ -281,20 +281,22 @@
     "suggestedIdeasWillAppear": "Suggested ideas from your audience will appear here"
   },
   "dashboard": {
+    "welcome": "Hello",
+    "welcomeSubtitle": "Welcome to your ideas panel",
     "topIdeas": "Top Ideas",
     "voteDescription": "This is what your audience is looking for 🙌🏻",
     "yourPublicProfile": "Your Public Profile",
-    "publicView": "Public Link",
-    "shareProfileDesc": "This link directs your followers to the public version of your profile, where they can view and vote for your content ideas.",
+    "publicView": "Public View",
+    "shareProfileDesc": "This link directs your followers to the public version of your profile, where they can view and vote on your content ideas.",
     "aboutPublicProfile": "About your public profile:",
     "publicProfileVisibility": "This page is visible to anyone with the link, even if they don't have an account on the platform.",
-    "visitorVoting": "Visitors can view your ideas and vote for them, helping you determine what content to create first.",
+    "visitorVoting": "Visitors can view your ideas and vote on them, helping you determine what content to create first.",
     "copyLink": "Copy link",
     "viewProfile": "View profile",
     "shareProfile": "Share profile",
     "sharingTips": "Sharing tips:",
     "shareTip1": "Share your link on social media to get more votes",
-    "shareTip2": "Include the link in your video or post descriptions",
+    "shareTip2": "Include the link in your videos or posts description",
     "shareTip3": "Encourage your audience to vote to influence your next content"
   },
   "ideaForm": {
