@@ -396,7 +396,9 @@
       "upgrading": "Upgrading...",
       "unlockFeatures": "Unlock all premium features",
       "noCommitment": "No commitment, cancel anytime"
-    }
+    },
+    "embedLeaderboard": "Embed the leaderboard",
+    "noBranding": "No Fanlist branding"
   },
   "profile": {
     "editProfile": "Edit Profile",

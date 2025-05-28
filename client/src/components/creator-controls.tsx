@@ -165,6 +165,18 @@ export default function CreatorControls({ onAddIdea }: CreatorControlsProps) {
                       {t("subscription.unlimitedVotes")}
                     </span>
                   </div>
+                  <div className="flex items-center gap-1.5">
+                    <CheckCircle className="w-4 h-4 text-green-500" />
+                    <span className="text-xs text-gray-600 dark:text-gray-300">
+                      {t("subscription.embedLeaderboard")}
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-1.5">
+                    <CheckCircle className="w-4 h-4 text-green-500" />
+                    <span className="text-xs text-gray-600 dark:text-gray-300">
+                      {t("subscription.noBranding")}
+                    </span>
+                  </div>
                 </div>
               </div>
             </div>

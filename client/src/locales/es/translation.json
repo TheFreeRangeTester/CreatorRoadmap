@@ -403,7 +403,9 @@
       "upgrading": "Actualizando...",
       "unlockFeatures": "Desbloquea todas las funciones premium",
       "noCommitment": "Sin compromiso, cancela en cualquier momento"
-    }
+    },
+    "embedLeaderboard": "Incrustar el leaderboard",
+    "noBranding": "Sin marca Fanlist"
   },
   "profile": {
     "editProfile": "Editar Perfil",
