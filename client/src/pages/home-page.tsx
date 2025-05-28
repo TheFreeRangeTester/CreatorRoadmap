@@ -477,12 +477,6 @@ export default function HomePage() {
             <div className="hidden md:flex items-center gap-3">
               {user ? (
                 <div className="flex items-center gap-3">
-                  <div className="text-sm text-muted-foreground">
-                    {t("dashboard.welcome", "Hola")},{" "}
-                    <span className="font-medium text-foreground">
-                      {user.username}
-                    </span>
-                  </div>
                   <Link href="/profile">
                     <Button variant="outline" size="sm">
                       <User className="h-4 w-4 mr-2" />
