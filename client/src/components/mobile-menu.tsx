@@ -1,10 +1,8 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Menu, X, LogOut, RefreshCcw, LogIn } from "lucide-react";
+import { Menu, X, LogOut, RefreshCcw, LogIn, User } from "lucide-react";
 import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
-import { ThemeToggle } from "@/components/theme-toggle";
-import { LanguageToggle } from "@/components/language-toggle";
 import { useTranslation } from "react-i18next";
 import { useAuth } from "@/hooks/use-auth";
 
@@ -48,7 +46,7 @@ export const MobileMenu = ({
   };
 
   return (
-    <div className="lg:hidden">
+    <>
       <Button
         variant={transparent ? "ghost" : "ghost"}
         size="icon"
@@ -131,16 +129,16 @@ export const MobileMenu = ({
               ) : // Vista para el dashboard y demás páginas
               user ? (
                 <div className="w-full flex flex-col items-center space-y-6">
-                  {/* Toggles de configuración */}
-                  <div className="flex flex-col items-center space-y-4 w-full">
-                    <div className="flex justify-center w-full">
-                      <ThemeToggle />
-                    </div>
-                    <div className="flex justify-center w-full">
-                      <LanguageToggle />
-                    </div>
-                  </div>
-                  
+                  <Link href="/profile" onClick={() => setIsOpen(false)}>
+                    <Button
+                      className="w-full justify-center max-w-xs"
+                      variant="outline"
+                    >
+                      <User className="h-4 w-4 mr-2" />
+                      <span className="font-medium">{user.username}</span>
+                    </Button>
+                  </Link>
+
                   <Button
                     onClick={handleLogout}
                     className="w-full justify-center max-w-xs"
@@ -152,16 +150,6 @@ export const MobileMenu = ({
                 </div>
               ) : (
                 <div className="w-full flex flex-col items-center space-y-6">
-                  {/* Toggles de configuración para usuarios no autenticados */}
-                  <div className="flex flex-col items-center space-y-4 w-full">
-                    <div className="flex justify-center w-full">
-                      <ThemeToggle />
-                    </div>
-                    <div className="flex justify-center w-full">
-                      <LanguageToggle />
-                    </div>
-                  </div>
-                  
                   <Link href="/auth" onClick={() => setIsOpen(false)}>
                     <Button className="w-full justify-center max-w-xs">
                       <LogIn className="h-4 w-4 mr-2" />
@@ -174,6 +162,6 @@ export const MobileMenu = ({
           </motion.div>
         )}
       </AnimatePresence>
-    </div>
+    </>
   );
 };
