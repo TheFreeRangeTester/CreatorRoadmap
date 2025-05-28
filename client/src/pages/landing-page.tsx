@@ -12,7 +12,6 @@ import {
 } from "@/components/gsap-animations";
 import AnimatedTitle from "@/components/animated-title";
 import {
-  CloudLightning,
   ArrowRight,
   Check,
   CircleCheck,
@@ -26,7 +25,6 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
-  Card,
   CardContent,
   CardDescription,
   CardFooter,
@@ -34,15 +32,15 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Toggle, toggleVariants } from "@/components/ui/toggle";
 import BillingToggle from "../components/billing-toggle";
-import { ThemeToggle } from "@/components/theme-toggle";
-import { LanguageToggle } from "@/components/language-toggle";
-// No necesitamos importar useAuth para la página de inicio
 import { useIsMobile } from "@/hooks/use-mobile";
 import { useTranslation } from "react-i18next";
 import DemoDialog from "@/components/demo-dialog";
 import demoGifPath from "@assets/DemoGIF.gif";
+import { MobileMenu } from "@/components/mobile-menu";
+import { BottomBar } from "@/components/bottom-bar";
+import { ProfileFAB } from "@/components/profile-fab";
+import { LandingHeader } from "@/components/landing-header";
 
 const fadeIn = {
   hidden: { opacity: 0, y: 20 },
@@ -110,9 +108,6 @@ function PricingCard({
   ctaText,
   freeLabel,
   perMonth,
-  yearlyPrice,
-  savings,
-  className,
 }: {
   name: string;
   price: string;
@@ -239,8 +234,7 @@ function Testimonial({
 }
 
 export default function LandingPage() {
-  const isMobile = useIsMobile();
-  const [, navigate] = useLocation();
+  const [] = useLocation();
   const [isDemoOpen, setIsDemoOpen] = useState(false);
   const [billingPeriod, setBillingPeriod] = useState("monthly");
   const { t } = useTranslation();
@@ -263,7 +257,6 @@ export default function LandingPage() {
   }, []);
 
   // Hero title ref para animación avanzada (estilo GSAP.com)
-  const heroTitle3DRef = useRef(null);
   const heroBadgeRef = useRef(null);
   const heroGraphicRef = useRef(null);
   const heroButtonRef = useRef(null);
@@ -383,57 +376,9 @@ export default function LandingPage() {
     <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white dark:from-gray-950 dark:to-gray-900">
       {/* Modal de demostración */}
       <DemoDialog open={isDemoOpen} onOpenChange={setIsDemoOpen} />
+
       {/* Header */}
-      <header className="fixed w-full bg-white/80 dark:bg-gray-900/80 backdrop-blur-md border-b border-gray-200 dark:border-gray-800 z-50">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16">
-            <div className="flex items-center">
-              <img
-                src={new URL("@/assets/logo.png", import.meta.url).href}
-                alt="Logo"
-                className="h-8 w-8 object-contain"
-              />
-              <h1 className="ml-2 text-xl font-bold text-neutral-800 dark:text-white">
-                Fanlist
-              </h1>
-            </div>
-            <div className="flex items-center gap-4">
-              <div className="hidden md:flex items-center gap-6">
-                <a
-                  href="#features"
-                  className="text-sm font-medium text-gray-600 hover:text-primary dark:text-gray-300 dark:hover:text-primary-400 transition-colors"
-                >
-                  {t("landing.menu.features")}
-                </a>
-                <a
-                  href="#pricing"
-                  className="text-sm font-medium text-gray-600 hover:text-primary dark:text-gray-300 dark:hover:text-primary-400 transition-colors"
-                >
-                  {t("landing.menu.pricing")}
-                </a>
-                <a
-                  href="#testimonials"
-                  className="text-sm font-medium text-gray-600 hover:text-primary dark:text-gray-300 dark:hover:text-primary-400 transition-colors"
-                >
-                  {t("landing.menu.testimonials")}
-                </a>
-              </div>
-              <div className="flex items-center gap-4">
-                <ThemeToggle />
-                <LanguageToggle />
-                <div className="flex gap-2">
-                  <Link href="/auth?direct=true">
-                    <Button variant="outline">{t("landing.cta.login")}</Button>
-                  </Link>
-                  <Link href="/auth?direct=true&register=true">
-                    <Button>{t("landing.cta.register")}</Button>
-                  </Link>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </header>
+      <LandingHeader />
 
       {/* Hero */}
       <section className="pt-32 pb-20 md:pt-40 md:pb-32 relative overflow-hidden">
@@ -1238,6 +1183,12 @@ export default function LandingPage() {
           </div>
         </div>
       </footer>
+
+      {/* Barra inferior para móvil */}
+      <BottomBar />
+
+      {/* Botón flotante de perfil para móvil */}
+      <ProfileFAB />
     </div>
   );
 }
