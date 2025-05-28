@@ -122,27 +122,28 @@ export default function CreatorControls({ onAddIdea }: CreatorControlsProps) {
   };
   
   return (
-    <div className="bg-white p-4 rounded-lg shadow mb-6 dark:bg-neutral-800">
-      <div className="flex flex-col gap-4">
-        {/* Header row */}
-        <div className="sm:flex sm:items-center sm:justify-between">
-          <h2 className="text-lg font-medium text-neutral-800 dark:text-white">
+    <div className="bg-white p-3 sm:p-4 rounded-lg shadow mb-4 sm:mb-6 dark:bg-neutral-800">
+      <div className="flex flex-col gap-3 sm:gap-4">
+        {/* Header row - responsive */}
+        <div className="flex flex-col space-y-3 sm:flex-row sm:items-center sm:justify-between sm:space-y-0">
+          <h2 className="text-base sm:text-lg font-medium text-neutral-800 dark:text-white">
             {t('dashboard.creatorDashboard', 'Creator Dashboard')}
           </h2>
           <Button
             onClick={onAddIdea}
-            className="mt-3 sm:mt-0"
+            className="w-full sm:w-auto"
+            size="sm"
           >
             <PlusCircle className="w-4 h-4 mr-2" />
-            {t('ideas.addIdea', 'Add New Idea')}
+            <span className="text-sm">{t('ideas.addIdea', 'Add New Idea')}</span>
           </Button>
         </div>
 
-        {/* Subscription promotion row */}
+        {/* Subscription promotion row - mobile optimized */}
         {user && user.subscriptionStatus !== 'premium' && (
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 p-3 bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-900/20 dark:to-purple-900/20 rounded-lg border border-blue-200 dark:border-blue-700">
+          <div className="flex flex-col gap-3 p-3 bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-900/20 dark:to-purple-900/20 rounded-lg border border-blue-200 dark:border-blue-700">
             <div className="flex-1">
-              <p className="text-sm font-medium text-gray-900 dark:text-white">
+              <p className="text-sm font-medium text-gray-900 dark:text-white leading-tight">
                 {user.subscriptionStatus === 'trial' 
                   ? t('subscription.trial.unlockFeatures')
                   : !user.hasUsedTrial 
@@ -150,11 +151,11 @@ export default function CreatorControls({ onAddIdea }: CreatorControlsProps) {
                     : t('subscription.trial.unlockFeatures')
                 }
               </p>
-              <p className="text-xs text-gray-600 dark:text-gray-300">
+              <p className="text-xs text-gray-600 dark:text-gray-300 mt-1">
                 {t('subscription.trial.noCommitment')}
               </p>
             </div>
-            <div className="flex-shrink-0">
+            <div className="flex justify-center sm:justify-end">
               {renderSubscriptionButton()}
             </div>
           </div>

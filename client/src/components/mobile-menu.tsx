@@ -158,7 +158,8 @@ export const MobileMenu = ({
                   </div>
                 ) : (
                   <div className="w-full flex flex-col items-center space-y-6">
-                    <div className="flex flex-col items-center space-y-4 w-full">
+                    {/* Mobile toggles section */}
+                    <div className="flex flex-col items-center space-y-4 w-full sm:hidden">
                       <div className="flex justify-center w-full">
                         <ThemeToggle />
                       </div>
@@ -168,7 +169,8 @@ export const MobileMenu = ({
                     </div>
                     
                     <Link href="/auth" onClick={() => setIsOpen(false)}>
-                      <Button className="w-full justify-center">
+                      <Button className="w-full justify-center max-w-xs">
+                        <LogIn className="h-4 w-4 mr-2" />
                         {t('common.login', 'Iniciar sesión')}
                       </Button>
                     </Link>

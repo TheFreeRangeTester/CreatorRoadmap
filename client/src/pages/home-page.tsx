@@ -470,18 +470,19 @@ export default function HomePage() {
     <div className="bg-gray-50 dark:bg-gray-950 min-h-screen">
       {/* Header */}
       <header className="bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800 sticky top-0 z-10">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="container mx-auto px-3 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
-            <div className="flex items-center">
-              <img src={new URL('@/assets/logo.png', import.meta.url).href} alt="Logo" className="h-8 w-auto" />
-              <div className="ml-2">
-                <h1 className="text-xl font-bold text-neutral-800 dark:text-white">
+            {/* Logo and title section - responsive */}
+            <div className="flex items-center min-w-0 flex-1">
+              <img src={new URL('@/assets/logo.png', import.meta.url).href} alt="Logo" className="h-7 sm:h-8 w-auto flex-shrink-0" />
+              <div className="ml-2 min-w-0 flex-1">
+                <h1 className="text-base sm:text-xl font-bold text-neutral-800 dark:text-white truncate">
                   {t("dashboard.creatorDashboard", "Idea Leaderboard")}
                 </h1>
-                <div className="text-xs text-muted-foreground flex items-center">
+                <div className="text-xs text-muted-foreground flex items-center mt-0.5">
                   <Badge
                     variant="outline"
-                    className="bg-primary/10 text-primary dark:bg-primary-900/30 dark:text-primary-300 h-5 rounded-sm"
+                    className="bg-primary/10 text-primary dark:bg-primary-900/30 dark:text-primary-300 h-4 sm:h-5 rounded-sm text-xs px-1.5 sm:px-2"
                   >
                     {t("dashboard.creatorView", "Panel de creador")}
                   </Badge>
@@ -490,9 +491,11 @@ export default function HomePage() {
             </div>
 
             {/* Desktop menu */}
-            <div className="hidden md:flex items-center gap-4">
+            <div className="hidden lg:flex items-center gap-3">
+              <ThemeToggle />
+              <LanguageToggle />
               {user ? (
-                <div className="flex items-center gap-4">
+                <div className="flex items-center gap-3">
                   <Link href="/profile">
                     <Badge
                       variant="outline"
@@ -514,7 +517,7 @@ export default function HomePage() {
               ) : (
                 <div className="flex items-center gap-3">
                   <Link href="/auth">
-                    <Button size="sm" className="ml-1">
+                    <Button size="sm">
                       {t("common.login", "Log in")}
                     </Button>
                   </Link>
@@ -522,45 +525,53 @@ export default function HomePage() {
               )}
             </div>
 
-            {/* Mobile menu */}
-            <MobileMenu onLogout={handleLogout} />
+            {/* Mobile menu and quick toggles */}
+            <div className="flex items-center gap-2 lg:hidden">
+              <div className="hidden sm:flex items-center gap-2">
+                <ThemeToggle />
+                <LanguageToggle />
+              </div>
+              <MobileMenu onLogout={handleLogout} />
+            </div>
           </div>
         </div>
       </header>
 
-      <main className="container mx-auto px-4 sm:px-6 lg:px-8 py-6">
+      <main className="container mx-auto px-3 sm:px-6 lg:px-8 py-4 sm:py-6">
         {/* Creator Controls (solo visible para creadores) */}
         {user && user.userRole === "creator" && (
           <CreatorControls onAddIdea={handleAddIdea} />
         )}
 
         {/* Main content for both authenticated and non-authenticated users */}
-        <div className="mt-6">
+        <div className="mt-4 sm:mt-6">
           {user ? (
-            // Two-column layout for authenticated users
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            // Responsive layout for authenticated users
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
               {/* Main content area (2/3 width on larger screens) */}
-              <div className="lg:col-span-2 space-y-6">
+              <div className="lg:col-span-2 space-y-4 sm:space-y-6">
                 <LeaderboardInfo />
 
                 {/* Tabs for ideas view - Only for creators */}
                 {user.userRole === "creator" ? (
                   <Tabs defaultValue="published" className="w-full">
-                    <div className="flex justify-between items-center mb-6">
-                      <TabsList className="grid grid-cols-2 w-60">
+                    <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-4 sm:mb-6 space-y-3 sm:space-y-0">
+                      <TabsList className="grid grid-cols-2 w-full sm:w-60">
                         <TabsTrigger
                           value="published"
-                          className="flex items-center gap-1"
+                          className="flex items-center gap-1 text-xs sm:text-sm"
                         >
-                          <ListFilter className="w-4 h-4" />
-                          {t("dashboard.myIdeas", "Mis Ideas")}
+                          <ListFilter className="w-3 h-3 sm:w-4 sm:h-4" />
+                          <span className="hidden xs:inline">{t("dashboard.myIdeas", "Mis Ideas")}</span>
+                          <span className="xs:hidden">{t("dashboard.published", "Ideas")}</span>
                         </TabsTrigger>
                         <TabsTrigger
                           value="suggested"
-                          className="flex items-center gap-1"
+                          className="flex items-center gap-1 text-xs sm:text-sm"
                         >
-                          <Lightbulb className="w-4 h-4" />
-                          {t("dashboard.suggested", "Sugeridas")}
+                          <Lightbulb className="w-3 h-3 sm:w-4 sm:h-4" />
+                          <span className="hidden xs:inline">{t("dashboard.suggested", "Sugeridas")}</span>
+                          <span className="xs:hidden">{t("dashboard.suggestions", "Sugeridas")}</span>
                         </TabsTrigger>
                       </TabsList>
                     </div>

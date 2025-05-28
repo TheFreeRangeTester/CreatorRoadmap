@@ -210,20 +210,20 @@ export default function IdeaCard({
       </AnimatePresence>
 
       <Card className="idea-card overflow-hidden dark:bg-gray-800 dark:border-gray-700">
-        <CardContent className="p-6">
-          <div className="flex justify-between items-start mb-4">
-            <h3 className="text-lg font-semibold text-neutral-800 dark:text-white">
+        <CardContent className="p-4 sm:p-6">
+          <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start mb-3 sm:mb-4 space-y-2 sm:space-y-0">
+            <h3 className="text-base sm:text-lg font-semibold text-neutral-800 dark:text-white leading-tight pr-2">
               {idea.title}
             </h3>
             <motion.span
               variants={positionBadgeVariants}
-              className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-semibold ${position.className}`}
+              className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-semibold self-start ${position.className}`}
             >
               {position.icon}
               {position.text}
             </motion.span>
           </div>
-          <p className="text-neutral-600 dark:text-neutral-300 text-sm mb-4">
+          <p className="text-neutral-600 dark:text-neutral-300 text-sm leading-relaxed mb-3 sm:mb-4">
             {idea.description}
           </p>
 
@@ -249,7 +249,7 @@ export default function IdeaCard({
             )}
           </AnimatePresence>
 
-          <div className="flex justify-between items-center">
+          <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center space-y-3 sm:space-y-0">
             <div className="flex items-center">
               {/* Solo mostrar el botón de voto cuando NO estamos en el dashboard del creador y no es el creador de la idea */}
               {!onEdit && !onDelete && !isCreator && (
@@ -257,7 +257,7 @@ export default function IdeaCard({
                   variants={buttonVariants}
                   whileHover="hover"
                   whileTap="tap"
-                  className={`flex items-center px-3 py-1 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-1 dark:focus:ring-offset-gray-800 min-w-[70px] ${
+                  className={`flex items-center px-3 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-1 dark:focus:ring-offset-gray-800 min-w-[80px] text-sm ${
                     hasVoted
                       ? "bg-neutral-100 dark:bg-gray-700 text-neutral-400 dark:text-neutral-500 cursor-not-allowed"
                       : "bg-primary-50 dark:bg-primary-900/50 text-primary dark:text-primary-300 hover:bg-primary-100 dark:hover:bg-primary-800/70"
@@ -313,16 +313,16 @@ export default function IdeaCard({
 
             {/* Edit and Delete actions for creators */}
             {(onEdit || onDelete) && (
-              <div className="flex space-x-1">
+              <div className="flex space-x-2 justify-end sm:justify-start">
                 {onEdit && (
                   <motion.button
                     whileHover={{ scale: 1.1, rotate: 5 }}
                     whileTap={{ scale: 0.9 }}
                     onClick={() => onEdit(idea)}
-                    className="p-1 text-neutral-400 hover:text-neutral-500 dark:text-neutral-400 dark:hover:text-neutral-300"
+                    className="p-2 text-neutral-400 hover:text-neutral-500 dark:text-neutral-400 dark:hover:text-neutral-300 rounded-md hover:bg-neutral-100 dark:hover:bg-gray-700"
                     aria-label="Edit idea"
                   >
-                    <Pencil className="w-5 h-5" />
+                    <Pencil className="w-4 h-4 sm:w-5 sm:h-5" />
                   </motion.button>
                 )}
                 {onDelete && (
@@ -330,10 +330,10 @@ export default function IdeaCard({
                     whileHover={{ scale: 1.1, rotate: 5 }}
                     whileTap={{ scale: 0.9 }}
                     onClick={() => onDelete(idea.id)}
-                    className="p-1 text-neutral-400 hover:text-red-500 dark:text-neutral-400 dark:hover:text-red-400"
+                    className="p-2 text-neutral-400 hover:text-red-500 dark:text-neutral-400 dark:hover:text-red-400 rounded-md hover:bg-neutral-100 dark:hover:bg-gray-700"
                     aria-label="Delete idea"
                   >
-                    <Trash2 className="w-5 h-5" />
+                    <Trash2 className="w-4 h-4 sm:w-5 sm:h-5" />
                   </motion.button>
                 )}
               </div>
