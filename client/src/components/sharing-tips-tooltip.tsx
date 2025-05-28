@@ -30,21 +30,29 @@ export function SharingTipsTooltip() {
           <Lightbulb className="h-5 w-5" />
         </button>
         {isOpen && (
-          <div className="absolute z-50 mt-2 w-64 p-4 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700">
-            <div className="space-y-2">
-              <h4 className="font-medium text-sm text-gray-900 dark:text-white">
-                {t("dashboard.sharingTips")}
-              </h4>
-              <ul className="space-y-2">
-                {tips.map((tip, index) => (
-                  <li key={index} className="flex items-start gap-2">
-                    <span className="text-primary text-sm">•</span>
-                    <span className="text-sm text-gray-600 dark:text-gray-300">
-                      {tip}
-                    </span>
-                  </li>
-                ))}
-              </ul>
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[90%] max-w-[320px] p-4 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700">
+              <div className="space-y-2">
+                <h4 className="font-medium text-sm text-gray-900 dark:text-white">
+                  {t("dashboard.sharingTips")}
+                </h4>
+                <ul className="space-y-2">
+                  {tips.map((tip, index) => (
+                    <li key={index} className="flex items-start gap-2">
+                      <span className="text-primary text-sm">•</span>
+                      <span className="text-sm text-gray-600 dark:text-gray-300">
+                        {tip}
+                      </span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+              <button
+                onClick={() => setIsOpen(false)}
+                className="absolute top-2 right-2 text-gray-400 hover:text-gray-600 dark:text-gray-500 dark:hover:text-gray-300"
+              >
+                ×
+              </button>
             </div>
           </div>
         )}
