@@ -207,6 +207,14 @@ export default function SubscriptionPage() {
       <header className="border-b border-gray-200 dark:border-gray-700 bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm">
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
+            <Button
+              variant="outline"
+              onClick={() => navigate("/dashboard")}
+              className="flex items-center gap-2"
+            >
+              <ArrowLeft className="w-4 h-4" />
+              {t("subscription.navigation.backToDashboard")}
+            </Button>
             <div className="flex items-center gap-3">
               <button
                 onClick={() => navigate("/dashboard")}
@@ -222,14 +230,8 @@ export default function SubscriptionPage() {
                 </span>
               </button>
             </div>
-            <Button
-              variant="outline"
-              onClick={() => navigate("/dashboard")}
-              className="flex items-center gap-2"
-            >
-              <ArrowLeft className="w-4 h-4" />
-              {t("subscription.navigation.backToDashboard")}
-            </Button>
+            <div className="w-[120px]"></div>{" "}
+            {/* Espaciador para mantener el logo centrado */}
           </div>
         </div>
       </header>
