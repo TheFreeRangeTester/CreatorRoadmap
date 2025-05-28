@@ -298,10 +298,10 @@
   "badges": {
     "votes": "votos",
     "vote": "voto",
-    "up": "↑{{change}}",
-    "down": "↓{{change}}",
-    "same": "Igual",
-    "new": "Nueva"
+    "up": "Subió {{change}} posiciones",
+    "down": "Bajó {{change}} posiciones",
+    "same": "Misma posición",
+    "new": "Idea nueva"
   },
   "publicLeaderboard": {
     "title": "Ranking Público",
