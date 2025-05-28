@@ -492,8 +492,10 @@ export default function HomePage() {
 
             {/* Desktop menu */}
             <div className="hidden md:flex items-center gap-3">
-              <ThemeToggle />
-              <LanguageToggle />
+              <div className="hidden lg:flex items-center gap-3">
+                <ThemeToggle />
+                <LanguageToggle />
+              </div>
               {user ? (
                 <div className="flex items-center gap-3">
                   <Link href="/profile">
@@ -526,7 +528,7 @@ export default function HomePage() {
             </div>
 
             {/* Mobile menu - solo burger menu */}
-            <div className="md:hidden">
+            <div className="lg:hidden">
               <MobileMenu onLogout={handleLogout} />
             </div>
           </div>
