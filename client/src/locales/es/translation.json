@@ -277,7 +277,8 @@
     "confirmDelete": "¿Estás seguro de que quieres eliminar esta idea? Esta acción no se puede deshacer y se perderán todos los votos.",
     "delete": "Eliminar",
     "noPublishedIdeas": "Aún no hay ideas publicadas",
-    "createFirstIdea": "Crea tu primera idea para comenzar"
+    "createFirstIdea": "Crea tu primera idea para comenzar",
+    "suggestedIdeasWillAppear": "Las ideas sugeridas por tu audiencia aparecerán aquí"
   },
   "dashboard": {
     "topIdeas": "Ideas Principales",
