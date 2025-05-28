@@ -525,12 +525,8 @@ export default function HomePage() {
               )}
             </div>
 
-            {/* Mobile menu and quick toggles */}
-            <div className="flex items-center gap-2 lg:hidden">
-              <div className="hidden sm:flex items-center gap-2">
-                <ThemeToggle />
-                <LanguageToggle />
-              </div>
+            {/* Mobile menu - solo burger menu */}
+            <div className="md:hidden">
               <MobileMenu onLogout={handleLogout} />
             </div>
           </div>
