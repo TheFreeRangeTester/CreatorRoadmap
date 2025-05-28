@@ -19,14 +19,27 @@ export function SharingTipsTooltip() {
   ];
 
   return (
-    <TooltipProvider>
+    <TooltipProvider delayDuration={0}>
       <Tooltip>
         <TooltipTrigger asChild>
-          <button className="inline-flex items-center justify-center rounded-full p-2 text-gray-500 hover:text-primary dark:text-gray-400 dark:hover:text-primary-400 transition-colors">
+          <button
+            className="inline-flex items-center justify-center rounded-full p-2 text-gray-500 hover:text-primary dark:text-gray-400 dark:hover:text-primary-400 transition-colors"
+            onClick={(e) => {
+              if (isMobile) {
+                e.preventDefault();
+                e.stopPropagation();
+              }
+            }}
+          >
             <Lightbulb className="h-5 w-5" />
           </button>
         </TooltipTrigger>
-        <TooltipContent className="w-64 p-4">
+        <TooltipContent
+          side="bottom"
+          align="start"
+          className="w-64 p-4"
+          sideOffset={5}
+        >
           <div className="space-y-2">
             <h4 className="font-medium text-sm text-gray-900 dark:text-white">
               {t("dashboard.sharingTips")}
