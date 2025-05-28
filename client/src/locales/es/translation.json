@@ -400,5 +400,32 @@
       "unlockFeatures": "Desbloquea todas las funciones premium",
       "noCommitment": "Sin compromiso, cancela en cualquier momento"
     }
+  },
+  "profile": {
+    "editProfile": "Editar Perfil",
+    "editProfileDesc": "Personaliza la información y apariencia de tu perfil",
+    "logoUrl": "URL de Foto de Perfil",
+    "logoUrlPlaceholder": "Ingresa la URL de tu foto de perfil",
+    "logoUrlHelp": "Ingresa una URL para tu foto de perfil (tamaño recomendado: 400x400px)",
+    "description": "Descripción del Perfil",
+    "descriptionPlaceholder": "Cuéntanos sobre ti y tu contenido",
+    "background": "Fondo del Perfil",
+    "backgroundDesc": "Elige un fondo para tu perfil público. El patrón se adaptará automáticamente al modo claro/oscuro.",
+    "gradient1": "Sutil",
+    "gradient2": "Azul/Índigo",
+    "gradient3": "Verde/Teal",
+    "gradient4": "Rosa/Naranja",
+    "pattern1": "Puntos",
+    "pattern2": "Cuadrícula",
+    "socialLinks": "Enlaces de Redes Sociales",
+    "updateSuccess": "Perfil Actualizado",
+    "updateSuccessDesc": "Tu perfil ha sido actualizado exitosamente",
+    "updateError": "Error al Actualizar",
+    "updateErrorDesc": "No se pudo actualizar tu perfil. Por favor intenta de nuevo.",
+    "becomeCreator": "¿Quieres ser creador?",
+    "becomeCreatorDesc": "Como creador, podrás gestionar tu propio leaderboard de ideas y recibir sugerencias de tu audiencia.",
+    "becomeCreatorConfirm": "¿Estás seguro de que quieres convertirte en creador? Podrás comenzar a gestionar tu propio leaderboard de ideas.",
+    "becomeCreatorSuccess": "¡Rol Actualizado!",
+    "becomeCreatorSuccessDesc": "Tu cuenta ha sido actualizada a creador. Serás redirigido al dashboard."
   }
 }
