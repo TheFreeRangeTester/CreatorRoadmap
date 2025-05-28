@@ -201,6 +201,8 @@
     "voted": "Voted!",
     "share": "Share",
     "login": "Login",
+    "logout": "Log out",
+    "register": "Register",
     "cancel": "Cancel",
     "suggest": "Suggest",
     "greeting": "👋🏻 Hi",
