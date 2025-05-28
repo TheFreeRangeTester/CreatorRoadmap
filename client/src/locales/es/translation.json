@@ -216,7 +216,10 @@
     "yourOpinionMatters": "Tu opinión es importante para este creador",
     "sessionExpired": "Sesión expirada",
     "pleaseLoginAgain": "Por favor inicia sesión nuevamente",
-    "loginToVote": "Inicia sesión para votar"
+    "loginToVote": "Inicia sesión para votar",
+    "reset": "Restablecer",
+    "save": "Guardar",
+    "saving": "Guardando..."
   },
   "creator": {
     "voteSuccess": "¡Voto registrado!",
