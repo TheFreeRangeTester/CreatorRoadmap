@@ -184,12 +184,12 @@ export default function IdeaForm({ isOpen, idea, onClose }: IdeaFormProps) {
               name="title"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>{t("ideaForm.title", "Título")}</FormLabel>
+                  <FormLabel>{t("ideaForm.title", "Title")}</FormLabel>
                   <FormControl>
                     <Input
                       placeholder={t(
                         "ideaForm.titlePlaceholder",
-                        "Ingresa un título llamativo (requerido)"
+                        "Enter a catchy title (required)"
                       )}
                       maxLength={100}
                       {...field}
@@ -206,13 +206,13 @@ export default function IdeaForm({ isOpen, idea, onClose }: IdeaFormProps) {
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>
-                    {t("ideaForm.description", "Descripción")}
+                    {t("ideaForm.description", "Description")}
                   </FormLabel>
                   <FormControl>
                     <Textarea
                       placeholder={t(
                         "ideaForm.descriptionPlaceholder",
-                        "Describe tu idea en 280 caracteres o menos"
+                        "Describe your idea in 280 characters or less"
                       )}
                       maxLength={280}
                       className="resize-none h-24"
@@ -220,7 +220,7 @@ export default function IdeaForm({ isOpen, idea, onClose }: IdeaFormProps) {
                     />
                   </FormControl>
                   <div className="mt-1 text-xs text-neutral-500 text-right">
-                    {charCount}/280 {t("ideaForm.characters", "caracteres")}
+                    {charCount}/280 {t("ideaForm.characters", "characters")}
                   </div>
                   <FormMessage />
                 </FormItem>
