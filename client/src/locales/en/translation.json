@@ -301,7 +301,13 @@
     "up": "Up {{change}} positions",
     "down": "Down {{change}} positions",
     "same": "Same position",
-    "new": "New idea"
+    "new": "New idea",
+    "legend": {
+      "up": "Up positions",
+      "down": "Down positions",
+      "same": "Same position",
+      "new": "New idea"
+    }
   },
   "publicLeaderboard": {
     "title": "Public Leaderboard",

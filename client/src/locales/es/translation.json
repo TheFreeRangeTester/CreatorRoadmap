@@ -301,7 +301,13 @@
     "up": "Subió {{change}} posiciones",
     "down": "Bajó {{change}} posiciones",
     "same": "Misma posición",
-    "new": "Idea nueva"
+    "new": "Idea nueva",
+    "legend": {
+      "up": "Subió posiciones",
+      "down": "Bajó posiciones",
+      "same": "Misma posición",
+      "new": "Idea nueva"
+    }
   },
   "publicLeaderboard": {
     "title": "Ranking Público",
