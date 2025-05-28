@@ -131,18 +131,22 @@ export default function CreatorControls({ onAddIdea }: CreatorControlsProps) {
       <div className="flex flex-col gap-3 sm:gap-4">
         {/* Header row - responsive */}
         <div className="flex flex-col space-y-3 sm:flex-row sm:items-center sm:justify-between sm:space-y-0">
-          <div className="flex items-center gap-2">
-            <h2 className="text-base sm:text-lg font-medium text-neutral-800 dark:text-white">
-              {t("dashboard.creatorDashboard", "Creator Dashboard")}
-            </h2>
-          </div>
-          <Button onClick={onAddIdea} className="w-full sm:w-auto" size="sm">
-            <PlusCircle className="w-4 h-4 mr-2" />
-            <span className="text-sm">
-              {t("ideas.addIdea", "Add New Idea")}
-            </span>
-          </Button>
+          <h2 className="text-base sm:text-lg font-medium text-neutral-800 dark:text-white">
+            {t("dashboard.creatorDashboard", "Creator Dashboard")}
+          </h2>
         </div>
+
+        {/* Botón de agregar idea - ahora más prominente */}
+        <Button
+          onClick={onAddIdea}
+          className="w-full sm:w-auto bg-gradient-to-r from-primary to-blue-600 hover:from-primary/90 hover:to-blue-700 text-white shadow-lg"
+          size="lg"
+        >
+          <PlusCircle className="w-5 h-5 mr-2" />
+          <span className="text-base">
+            {t("ideas.addIdea", "Add New Idea")}
+          </span>
+        </Button>
 
         {/* Subscription promotion row - mobile optimized */}
         {user && user.subscriptionStatus !== "premium" && (
