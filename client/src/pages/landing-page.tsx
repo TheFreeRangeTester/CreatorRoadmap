@@ -419,8 +419,10 @@ export default function LandingPage() {
                 </a>
               </div>
               <div className="flex items-center gap-4">
-                <ThemeToggle />
-                <LanguageToggle />
+                <div className="hidden md:flex items-center gap-2">
+                  <ThemeToggle />
+                  <LanguageToggle />
+                </div>
                 <div className="flex gap-2">
                   <Link href="/auth?direct=true">
                     <Button variant="outline">{t("landing.cta.login")}</Button>
@@ -784,7 +786,7 @@ export default function LandingPage() {
                         </div>
                       </div>
                     </div>
-                  </div>
+                                    </div>
                 </div>
               </motion.div>
             </div>

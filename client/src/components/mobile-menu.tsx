@@ -158,8 +158,7 @@ export const MobileMenu = ({
                   </div>
                 ) : (
                   <div className="w-full flex flex-col items-center space-y-6">
-                    {/* Mobile toggles section */}
-                    <div className="flex flex-col items-center space-y-4 w-full sm:hidden">
+                    <div className="flex flex-col items-center space-y-4 w-full">
                       <div className="flex justify-center w-full">
                         <ThemeToggle />
                       </div>
