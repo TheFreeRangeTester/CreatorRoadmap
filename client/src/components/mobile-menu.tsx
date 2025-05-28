@@ -55,7 +55,7 @@ export const MobileMenu = ({
         size="icon"
         aria-label={t('common.menu', 'Menu')}
         onClick={toggleMenu}
-        className={`relative z-50 ${transparent ? 'bg-white/20 text-white hover:bg-white/30 backdrop-blur-sm' : ''}`}
+        className={`relative z-[60] ${transparent ? 'bg-white/20 text-white hover:bg-white/30 backdrop-blur-sm' : ''}`}
       >
         {isOpen ? (
           <X className={`h-5 w-5 ${transparent ? 'text-white' : iconColor}`} />
@@ -71,7 +71,7 @@ export const MobileMenu = ({
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
             transition={{ duration: 0.2 }}
-            className={`fixed inset-0 z-40 pt-16 ${transparent ? 'bg-gradient-to-b from-blue-600 to-indigo-900' : 'bg-white dark:bg-gray-900'}`}
+            className={`fixed inset-0 z-50 pt-16 ${transparent ? 'bg-gradient-to-b from-blue-600 to-indigo-900' : 'bg-white dark:bg-gray-900'}`}
           >
             <div className="container mx-auto px-4 py-4 flex flex-col items-center gap-6">
               {isCreatorProfile ? (
