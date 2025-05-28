@@ -209,7 +209,7 @@ export default function IdeaCard({
         )}
       </AnimatePresence>
 
-      <Card className="idea-card overflow-hidden dark:bg-gray-800 dark:border-gray-700">
+      <Card className="idea-card overflow-hidden dark:bg-gray-800 dark:border-gray-700 bg-gradient-to-r from-primary/5 to-blue-500/5 dark:from-primary/10 dark:to-blue-500/10">
         <CardContent className="p-4 sm:p-6">
           <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start mb-3 sm:mb-4 space-y-2 sm:space-y-0">
             <h3 className="text-base sm:text-lg font-semibold text-neutral-800 dark:text-white leading-tight pr-2">
