@@ -5,8 +5,6 @@ import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
 import { useTranslation } from "react-i18next";
 import { useAuth } from "@/hooks/use-auth";
-import { ThemeToggle } from "@/components/theme-toggle";
-import { LanguageToggle } from "@/components/language-toggle";
 
 interface MobileMenuProps {
   onLogout?: () => void;
@@ -95,11 +93,6 @@ export const MobileMenu = ({
 
               <div className="flex-1 px-4 py-6">
                 <div className="flex flex-col gap-6">
-                  <div className="flex items-center justify-center gap-4 mb-6">
-                    <ThemeToggle />
-                    <LanguageToggle />
-                  </div>
-
                   {user ? (
                     <div className="w-full flex flex-col items-center space-y-6">
                       <Link href="/profile" onClick={() => setIsOpen(false)}>
