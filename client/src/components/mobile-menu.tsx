@@ -100,69 +100,22 @@ export const MobileMenu = ({
                     <LanguageToggle />
                   </div>
 
-                  {isCreatorProfile ? (
-                    <div className="w-full flex flex-col items-center space-y-6">
-                      {onRefresh && (
-                        <Button
-                          onClick={handleRefresh}
-                          className={`w-full justify-center ${
-                            transparent
-                              ? "bg-white/10 text-white hover:bg-white/20"
-                              : ""
-                          }`}
-                          variant={transparent ? "ghost" : "outline"}
-                        >
-                          <RefreshCcw className="h-5 w-5 mr-2" />
-                          {t("common.refresh", "Actualizar")}
-                        </Button>
-                      )}
-
-                      {user ? (
-                        <Button
-                          onClick={handleLogout}
-                          className="w-full justify-center text-red-600 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300"
-                          variant="outline"
-                          size="lg"
-                        >
-                          <LogOut className="h-5 w-5 mr-2" />
-                          {t("common.logout", "Cerrar sesión")}
-                        </Button>
-                      ) : (
-                        <Link
-                          to={`/auth?referrer=/creators/${username}`}
-                          onClick={() => setIsOpen(false)}
-                          className="w-full"
-                        >
-                          <Button
-                            className="w-full justify-center"
-                            variant={transparent ? "ghost" : "default"}
-                            size="lg"
-                          >
-                            <LogIn className="h-5 w-5 mr-2" />
-                            {t(
-                              "common.loginToVote",
-                              "Iniciar sesión para votar"
-                            )}
-                          </Button>
-                        </Link>
-                      )}
-                    </div>
-                  ) : user ? (
+                  {user ? (
                     <div className="w-full flex flex-col items-center space-y-6">
                       <Link href="/profile" onClick={() => setIsOpen(false)}>
                         <Button
-                          className="w-full justify-center max-w-xs"
+                          className="w-full justify-center"
                           variant="outline"
                           size="lg"
                         >
                           <User className="h-5 w-5 mr-2" />
-                          <span className="font-medium">{user.username}</span>
+                          {t("common.profile", "Perfil")}
                         </Button>
                       </Link>
 
                       <Button
                         onClick={handleLogout}
-                        className="w-full justify-center max-w-xs text-red-600 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300"
+                        className="w-full justify-center text-red-600 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300"
                         variant="outline"
                         size="lg"
                       >

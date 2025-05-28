@@ -8,6 +8,7 @@ import {
   Clock,
   User,
   ListFilter,
+  Plus,
 } from "lucide-react";
 import { useAuth } from "@/hooks/use-auth";
 import { useToast } from "@/hooks/use-toast";
@@ -467,16 +468,8 @@ export default function HomePage() {
               />
               <div className="ml-2 min-w-0 flex-1">
                 <h1 className="text-base sm:text-xl font-bold text-neutral-800 dark:text-white truncate">
-                  {t("dashboard.creatorDashboard", "Idea Leaderboard")}
+                  {t("dashboard.appName", "Fanlist")}
                 </h1>
-                <div className="text-xs text-muted-foreground flex items-center mt-0.5">
-                  <Badge
-                    variant="outline"
-                    className="bg-primary/10 text-primary dark:bg-primary-900/30 dark:text-primary-300 h-4 sm:h-5 rounded-sm text-xs px-1.5 sm:px-2"
-                  >
-                    {t("dashboard.creatorView", "Panel de creador")}
-                  </Badge>
-                </div>
               </div>
             </div>
 
@@ -484,10 +477,16 @@ export default function HomePage() {
             <div className="hidden md:flex items-center gap-3">
               {user ? (
                 <div className="flex items-center gap-3">
+                  <div className="text-sm text-muted-foreground">
+                    {t("dashboard.welcome", "Hola")},{" "}
+                    <span className="font-medium text-foreground">
+                      {user.username}
+                    </span>
+                  </div>
                   <Link href="/profile">
                     <Button variant="outline" size="sm">
                       <User className="h-4 w-4 mr-2" />
-                      {user.username}
+                      {t("common.profile", "Perfil")}
                     </Button>
                   </Link>
                   <Button
@@ -524,7 +523,22 @@ export default function HomePage() {
       <main className="container mx-auto px-3 sm:px-6 lg:px-8 py-4 sm:py-6">
         {/* Creator Controls (solo visible para creadores) */}
         {user && user.userRole === "creator" && (
-          <CreatorControls onAddIdea={handleAddIdea} />
+          <div className="space-y-4">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <div className="text-sm text-muted-foreground md:hidden">
+                  {t("dashboard.welcome", "Hola")},{" "}
+                  <span className="font-medium text-foreground">
+                    {user.username}
+                  </span>
+                </div>
+              </div>
+              <Button onClick={handleAddIdea} className="w-full md:w-auto">
+                <Plus className="h-4 w-4 mr-2" />
+                {t("ideas.addNew", "Agregar nueva idea")}
+              </Button>
+            </div>
+          </div>
         )}
 
         {/* Main content for both authenticated and non-authenticated users */}
