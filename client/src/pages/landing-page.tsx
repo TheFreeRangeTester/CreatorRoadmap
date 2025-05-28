@@ -12,7 +12,6 @@ import {
 } from "@/components/gsap-animations";
 import AnimatedTitle from "@/components/animated-title";
 import {
-  CloudLightning,
   ArrowRight,
   Check,
   CircleCheck,
@@ -26,7 +25,6 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
-  Card,
   CardContent,
   CardDescription,
   CardFooter,
@@ -34,7 +32,6 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Toggle, toggleVariants } from "@/components/ui/toggle";
 import BillingToggle from "../components/billing-toggle";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { LanguageToggle } from "@/components/language-toggle";
@@ -113,9 +110,6 @@ function PricingCard({
   ctaText,
   freeLabel,
   perMonth,
-  yearlyPrice,
-  savings,
-  className,
 }: {
   name: string;
   price: string;
@@ -242,8 +236,7 @@ function Testimonial({
 }
 
 export default function LandingPage() {
-  const isMobile = useIsMobile();
-  const [, navigate] = useLocation();
+  const [] = useLocation();
   const [isDemoOpen, setIsDemoOpen] = useState(false);
   const [billingPeriod, setBillingPeriod] = useState("monthly");
   const { t } = useTranslation();
@@ -266,7 +259,6 @@ export default function LandingPage() {
   }, []);
 
   // Hero title ref para animación avanzada (estilo GSAP.com)
-  const heroTitle3DRef = useRef(null);
   const heroBadgeRef = useRef(null);
   const heroGraphicRef = useRef(null);
   const heroButtonRef = useRef(null);
@@ -422,10 +414,6 @@ export default function LandingPage() {
                 </a>
               </div>
               <div className="flex items-center gap-4">
-                <div className="hidden md:flex items-center gap-2">
-                  <ThemeToggle />
-                  <LanguageToggle />
-                </div>
                 <div className="hidden md:flex gap-2">
                   <Link href="/auth?direct=true">
                     <Button variant="outline">{t("landing.cta.login")}</Button>
