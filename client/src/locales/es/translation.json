@@ -293,7 +293,14 @@
   "ideaForm": {
     "addTitle": "Agregar nueva idea",
     "addDescription": "Comparte tu idea con la comunidad. ¡Sé claro y conciso para obtener más votos!",
-    "submitIdea": "Guardar idea"
+    "submitIdea": "Guardar idea",
+    "title": "Título",
+    "description": "Descripción",
+    "characters": "caracteres",
+    "titlePlaceholder": "Ingresa un título llamativo (requerido)",
+    "descriptionPlaceholder": "Describe tu idea en 280 caracteres o menos",
+    "editTitle": "Editar idea",
+    "editDescription": "Realiza cambios en tu idea."
   },
   "badges": {
     "votes": "votos",
