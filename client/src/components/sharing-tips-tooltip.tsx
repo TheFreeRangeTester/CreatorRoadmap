@@ -7,10 +7,12 @@ import {
 import { Lightbulb } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { useState } from "react";
 
 export function SharingTipsTooltip() {
   const { t } = useTranslation();
   const isMobile = useIsMobile();
+  const [isOpen, setIsOpen] = useState(false);
 
   const tips = [
     t("dashboard.shareTip1"),
@@ -18,19 +20,43 @@ export function SharingTipsTooltip() {
     t("dashboard.shareTip3"),
   ];
 
+  if (isMobile) {
+    return (
+      <div className="relative">
+        <button
+          className="inline-flex items-center justify-center rounded-full p-2 text-gray-500 hover:text-primary dark:text-gray-400 dark:hover:text-primary-400 transition-colors"
+          onClick={() => setIsOpen(!isOpen)}
+        >
+          <Lightbulb className="h-5 w-5" />
+        </button>
+        {isOpen && (
+          <div className="absolute z-50 mt-2 w-64 p-4 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700">
+            <div className="space-y-2">
+              <h4 className="font-medium text-sm text-gray-900 dark:text-white">
+                {t("dashboard.sharingTips")}
+              </h4>
+              <ul className="space-y-2">
+                {tips.map((tip, index) => (
+                  <li key={index} className="flex items-start gap-2">
+                    <span className="text-primary text-sm">•</span>
+                    <span className="text-sm text-gray-600 dark:text-gray-300">
+                      {tip}
+                    </span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        )}
+      </div>
+    );
+  }
+
   return (
     <TooltipProvider delayDuration={0}>
       <Tooltip>
         <TooltipTrigger asChild>
-          <button
-            className="inline-flex items-center justify-center rounded-full p-2 text-gray-500 hover:text-primary dark:text-gray-400 dark:hover:text-primary-400 transition-colors"
-            onClick={(e) => {
-              if (isMobile) {
-                e.preventDefault();
-                e.stopPropagation();
-              }
-            }}
-          >
+          <button className="inline-flex items-center justify-center rounded-full p-2 text-gray-500 hover:text-primary dark:text-gray-400 dark:hover:text-primary-400 transition-colors">
             <Lightbulb className="h-5 w-5" />
           </button>
         </TooltipTrigger>
