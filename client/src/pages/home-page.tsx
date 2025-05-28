@@ -2,13 +2,10 @@ import { useState } from "react";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import {
   Loader2,
-  CloudLightning,
-  Share2,
   CheckCircle,
   XCircle,
   Lightbulb,
   Clock,
-  ChevronRight,
   User,
   ListFilter,
 } from "lucide-react";
@@ -19,22 +16,11 @@ import IdeaCard from "@/components/idea-card";
 import IdeaForm from "@/components/idea-form";
 import DeleteConfirmation from "@/components/delete-confirmation";
 import CreatorControls from "@/components/creator-controls";
-import { ThemeToggle } from "@/components/theme-toggle";
-import { LanguageToggle } from "@/components/language-toggle";
 import { MobileMenu } from "@/components/mobile-menu";
 import LeaderboardInfo from "@/components/leaderboard-info";
 import EmptyState from "@/components/empty-state";
 import ShareProfile from "@/components/share-profile";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { ScrollArea } from "@/components/ui/scroll-area";
 import { Badge } from "@/components/ui/badge";
 import { Link } from "wouter";
 import { IdeaResponse } from "@shared/schema";
@@ -474,7 +460,11 @@ export default function HomePage() {
           <div className="flex justify-between items-center h-16">
             {/* Logo and title section - responsive */}
             <div className="flex items-center min-w-0 flex-1">
-              <img src={new URL('@/assets/logo.png', import.meta.url).href} alt="Logo" className="h-7 sm:h-8 w-auto flex-shrink-0" />
+              <img
+                src={new URL("@/assets/logo.png", import.meta.url).href}
+                alt="Logo"
+                className="h-7 sm:h-8 w-auto flex-shrink-0"
+              />
               <div className="ml-2 min-w-0 flex-1">
                 <h1 className="text-base sm:text-xl font-bold text-neutral-800 dark:text-white truncate">
                   {t("dashboard.creatorDashboard", "Idea Leaderboard")}
@@ -492,36 +482,32 @@ export default function HomePage() {
 
             {/* Desktop menu */}
             <div className="hidden md:flex items-center gap-3">
-              <div className="hidden lg:flex items-center gap-3">
-                <ThemeToggle />
-                <LanguageToggle />
-              </div>
               {user ? (
                 <div className="flex items-center gap-3">
                   <Link href="/profile">
-                    <Badge
-                      variant="outline"
-                      className="bg-blue-50 text-blue-700 border-blue-200 dark:bg-blue-900/20 dark:text-blue-300 dark:border-blue-800/50 px-3 py-1 transition-all duration-300 hover:shadow-md hover:-translate-y-0.5 cursor-pointer"
-                    >
-                      <User className="h-3.5 w-3.5 mr-1.5 text-blue-500 dark:text-blue-400" />
-                      <span className="font-medium">{user.username}</span>
-                    </Badge>
+                    <Button variant="outline" size="sm">
+                      <User className="h-4 w-4 mr-2" />
+                      {user.username}
+                    </Button>
                   </Link>
                   <Button
                     variant="outline"
-                    onClick={handleLogout}
                     size="sm"
-                    className="border-gray-300 dark:border-gray-700 text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700"
+                    onClick={handleLogout}
+                    className="text-red-600 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300"
                   >
-                    {t("common.logout", "Log out")}
+                    {t("common.logout")}
                   </Button>
                 </div>
               ) : (
                 <div className="flex items-center gap-3">
                   <Link href="/auth">
-                    <Button size="sm">
-                      {t("common.login", "Log in")}
+                    <Button variant="outline" size="sm">
+                      {t("common.login")}
                     </Button>
+                  </Link>
+                  <Link href="/auth?register=true">
+                    <Button size="sm">{t("common.register")}</Button>
                   </Link>
                 </div>
               )}
@@ -560,16 +546,24 @@ export default function HomePage() {
                           className="flex items-center gap-1 text-xs sm:text-sm"
                         >
                           <ListFilter className="w-3 h-3 sm:w-4 sm:h-4" />
-                          <span className="hidden xs:inline">{t("dashboard.myIdeas", "Mis Ideas")}</span>
-                          <span className="xs:hidden">{t("dashboard.published", "Ideas")}</span>
+                          <span className="hidden xs:inline">
+                            {t("dashboard.myIdeas", "Mis Ideas")}
+                          </span>
+                          <span className="xs:hidden">
+                            {t("dashboard.published", "Ideas")}
+                          </span>
                         </TabsTrigger>
                         <TabsTrigger
                           value="suggested"
                           className="flex items-center gap-1 text-xs sm:text-sm"
                         >
                           <Lightbulb className="w-3 h-3 sm:w-4 sm:h-4" />
-                          <span className="hidden xs:inline">{t("dashboard.suggested", "Sugeridas")}</span>
-                          <span className="xs:hidden">{t("dashboard.suggestions", "Sugeridas")}</span>
+                          <span className="hidden xs:inline">
+                            {t("dashboard.suggested", "Sugeridas")}
+                          </span>
+                          <span className="xs:hidden">
+                            {t("dashboard.suggestions", "Sugeridas")}
+                          </span>
                         </TabsTrigger>
                       </TabsList>
                     </div>

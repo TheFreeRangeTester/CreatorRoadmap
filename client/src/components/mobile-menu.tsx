@@ -5,6 +5,8 @@ import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
 import { useTranslation } from "react-i18next";
 import { useAuth } from "@/hooks/use-auth";
+import { ThemeToggle } from "@/components/theme-toggle";
+import { LanguageToggle } from "@/components/language-toggle";
 
 interface MobileMenuProps {
   onLogout?: () => void;
@@ -74,90 +76,121 @@ export const MobileMenu = ({
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
             transition={{ duration: 0.2 }}
-            className={`fixed inset-0 z-50 pt-16 ${
-              transparent
-                ? "bg-gradient-to-b from-blue-600 to-indigo-900"
-                : "bg-white dark:bg-gray-900"
-            }`}
+            className="fixed inset-0 z-50 bg-white dark:bg-gray-900 md:hidden"
           >
-            <div className="container mx-auto px-4 py-4 flex flex-col items-center gap-6">
-              {isCreatorProfile ? (
-                // Vista específica para el perfil del creador
-                <div className="w-full flex flex-col items-center space-y-6">
-                  {onRefresh && (
-                    <Button
-                      onClick={handleRefresh}
-                      className={`w-full justify-center ${
-                        transparent
-                          ? "bg-white/10 text-white hover:bg-white/20"
-                          : ""
-                      }`}
-                      variant={transparent ? "ghost" : "outline"}
-                    >
-                      <RefreshCcw className="h-4 w-4 mr-2" />
-                      {t("common.refresh", "Actualizar")}
-                    </Button>
-                  )}
+            <div className="flex flex-col h-full">
+              <div className="flex justify-end p-4">
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={toggleMenu}
+                  className="text-gray-700 dark:text-gray-200"
+                >
+                  <X className="h-5 w-5" />
+                </Button>
+              </div>
 
-                  {user ? (
-                    <Button
-                      onClick={handleLogout}
-                      className="w-full justify-center"
-                      variant={transparent ? "ghost" : "outline"}
-                      size="sm"
-                    >
-                      <LogOut className="h-4 w-4 mr-2" />
-                      {t("common.logout", "Cerrar sesión")}
-                    </Button>
-                  ) : (
-                    <Link
-                      to={`/auth?referrer=/creators/${username}`}
-                      onClick={() => setIsOpen(false)}
-                      className="w-full"
-                    >
+              <div className="flex-1 px-4 py-2">
+                <div className="flex flex-col gap-4">
+                  <div className="flex items-center justify-center gap-2 mb-4">
+                    <ThemeToggle />
+                    <LanguageToggle />
+                  </div>
+
+                  {isCreatorProfile ? (
+                    <div className="w-full flex flex-col items-center space-y-6">
+                      {onRefresh && (
+                        <Button
+                          onClick={handleRefresh}
+                          className={`w-full justify-center ${
+                            transparent
+                              ? "bg-white/10 text-white hover:bg-white/20"
+                              : ""
+                          }`}
+                          variant={transparent ? "ghost" : "outline"}
+                        >
+                          <RefreshCcw className="h-4 w-4 mr-2" />
+                          {t("common.refresh", "Actualizar")}
+                        </Button>
+                      )}
+
+                      {user ? (
+                        <Button
+                          onClick={handleLogout}
+                          className="w-full justify-center"
+                          variant={transparent ? "ghost" : "outline"}
+                          size="sm"
+                        >
+                          <LogOut className="h-4 w-4 mr-2" />
+                          {t("common.logout", "Cerrar sesión")}
+                        </Button>
+                      ) : (
+                        <Link
+                          to={`/auth?referrer=/creators/${username}`}
+                          onClick={() => setIsOpen(false)}
+                          className="w-full"
+                        >
+                          <Button
+                            className="w-full justify-center"
+                            variant={transparent ? "ghost" : "default"}
+                            size="sm"
+                          >
+                            <LogIn className="h-4 w-4 mr-2" />
+                            {t(
+                              "common.loginToVote",
+                              "Iniciar sesión para votar"
+                            )}
+                          </Button>
+                        </Link>
+                      )}
+                    </div>
+                  ) : // Vista para el dashboard y demás páginas
+                  user ? (
+                    <div className="w-full flex flex-col items-center space-y-6">
+                      <Link href="/profile" onClick={() => setIsOpen(false)}>
+                        <Button
+                          className="w-full justify-center max-w-xs"
+                          variant="outline"
+                        >
+                          <User className="h-4 w-4 mr-2" />
+                          <span className="font-medium">{user.username}</span>
+                        </Button>
+                      </Link>
+
                       <Button
-                        className="w-full justify-center"
-                        variant={transparent ? "ghost" : "default"}
-                        size="sm"
+                        onClick={handleLogout}
+                        className="w-full justify-center max-w-xs"
+                        variant="outline"
                       >
-                        <LogIn className="h-4 w-4 mr-2" />
-                        {t("common.loginToVote", "Iniciar sesión para votar")}
+                        <LogOut className="h-4 w-4 mr-2" />
+                        {t("common.logout", "Cerrar sesión")}
                       </Button>
-                    </Link>
+                    </div>
+                  ) : (
+                    <div className="w-full flex flex-col items-center space-y-6">
+                      <Link href="/auth?direct=true">
+                        <Button
+                          variant="outline"
+                          className="w-full justify-start gap-2"
+                          onClick={toggleMenu}
+                        >
+                          <LogIn className="h-4 w-4" />
+                          {t("landing.cta.login")}
+                        </Button>
+                      </Link>
+                      <Link href="/auth?direct=true&register=true">
+                        <Button
+                          className="w-full justify-start gap-2"
+                          onClick={toggleMenu}
+                        >
+                          <User className="h-4 w-4" />
+                          {t("landing.cta.register")}
+                        </Button>
+                      </Link>
+                    </div>
                   )}
                 </div>
-              ) : // Vista para el dashboard y demás páginas
-              user ? (
-                <div className="w-full flex flex-col items-center space-y-6">
-                  <Link href="/profile" onClick={() => setIsOpen(false)}>
-                    <Button
-                      className="w-full justify-center max-w-xs"
-                      variant="outline"
-                    >
-                      <User className="h-4 w-4 mr-2" />
-                      <span className="font-medium">{user.username}</span>
-                    </Button>
-                  </Link>
-
-                  <Button
-                    onClick={handleLogout}
-                    className="w-full justify-center max-w-xs"
-                    variant="outline"
-                  >
-                    <LogOut className="h-4 w-4 mr-2" />
-                    {t("common.logout", "Cerrar sesión")}
-                  </Button>
-                </div>
-              ) : (
-                <div className="w-full flex flex-col items-center space-y-6">
-                  <Link href="/auth" onClick={() => setIsOpen(false)}>
-                    <Button className="w-full justify-center max-w-xs">
-                      <LogIn className="h-4 w-4 mr-2" />
-                      {t("common.login", "Iniciar sesión")}
-                    </Button>
-                  </Link>
-                </div>
-              )}
+              </div>
             </div>
           </motion.div>
         )}
