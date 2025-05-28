@@ -43,6 +43,7 @@ import { useIsMobile } from "@/hooks/use-mobile";
 import { useTranslation } from "react-i18next";
 import DemoDialog from "@/components/demo-dialog";
 import demoGifPath from "@assets/DemoGIF.gif";
+import { MobileMenu } from "@/components/mobile-menu";
 
 const fadeIn = {
   hidden: { opacity: 0, y: 20 },
@@ -423,7 +424,7 @@ export default function LandingPage() {
                   <ThemeToggle />
                   <LanguageToggle />
                 </div>
-                <div className="flex gap-2">
+                <div className="hidden md:flex gap-2">
                   <Link href="/auth?direct=true">
                     <Button variant="outline">{t("landing.cta.login")}</Button>
                   </Link>
@@ -431,6 +432,7 @@ export default function LandingPage() {
                     <Button>{t("landing.cta.register")}</Button>
                   </Link>
                 </div>
+                <MobileMenu />
               </div>
             </div>
           </div>
@@ -786,7 +788,7 @@ export default function LandingPage() {
                         </div>
                       </div>
                     </div>
-                                    </div>
+                  </div>
                 </div>
               </motion.div>
             </div>
