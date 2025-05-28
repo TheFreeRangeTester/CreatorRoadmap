@@ -6,6 +6,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useToast } from "@/hooks/use-toast";
 import { Link } from "wouter";
 import type { UserResponse } from "@shared/schema";
+import { SharingTipsTooltip } from "./sharing-tips-tooltip";
 
 interface CreatorControlsProps {
   onAddIdea: () => void;
@@ -130,9 +131,12 @@ export default function CreatorControls({ onAddIdea }: CreatorControlsProps) {
       <div className="flex flex-col gap-3 sm:gap-4">
         {/* Header row - responsive */}
         <div className="flex flex-col space-y-3 sm:flex-row sm:items-center sm:justify-between sm:space-y-0">
-          <h2 className="text-base sm:text-lg font-medium text-neutral-800 dark:text-white">
-            {t("dashboard.creatorDashboard", "Creator Dashboard")}
-          </h2>
+          <div className="flex items-center gap-2">
+            <h2 className="text-base sm:text-lg font-medium text-neutral-800 dark:text-white">
+              {t("dashboard.creatorDashboard", "Creator Dashboard")}
+            </h2>
+            <SharingTipsTooltip />
+          </div>
           <Button onClick={onAddIdea} className="w-full sm:w-auto" size="sm">
             <PlusCircle className="w-4 h-4 mr-2" />
             <span className="text-sm">
