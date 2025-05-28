@@ -28,6 +28,8 @@ import { IdeaResponse } from "@shared/schema";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useTranslation } from "react-i18next";
 import { IdeasTabView } from "@/components/ideas-tab-view";
+import { LanguageToggle } from "@/components/language-toggle";
+import { ThemeToggle } from "@/components/theme-toggle";
 
 export default function HomePage() {
   const { user, logoutMutation } = useAuth();
@@ -187,9 +189,24 @@ export default function HomePage() {
               )}
             </div>
 
-            {/* Mobile menu - solo burger menu */}
-            <div className="md:hidden">
-              <MobileMenu onLogout={handleLogout} iconColor="text-foreground" />
+            {/* Mobile layout - three sections */}
+            <div className="md:hidden flex items-center justify-between w-full">
+              {/* Left section - Logo and title (already in place) */}
+              <div className="flex-1"></div>
+
+              {/* Center section - Mobile menu */}
+              <div className="flex-1 flex justify-center">
+                <MobileMenu
+                  onLogout={handleLogout}
+                  iconColor="text-foreground"
+                />
+              </div>
+
+              {/* Right section - Toggles */}
+              <div className="flex-1 flex justify-end items-center gap-2">
+                <LanguageToggle />
+                <ThemeToggle />
+              </div>
             </div>
           </div>
         </div>
@@ -218,12 +235,11 @@ export default function HomePage() {
                   </div>
                 </div>
 
-                <LeaderboardInfo />
-
                 {/* Tabs for ideas view - Only for creators */}
                 {user.userRole === "creator" ? (
                   <>
                     <CreatorControls onAddIdea={handleAddIdea} />
+                    <LeaderboardInfo />
                     <Tabs defaultValue="published" className="w-full">
                       <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-4 sm:mb-6 space-y-3 sm:space-y-0">
                         <TabsList className="grid grid-cols-2 w-full sm:w-60">
