@@ -514,8 +514,8 @@ export default function HomePage() {
             </div>
 
             {/* Mobile menu - solo burger menu */}
-            <div className="lg:hidden">
-              <MobileMenu onLogout={handleLogout} />
+            <div className="md:hidden">
+              <MobileMenu onLogout={handleLogout} iconColor="text-foreground" />
             </div>
           </div>
         </div>
