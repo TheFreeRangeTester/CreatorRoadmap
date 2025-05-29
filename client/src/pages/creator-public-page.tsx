@@ -420,7 +420,7 @@ export default function CreatorPublicPage() {
               </div>
 
               {/* Controles en móvil - Lado derecho */}
-              <div className="flex items-center gap-2">
+              <div className="flex items-center">
                 <MobileMenu
                   isCreatorProfile={true}
                   onRefresh={() => refetch()}

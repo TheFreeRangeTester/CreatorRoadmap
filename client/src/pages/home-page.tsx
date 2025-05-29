@@ -191,8 +191,19 @@ export default function HomePage() {
 
             {/* Mobile layout - three sections */}
             <div className="md:hidden flex items-center justify-between w-full">
-              {/* Left section - Logo and title (already in place) */}
-              <div className="flex-1"></div>
+              {/* Left section - Logo and title */}
+              <div className="flex items-center min-w-0 flex-1">
+                <img
+                  src={new URL("@/assets/logo.png", import.meta.url).href}
+                  alt="Logo"
+                  className="h-7 w-auto flex-shrink-0"
+                />
+                <div className="ml-2 min-w-0 flex-1">
+                  <h1 className="text-base font-bold text-neutral-800 dark:text-white truncate">
+                    {t("dashboard.appName", "Fanlist")}
+                  </h1>
+                </div>
+              </div>
 
               {/* Center section - Mobile menu */}
               <div className="flex-1 flex justify-center">
@@ -202,11 +213,8 @@ export default function HomePage() {
                 />
               </div>
 
-              {/* Right section - Toggles */}
-              <div className="flex-1 flex justify-end items-center gap-2">
-                <LanguageToggle />
-                <ThemeToggle />
-              </div>
+              {/* Right section - Empty for spacing */}
+              <div className="flex-1"></div>
             </div>
           </div>
         </div>

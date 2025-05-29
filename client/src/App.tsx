@@ -48,13 +48,13 @@ function App() {
   return (
     <>
       {/* Selector de idioma y tema en la esquina superior derecha */}
-      <div className="fixed top-4 right-4 z-50 flex items-center space-x-2">
+      <div className="hidden md:flex fixed top-4 right-4 z-50 items-center space-x-2">
         <LanguageToggle />
         <ThemeToggle />
       </div>
-      
+
       {/* Espacio para modales */}
-      
+
       {/* Router principal */}
       <Switch>
         <Route path="/" component={LandingPage} />
@@ -64,38 +64,41 @@ function App() {
         <Route path="/auth-debug" component={AuthDebug} />
         <Route path="/public/:token" component={PublicLeaderboardPage} />
         <Route path="/creators/:username" component={CreatorPublicPage} />
-        
+
         {/* Rutas de producto */}
         <Route path="/features" component={FeaturesPage} />
         <Route path="/pricing" component={PricingPage} />
         <Route path="/demo" component={DemoPage} />
         <Route path="/roadmap" component={RoadmapPage} />
-        
+
         {/* Rutas de recursos */}
         <Route path="/blog" component={BlogPage} />
         <Route path="/documentation" component={DocumentationPage} />
         <Route path="/guides" component={GuidesPage} />
         <Route path="/success-stories" component={SuccessPage} />
-        
+
         {/* Rutas de compañía */}
         <Route path="/about" component={AboutPage} />
         <Route path="/team" component={TeamPage} />
         <Route path="/contact" component={ContactPage} />
         <Route path="/careers" component={CareersPage} />
-        
+
         {/* Rutas legales */}
         <Route path="/terms" component={TermsPage} />
         <Route path="/privacy" component={PrivacyPage} />
         <Route path="/cookies" component={CookiesPage} />
-        
+
         {/* Ruta de recuperación de contraseña */}
         <Route path="/forgot-password" component={ForgotPasswordPage} />
-        
+
         {/* Rutas de suscripción */}
         <ProtectedRoute path="/subscription" component={SubscriptionPage} />
-        <Route path="/subscription/success" component={SubscriptionSuccessPage} />
+        <Route
+          path="/subscription/success"
+          component={SubscriptionSuccessPage}
+        />
         <Route path="/subscription/cancel" component={SubscriptionCancelPage} />
-        
+
         {/* Ruta del creador debe ir al final para evitar conflictos con otras rutas */}
         <Route path="/:username" component={CreatorQAProfile} />
         <Route component={NotFound} />
