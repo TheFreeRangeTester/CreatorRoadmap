@@ -10,7 +10,7 @@ import { ProtectedRoute } from "./lib/protected-route";
 import { ThemeToggle } from "./components/theme-toggle";
 import { LanguageToggle } from "./components/language-toggle";
 // Importación directa sin usar alias @
-import CreatorPublicPage from "./pages/creator-public-page";
+import CreatorProfileUnified from "./pages/creator-profile-unified";
 
 // Páginas de producto
 import FeaturesPage from "@/pages/features-page";
@@ -97,8 +97,8 @@ function App() {
         <Route path="/subscription/cancel" component={SubscriptionCancelPage} />
 
         {/* Rutas unificadas del creador - ambas apuntan a la misma página */}
-        <Route path="/creators/:username" component={CreatorPublicPage} />
-        <Route path="/:username" component={CreatorPublicPage} />
+        <Route path="/creators/:username" component={CreatorProfileUnified} />
+        <Route path="/:username" component={CreatorProfileUnified} />
         <Route component={NotFound} />
       </Switch>
     </>
