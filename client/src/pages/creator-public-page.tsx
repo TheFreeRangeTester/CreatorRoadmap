@@ -390,6 +390,8 @@ export default function CreatorPublicPage() {
 
               {/* Lado derecho: menú móvil */}
               <div className="flex items-center gap-2">
+                <LanguageToggle />
+                <ThemeToggle />
                 <MobileMenu
                   isCreatorProfile={true}
                   onRefresh={() => refetch()}
@@ -420,7 +422,9 @@ export default function CreatorPublicPage() {
               </div>
 
               {/* Controles en móvil - Lado derecho */}
-              <div className="flex items-center">
+              <div className="flex items-center gap-2">
+                <LanguageToggle />
+                <ThemeToggle />
                 <MobileMenu
                   isCreatorProfile={true}
                   onRefresh={() => refetch()}
