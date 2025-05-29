@@ -222,7 +222,9 @@
     "reset": "Reset",
     "save": "Save",
     "saving": "Saving...",
-    "back": "Back to Dashboard"
+    "back": "Back to Dashboard",
+    "website": "Website",
+    "menu": "Menu"
   },
   "creator": {
     "voteSuccess": "Vote registered!",
