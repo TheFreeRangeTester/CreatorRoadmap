@@ -12,6 +12,7 @@ import {
   ThumbsUp,
   Loader2,
   UserPlus,
+  User,
   ExternalLink,
   Twitter,
   Instagram,
@@ -123,6 +124,9 @@ export default function CreatorProfileUnified() {
 
   const handleVote = async (ideaId: number) => {
     if (!user) {
+      // Store current page as redirect destination
+      localStorage.setItem('redirectAfterAuth', `/creators/${username}`);
+      
       toast({
         title: t("common.loginRequired", "Login required"),
         description: t("common.loginRequiredDesc", "Please log in to vote"),
@@ -286,18 +290,34 @@ export default function CreatorProfileUnified() {
       {/* Header */}
       <header className="relative z-10 p-4">
         <div className="container mx-auto flex justify-between items-center">
-          <div className="flex items-center gap-4">
+          {/* Desktop toggles - solo visible en desktop */}
+          <div className="hidden md:flex items-center gap-4">
             <ThemeToggle />
             <LanguageToggle />
           </div>
-          <MobileMenu 
-            isCreatorProfile={true} 
-            username={username}
-            transparent={true}
-            onRefresh={async () => {
-              await refetch();
-            }}
-          />
+          
+          {/* Spacer for mobile */}
+          <div className="md:hidden"></div>
+          
+          {/* Mobile menu - includes auth status indicator */}
+          <div className="flex items-center gap-4">
+            {/* User indicator for desktop */}
+            {user && (
+              <div className="hidden md:flex items-center gap-2 text-white/80 bg-black/20 px-3 py-1 rounded-full backdrop-blur-sm">
+                <User className="w-4 h-4" />
+                <span className="text-sm">{user.username}</span>
+              </div>
+            )}
+            
+            <MobileMenu 
+              isCreatorProfile={true} 
+              username={username}
+              transparent={true}
+              onRefresh={async () => {
+                await refetch();
+              }}
+            />
+          </div>
         </div>
       </header>
 
