@@ -222,7 +222,13 @@
     "reset": "Restablecer",
     "save": "Guardar",
     "saving": "Guardando...",
-    "back": "Volver al Dashboard"
+    "back": "Volver al Dashboard",
+    "website": "Sitio web",
+    "menu": "Menú",
+    "profile": "Perfil",
+    "refresh": "Actualizar",
+    "loginRequired": "Inicio de sesión requerido",
+    "loginRequiredDesc": "Por favor inicia sesión para votar"
   },
   "creator": {
     "voteSuccess": "¡Voto registrado!",

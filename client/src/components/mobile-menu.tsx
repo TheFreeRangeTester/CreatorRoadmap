@@ -95,16 +95,46 @@ export const MobileMenu = ({
                 <div className="flex flex-col gap-6">
                   {user ? (
                     <div className="w-full flex flex-col items-center space-y-6">
-                      <Link href="/profile" onClick={() => setIsOpen(false)}>
+                      {/* Solo mostrar perfil/dashboard si es creador */}
+                      {user.userRole === 'creator' && (
+                        <Link href="/dashboard" onClick={() => setIsOpen(false)}>
+                          <Button
+                            className="w-full justify-center"
+                            variant="outline"
+                            size="lg"
+                          >
+                            <User className="h-5 w-5 mr-2" />
+                            {t("common.back", "Dashboard")}
+                          </Button>
+                        </Link>
+                      )}
+
+                      {/* Mostrar perfil solo si es creador y estamos en su perfil */}
+                      {user.userRole === 'creator' && isCreatorProfile && user.username === username && (
+                        <Link href="/profile" onClick={() => setIsOpen(false)}>
+                          <Button
+                            className="w-full justify-center"
+                            variant="outline"
+                            size="lg"
+                          >
+                            <User className="h-5 w-5 mr-2" />
+                            {t("common.profile", "Settings")}
+                          </Button>
+                        </Link>
+                      )}
+
+                      {/* Botón de refrescar para todos los usuarios autenticados */}
+                      {isCreatorProfile && onRefresh && (
                         <Button
+                          onClick={handleRefresh}
                           className="w-full justify-center"
                           variant="outline"
                           size="lg"
                         >
-                          <User className="h-5 w-5 mr-2" />
-                          {t("common.profile", "Perfil")}
+                          <RefreshCcw className="h-5 w-5 mr-2" />
+                          {t("common.refresh", "Refresh")}
                         </Button>
-                      </Link>
+                      )}
 
                       <Button
                         onClick={handleLogout}

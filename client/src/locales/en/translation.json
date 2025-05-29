@@ -224,7 +224,11 @@
     "saving": "Saving...",
     "back": "Back to Dashboard",
     "website": "Website",
-    "menu": "Menu"
+    "menu": "Menu",
+    "profile": "Profile",
+    "refresh": "Refresh",
+    "loginRequired": "Login required",
+    "loginRequiredDesc": "Please log in to vote"
   },
   "creator": {
     "voteSuccess": "Vote registered!",

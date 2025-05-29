@@ -88,11 +88,17 @@ export default function CreatorProfileUnified() {
     }
   }, [error, navigate, toast]);
 
-  // Load voted ideas from localStorage
+  // Load voted ideas from localStorage only for authenticated users
   useEffect(() => {
-    const votedIdeasFromStorage = JSON.parse(localStorage.getItem("votedIdeas") || "[]");
-    setVotedIdeas(new Set(votedIdeasFromStorage));
-  }, []);
+    if (user) {
+      const userKey = `votedIdeas_${user.id}`;
+      const votedIdeasFromStorage = JSON.parse(localStorage.getItem(userKey) || "[]");
+      setVotedIdeas(new Set(votedIdeasFromStorage));
+    } else {
+      // Clear voted ideas for non-authenticated users
+      setVotedIdeas(new Set());
+    }
+  }, [user]);
 
   // Usar useStaggerCards para animar las tarjetas de ideas cuando estén disponibles
   useStaggerCards(ideasContainerRef);
@@ -140,9 +146,10 @@ export default function CreatorProfileUnified() {
       newVotedIdeas.add(ideaId);
       setVotedIdeas(newVotedIdeas);
       
-      // Update localStorage
+      // Update localStorage with user-specific key
+      const userKey = `votedIdeas_${user.id}`;
       const votedArray = Array.from(newVotedIdeas);
-      localStorage.setItem("votedIdeas", JSON.stringify(votedArray));
+      localStorage.setItem(userKey, JSON.stringify(votedArray));
 
       toast({
         title: t("creator.voteSuccess", "Vote registered!"),
