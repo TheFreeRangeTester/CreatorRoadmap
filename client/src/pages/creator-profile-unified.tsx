@@ -169,6 +169,41 @@ export default function CreatorProfileUnified() {
     }
   };
 
+  const getBackgroundStyle = (profileBackground?: string) => {
+    switch (profileBackground) {
+      case 'gradient-1':
+        return 'bg-gradient-to-br from-gray-50 to-white dark:from-gray-900 dark:to-gray-950';
+      case 'gradient-2':
+        return 'bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-blue-950/30 dark:to-indigo-950/30';
+      case 'gradient-3':
+        return 'bg-gradient-to-br from-green-50 to-teal-50 dark:from-green-950/30 dark:to-teal-950/30';
+      case 'gradient-4':
+        return 'bg-gradient-to-br from-rose-50 to-orange-50 dark:from-rose-950/30 dark:to-orange-950/30';
+      case 'pattern-1':
+        return 'bg-gray-50 dark:bg-gray-900';
+      case 'pattern-2':
+        return 'bg-gray-50 dark:bg-gray-900';
+      default:
+        return 'bg-gradient-to-b from-blue-600 to-indigo-900';
+    }
+  };
+
+  const getPatternStyle = (profileBackground?: string) => {
+    if (profileBackground === 'pattern-1') {
+      return {
+        backgroundImage: "radial-gradient(circle at 1px 1px, rgba(156, 163, 175, 0.5) 1px, transparent 0)",
+        backgroundSize: "20px 20px"
+      };
+    }
+    if (profileBackground === 'pattern-2') {
+      return {
+        backgroundImage: "linear-gradient(90deg, rgba(156, 163, 175, 0.1) 1px, transparent 1px), linear-gradient(rgba(156, 163, 175, 0.1) 1px, transparent 1px)",
+        backgroundSize: "20px 20px"
+      };
+    }
+    return {};
+  };
+
   const getSocialIcon = (platform: string, url: string) => {
     const iconProps = { className: "w-5 h-5" };
     
@@ -192,25 +227,31 @@ export default function CreatorProfileUnified() {
 
   const renderSocialLinks = () => {
     const socialLinks = [
-      { platform: 'website', url: creator.websiteUrl },
-      { platform: 'twitter', url: creator.twitterUrl },
-      { platform: 'instagram', url: creator.instagramUrl },
-      { platform: 'youtube', url: creator.youtubeUrl },
-      { platform: 'tiktok', url: creator.tiktokUrl },
-      { platform: 'threads', url: creator.threadsUrl },
+      { platform: 'website', url: creator.websiteUrl, label: t('common.website', 'Website') },
+      { platform: 'twitter', url: creator.twitterUrl, label: 'Twitter' },
+      { platform: 'instagram', url: creator.instagramUrl, label: 'Instagram' },
+      { platform: 'youtube', url: creator.youtubeUrl, label: 'YouTube' },
+      { platform: 'tiktok', url: creator.tiktokUrl, label: 'TikTok' },
+      { platform: 'threads', url: creator.threadsUrl, label: 'Threads' },
     ].filter(link => link.url);
 
     if (socialLinks.length === 0) return null;
 
     return (
-      <div className="flex flex-wrap gap-3 justify-center">
-        {socialLinks.map(({ platform, url }) => (
+      <div className="flex flex-wrap gap-3 justify-center mb-6">
+        {socialLinks.map(({ platform, url, label }) => (
           <a
             key={platform}
             href={url!}
             target="_blank"
             rel="noopener noreferrer"
-            className="p-2 rounded-full bg-white/10 hover:bg-white/20 transition-colors"
+            className={cn(
+              "p-3 rounded-full transition-all duration-200 hover:scale-110",
+              isCustomBackground
+                ? "bg-gray-200 hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300"
+                : "bg-white/10 hover:bg-white/20 text-white"
+            )}
+            aria-label={label}
           >
             {getSocialIcon(platform, url!)}
           </a>
@@ -219,8 +260,12 @@ export default function CreatorProfileUnified() {
     );
   };
 
+  const backgroundClass = getBackgroundStyle(creator.profileBackground);
+  const patternStyle = getPatternStyle(creator.profileBackground);
+  const isCustomBackground = creator.profileBackground && creator.profileBackground !== 'gradient-default';
+
   return (
-    <div className="min-h-screen bg-gradient-to-b from-blue-600 to-indigo-900">
+    <div className={cn("min-h-screen", backgroundClass)} style={patternStyle}>
       {/* Header */}
       <header className="relative z-10 p-4">
         <div className="container mx-auto flex justify-between items-center">
@@ -240,11 +285,26 @@ export default function CreatorProfileUnified() {
       </header>
 
       {/* Creator Profile Section */}
-      <div className="relative z-10 text-center text-white py-12">
+      <div className={cn(
+        "relative z-10 text-center py-12",
+        isCustomBackground 
+          ? "text-gray-900 dark:text-white" 
+          : "text-white"
+      )}>
         <div className="container mx-auto px-4">
-          <Avatar className="w-24 h-24 mx-auto mb-6 ring-4 ring-white/20">
+          <Avatar className={cn(
+            "w-24 h-24 mx-auto mb-6 ring-4",
+            isCustomBackground 
+              ? "ring-gray-300 dark:ring-gray-600" 
+              : "ring-white/20"
+          )}>
             <AvatarImage src={creator.logoUrl || undefined} alt={creator.username} />
-            <AvatarFallback className="text-2xl font-bold bg-white/20">
+            <AvatarFallback className={cn(
+              "text-2xl font-bold",
+              isCustomBackground 
+                ? "bg-gray-200 dark:bg-gray-700" 
+                : "bg-white/20"
+            )}>
               {creator.username.charAt(0).toUpperCase()}
             </AvatarFallback>
           </Avatar>
@@ -252,7 +312,12 @@ export default function CreatorProfileUnified() {
           <h1 className="text-4xl font-bold mb-4">{creator.username}</h1>
           
           {creator.profileDescription && (
-            <p className="text-xl text-white/90 mb-6 max-w-2xl mx-auto">
+            <p className={cn(
+              "text-xl mb-6 max-w-2xl mx-auto",
+              isCustomBackground 
+                ? "text-gray-700 dark:text-gray-300" 
+                : "text-white/90"
+            )}>
               {creator.profileDescription}
             </p>
           )}
@@ -262,7 +327,11 @@ export default function CreatorProfileUnified() {
           <div className="flex flex-col sm:flex-row gap-4 justify-center mt-8">
             <Button
               onClick={() => setSuggestDialogOpen(true)}
-              className="bg-white text-blue-600 hover:bg-white/90"
+              className={cn(
+                isCustomBackground
+                  ? "bg-blue-600 text-white hover:bg-blue-700"
+                  : "bg-white text-blue-600 hover:bg-white/90"
+              )}
             >
               <UserPlus className="w-4 h-4 mr-2" />
               {t("suggestIdea.button", "Suggest Idea")}
@@ -271,7 +340,11 @@ export default function CreatorProfileUnified() {
             <Button
               onClick={handleShare}
               variant="outline"
-              className="border-white text-white hover:bg-white hover:text-blue-600"
+              className={cn(
+                isCustomBackground
+                  ? "border-gray-300 text-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:text-gray-300 dark:hover:bg-gray-800"
+                  : "border-white text-white hover:bg-white hover:text-blue-600"
+              )}
             >
               <Share2 className="w-4 h-4 mr-2" />
               {t("common.share", "Share")}
@@ -348,9 +421,9 @@ export default function CreatorProfileUnified() {
 
       {/* Suggest Idea Modal */}
       <SuggestIdeaModal
-        isOpen={suggestDialogOpen}
-        onClose={() => setSuggestDialogOpen(false)}
-        creatorUsername={creator.username}
+        username={creator.username}
+        open={suggestDialogOpen}
+        onOpenChange={setSuggestDialogOpen}
         onSuccess={async () => {
           setSuggestDialogOpen(false);
           await refetch();
