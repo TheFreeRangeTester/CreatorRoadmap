@@ -213,8 +213,11 @@ export default function HomePage() {
                 />
               </div>
 
-              {/* Right section - Empty for spacing */}
-              <div className="flex-1"></div>
+              {/* Right section - Toggles */}
+              <div className="flex-1 flex justify-end items-center gap-2">
+                <LanguageToggle />
+                <ThemeToggle />
+              </div>
             </div>
           </div>
         </div>
