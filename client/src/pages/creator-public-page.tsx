@@ -423,8 +423,10 @@ export default function CreatorPublicPage() {
 
               {/* Controles en móvil - Lado derecho */}
               <div className="flex items-center gap-2">
-                <LanguageToggle />
-                <ThemeToggle />
+                <div className="flex items-center gap-1">
+                  <LanguageToggle />
+                  <ThemeToggle />
+                </div>
                 <MobileMenu
                   isCreatorProfile={true}
                   onRefresh={() => refetch()}
