@@ -5,7 +5,6 @@ import AuthPage from "@/pages/auth-page";
 import ProfilePage from "@/pages/profile-page";
 import PublicLeaderboardPage from "@/pages/public-leaderboard-page";
 import LandingPage from "@/pages/landing-page";
-import CreatorQAProfile from "@/pages/creator-qa-profile";
 import AuthDebug from "@/pages/auth-debug";
 import { ProtectedRoute } from "./lib/protected-route";
 import { ThemeToggle } from "./components/theme-toggle";
@@ -63,7 +62,10 @@ function App() {
         <Route path="/auth" component={AuthPage} />
         <Route path="/auth-debug" component={AuthDebug} />
         <Route path="/public/:token" component={PublicLeaderboardPage} />
+
+        {/* Rutas de creador - ambas apuntan a la misma página */}
         <Route path="/creators/:username" component={CreatorPublicPage} />
+        <Route path="/:username" component={CreatorPublicPage} />
 
         {/* Rutas de producto */}
         <Route path="/features" component={FeaturesPage} />
@@ -99,8 +101,6 @@ function App() {
         />
         <Route path="/subscription/cancel" component={SubscriptionCancelPage} />
 
-        {/* Ruta del creador debe ir al final para evitar conflictos con otras rutas */}
-        <Route path="/:username" component={CreatorQAProfile} />
         <Route component={NotFound} />
       </Switch>
     </>
