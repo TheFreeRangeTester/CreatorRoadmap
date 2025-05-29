@@ -699,9 +699,12 @@ export default function CreatorQAProfile() {
       {/* Sección de Votaciones */}
       <div className="container mx-auto px-4 max-w-4xl">
         <div className="flex justify-between items-center mb-6">
-          <h2 className="text-2xl sm:text-3xl font-bold text-gray-800 dark:text-gray-100 flex items-center">
-            🗳️ {t("creator.voteHeaderTitle")}
-          </h2>
+          <div className="bg-white dark:bg-gray-800/95 px-4 py-2 rounded-lg shadow-sm border border-gray-100 dark:border-gray-700">
+            <h2 className="text-2xl sm:text-3xl font-bold text-gray-800 dark:text-gray-100 flex items-center gap-2">
+              <span className="text-primary dark:text-primary-400">🗳️</span>
+              {t("creator.voteHeaderTitle")}
+            </h2>
+          </div>
 
           <div className="flex gap-2">
             <Button
