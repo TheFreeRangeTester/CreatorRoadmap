@@ -62,11 +62,6 @@ function App() {
         <Route path="/auth" component={AuthPage} />
         <Route path="/auth-debug" component={AuthDebug} />
         <Route path="/public/:token" component={PublicLeaderboardPage} />
-
-        {/* Rutas de creador - ambas apuntan a la misma página */}
-        <Route path="/creators/:username" component={CreatorPublicPage} />
-        <Route path="/:username" component={CreatorPublicPage} />
-
         {/* Rutas de producto */}
         <Route path="/features" component={FeaturesPage} />
         <Route path="/pricing" component={PricingPage} />
@@ -101,6 +96,9 @@ function App() {
         />
         <Route path="/subscription/cancel" component={SubscriptionCancelPage} />
 
+        {/* Rutas unificadas del creador - ambas apuntan a la misma página */}
+        <Route path="/creators/:username" component={CreatorPublicPage} />
+        <Route path="/:username" component={CreatorPublicPage} />
         <Route component={NotFound} />
       </Switch>
     </>
