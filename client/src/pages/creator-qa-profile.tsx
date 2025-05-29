@@ -594,12 +594,12 @@ export default function CreatorQAProfile() {
 
       {/* Sección de Perfil */}
       <div className="container mx-auto px-4 py-4 pt-16">
-        <Card className="bg-white dark:bg-gray-800 shadow-md rounded-xl overflow-hidden max-w-2xl mx-auto mb-6">
+        <Card className="bg-white dark:bg-gray-800/95 shadow-md rounded-xl overflow-hidden max-w-2xl mx-auto mb-6">
           <CardContent className="relative p-3 sm:p-4">
             {/* Etiqueta de perfil público */}
             <Badge
               variant="outline"
-              className="absolute top-2 right-2 bg-blue-50 text-blue-700 border-blue-200 dark:bg-blue-900/20 dark:text-blue-300 dark:border-blue-800/50 text-xs"
+              className="absolute top-2 right-2 bg-blue-50 text-blue-700 border-blue-200 dark:bg-blue-900/30 dark:text-blue-300 dark:border-blue-800/50 text-xs"
             >
               {t("creator.publicProfileView", "Perfil Público")}
             </Badge>
@@ -616,7 +616,7 @@ export default function CreatorQAProfile() {
               </Avatar>
 
               <div className="flex-1 text-center sm:text-left">
-                <h1 className="text-lg sm:text-xl font-bold text-gray-900 dark:text-white">
+                <h1 className="text-lg sm:text-xl font-bold text-gray-900 dark:text-gray-100">
                   {creator.username}
                 </h1>
 
@@ -699,7 +699,7 @@ export default function CreatorQAProfile() {
       {/* Sección de Votaciones */}
       <div className="container mx-auto px-4 max-w-4xl">
         <div className="flex justify-between items-center mb-6">
-          <h2 className="text-2xl sm:text-3xl font-bold text-gray-800 dark:text-white flex items-center">
+          <h2 className="text-2xl sm:text-3xl font-bold text-gray-800 dark:text-gray-100 flex items-center">
             🗳️ {t("creator.voteHeaderTitle")}
           </h2>
 
@@ -740,8 +740,8 @@ export default function CreatorQAProfile() {
         </div>
 
         {sortedIdeas.length === 0 ? (
-          <div className="bg-white dark:bg-gray-800 rounded-xl p-8 text-center shadow-md">
-            <h3 className="text-xl font-semibold text-gray-800 dark:text-white mb-2">
+          <div className="bg-white dark:bg-gray-800/95 rounded-xl p-8 text-center shadow-md">
+            <h3 className="text-xl font-semibold text-gray-800 dark:text-gray-100 mb-2">
               {t("ideas.noSuggestedIdeas", "No suggested ideas yet")}
             </h3>
             <p className="text-gray-600 dark:text-gray-300 mb-4">
@@ -757,8 +757,6 @@ export default function CreatorQAProfile() {
           </div>
         ) : (
           <div className="space-y-4 max-w-4xl mx-auto">
-            
-            
             {sortedIdeas.map((idea, index) => (
               <RankingCard
                 key={idea.id}
