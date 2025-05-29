@@ -566,8 +566,14 @@ export default function CreatorQAProfile() {
       </div>
 
       {/* Header centrado con saludo y nombre de usuario */}
-      {user && (
-        <div className="fixed top-4 left-1/2 transform -translate-x-1/2 z-10">
+      <div className="fixed top-4 left-1/22 transform -translate-x-1/2 z-10 flex items-center gap-2">
+        {/* Toggles de idioma y tema */}
+        <div className="flex items-center gap-2 mr-2">
+          <LanguageToggle />
+          <ThemeToggle />
+        </div>
+
+        {user && (
           <motion.div
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -589,8 +595,8 @@ export default function CreatorQAProfile() {
               </span>
             )}
           </motion.div>
-        </div>
-      )}
+        )}
+      </div>
 
       {/* Sección de Perfil */}
       <div className="container mx-auto px-4 py-4 pt-16">
