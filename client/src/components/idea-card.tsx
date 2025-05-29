@@ -50,34 +50,42 @@ export default function IdeaCard({
   // Verificar si el usuario actual es el creador de la idea
   const isCreator = user?.id === idea.creatorId;
 
-  // Load voting state from localStorage
+  // Load voting state from localStorage (user-specific)
   useEffect(() => {
-    const votedIdeas = JSON.parse(localStorage.getItem("votedIdeas") || "[]");
-    setHasVoted(votedIdeas.includes(idea.id));
-  }, [idea.id]);
+    if (user) {
+      const userKey = `votedIdeas_${user.id}`;
+      const votedIdeas = JSON.parse(localStorage.getItem(userKey) || "[]");
+      setHasVoted(votedIdeas.includes(idea.id));
+    } else {
+      setHasVoted(false);
+    }
+  }, [idea.id, user]);
 
   // Estado para controlar las animaciones
   const [isVoteAnimating, setIsVoteAnimating] = useState(false);
   const [showConfetti, setShowConfetti] = useState(false);
 
-  // When successfully voting, update localStorage
+  // When successfully voting, update localStorage with user-specific key
   const handleVote = () => {
     if (!hasVoted && !isVoting) {
       onVote(idea.id);
 
-      // Optimistically update UI
-      const votedIdeas = JSON.parse(localStorage.getItem("votedIdeas") || "[]");
-      votedIdeas.push(idea.id);
-      localStorage.setItem("votedIdeas", JSON.stringify(votedIdeas));
-      setHasVoted(true);
+      // Optimistically update UI only for authenticated users
+      if (user) {
+        const userKey = `votedIdeas_${user.id}`;
+        const votedIdeas = JSON.parse(localStorage.getItem(userKey) || "[]");
+        votedIdeas.push(idea.id);
+        localStorage.setItem(userKey, JSON.stringify(votedIdeas));
+        setHasVoted(true);
 
-      // Activar animaciones
-      setIsVoteAnimating(true);
-      setShowConfetti(true);
+        // Activar animaciones
+        setIsVoteAnimating(true);
+        setShowConfetti(true);
 
-      // Desactivar animaciones después de un tiempo
-      setTimeout(() => setIsVoteAnimating(false), 600);
-      setTimeout(() => setShowConfetti(false), 1000);
+        // Desactivar animaciones después de un tiempo
+        setTimeout(() => setIsVoteAnimating(false), 600);
+        setTimeout(() => setShowConfetti(false), 1000);
+      }
     }
   };
 
@@ -274,7 +282,9 @@ export default function IdeaCard({
                   className={`flex items-center px-3 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-1 dark:focus:ring-offset-gray-800 min-w-[80px] text-sm ${
                     hasVoted
                       ? "bg-neutral-100 dark:bg-gray-700 text-neutral-400 dark:text-neutral-500 cursor-not-allowed"
-                      : "bg-primary-50 dark:bg-primary-900/50 text-primary dark:text-primary-300 hover:bg-primary-100 dark:hover:bg-primary-800/70"
+                      : user
+                      ? "bg-primary-50 dark:bg-primary-900/50 text-primary dark:text-primary-300 hover:bg-primary-100 dark:hover:bg-primary-800/70"
+                      : "bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 hover:bg-blue-100 dark:hover:bg-blue-800/50 border border-blue-200 dark:border-blue-700"
                   }`}
                   onClick={handleVote}
                   disabled={hasVoted || isVoting}
@@ -291,7 +301,9 @@ export default function IdeaCard({
                       </motion.div>
                       {hasVoted
                         ? t("ideaPosition.voted")
-                        : t("ideaPosition.vote")}
+                        : user
+                        ? t("ideaPosition.vote")
+                        : t("common.loginToVote")}
                     </>
                   )}
                 </motion.button>
