@@ -330,63 +330,70 @@ export default function CreatorProfileUnified() {
   return (
     <div className={cn("min-h-screen", backgroundClass)} style={patternStyle}>
       {/* Header */}
-      <header className="fixed top-0 left-0 right-0 z-50 p-4">
+      <header className="fixed top-0 left-0 right-0 z-50 p-4 bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800">
         <div className="container mx-auto">
           <div className="flex justify-between items-center">
-            {/* Left section - Logo/Title */}
-            <div className="flex items-center">
-              <h1 className="text-xl font-bold text-white">
-                {t("dashboard.appName", "Fanlist")}
-              </h1>
-            </div>
-
-            {/* Right section - User info and toggles */}
+            {/* Left section - User Info (Desktop) or Logo/Title (Mobile) */}
             <div className="flex items-center gap-4">
-              {/* Desktop user info and logout */}
-              <div className="hidden md:flex items-center gap-4">
-                {user && (
-                  <div className="flex items-center gap-2 text-white/80 bg-black/20 px-3 py-1.5 rounded-full backdrop-blur-sm">
+              {/* User info and Logout (Desktop only) */}
+              {user && (
+                <div className="hidden md:flex items-center gap-4">
+                  <div className="flex items-center gap-2 text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-800 px-3 py-1.5 rounded-full">
                     <User className="w-4 h-4" />
-                    <span className="text-sm">{user.username}</span>
+                    <span className="text-sm font-medium">{user.username}</span>
                   </div>
-                )}
-                {user && (
                   <Button
-                    variant="ghost"
+                    variant="outline"
                     size="sm"
                     onClick={() => {
-                      // Aquí iría la lógica de logout
-                      window.location.href = "/auth";
+                      // Placeholder for actual logout logic
+                      if (user?.userRole === "creator") {
+                        window.location.href = "/dashboard"; // Redirect creator to dashboard after logout
+                      } else {
+                        window.location.href = "/"; // Redirect other users to landing
+                      }
                     }}
-                    className="text-white/80 hover:text-white hover:bg-white/20"
+                    className="text-red-600 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300 border-gray-300 dark:border-gray-700"
                   >
                     {t("common.logout", "Cerrar sesión")}
                   </Button>
-                )}
-              </div>
+                </div>
+              )}
 
-              {/* Toggles - visible in both mobile and desktop */}
-              <div className="flex items-center gap-2">
+              {/* Logo/Title (Mobile only) */}
+              <div className="md:hidden">
+                <h1 className="text-xl font-bold text-gray-900 dark:text-white">
+                  {t("dashboard.appName", "Fanlist")}
+                </h1>
+              </div>
+            </div>
+
+            {/* Right section - Toggles (Desktop) and Mobile Menu (Mobile) */}
+            <div className="flex items-center gap-4">
+              {/* Toggles (Desktop only) */}
+              <div className="hidden md:flex items-center gap-2">
                 <ThemeToggle />
                 <LanguageToggle />
               </div>
 
-              {/* Mobile menu */}
-              <MobileMenu
-                isCreatorProfile={true}
-                username={username}
-                transparent={true}
-                onRefresh={async () => {
-                  await refetch();
-                }}
-              />
+              {/* Mobile Menu (Mobile only) */}
+              <div className="md:hidden">
+                <MobileMenu
+                  isCreatorProfile={true}
+                  username={username}
+                  transparent={false} // Mobile menu background
+                  onRefresh={async () => {
+                    await refetch();
+                  }}
+                />
+              </div>
             </div>
           </div>
         </div>
       </header>
 
       {/* Add padding to account for fixed header */}
-      <div className="pt-16">
+      <div className="pt-20">
         {/* Creator Profile Section */}
         <div
           className={cn(

@@ -98,7 +98,7 @@ export const MobileMenu = ({
                   {user ? (
                     <div className="w-full flex flex-col items-center space-y-6">
                       {/* User info for mobile */}
-                      <div className="md:hidden w-full flex items-center gap-2 text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-800 px-4 py-3 rounded-lg">
+                      <div className="w-full flex items-center gap-2 text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-800 px-4 py-3 rounded-lg">
                         <User className="h-5 w-5" />
                         <span className="font-medium">{user.username}</span>
                       </div>
