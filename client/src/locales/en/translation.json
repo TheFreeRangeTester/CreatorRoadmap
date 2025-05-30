@@ -234,7 +234,9 @@
     "profile": "Profile",
     "refresh": "Refresh",
     "loginRequired": "Login required",
-    "loginRequiredDesc": "Please log in to vote"
+    "loginRequiredDesc": "Please log in to vote",
+    "voted": "Voted!",
+    "alreadyVoted": "Already voted"
   },
   "creator": {
     "voteSuccess": "Vote registered!",
