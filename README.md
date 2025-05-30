@@ -45,7 +45,3 @@ Visit us at [fanlist.live](https://fanlist.live)
 ## 📝 License
 
 This project is under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## 📧 Contact
-
-[Tu información de contacto]
