@@ -133,7 +133,27 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       queryClient.invalidateQueries({ queryKey: ["/api/user"] });
       refetchUser();
       
-      // Show success message
+      // Check if user is trying to access creator features with audience account
+      const currentPath = window.location.pathname;
+      const isAccessingCreatorArea = currentPath === '/auth' && 
+        (window.location.search.includes('direct=true') || 
+         localStorage.getItem('attemptingCreatorLogin') === 'true');
+      
+      if (isAccessingCreatorArea && userData.userRole === 'audience') {
+        // Clear the flag
+        localStorage.removeItem('attemptingCreatorLogin');
+        
+        // Show error message for audience trying to access creator features
+        toast({
+          title: i18n.t("auth.notCreatorAccount", "Not a creator account"),
+          description: i18n.t("auth.notCreatorAccountDesc", "No es una cuenta de creador. Por favor registrate como creador si querés usar las funciones de Fanlist para creadores."),
+          variant: "destructive",
+          duration: 6000,
+        });
+        return; // Don't show success message
+      }
+      
+      // Show success message for valid logins
       toast({
         title: i18n.t("auth.loginSuccess", "Login successful"),
         description: i18n.t("auth.welcomeBack", "Welcome back, {{username}}!", { username: userData.username }),

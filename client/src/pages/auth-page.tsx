@@ -84,6 +84,19 @@ export default function AuthPage() {
   // Redirect if already logged in
   useEffect(() => {
     if (user) {
+      // Check if audience user tried to access creator area
+      const searchParams = new URLSearchParams(window.location.search);
+      const isDirect = searchParams.get('direct') === 'true';
+      const attemptingCreatorLogin = localStorage.getItem('attemptingCreatorLogin') === 'true';
+      
+      if ((isDirect || attemptingCreatorLogin) && user.userRole === 'audience') {
+        // Clear any flags
+        localStorage.removeItem('attemptingCreatorLogin');
+        // Redirect to landing page with error message already shown
+        navigate('/');
+        return;
+      }
+      
       // Handle vote intent if exists
       if (voteIntent) {
         const { ideaId, redirect } = voteIntent;

@@ -36,13 +36,12 @@ export function ProtectedRoute({
 
   // Verificar el rol del usuario
   if (requiredRole === "creator" && user.userRole !== "creator") {
+    // Store flag to show error message on landing page
+    localStorage.setItem('audienceTriedCreatorAccess', 'true');
+    
     return (
       <Route path={path}>
-        <div className="flex flex-col items-center justify-center min-h-screen p-4 text-center">
-          <h2 className="text-2xl font-bold mb-2">Acceso restringido</h2>
-          <p className="mb-4">Esta sección es exclusiva para creadores de contenido.</p>
-          <Redirect to="/" />
-        </div>
+        <Redirect to="/" />
       </Route>
     );
   }
