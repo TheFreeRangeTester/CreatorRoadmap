@@ -39,6 +39,7 @@ import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { cn } from "@/lib/utils";
 import SuggestIdeaModal from "@/components/suggest-idea-modal";
+import AudienceStats from "@/components/audience-stats";
 import { FaTiktok } from "react-icons/fa";
 import { FaThreads } from "react-icons/fa6";
 import { useStaggerCards } from "@/components/gsap-animations";
@@ -68,6 +69,7 @@ export default function CreatorProfileUnified() {
   const [isVoting, setIsVoting] = useState<{ [key: number]: boolean }>({});
   const [votedIdeas, setVotedIdeas] = useState<Set<number>>(new Set());
   const [suggestDialogOpen, setSuggestDialogOpen] = useState(false);
+  const [showAudienceStats, setShowAudienceStats] = useState(false);
   const { toast } = useToast();
   const { user } = useAuth();
   const { t } = useTranslation();
@@ -413,9 +415,35 @@ export default function CreatorProfileUnified() {
               <Share2 className="w-4 h-4 mr-2" />
               {t("common.share", "Share")}
             </Button>
+
+            {/* Audience Stats Button - Only show if user is logged in */}
+            {user && (
+              <Button
+                onClick={() => setShowAudienceStats(!showAudienceStats)}
+                variant="outline"
+                className={cn(
+                  isCustomBackground
+                    ? "border-gray-300 text-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:text-gray-300 dark:hover:bg-gray-800"
+                    : "border-white text-white hover:bg-white hover:text-blue-600"
+                )}
+              >
+                <BarChart3 className="w-4 h-4 mr-2" />
+                {showAudienceStats 
+                  ? t("audienceStats.hide", "Hide My Stats") 
+                  : t("audienceStats.show", "My Activity")
+                }
+              </Button>
+            )}
           </div>
         </div>
       </div>
+
+      {/* Audience Stats Section - Only show when toggled */}
+      {showAudienceStats && (
+        <div className="bg-gray-50 dark:bg-gray-900 py-8">
+          <AudienceStats isVisible={showAudienceStats} />
+        </div>
+      )}
 
       {/* Ideas Section */}
       <div className="bg-gray-50 dark:bg-gray-900 min-h-screen">

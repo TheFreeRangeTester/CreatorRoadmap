@@ -3,6 +3,7 @@ import { useAuth } from "@/hooks/use-auth";
 import { useAchievements } from "@/hooks/use-achievements";
 import { Loader2, ArrowLeft, User, Trophy, RotateCcw } from "lucide-react";
 import { Link, useLocation } from "wouter";
+import { useEffect } from "react";
 import ProfileEditor from "@/components/profile-editor";
 import { Button } from "@/components/ui/button";
 import { LanguageToggle } from "@/components/language-toggle";
@@ -15,6 +16,18 @@ export default function ProfilePage() {
   const [, setLocation] = useLocation();
   const { resetAchievements, stats } = useAchievements();
   const { toast } = useToast();
+
+  // Redirect audience users to landing page
+  useEffect(() => {
+    if (!isLoading && user && user.userRole !== "creator") {
+      toast({
+        title: t("dashboard.accessDenied", "Access Denied"),
+        description: t("dashboard.creatorRequired", "Necesitás una cuenta de creador para acceder al dashboard."),
+        variant: "destructive",
+      });
+      setLocation("/");
+    }
+  }, [user, isLoading, setLocation, toast, t]);
 
   const handleBack = () => {
     setLocation("/dashboard");
