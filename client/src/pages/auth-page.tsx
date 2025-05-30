@@ -155,7 +155,7 @@ export default function AuthPage() {
     
     // If we came from a creator profile, go back to that profile
     if (params?.username) {
-      return `/creators/${params.username}`;
+      return `/${params.username}`;
     }
     
     // Default redirects based on role
