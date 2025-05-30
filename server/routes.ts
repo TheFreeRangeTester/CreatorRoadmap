@@ -673,6 +673,31 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Check vote status for a specific idea
+  app.get("/api/creators/:username/ideas/:ideaId/vote-status", async (req: Request, res: Response) => {
+    try {
+      const { ideaId } = req.params;
+      const userId = req.isAuthenticated() ? req.user.id : undefined;
+      const sessionId = !userId ? req.sessionID : undefined;
+
+      if (!userId && !sessionId) {
+        return res.json({ hasVoted: false });
+      }
+
+      // Check if user/session has already voted for this idea
+      const existingVote = await storage.getVoteByUserOrSession(
+        parseInt(ideaId),
+        userId,
+        sessionId
+      );
+
+      res.json({ hasVoted: !!existingVote });
+    } catch (error) {
+      console.error("Error checking vote status:", error);
+      res.status(500).json({ message: "Failed to check vote status" });
+    }
+  });
+
   // Vote on a creator's idea
   app.post("/api/creators/:username/ideas/:ideaId/vote", async (req: Request, res: Response) => {
     try {

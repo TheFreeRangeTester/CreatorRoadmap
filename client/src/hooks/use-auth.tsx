@@ -133,13 +133,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       queryClient.invalidateQueries({ queryKey: ["/api/user"] });
       refetchUser();
       
-      // Check if user is trying to access creator features with audience account
+      // Check if there's a redirect URL stored from before login
+      const redirectAfterAuth = localStorage.getItem('redirectAfterAuth');
       const currentPath = window.location.pathname;
-      const isAccessingCreatorArea = currentPath === '/auth' && 
+      
+      // Only redirect audience users away from creator-only areas
+      const isAccessingCreatorOnlyArea = currentPath === '/auth' && 
         (window.location.search.includes('direct=true') || 
          localStorage.getItem('attemptingCreatorLogin') === 'true');
       
-      if (isAccessingCreatorArea && userData.userRole === 'audience') {
+      if (isAccessingCreatorOnlyArea && userData.userRole === 'audience') {
         // Clear the flag
         localStorage.removeItem('attemptingCreatorLogin');
         
@@ -150,7 +153,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           variant: "destructive",
           duration: 6000,
         });
-        return; // Don't show success message
+        return; // Don't show success message or redirect
       }
       
       // Show success message for valid logins
@@ -158,6 +161,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         title: i18n.t("auth.loginSuccess", "Login successful"),
         description: i18n.t("auth.welcomeBack", "Welcome back, {{username}}!", { username: userData.username }),
       });
+      
+      // Handle post-login redirection
+      if (redirectAfterAuth) {
+        // Clear the stored redirect URL
+        localStorage.removeItem('redirectAfterAuth');
+        // Redirect to the stored URL (usually a creator profile)
+        window.location.href = redirectAfterAuth;
+      }
       
       // Log login success for debugging
       console.log("Login successful, user data:", userData);
