@@ -332,17 +332,17 @@ export default function CreatorProfileUnified() {
       {/* Header */}
       <header className="relative z-10 p-4">
         <div className="container mx-auto flex justify-between items-center">
-          {/* Desktop toggles - solo visible en desktop */}
-          <div className="hidden md:flex items-center gap-4">
-            <ThemeToggle />
-            <LanguageToggle />
-          </div>
-
           {/* Spacer for mobile */}
           <div className="md:hidden"></div>
 
-          {/* Mobile menu - includes auth status indicator */}
+          {/* Right section with toggles and mobile menu */}
           <div className="flex items-center gap-4">
+            {/* Desktop toggles */}
+            <div className="hidden md:flex items-center gap-4">
+              <ThemeToggle />
+              <LanguageToggle />
+            </div>
+
             {/* User indicator for desktop */}
             {user && (
               <div className="hidden md:flex items-center gap-2 text-white/80 bg-black/20 px-3 py-1 rounded-full backdrop-blur-sm">

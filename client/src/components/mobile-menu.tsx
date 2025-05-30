@@ -95,7 +95,7 @@ export const MobileMenu = ({
 
               <div className="flex-1 px-4 py-6">
                 <div className="flex flex-col gap-6">
-                  {/* Theme and Language toggles for mobile */}
+                  {/* Theme and Language toggles for mobile - hidden on desktop */}
                   <div className="flex md:hidden justify-center gap-4 pb-4 border-b border-gray-200 dark:border-gray-700">
                     <ThemeToggle />
                     <LanguageToggle />
