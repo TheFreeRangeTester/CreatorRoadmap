@@ -1,6 +1,6 @@
 # CreatorRoadmap
 
-![CreatorRoadmap Logo](logo.png)
+![CreatorRoadmap Logo](attached_assets/logo.png)
 
 CreatorRoadmap is a modern web application designed to help content creators plan and manage their careers. Built with modern technologies and a robust architecture.
 
