@@ -95,14 +95,14 @@ export const MobileMenu = ({
 
               <div className="flex-1 px-4 py-6">
                 <div className="flex flex-col gap-6">
-                  {/* Theme and Language toggles for mobile - hidden on desktop */}
-                  <div className="flex md:hidden justify-center gap-4 pb-4 border-b border-gray-200 dark:border-gray-700">
-                    <ThemeToggle />
-                    <LanguageToggle />
-                  </div>
-
                   {user ? (
                     <div className="w-full flex flex-col items-center space-y-6">
+                      {/* User info for mobile */}
+                      <div className="md:hidden w-full flex items-center gap-2 text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-800 px-4 py-3 rounded-lg">
+                        <User className="h-5 w-5" />
+                        <span className="font-medium">{user.username}</span>
+                      </div>
+
                       {/* Solo mostrar perfil/dashboard si es creador */}
                       {user.userRole === "creator" && (
                         <Link
