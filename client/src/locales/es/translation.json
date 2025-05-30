@@ -185,7 +185,13 @@
     "creatorRole": "Creador",
     "creatorRoleDescription": "Comparte ideas y recibe comentarios de tu audiencia",
     "audienceRole": "Audiencia",
-    "audienceRoleDescription": "Vota por las ideas de tu creador favorito"
+    "audienceRoleDescription": "Vota por las ideas de tu creador favorito",
+    "notCreatorAccount": "No es una cuenta de creador",
+    "notCreatorAccountDesc": "No es una cuenta de creador. Por favor registrate como creador si querés usar las funciones de Fanlist para creadores.",
+    "loginSuccess": "Inicio de sesión exitoso",
+    "welcomeBack": "¡Bienvenido de vuelta, {{username}}!",
+    "registerSuccess": "Registro exitoso",
+    "welcome": "¡Bienvenido a Fanlist, {{username}}!"
   },
   "pricing": {
     "monthly": "Mensual",

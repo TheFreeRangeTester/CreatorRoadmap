@@ -3,6 +3,7 @@ import { Link, useLocation } from "wouter";
 import { motion } from "framer-motion";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { useToast } from "@/hooks/use-toast";
 import {
   CustomSplitText,
   registerGSAPPlugins,
@@ -238,6 +239,7 @@ export default function LandingPage() {
   const [isDemoOpen, setIsDemoOpen] = useState(false);
   const [billingPeriod, setBillingPeriod] = useState("monthly");
   const { t } = useTranslation();
+  const { toast } = useToast();
 
   const heroTitleRef = useRef(null);
   const heroTextRef = useRef(null);
@@ -255,6 +257,26 @@ export default function LandingPage() {
       ScrollTrigger.getAll().forEach((t) => t.kill());
     };
   }, []);
+
+  // Check for audience user trying to access creator features
+  useEffect(() => {
+    const audienceTriedAccess = localStorage.getItem('audienceTriedCreatorAccess');
+    const attemptingCreatorLogin = localStorage.getItem('attemptingCreatorLogin');
+    
+    if (audienceTriedAccess === 'true' || attemptingCreatorLogin === 'true') {
+      // Clear the flags
+      localStorage.removeItem('audienceTriedCreatorAccess');
+      localStorage.removeItem('attemptingCreatorLogin');
+      
+      // Show error message
+      toast({
+        title: t("auth.notCreatorAccount", "No es una cuenta de creador"),
+        description: t("auth.notCreatorAccountDesc", "No es una cuenta de creador. Por favor registrate como creador si querés usar las funciones de Fanlist para creadores."),
+        variant: "destructive",
+        duration: 8000,
+      });
+    }
+  }, [toast, t]);
 
   // Hero title ref para animación avanzada (estilo GSAP.com)
   const heroBadgeRef = useRef(null);
@@ -430,6 +452,9 @@ export default function LandingPage() {
                   <Button
                     size="lg"
                     className="font-medium text-base bg-gradient-to-r from-primary to-blue-600 hover:from-primary/90 hover:to-blue-700 text-white"
+                    onClick={() => {
+                      localStorage.setItem('attemptingCreatorLogin', 'true');
+                    }}
                   >
                     {t("landing.cta.startFree")}
                     <ArrowRight className="h-4 w-4 ml-2" />
