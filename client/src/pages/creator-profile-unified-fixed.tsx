@@ -9,6 +9,10 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { toast } from "@/hooks/use-toast";
 import { useAuth } from "@/hooks/use-auth";
 import { useIsMobile } from "@/hooks/use-mobile";
+import CreatorProfileHeader from "@/components/creator-profile-header";
+import SuggestIdeaDialog from "@/components/suggest-idea-dialog";
+import ShareProfile from "@/components/share-profile";
+import { MobileMenu } from "@/components/mobile-menu";
 import AudienceStats from "@/components/audience-stats";
 import { 
   Heart, 
@@ -103,6 +107,7 @@ export default function CreatorProfileUnified() {
       );
       setVotedIdeas(new Set(votedIdeasFromStorage));
     } else {
+      // Clear voted ideas for non-authenticated users
       setVotedIdeas(new Set());
     }
   }, [user]);
@@ -110,6 +115,7 @@ export default function CreatorProfileUnified() {
   // Check vote status for all ideas when data loads
   useEffect(() => {
     if (!data?.ideas || !user) {
+      setVotedIdeas(new Set());
       return;
     }
 
@@ -139,6 +145,7 @@ export default function CreatorProfileUnified() {
     checkVotedIdeas();
   }, [data?.ideas, user, username]);
 
+  // Usar useStaggerCards para animar las tarjetas de ideas cuando estén disponibles
   useStaggerCards(ideasContainerRef);
 
   if (isLoading) {
@@ -158,10 +165,13 @@ export default function CreatorProfileUnified() {
   }
 
   const { ideas, creator } = data;
+
+  // Check if current user is the profile owner
   const isOwnProfile = user?.username === creator.username;
 
   const handleVote = async (ideaId: number) => {
     if (!user) {
+      // Store current page as redirect destination
       localStorage.setItem("redirectAfterAuth", `/creators/${username}`);
       setLocation(`/auth?referrer=${encodeURIComponent(`/creators/${username}`)}`);
       return;
@@ -188,10 +198,12 @@ export default function CreatorProfileUnified() {
         `/api/creators/${username}/ideas/${ideaId}/vote`
       );
 
+      // Update voted ideas
       const newVotedIdeas = new Set(votedIdeas);
       newVotedIdeas.add(ideaId);
       setVotedIdeas(newVotedIdeas);
 
+      // Update localStorage with user-specific key
       const userKey = `votedIdeas_${user.id}`;
       const votedArray = Array.from(newVotedIdeas);
       localStorage.setItem(userKey, JSON.stringify(votedArray));
@@ -204,6 +216,7 @@ export default function CreatorProfileUnified() {
         ),
       });
 
+      // Refresh ideas to get updated vote counts
       refetch();
     } catch (error) {
       console.error("Error voting:", error);
@@ -218,6 +231,24 @@ export default function CreatorProfileUnified() {
     } finally {
       setIsVoting((prev) => ({ ...prev, [ideaId]: false }));
     }
+  };
+
+  const handleSuggestIdea = () => {
+    if (!user) {
+      // Store current page as redirect destination
+      localStorage.setItem("redirectAfterAuth", `/creators/${username}`);
+      setLocation(`/auth?referrer=${encodeURIComponent(`/creators/${username}`)}`);
+      return;
+    }
+
+    // Open suggestion dialog logic would go here
+    toast({
+      title: t("common.suggest", "Suggest"),
+      description: t(
+        "creator.suggestFeature",
+        "Suggestion feature coming soon!"
+      ),
+    });
   };
 
   const getRankingIcon = (change: number | null) => {
@@ -238,24 +269,23 @@ export default function CreatorProfileUnified() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-900 via-purple-900 to-indigo-900">
       {/* Header */}
-      <div className="bg-white/5 backdrop-blur-sm border-b border-white/10">
-        <div className="container mx-auto px-4 py-6">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-4">
-              <Avatar className="h-16 w-16 border-2 border-white/20">
-                <AvatarImage src={creator.logoUrl || ""} alt={creator.username} />
-                <AvatarFallback className="bg-white/20 text-white text-lg">
-                  {creator.username.charAt(0).toUpperCase()}
-                </AvatarFallback>
-              </Avatar>
-              <div>
-                <h1 className="text-2xl font-bold text-white">{creator.username}</h1>
-                <p className="text-white/70">
-                  {creator.profileDescription || t("creator.defaultProfileDescription", "Content creator")}
-                </p>
-              </div>
-            </div>
+      <CreatorProfileHeader
+        creator={creator}
+        isOwnProfile={isOwnProfile}
+        user={user}
+        onSuggestIdea={handleSuggestIdea}
+      />
+
+      {/* Main Content */}
+      <div className="container mx-auto px-4 py-8">
+        {/* Ideas Grid */}
+        <div className="space-y-6">
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+            <h2 className="text-2xl font-bold text-white">
+              {t("creator.voteHeaderTitle", "Vote for Content Ideas")}
+            </h2>
             
+            {/* Audience Stats Button */}
             {user && !isOwnProfile && (
               <Button
                 onClick={() => setShowAudienceStats(true)}
@@ -267,18 +297,8 @@ export default function CreatorProfileUnified() {
               </Button>
             )}
           </div>
-        </div>
-      </div>
 
-      {/* Main Content */}
-      <div className="container mx-auto px-4 py-8">
-        <div className="space-y-6">
-          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-            <h2 className="text-2xl font-bold text-white">
-              {t("creator.voteHeaderTitle", "Vote for Content Ideas")}
-            </h2>
-          </div>
-
+          {/* Ideas Container */}
           <div
             ref={ideasContainerRef}
             className="grid gap-6 md:grid-cols-2 lg:grid-cols-3"
@@ -289,6 +309,7 @@ export default function CreatorProfileUnified() {
                 className="bg-white/10 backdrop-blur-sm border-white/20 hover:bg-white/15 transition-all duration-300"
               >
                 <div className="p-6">
+                  {/* Ranking Badge */}
                   <div className="flex items-center justify-between mb-4">
                     <Badge
                       variant="secondary"
@@ -302,6 +323,7 @@ export default function CreatorProfileUnified() {
                     </div>
                   </div>
 
+                  {/* Idea Content */}
                   <h3 className="text-lg font-semibold text-white mb-2 line-clamp-2">
                     {idea.title}
                   </h3>
@@ -309,12 +331,14 @@ export default function CreatorProfileUnified() {
                     {idea.description}
                   </p>
 
+                  {/* Vote Section */}
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2 text-white/70">
                       <Heart className="h-4 w-4" />
                       <span className="text-sm font-medium">{idea.votes}</span>
                     </div>
 
+                    {/* Vote Button */}
                     {user ? (
                       <Button
                         onClick={() => handleVote(idea.id)}
@@ -359,6 +383,7 @@ export default function CreatorProfileUnified() {
                     )}
                   </div>
 
+                  {/* Suggested by */}
                   {idea.suggestedByUsername && (
                     <div className="mt-3 pt-3 border-t border-white/20">
                       <p className="text-xs text-white/60">
@@ -376,6 +401,7 @@ export default function CreatorProfileUnified() {
         </div>
       </div>
 
+      {/* Audience Stats Modal */}
       <AudienceStats 
         isVisible={showAudienceStats}
         onClose={() => setShowAudienceStats(false)}
