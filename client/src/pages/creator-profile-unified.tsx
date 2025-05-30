@@ -382,12 +382,23 @@ export default function CreatorProfileUnified() {
                   <Button
                     variant="outline"
                     size="sm"
-                    onClick={() => {
-                      // Placeholder for actual logout logic
-                      if (user?.userRole === "creator") {
-                        window.location.href = "/dashboard"; // Redirect creator to dashboard after logout
-                      } else {
-                        window.location.href = "/"; // Redirect other users to landing
+                    onClick={async () => {
+                      try {
+                        // Call logout API
+                        await fetch("/api/logout", {
+                          method: "POST",
+                          headers: {
+                            "X-Requested-With": "XMLHttpRequest"
+                          },
+                          credentials: "same-origin"
+                        });
+                        
+                        // Stay on the same public profile after logout
+                        window.location.reload();
+                      } catch (error) {
+                        console.error("Logout error:", error);
+                        // Even if logout fails, reload to refresh the page
+                        window.location.reload();
                       }
                     }}
                     className="text-red-600 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300 border-gray-300 dark:border-gray-700"
