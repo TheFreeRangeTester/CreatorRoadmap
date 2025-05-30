@@ -23,6 +23,7 @@ interface IdeaCardProps {
   onEdit?: (idea: IdeaResponse) => void;
   onDelete?: (ideaId: number) => void;
   isVoting: boolean;
+  hasVoted?: boolean;
 }
 
 export default function IdeaCard({
@@ -31,9 +32,9 @@ export default function IdeaCard({
   onEdit,
   onDelete,
   isVoting,
+  hasVoted: initialHasVoted = false,
 }: IdeaCardProps) {
-  // Check if user has already voted for this idea
-  const [hasVoted, setHasVoted] = useState(false);
+  const [hasVoted, setHasVoted] = useState(initialHasVoted);
   const { t } = useTranslation();
   const { user } = useAuth();
 
@@ -59,7 +60,7 @@ export default function IdeaCard({
     } else {
       setHasVoted(false);
     }
-  }, [idea.id, user]);
+  }, [idea.id, user, initialHasVoted]);
 
   // Estado para controlar las animaciones
   const [isVoteAnimating, setIsVoteAnimating] = useState(false);
