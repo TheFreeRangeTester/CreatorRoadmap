@@ -250,26 +250,13 @@ export default function IdeaCard({
           </p>
 
           {/* Mostrar badge si la idea fue sugerida por otro usuario */}
-          <AnimatePresence>
-            {idea.suggestedByUsername && (
-              <motion.div
-                className="mb-4"
-                initial={{ opacity: 0, height: 0 }}
-                animate={{ opacity: 1, height: "auto" }}
-                exit={{ opacity: 0, height: 0 }}
-              >
-                <Badge
-                  variant="outline"
-                  className="bg-amber-50 border-amber-200 text-amber-700 dark:bg-amber-900/30 dark:border-amber-800 dark:text-amber-300 flex items-center gap-1"
-                >
-                  <User className="h-3 w-3" />
-                  {t("ideaPosition.suggestedBy", {
-                    username: idea.suggestedByUsername,
-                  })}
-                </Badge>
-              </motion.div>
-            )}
-          </AnimatePresence>
+          {idea.suggestedByUsername && (
+            <div className="text-xs text-gray-500 dark:text-gray-400 mb-3 inline-flex items-center gap-1 bg-gray-100 dark:bg-gray-700 px-2 py-1 rounded-full">
+              <User className="h-3 w-3" />
+              {t("ideas.suggestedBy")}:{" "}
+              <span className="font-medium">{idea.suggestedByUsername}</span>
+            </div>
+          )}
 
           <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center space-y-3 sm:space-y-0">
             <div className="flex items-center">

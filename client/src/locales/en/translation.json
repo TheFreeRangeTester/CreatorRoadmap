@@ -294,7 +294,9 @@
     "delete": "Delete",
     "noPublishedIdeas": "No published ideas yet",
     "createFirstIdea": "Create your first idea to get started",
-    "suggestedIdeasWillAppear": "Suggested ideas from your audience will appear here"
+    "suggestedIdeasWillAppear": "Suggested ideas from your audience will appear here",
+    "suggestedBy": "Suggested by",
+    "pending": "Pending"
   },
   "dashboard": {
     "welcome": "Hello",

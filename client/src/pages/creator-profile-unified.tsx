@@ -96,7 +96,9 @@ export default function CreatorProfileUnified() {
   useEffect(() => {
     if (user) {
       const userKey = `votedIdeas_${user.id}`;
-      const votedIdeasFromStorage = JSON.parse(localStorage.getItem(userKey) || "[]");
+      const votedIdeasFromStorage = JSON.parse(
+        localStorage.getItem(userKey) || "[]"
+      );
       setVotedIdeas(new Set(votedIdeasFromStorage));
     } else {
       // Clear voted ideas for non-authenticated users
@@ -131,8 +133,8 @@ export default function CreatorProfileUnified() {
   const handleVote = async (ideaId: number) => {
     if (!user) {
       // Store current page as redirect destination
-      localStorage.setItem('redirectAfterAuth', `/creators/${username}`);
-      
+      localStorage.setItem("redirectAfterAuth", `/creators/${username}`);
+
       toast({
         title: t("common.loginRequired", "Login required"),
         description: t("common.loginRequiredDesc", "Please log in to vote"),
@@ -146,7 +148,10 @@ export default function CreatorProfileUnified() {
     if (isOwnProfile) {
       toast({
         title: t("creator.cantVoteOwn", "Can't vote on own ideas"),
-        description: t("creator.cantVoteOwnDesc", "No podés votar tus propias ideas 😅"),
+        description: t(
+          "creator.cantVoteOwnDesc",
+          "No podés votar tus propias ideas 😅"
+        ),
         variant: "destructive",
       });
       return;
@@ -156,16 +161,19 @@ export default function CreatorProfileUnified() {
       return;
     }
 
-    setIsVoting(prev => ({ ...prev, [ideaId]: true }));
+    setIsVoting((prev) => ({ ...prev, [ideaId]: true }));
 
     try {
-      await apiRequest("POST", `/api/creators/${username}/ideas/${ideaId}/vote`);
-      
+      await apiRequest(
+        "POST",
+        `/api/creators/${username}/ideas/${ideaId}/vote`
+      );
+
       // Update voted ideas
       const newVotedIdeas = new Set(votedIdeas);
       newVotedIdeas.add(ideaId);
       setVotedIdeas(newVotedIdeas);
-      
+
       // Update localStorage with user-specific key
       const userKey = `votedIdeas_${user.id}`;
       const votedArray = Array.from(newVotedIdeas);
@@ -173,25 +181,35 @@ export default function CreatorProfileUnified() {
 
       toast({
         title: t("creator.voteSuccess", "Vote registered!"),
-        description: t("creator.voteSuccessDesc", "Your vote has been registered successfully"),
+        description: t(
+          "creator.voteSuccessDesc",
+          "Your vote has been registered successfully"
+        ),
       });
 
       refetch();
     } catch (error) {
       toast({
         title: t("creator.voteError", "Vote failed"),
-        description: t("creator.voteErrorDesc", "Could not register your vote. Please try again."),
+        description: t(
+          "creator.voteErrorDesc",
+          "Could not register your vote. Please try again."
+        ),
         variant: "destructive",
       });
     } finally {
-      setIsVoting(prev => ({ ...prev, [ideaId]: false }));
+      setIsVoting((prev) => ({ ...prev, [ideaId]: false }));
     }
   };
 
   const handleShare = () => {
     const shareData = {
-      title: t("share.title", "Check out {{username}}'s ideas!", { username: creator.username }),
-      text: t("share.text", "Vote for {{username}}'s next content ideas", { username: creator.username }),
+      title: t("share.title", "Check out {{username}}'s ideas!", {
+        username: creator.username,
+      }),
+      text: t("share.text", "Vote for {{username}}'s next content ideas", {
+        username: creator.username,
+      }),
       url: window.location.href,
     };
 
@@ -208,34 +226,36 @@ export default function CreatorProfileUnified() {
 
   const getBackgroundStyle = (profileBackground?: string) => {
     switch (profileBackground) {
-      case 'gradient-1':
-        return 'bg-gradient-to-br from-gray-50 to-white dark:from-gray-900 dark:to-gray-950';
-      case 'gradient-2':
-        return 'bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-blue-950/30 dark:to-indigo-950/30';
-      case 'gradient-3':
-        return 'bg-gradient-to-br from-green-50 to-teal-50 dark:from-green-950/30 dark:to-teal-950/30';
-      case 'gradient-4':
-        return 'bg-gradient-to-br from-rose-50 to-orange-50 dark:from-rose-950/30 dark:to-orange-950/30';
-      case 'pattern-1':
-        return 'bg-gray-50 dark:bg-gray-900';
-      case 'pattern-2':
-        return 'bg-gray-50 dark:bg-gray-900';
+      case "gradient-1":
+        return "bg-gradient-to-br from-gray-50 to-white dark:from-gray-900 dark:to-gray-950";
+      case "gradient-2":
+        return "bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-blue-950/30 dark:to-indigo-950/30";
+      case "gradient-3":
+        return "bg-gradient-to-br from-green-50 to-teal-50 dark:from-green-950/30 dark:to-teal-950/30";
+      case "gradient-4":
+        return "bg-gradient-to-br from-rose-50 to-orange-50 dark:from-rose-950/30 dark:to-orange-950/30";
+      case "pattern-1":
+        return "bg-gray-50 dark:bg-gray-900";
+      case "pattern-2":
+        return "bg-gray-50 dark:bg-gray-900";
       default:
-        return 'bg-gradient-to-b from-blue-600 to-indigo-900';
+        return "bg-gradient-to-b from-blue-600 to-indigo-900";
     }
   };
 
   const getPatternStyle = (profileBackground?: string) => {
-    if (profileBackground === 'pattern-1') {
+    if (profileBackground === "pattern-1") {
       return {
-        backgroundImage: "radial-gradient(circle at 1px 1px, rgba(156, 163, 175, 0.5) 1px, transparent 0)",
-        backgroundSize: "20px 20px"
+        backgroundImage:
+          "radial-gradient(circle at 1px 1px, rgba(156, 163, 175, 0.5) 1px, transparent 0)",
+        backgroundSize: "20px 20px",
       };
     }
-    if (profileBackground === 'pattern-2') {
+    if (profileBackground === "pattern-2") {
       return {
-        backgroundImage: "linear-gradient(90deg, rgba(156, 163, 175, 0.1) 1px, transparent 1px), linear-gradient(rgba(156, 163, 175, 0.1) 1px, transparent 1px)",
-        backgroundSize: "20px 20px"
+        backgroundImage:
+          "linear-gradient(90deg, rgba(156, 163, 175, 0.1) 1px, transparent 1px), linear-gradient(rgba(156, 163, 175, 0.1) 1px, transparent 1px)",
+        backgroundSize: "20px 20px",
       };
     }
     return {};
@@ -243,19 +263,19 @@ export default function CreatorProfileUnified() {
 
   const getSocialIcon = (platform: string, url: string) => {
     const iconProps = { className: "w-5 h-5" };
-    
+
     switch (platform) {
-      case 'twitter':
+      case "twitter":
         return <Twitter {...iconProps} />;
-      case 'instagram':
+      case "instagram":
         return <Instagram {...iconProps} />;
-      case 'youtube':
+      case "youtube":
         return <Youtube {...iconProps} />;
-      case 'tiktok':
+      case "tiktok":
         return <FaTiktok {...iconProps} />;
-      case 'threads':
+      case "threads":
         return <FaThreads {...iconProps} />;
-      case 'website':
+      case "website":
         return <Globe {...iconProps} />;
       default:
         return <ExternalLink {...iconProps} />;
@@ -264,13 +284,17 @@ export default function CreatorProfileUnified() {
 
   const renderSocialLinks = () => {
     const socialLinks = [
-      { platform: 'website', url: creator.websiteUrl, label: t('common.website', 'Website') },
-      { platform: 'twitter', url: creator.twitterUrl, label: 'Twitter' },
-      { platform: 'instagram', url: creator.instagramUrl, label: 'Instagram' },
-      { platform: 'youtube', url: creator.youtubeUrl, label: 'YouTube' },
-      { platform: 'tiktok', url: creator.tiktokUrl, label: 'TikTok' },
-      { platform: 'threads', url: creator.threadsUrl, label: 'Threads' },
-    ].filter(link => link.url);
+      {
+        platform: "website",
+        url: creator.websiteUrl,
+        label: t("common.website", "Website"),
+      },
+      { platform: "twitter", url: creator.twitterUrl, label: "Twitter" },
+      { platform: "instagram", url: creator.instagramUrl, label: "Instagram" },
+      { platform: "youtube", url: creator.youtubeUrl, label: "YouTube" },
+      { platform: "tiktok", url: creator.tiktokUrl, label: "TikTok" },
+      { platform: "threads", url: creator.threadsUrl, label: "Threads" },
+    ].filter((link) => link.url);
 
     if (socialLinks.length === 0) return null;
 
@@ -299,7 +323,9 @@ export default function CreatorProfileUnified() {
 
   const backgroundClass = getBackgroundStyle(creator.profileBackground);
   const patternStyle = getPatternStyle(creator.profileBackground);
-  const isCustomBackground = creator.profileBackground && creator.profileBackground !== 'gradient-default';
+  const isCustomBackground =
+    creator.profileBackground &&
+    creator.profileBackground !== "gradient-default";
 
   return (
     <div className={cn("min-h-screen", backgroundClass)} style={patternStyle}>
@@ -311,10 +337,10 @@ export default function CreatorProfileUnified() {
             <ThemeToggle />
             <LanguageToggle />
           </div>
-          
+
           {/* Spacer for mobile */}
           <div className="md:hidden"></div>
-          
+
           {/* Mobile menu - includes auth status indicator */}
           <div className="flex items-center gap-4">
             {/* User indicator for desktop */}
@@ -324,9 +350,9 @@ export default function CreatorProfileUnified() {
                 <span className="text-sm">{user.username}</span>
               </div>
             )}
-            
-            <MobileMenu 
-              isCreatorProfile={true} 
+
+            <MobileMenu
+              isCreatorProfile={true}
               username={username}
               transparent={true}
               onRefresh={async () => {
@@ -338,39 +364,48 @@ export default function CreatorProfileUnified() {
       </header>
 
       {/* Creator Profile Section */}
-      <div className={cn(
-        "relative z-10 text-center py-12",
-        isCustomBackground 
-          ? "text-gray-900 dark:text-white" 
-          : "text-white"
-      )}>
+      <div
+        className={cn(
+          "relative z-10 text-center py-12",
+          isCustomBackground ? "text-gray-900 dark:text-white" : "text-white"
+        )}
+      >
         <div className="container mx-auto px-4">
-          <Avatar className={cn(
-            "w-24 h-24 mx-auto mb-6 ring-4",
-            isCustomBackground 
-              ? "ring-gray-300 dark:ring-gray-600" 
-              : "ring-white/20"
-          )}>
-            <AvatarImage src={creator.logoUrl || undefined} alt={creator.username} />
-            <AvatarFallback className={cn(
-              "text-2xl font-bold",
-              isCustomBackground 
-                ? "bg-gray-200 dark:bg-gray-700" 
-                : "bg-white/20"
-            )}>
+          <Avatar
+            className={cn(
+              "w-24 h-24 mx-auto mb-6 ring-4",
+              isCustomBackground
+                ? "ring-gray-300 dark:ring-gray-600"
+                : "ring-white/20"
+            )}
+          >
+            <AvatarImage
+              src={creator.logoUrl || undefined}
+              alt={creator.username}
+            />
+            <AvatarFallback
+              className={cn(
+                "text-2xl font-bold",
+                isCustomBackground
+                  ? "bg-gray-200 dark:bg-gray-700"
+                  : "bg-white/20"
+              )}
+            >
               {creator.username.charAt(0).toUpperCase()}
             </AvatarFallback>
           </Avatar>
-          
+
           <h1 className="text-4xl font-bold mb-4">{creator.username}</h1>
-          
+
           {creator.profileDescription && (
-            <p className={cn(
-              "text-xl mb-6 max-w-2xl mx-auto",
-              isCustomBackground 
-                ? "text-gray-700 dark:text-gray-300" 
-                : "text-white/90"
-            )}>
+            <p
+              className={cn(
+                "text-xl mb-6 max-w-2xl mx-auto",
+                isCustomBackground
+                  ? "text-gray-700 dark:text-gray-300"
+                  : "text-white/90"
+              )}
+            >
               {creator.profileDescription}
             </p>
           )}
@@ -382,8 +417,14 @@ export default function CreatorProfileUnified() {
               onClick={() => {
                 if (isOwnProfile) {
                   toast({
-                    title: t("creator.cantSuggestOwn", "Can't suggest to yourself"),
-                    description: t("creator.cantSuggestOwnDesc", "No podés sugerir ideas a tu propio perfil 😅"),
+                    title: t(
+                      "creator.cantSuggestOwn",
+                      "Can't suggest to yourself"
+                    ),
+                    description: t(
+                      "creator.cantSuggestOwnDesc",
+                      "No podés sugerir ideas a tu propio perfil 😅"
+                    ),
                     variant: "destructive",
                   });
                   return;
@@ -392,7 +433,7 @@ export default function CreatorProfileUnified() {
               }}
               disabled={isOwnProfile}
               className={cn(
-                isOwnProfile 
+                isOwnProfile
                   ? "bg-gray-400 text-gray-600 cursor-not-allowed opacity-50"
                   : isCustomBackground
                   ? "bg-blue-600 text-white hover:bg-blue-700"
@@ -402,7 +443,7 @@ export default function CreatorProfileUnified() {
               <UserPlus className="w-4 h-4 mr-2" />
               {t("suggestIdea.button", "Suggest Idea")}
             </Button>
-            
+
             <Button
               onClick={handleShare}
               variant="outline"
@@ -428,10 +469,9 @@ export default function CreatorProfileUnified() {
                 )}
               >
                 <BarChart3 className="w-4 h-4 mr-2" />
-                {showAudienceStats 
-                  ? t("audienceStats.hide", "Hide My Stats") 
-                  : t("audienceStats.show", "My Activity")
-                }
+                {showAudienceStats
+                  ? t("audienceStats.hide", "Hide My Stats")
+                  : t("audienceStats.show", "My Activity")}
               </Button>
             )}
           </div>
@@ -455,14 +495,17 @@ export default function CreatorProfileUnified() {
           {ideas.length === 0 ? (
             <div className="text-center py-12">
               <p className="text-gray-600 dark:text-gray-400">
-                {t("suggestIdea.beFirstToSuggest", "Be the first to suggest a content idea")}
+                {t(
+                  "suggestIdea.beFirstToSuggest",
+                  "Be the first to suggest a content idea"
+                )}
               </p>
             </div>
           ) : (
             <div ref={ideasContainerRef} className="space-y-4">
               {ideas.map((idea, index) => {
                 const rank = index + 1;
-                
+
                 // Gradientes basados en el ranking como en la página QA original
                 const gradientClasses = {
                   1: "bg-gradient-to-r from-yellow-400 to-amber-500 hover:from-yellow-500 hover:to-amber-600", // #1 Oro
@@ -470,12 +513,14 @@ export default function CreatorProfileUnified() {
                   3: "bg-gradient-to-r from-rose-400 to-pink-500 hover:from-rose-500 hover:to-pink-600", // #3 Rosa
                   4: "bg-gradient-to-r from-blue-400 to-indigo-500 hover:from-blue-500 hover:to-indigo-600", // #4 Azul
                   5: "bg-gradient-to-r from-green-400 to-emerald-500 hover:from-green-500 hover:to-emerald-600", // #5 Verde
-                  default: "bg-gradient-to-r from-gray-400 to-slate-500 hover:from-gray-500 hover:to-slate-600"
+                  default:
+                    "bg-gradient-to-r from-gray-400 to-slate-500 hover:from-gray-500 hover:to-slate-600",
                 };
 
-                const gradientClass = rank <= 5 
-                  ? gradientClasses[rank as keyof typeof gradientClasses] 
-                  : gradientClasses.default;
+                const gradientClass =
+                  rank <= 5
+                    ? gradientClasses[rank as keyof typeof gradientClasses]
+                    : gradientClasses.default;
 
                 return (
                   <motion.div
@@ -493,46 +538,73 @@ export default function CreatorProfileUnified() {
                     <Card className="overflow-hidden border-0 shadow-md hover:shadow-lg transition-all duration-300">
                       <div className="flex items-stretch">
                         {/* Indicador de posición con emojis animados */}
-                        <div className={`flex items-center justify-center w-16 text-white font-bold text-xl ${gradientClass} relative`}>
-                          <span className="relative z-10">{rank > 3 ? `#${rank}` : ''}</span>
+                        <div
+                          className={`flex items-center justify-center w-16 text-white font-bold text-xl ${gradientClass} relative`}
+                        >
+                          <span className="relative z-10">
+                            {rank > 3 ? `#${rank}` : ""}
+                          </span>
                           {rank <= 3 && (
-                            <span 
-                              className={`absolute trophy-icon text-2xl ${rank === 1 ? 'text-yellow-400' : rank === 2 ? 'text-gray-300' : 'text-amber-700'}`}
+                            <span
+                              className={`absolute trophy-icon text-2xl ${
+                                rank === 1
+                                  ? "text-yellow-400"
+                                  : rank === 2
+                                  ? "text-gray-300"
+                                  : "text-amber-700"
+                              }`}
                               ref={(el) => {
                                 if (el) {
-                                  gsap.fromTo(el, 
+                                  gsap.fromTo(
+                                    el,
                                     { scale: 0.8, opacity: 0, y: 10 },
-                                    { 
-                                      scale: 1, 
-                                      opacity: 1, 
+                                    {
+                                      scale: 1,
+                                      opacity: 1,
                                       y: 0,
                                       duration: 0.6,
                                       ease: "elastic.out(1, 0.5)",
                                       repeat: -1,
                                       yoyo: true,
                                       repeatDelay: 2,
-                                      yoyoEase: "power2.out"
+                                      yoyoEase: "power2.out",
                                     }
                                   );
                                 }
                               }}
                             >
-                              {rank === 1 ? '🏆' : rank === 2 ? '🥈' : '🥉'}
+                              {rank === 1 ? "🏆" : rank === 2 ? "🥈" : "🥉"}
                             </span>
                           )}
                         </div>
 
                         {/* Contenido */}
                         <div className="flex-1 p-4">
-                          <h3 className="text-lg font-bold dark:text-white mb-2">{idea.title}</h3>
-                          <p className="text-sm text-gray-600 dark:text-gray-300 line-clamp-2 mb-3">{idea.description}</p>
-                          
+                          <h3 className="text-lg font-bold dark:text-white mb-2">
+                            {idea.title}
+                          </h3>
+                          <p className="text-sm text-gray-600 dark:text-gray-300 line-clamp-2 mb-3">
+                            {idea.description}
+                          </p>
+
                           <div className="flex items-center justify-between">
                             <span className="text-sm font-semibold text-gray-700 dark:text-gray-300">
                               <span className="mr-1">👍</span>
-                              {idea.votes} {idea.votes === 1 ? t("badges.vote", "vote") : t("badges.votes", "votes")}
+                              <div className="bg-white/20 text-white text-xs rounded-full px-2 py-0.5 flex items-center">
+                                <ThumbsUp className="h-3 w-3 mr-1" />
+                                {idea.votes}
+                              </div>
+
+                              {/* Mostrar quién sugirió la idea */}
+                              {idea.suggestedByUsername && (
+                                <div className="bg-white/20 text-white text-xs rounded-full px-2 py-0.5 flex items-center">
+                                  <User className="h-3 w-3 mr-1" />
+                                  {t("ideas.suggestedBy")}:{" "}
+                                  {idea.suggestedByUsername}
+                                </div>
+                              )}
                             </span>
-                            
+
                             <motion.button
                               whileHover={{ scale: 1.05 }}
                               whileTap={{ scale: 0.95 }}
@@ -541,11 +613,15 @@ export default function CreatorProfileUnified() {
                                 votedIdeas.has(idea.id)
                                   ? "bg-green-100 dark:bg-green-900/50 text-green-700 dark:text-green-300 cursor-not-allowed"
                                   : user
-                                    ? "bg-blue-50 dark:bg-blue-900/50 text-blue-600 dark:text-blue-300 hover:bg-blue-100 dark:hover:bg-blue-800/70"
-                                    : "bg-gray-100 dark:bg-gray-700 text-gray-500 dark:text-gray-400 cursor-not-allowed"
+                                  ? "bg-blue-50 dark:bg-blue-900/50 text-blue-600 dark:text-blue-300 hover:bg-blue-100 dark:hover:bg-blue-800/70"
+                                  : "bg-gray-100 dark:bg-gray-700 text-gray-500 dark:text-gray-400 cursor-not-allowed"
                               )}
                               onClick={() => handleVote(idea.id)}
-                              disabled={votedIdeas.has(idea.id) || isVoting[idea.id] || !user}
+                              disabled={
+                                votedIdeas.has(idea.id) ||
+                                isVoting[idea.id] ||
+                                !user
+                              }
                             >
                               {isVoting[idea.id] ? (
                                 <>
@@ -560,10 +636,9 @@ export default function CreatorProfileUnified() {
                                   >
                                     <ThumbsUp className="w-4 h-4" />
                                   </motion.div>
-                                  {votedIdeas.has(idea.id) 
+                                  {votedIdeas.has(idea.id)
                                     ? t("common.voted", "Voted!")
-                                    : t("common.vote", "Vote")
-                                  }
+                                    : t("common.vote", "Vote")}
                                 </>
                               )}
                             </motion.button>

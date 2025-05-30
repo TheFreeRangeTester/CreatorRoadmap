@@ -290,7 +290,9 @@
     "delete": "Eliminar",
     "noPublishedIdeas": "Aún no hay ideas publicadas",
     "createFirstIdea": "Crea tu primera idea para comenzar",
-    "suggestedIdeasWillAppear": "Las ideas sugeridas por tu audiencia aparecerán aquí"
+    "suggestedIdeasWillAppear": "Las ideas sugeridas por tu audiencia aparecerán aquí",
+    "suggestedBy": "Sugerida por",
+    "pending": "Pendiente"
   },
   "dashboard": {
     "topIdeas": "Ideas Principales",
