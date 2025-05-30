@@ -42,6 +42,7 @@ import ForgotPasswordPage from "@/pages/forgot-password-page";
 import SubscriptionPage from "@/pages/subscription-page";
 import SubscriptionSuccessPage from "@/pages/subscription-success-page";
 import SubscriptionCancelPage from "@/pages/subscription-cancel-page";
+import DashboardSettingsPage from "@/pages/dashboard-settings-page";
 
 function App() {
   return (
@@ -58,6 +59,7 @@ function App() {
       <Switch>
         <Route path="/" component={LandingPage} />
         <ProtectedRoute path="/dashboard" component={HomePage} />
+        <ProtectedRoute path="/dashboard/settings" component={DashboardSettingsPage} />
         <ProtectedRoute path="/profile" component={ProfilePage} />
         <Route path="/auth" component={AuthPage} />
         <Route path="/auth-debug" component={AuthDebug} />

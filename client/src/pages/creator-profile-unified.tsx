@@ -18,6 +18,7 @@ import {
   Instagram,
   Youtube,
   Globe,
+  BarChart3,
   ArrowUp,
   ArrowDown,
   Plus,
