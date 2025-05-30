@@ -107,6 +107,39 @@ export default function CreatorProfileUnified() {
     }
   }, [user]);
 
+  // Check vote status for all ideas when data loads
+  useEffect(() => {
+    if (!data?.ideas || !user) {
+      setVotedIdeas(new Set());
+      return;
+    }
+
+    const checkVotedIdeas = async () => {
+      const votedSet = new Set<number>();
+      
+      for (const idea of data.ideas) {
+        try {
+          const response = await fetch(`/api/creators/${username}/ideas/${idea.id}/vote-status`, {
+            credentials: 'include'
+          });
+          
+          if (response.ok) {
+            const voteData = await response.json();
+            if (voteData.hasVoted) {
+              votedSet.add(idea.id);
+            }
+          }
+        } catch (error) {
+          console.error(`Error checking vote status for idea ${idea.id}:`, error);
+        }
+      }
+      
+      setVotedIdeas(votedSet);
+    };
+    
+    checkVotedIdeas();
+  }, [data?.ideas, user, username]);
+
   // Usar useStaggerCards para animar las tarjetas de ideas cuando estén disponibles
   useStaggerCards(ideasContainerRef);
 
@@ -130,36 +163,6 @@ export default function CreatorProfileUnified() {
 
   // Check if current user is the profile owner
   const isOwnProfile = user?.username === creator.username;
-
-  // Check vote status for all ideas when data loads
-  useEffect(() => {
-    if (data?.ideas && user) {
-      const checkVotedIdeas = async () => {
-        const votedSet = new Set<number>();
-        
-        for (const idea of data.ideas) {
-          try {
-            const response = await fetch(`/api/creators/${username}/ideas/${idea.id}/vote-status`, {
-              credentials: 'include'
-            });
-            
-            if (response.ok) {
-              const voteData = await response.json();
-              if (voteData.hasVoted) {
-                votedSet.add(idea.id);
-              }
-            }
-          } catch (error) {
-            console.error(`Error checking vote status for idea ${idea.id}:`, error);
-          }
-        }
-        
-        setVotedIdeas(votedSet);
-      };
-      
-      checkVotedIdeas();
-    }
-  }, [data?.ideas, user, username]);
 
   const handleVote = async (ideaId: number) => {
     if (!user) {
