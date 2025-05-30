@@ -279,7 +279,7 @@ export default function IdeaCard({
                   {isVoting ? (
                     <span className="flex items-center justify-center">
                       <Loader2 className="w-4 h-4 mr-1 animate-spin" />
-                      <span>{t("ideaPosition.voting")}</span>
+                      <span>{t("common.voting")}</span>
                     </span>
                   ) : (
                     <>
@@ -287,9 +287,9 @@ export default function IdeaCard({
                         <ThumbsUp className="w-4 h-4 mr-1" />
                       </motion.div>
                       {hasVoted
-                        ? t("ideaPosition.voted")
+                        ? t("common.voted")
                         : user
-                        ? t("ideaPosition.vote")
+                        ? t("common.vote")
                         : t("common.loginToVote")}
                     </>
                   )}

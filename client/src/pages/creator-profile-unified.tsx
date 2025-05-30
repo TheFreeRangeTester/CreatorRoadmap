@@ -176,8 +176,8 @@ export default function CreatorProfileUnified() {
       localStorage.setItem("redirectAfterAuth", `/creators/${username}`);
 
       toast({
-        title: t("common.loginRequired", "Login required"),
-        description: t("common.loginRequiredDesc", "Please log in to vote"),
+        title: t("common.loginRequired"),
+        description: t("common.loginRequiredDesc"),
         variant: "destructive",
       });
       navigate(`/auth?referrer=/creators/${username}`);
