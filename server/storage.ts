@@ -50,6 +50,9 @@ export interface IStorage {
   startUserTrial(id: number): Promise<User | undefined>;
   getUserByStripeCustomerId(stripeCustomerId: string): Promise<User | undefined>;
   
+  // Audience stats operations
+  getUserAudienceStats(userId: number): Promise<{ votesGiven: number; ideasSuggested: number; ideasApproved: number; }>;
+  
   // Session store
   sessionStore: any;
 }
@@ -483,6 +486,25 @@ export class MemStorage implements IStorage {
 
   async getUserByStripeCustomerId(stripeCustomerId: string): Promise<User | undefined> {
     return Array.from(this.users.values()).find(user => user.stripeCustomerId === stripeCustomerId);
+  }
+
+  async getUserAudienceStats(userId: number): Promise<{ votesGiven: number; ideasSuggested: number; ideasApproved: number; }> {
+    // Count votes given by user
+    const votesGiven = Array.from(this.votes.values()).filter(vote => vote.userId === userId).length;
+    
+    // Count ideas suggested by user
+    const ideasSuggested = Array.from(this.ideas.values()).filter(idea => idea.suggestedBy === userId).length;
+    
+    // Count approved ideas suggested by user
+    const ideasApproved = Array.from(this.ideas.values()).filter(
+      idea => idea.suggestedBy === userId && idea.status === 'approved'
+    ).length;
+    
+    return {
+      votesGiven,
+      ideasSuggested,
+      ideasApproved,
+    };
   }
 }
 

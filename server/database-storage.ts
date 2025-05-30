@@ -428,4 +428,27 @@ export class DatabaseStorage implements IStorage {
     
     return user;
   }
+
+  async getUserAudienceStats(userId: number): Promise<{ votesGiven: number; ideasSuggested: number; ideasApproved: number; }> {
+    // Count votes given by user
+    const votesResult = await db.select({ count: sql<number>`count(*)` })
+      .from(votes)
+      .where(eq(votes.userId, userId));
+    
+    // Count ideas suggested by user
+    const suggestedResult = await db.select({ count: sql<number>`count(*)` })
+      .from(ideas)
+      .where(eq(ideas.suggestedBy, userId));
+    
+    // Count approved ideas suggested by user
+    const approvedResult = await db.select({ count: sql<number>`count(*)` })
+      .from(ideas)
+      .where(and(eq(ideas.suggestedBy, userId), eq(ideas.status, 'approved')));
+    
+    return {
+      votesGiven: votesResult[0]?.count || 0,
+      ideasSuggested: suggestedResult[0]?.count || 0,
+      ideasApproved: approvedResult[0]?.count || 0,
+    };
+  }
 }
