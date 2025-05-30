@@ -1,18 +1,20 @@
 # CreatorRoadmap
 
-CreatorRoadmap es una aplicación web moderna diseñada para ayudar a los creadores de contenido a planificar y gestionar su carrera. Construida con tecnologías modernas y una arquitectura robusta.
+![CreatorRoadmap Logo](generated-icon.png)
 
-## 🚀 Características
+CreatorRoadmap is a modern web application designed to help content creators plan and manage their careers. Built with modern technologies and a robust architecture.
 
-- Interfaz de usuario moderna y responsiva
-- Sistema de autenticación seguro
-- Gestión de contenido y planificación
-- Integración con servicios de pago (Stripe)
-- Soporte multiidioma
-- Animaciones fluidas y transiciones suaves
-- Diseño adaptable a diferentes dispositivos
+## 🚀 Features
 
-## 🛠️ Tecnologías Principales
+- Modern and responsive user interface
+- Secure authentication system
+- Content management and planning
+- Payment service integration (Stripe)
+- Multi-language support
+- Smooth animations and transitions
+- Responsive design for all devices
+
+## 🛠️ Main Technologies
 
 - **Frontend:**
 
@@ -32,26 +34,26 @@ CreatorRoadmap es una aplicación web moderna diseñada para ayudar a los creado
   - PostgreSQL (Neon Database)
   - WebSocket
 
-- **Autenticación:**
+- **Authentication:**
   - Firebase
   - Passport.js
 
-## 📦 Instalación
+## 📦 Installation
 
-1. Clona el repositorio:
+1. Clone the repository:
 
 ```bash
 git clone [URL_DEL_REPOSITORIO]
 ```
 
-2. Instala las dependencias:
+2. Install dependencies:
 
 ```bash
 npm install
 ```
 
-3. Configura las variables de entorno:
-   Crea un archivo `.env` en la raíz del proyecto con las siguientes variables:
+3. Configure environment variables:
+   Create a `.env` file in the project root with the following variables:
 
 ```env
 DATABASE_URL=tu_url_de_base_de_datos
@@ -59,48 +61,48 @@ STRIPE_SECRET_KEY=tu_clave_secreta_de_stripe
 FIREBASE_CONFIG=tu_configuracion_de_firebase
 ```
 
-4. Inicia la base de datos:
+4. Start the database:
 
 ```bash
 npm run db:push
 ```
 
-5. Inicia el servidor de desarrollo:
+5. Start the development server:
 
 ```bash
 npm run dev
 ```
 
-## 🚀 Scripts Disponibles
+## 🚀 Available Scripts
 
-- `npm run dev` - Inicia el servidor de desarrollo
-- `npm run build` - Construye la aplicación para producción
-- `npm run start` - Inicia la aplicación en modo producción
-- `npm run check` - Verifica los tipos de TypeScript
-- `npm run db:push` - Actualiza la base de datos
+- `npm run dev` - Starts the development server
+- `npm run build` - Builds the application for production
+- `npm run start` - Starts the application in production mode
+- `npm run check` - Checks TypeScript types
+- `npm run db:push` - Updates the database
 
-## 📁 Estructura del Proyecto
+## 📁 Project Structure
 
 ```
-├── client/          # Código del frontend
-├── server/          # Código del backend
-├── shared/          # Código compartido entre frontend y backend
-├── public/          # Archivos estáticos
-└── attached_assets/ # Recursos adjuntos
+├── client/          # Frontend code
+├── server/          # Backend code
+├── shared/          # Code shared between frontend and backend
+├── public/          # Static files
+└── attached_assets/ # Attached resources
 ```
 
-## 🤝 Contribución
+## 🤝 Contribution
 
-1. Haz un Fork del proyecto
-2. Crea una rama para tu feature (`git checkout -b feature/AmazingFeature`)
-3. Commit tus cambios (`git commit -m 'Add some AmazingFeature'`)
-4. Push a la rama (`git push origin feature/AmazingFeature`)
-5. Abre un Pull Request
+1. Fork the project
+2. Create a branch for your feature (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
 
-## 📝 Licencia
+## 📝 License
 
-Este proyecto está bajo la Licencia MIT - ver el archivo [LICENSE](LICENSE) para más detalles.
+This project is under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-## 📧 Contacto
+## 📧 Contact
 
 [Tu información de contacto]
