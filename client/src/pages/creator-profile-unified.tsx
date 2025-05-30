@@ -173,14 +173,14 @@ export default function CreatorProfileUnified() {
   const handleVote = async (ideaId: number) => {
     if (!user) {
       // Store current page as redirect destination
-      localStorage.setItem("redirectAfterAuth", `/creators/${username}`);
+      localStorage.setItem("redirectAfterAuth", `/${username}`);
 
       toast({
         title: t("common.loginRequired"),
         description: t("common.loginRequiredDesc"),
         variant: "destructive",
       });
-      navigate(`/auth?referrer=/creators/${username}`);
+      navigate(`/auth?referrer=/${username}`);
       return;
     }
 
@@ -510,8 +510,8 @@ export default function CreatorProfileUnified() {
                   }
                   
                   if (!user) {
-                    localStorage.setItem("redirectAfterAuth", `/creators/${username}`);
-                    navigate(`/auth?referrer=/creators/${username}`);
+                    localStorage.setItem("redirectAfterAuth", `/${username}`);
+                    navigate(`/auth?referrer=/${username}`);
                     return;
                   }
                   
@@ -742,8 +742,8 @@ export default function CreatorProfileUnified() {
                                   whileTap={{ scale: 0.95 }}
                                   className="flex items-center px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 bg-blue-50 dark:bg-blue-900/50 text-blue-600 dark:text-blue-300 hover:bg-blue-100 dark:hover:bg-blue-800/70"
                                   onClick={() => {
-                                    localStorage.setItem("redirectAfterAuth", `/creators/${username}`);
-                                    navigate(`/auth?referrer=/creators/${username}`);
+                                    localStorage.setItem("redirectAfterAuth", `/${username}`);
+                                    navigate(`/auth?referrer=/${username}`);
                                   }}
                                 >
                                   <motion.div
