@@ -296,7 +296,17 @@
     "createFirstIdea": "Create your first idea to get started",
     "suggestedIdeasWillAppear": "Suggested ideas from your audience will appear here",
     "suggestedBy": "Suggested by",
-    "pending": "Pending"
+    "pending": "Pending",
+    "approve": "Approve",
+    "reject": "Reject",
+    "approved": "Idea approved",
+    "approvedSuccess": "The idea has been approved successfully",
+    "rejected": "Idea rejected",
+    "rejectedSuccess": "The idea has been rejected",
+    "approveError": "Error approving",
+    "approveErrorDesc": "Could not approve the idea. Please try again.",
+    "rejectError": "Error rejecting",
+    "rejectErrorDesc": "Could not reject the idea. Please try again."
   },
   "dashboard": {
     "welcome": "Hello",

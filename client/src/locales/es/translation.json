@@ -292,7 +292,17 @@
     "createFirstIdea": "Crea tu primera idea para comenzar",
     "suggestedIdeasWillAppear": "Las ideas sugeridas por tu audiencia aparecerán aquí",
     "suggestedBy": "Sugerida por",
-    "pending": "Pendiente"
+    "pending": "Pendiente",
+    "approve": "Aprobar",
+    "reject": "Rechazar",
+    "approved": "Idea aprobada",
+    "approvedSuccess": "La idea ha sido aprobada exitosamente",
+    "rejected": "Idea rechazada",
+    "rejectedSuccess": "La idea ha sido rechazada",
+    "approveError": "Error al aprobar",
+    "approveErrorDesc": "No se pudo aprobar la idea. Por favor intenta de nuevo.",
+    "rejectError": "Error al rechazar",
+    "rejectErrorDesc": "No se pudo rechazar la idea. Por favor intenta de nuevo."
   },
   "dashboard": {
     "topIdeas": "Ideas Principales",
