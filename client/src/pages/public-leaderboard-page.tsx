@@ -273,17 +273,19 @@ export default function PublicLeaderboardPage() {
                       )}
                     </Button>
                   ) : (
-                    <Link href="/auth">
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        className="w-full border-dashed bg-muted/50 hover:bg-muted"
-                      >
-                        <span className="text-xs text-gray-600 dark:text-gray-400">
-                          {t("login.requiredToVote")}
-                        </span>
-                      </Button>
-                    </Link>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="w-full bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 hover:bg-blue-100 dark:hover:bg-blue-800/50 border-blue-200 dark:border-blue-700"
+                      onClick={() => {
+                        // Store the current page for redirect after login
+                        localStorage.setItem('redirectAfterAuth', window.location.href);
+                        window.location.href = '/auth';
+                      }}
+                    >
+                      <ThumbsUp className="h-4 w-4 mr-2" />
+                      {t("common.loginToVote")}
+                    </Button>
                   )}
                 </div>
               </CardContent>

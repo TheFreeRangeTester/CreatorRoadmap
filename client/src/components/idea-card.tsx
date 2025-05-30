@@ -262,38 +262,51 @@ export default function IdeaCard({
             <div className="flex items-center">
               {/* Solo mostrar el botón de voto cuando NO estamos en el dashboard del creador y no es el creador de la idea */}
               {!onEdit && !onDelete && !isCreator && (
-                <motion.button
-                  variants={buttonVariants}
-                  whileHover="hover"
-                  whileTap="tap"
-                  className={`flex items-center px-3 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-1 dark:focus:ring-offset-gray-800 min-w-[80px] text-sm ${
-                    hasVoted
-                      ? "bg-neutral-100 dark:bg-gray-700 text-neutral-400 dark:text-neutral-500 cursor-not-allowed"
-                      : user
-                      ? "bg-primary-50 dark:bg-primary-900/50 text-primary dark:text-primary-300 hover:bg-primary-100 dark:hover:bg-primary-800/70"
-                      : "bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 hover:bg-blue-100 dark:hover:bg-blue-800/50 border border-blue-200 dark:border-blue-700"
-                  }`}
-                  onClick={handleVote}
-                  disabled={hasVoted || isVoting}
-                >
-                  {isVoting ? (
-                    <span className="flex items-center justify-center">
-                      <Loader2 className="w-4 h-4 mr-1 animate-spin" />
-                      <span>{t("common.voting")}</span>
-                    </span>
-                  ) : (
-                    <>
-                      <motion.div variants={iconVariants}>
-                        <ThumbsUp className="w-4 h-4 mr-1" />
-                      </motion.div>
-                      {hasVoted
-                        ? t("common.voted")
-                        : user
-                        ? t("common.vote")
-                        : t("common.loginToVote")}
-                    </>
-                  )}
-                </motion.button>
+                user ? (
+                  <motion.button
+                    variants={buttonVariants}
+                    whileHover="hover"
+                    whileTap="tap"
+                    className={`flex items-center px-3 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-1 dark:focus:ring-offset-gray-800 min-w-[80px] text-sm ${
+                      hasVoted
+                        ? "bg-neutral-100 dark:bg-gray-700 text-neutral-400 dark:text-neutral-500 cursor-not-allowed"
+                        : "bg-primary-50 dark:bg-primary-900/50 text-primary dark:text-primary-300 hover:bg-primary-100 dark:hover:bg-primary-800/70"
+                    }`}
+                    onClick={handleVote}
+                    disabled={hasVoted || isVoting}
+                  >
+                    {isVoting ? (
+                      <span className="flex items-center justify-center">
+                        <Loader2 className="w-4 h-4 mr-1 animate-spin" />
+                        <span>{t("common.voting")}</span>
+                      </span>
+                    ) : (
+                      <>
+                        <motion.div variants={iconVariants}>
+                          <ThumbsUp className="w-4 h-4 mr-1" />
+                        </motion.div>
+                        {hasVoted ? t("common.voted") : t("common.vote")}
+                      </>
+                    )}
+                  </motion.button>
+                ) : (
+                  <motion.button
+                    variants={buttonVariants}
+                    whileHover="hover"
+                    whileTap="tap"
+                    className="flex items-center px-3 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-1 dark:focus:ring-offset-gray-800 min-w-[80px] text-sm bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 hover:bg-blue-100 dark:hover:bg-blue-800/50 border border-blue-200 dark:border-blue-700"
+                    onClick={() => {
+                      // Store the current page for redirect after login
+                      localStorage.setItem('redirectAfterAuth', window.location.href);
+                      window.location.href = '/auth';
+                    }}
+                  >
+                    <motion.div variants={iconVariants}>
+                      <ThumbsUp className="w-4 h-4 mr-1" />
+                    </motion.div>
+                    {t("common.loginToVote")}
+                  </motion.button>
+                )
               )}
               <motion.span
                 className={`${

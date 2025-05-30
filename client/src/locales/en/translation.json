@@ -248,7 +248,7 @@
     "cantVoteOwn": "Can't vote on own ideas",
     "cantVoteOwnDesc": "You can't vote on your own ideas 😅",
     "cantSuggestOwn": "Can't suggest to yourself",
-    "cantSuggestOwnDesc": "No podés sugerir ideas a tu propio perfil 😅"
+    "cantSuggestOwnDesc": "You can't suggest ideas to your own profile 😅"
   },
   "roles": {
     "audience": "Audience member"

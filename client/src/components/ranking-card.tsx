@@ -127,14 +127,17 @@ export default function RankingCard({
                 </Button>
               )
             ) : (
-              <Link href="/auth">
-                <Button
-                  className={`rounded-full w-12 h-12 text-white ${gradientClass}`}
-                  aria-label="Iniciar sesión para votar"
-                >
-                  <ChevronUp className="h-5 w-5" />
-                </Button>
-              </Link>
+              <Button
+                className={`rounded-full w-12 h-12 text-white ${gradientClass}`}
+                aria-label={t("common.loginToVote")}
+                onClick={() => {
+                  // Store the current page for redirect after login
+                  localStorage.setItem('redirectAfterAuth', window.location.href);
+                  window.location.href = '/auth';
+                }}
+              >
+                <ChevronUp className="h-5 w-5" />
+              </Button>
             )}
             <span className="mt-1 font-bold text-lg dark:text-white">{idea.votes}</span>
           </div>

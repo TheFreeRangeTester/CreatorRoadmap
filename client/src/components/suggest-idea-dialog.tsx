@@ -25,13 +25,13 @@ export default function SuggestIdeaDialog({ username, refetch, fullWidth = false
   const [description, setDescription] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState('');
-  
+
   // Hooks
   const { toast } = useToast();
   const { user } = useAuth();
   const { t } = useTranslation();
   const { showAchievement } = useAchievements();
-  
+
   // Abrir diálogo
   const handleOpenDialog = () => {
     if (!user) {
@@ -42,21 +42,21 @@ export default function SuggestIdeaDialog({ username, refetch, fullWidth = false
       });
       return;
     }
-    
+
     // Resetear formulario
     setTitle('');
     setDescription('');
     setError('');
     setOpen(true);
   };
-  
+
   // Manejar cambios en el diálogo
   const handleDialogChange = (newOpen: boolean) => {
     if (!isSubmitting) {
       setOpen(newOpen);
     }
   };
-  
+
   // Validar formulario
   const validateForm = (): boolean => {
     // Validar título
@@ -64,36 +64,36 @@ export default function SuggestIdeaDialog({ username, refetch, fullWidth = false
       setError(t('suggestIdea.titleMinLength'));
       return false;
     }
-    
+
     if (title.trim().length > 100) {
       setError(t('suggestIdea.titleMaxLength'));
       return false;
     }
-    
+
     // Validar descripción
     if (!description || description.trim().length < 10) {
       setError(t('suggestIdea.descriptionMinLength'));
       return false;
     }
-    
+
     if (description.trim().length > 500) {
       setError(t('suggestIdea.descriptionMaxLength'));
       return false;
     }
-    
+
     // Todo bien
     setError('');
     return true;
   };
-  
+
   // Enviar sugerencia
   const handleSubmit = async () => {
     if (!validateForm()) return;
-    
+
     setIsSubmitting(true);
     console.log('Iniciando envío de sugerencia a:', username);
     console.log('Datos a enviar:', { title: title.trim(), description: description.trim() });
-    
+
     try {
       // Usar fetch directamente para tener más control y ver exactamente qué ocurre
       const response = await fetch(`/api/creators/${username}/suggest`, {
@@ -107,9 +107,9 @@ export default function SuggestIdeaDialog({ username, refetch, fullWidth = false
         }),
         credentials: 'include'
       });
-      
+
       console.log('Respuesta del servidor:', response.status);
-      
+
       if (!response.ok) {
         let errorMessage = 'Error al enviar sugerencia';
         try {
@@ -120,34 +120,34 @@ export default function SuggestIdeaDialog({ username, refetch, fullWidth = false
         }
         throw new Error(errorMessage);
       }
-      
+
       const data = await response.json();
       console.log('Datos recibidos:', data);
-      
+
       // Cerrar diálogo
       setOpen(false);
-      
+
       // Mostrar notificación de éxito
       toast({
         title: t('suggestIdea.thankYou', '¡Gracias por tu idea!'),
         description: t('suggestIdea.thankYouDesc', 'Tu idea ha sido enviada al creador para su aprobación.'),
         className: 'bg-gradient-to-r from-green-50 to-emerald-50 border-green-200 dark:from-green-900/30 dark:to-emerald-900/30 dark:border-green-800',
       });
-      
+
       // Mostrar logro de sugerencia
       showAchievement(
         AchievementType.SUGGESTED_IDEA, 
         t('suggestIdea.achievementText', '¡Tu idea ha sido enviada a @{{username}}!', { username })
       );
-      
+
       // Actualizar datos
       refetch();
-      
+
     } catch (error: any) {
       console.error('Error al sugerir idea:', error);
-      
+
       setError(error.message || t('suggestIdea.errorDesc', 'Ocurrió un error al enviar tu sugerencia'));
-      
+
       toast({
         title: t('suggestIdea.error', 'Error al enviar sugerencia'),
         description: error.message || t('suggestIdea.errorDesc', 'Ocurrió un error al enviar tu sugerencia'),
@@ -157,7 +157,7 @@ export default function SuggestIdeaDialog({ username, refetch, fullWidth = false
       setIsSubmitting(false);
     }
   };
-  
+
   return (
     <>
       {/* Botón para abrir el diálogo */}
@@ -172,7 +172,7 @@ export default function SuggestIdeaDialog({ username, refetch, fullWidth = false
         <Lightbulb className="h-4 w-4" />
         <span>{t('suggestIdea.button')}</span>
       </Button>
-      
+
       {/* Diálogo */}
       <Dialog open={open} onOpenChange={handleDialogChange}>
         <DialogContent className="sm:max-w-[425px]">
@@ -182,7 +182,7 @@ export default function SuggestIdeaDialog({ username, refetch, fullWidth = false
               {t('suggestIdea.title', { username })}
             </DialogTitle>
           </DialogHeader>
-          
+
           <div className="grid gap-4 py-4">
             {/* Mensaje de error */}
             {error && (
@@ -190,7 +190,7 @@ export default function SuggestIdeaDialog({ username, refetch, fullWidth = false
                 {error}
               </div>
             )}
-            
+
             {/* Campo de título */}
             <div className="grid gap-2">
               <Label htmlFor="title">{t('suggestIdea.titleLabel')}</Label>
@@ -203,7 +203,7 @@ export default function SuggestIdeaDialog({ username, refetch, fullWidth = false
                 autoComplete="off"
               />
             </div>
-            
+
             {/* Campo de descripción */}
             <div className="grid gap-2">
               <Label htmlFor="description">{t('suggestIdea.descriptionLabel')}</Label>
@@ -217,7 +217,7 @@ export default function SuggestIdeaDialog({ username, refetch, fullWidth = false
               />
             </div>
           </div>
-          
+
           {/* Botones de acción */}
           <DialogFooter>
             <Button
@@ -227,7 +227,7 @@ export default function SuggestIdeaDialog({ username, refetch, fullWidth = false
             >
               {t('suggestIdea.cancel')}
             </Button>
-            
+
             <Button
               onClick={handleSubmit}
               disabled={isSubmitting}
