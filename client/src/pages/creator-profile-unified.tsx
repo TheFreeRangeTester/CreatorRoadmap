@@ -497,6 +497,13 @@ export default function CreatorProfileUnified() {
                     });
                     return;
                   }
+                  
+                  if (!user) {
+                    localStorage.setItem("redirectAfterAuth", `/creators/${username}`);
+                    navigate(`/auth?referrer=/creators/${username}`);
+                    return;
+                  }
+                  
                   setSuggestDialogOpen(true);
                 }}
                 disabled={isOwnProfile}
@@ -509,7 +516,10 @@ export default function CreatorProfileUnified() {
                 )}
               >
                 <UserPlus className="w-4 h-4 mr-2" />
-                {t("suggestIdea.button", "Suggest Idea")}
+                {user 
+                  ? t("suggestIdea.button", "Suggest Idea")
+                  : t("common.loginToSuggest", "Login to suggest ideas")
+                }
               </Button>
 
               <Button
