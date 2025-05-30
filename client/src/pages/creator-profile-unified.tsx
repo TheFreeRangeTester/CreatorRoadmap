@@ -588,22 +588,29 @@ export default function CreatorProfileUnified() {
                           </p>
 
                           <div className="flex items-center justify-between">
-                            <span className="text-sm font-semibold text-gray-700 dark:text-gray-300">
-                              <span className="mr-1">👍</span>
-                              <div className="bg-white/20 text-white text-xs rounded-full px-2 py-0.5 flex items-center">
-                                <ThumbsUp className="h-3 w-3 mr-1" />
-                                {idea.votes}
+                            <div className="flex flex-col sm:flex-row gap-2">
+                              {/* Contador de votos */}
+                              <div className="flex items-center gap-2">
+                                <div className="bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 text-xs rounded-full px-2 py-1 flex items-center">
+                                  <ThumbsUp className="h-3 w-3 mr-1" />
+                                  {idea.votes}{" "}
+                                  {idea.votes === 1
+                                    ? t("badges.vote")
+                                    : t("badges.votes")}
+                                </div>
                               </div>
 
-                              {/* Mostrar quién sugirió la idea */}
+                              {/* Información de quién sugirió la idea */}
                               {idea.suggestedByUsername && (
-                                <div className="bg-white/20 text-white text-xs rounded-full px-2 py-0.5 flex items-center">
-                                  <User className="h-3 w-3 mr-1" />
-                                  {t("ideas.suggestedBy")}:{" "}
-                                  {idea.suggestedByUsername}
+                                <div className="flex items-center gap-2">
+                                  <div className="bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 text-xs rounded-full px-2 py-1 flex items-center">
+                                    <User className="h-3 w-3 mr-1" />
+                                    {t("ideas.suggestedBy")}:{" "}
+                                    {idea.suggestedByUsername}
+                                  </div>
                                 </div>
                               )}
-                            </span>
+                            </div>
 
                             <motion.button
                               whileHover={{ scale: 1.05 }}
