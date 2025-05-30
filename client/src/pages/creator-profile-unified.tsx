@@ -680,43 +680,60 @@ export default function CreatorProfileUnified() {
                                 )}
                               </div>
 
-                              <motion.button
-                                whileHover={{ scale: 1.05 }}
-                                whileTap={{ scale: 0.95 }}
-                                className={cn(
-                                  "flex items-center px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200",
-                                  votedIdeas.has(idea.id)
-                                    ? "bg-green-100 dark:bg-green-900/50 text-green-700 dark:text-green-300 cursor-not-allowed"
-                                    : user
-                                    ? "bg-blue-50 dark:bg-blue-900/50 text-blue-600 dark:text-blue-300 hover:bg-blue-100 dark:hover:bg-blue-800/70"
-                                    : "bg-gray-100 dark:bg-gray-700 text-gray-500 dark:text-gray-400 cursor-not-allowed"
-                                )}
-                                onClick={() => handleVote(idea.id)}
-                                disabled={
-                                  votedIdeas.has(idea.id) ||
-                                  isVoting[idea.id] ||
-                                  !user
-                                }
-                              >
-                                {isVoting[idea.id] ? (
-                                  <>
-                                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                                    {t("common.voting", "Voting...")}
-                                  </>
-                                ) : (
-                                  <>
-                                    <motion.div
-                                      whileHover={{ rotate: 10, scale: 1.1 }}
-                                      className="mr-2"
-                                    >
-                                      <ThumbsUp className="w-4 h-4" />
-                                    </motion.div>
-                                    {votedIdeas.has(idea.id)
-                                      ? t("common.voted", "Voted!")
-                                      : t("common.vote", "Vote")}
-                                  </>
-                                )}
-                              </motion.button>
+                              {user ? (
+                                <motion.button
+                                  whileHover={{ scale: 1.05 }}
+                                  whileTap={{ scale: 0.95 }}
+                                  className={cn(
+                                    "flex items-center px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200",
+                                    votedIdeas.has(idea.id)
+                                      ? "bg-green-100 dark:bg-green-900/50 text-green-700 dark:text-green-300 cursor-not-allowed"
+                                      : "bg-blue-50 dark:bg-blue-900/50 text-blue-600 dark:text-blue-300 hover:bg-blue-100 dark:hover:bg-blue-800/70"
+                                  )}
+                                  onClick={() => handleVote(idea.id)}
+                                  disabled={
+                                    votedIdeas.has(idea.id) ||
+                                    isVoting[idea.id]
+                                  }
+                                >
+                                  {isVoting[idea.id] ? (
+                                    <>
+                                      <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                                      {t("common.voting", "Voting...")}
+                                    </>
+                                  ) : (
+                                    <>
+                                      <motion.div
+                                        whileHover={{ rotate: 10, scale: 1.1 }}
+                                        className="mr-2"
+                                      >
+                                        <ThumbsUp className="w-4 h-4" />
+                                      </motion.div>
+                                      {votedIdeas.has(idea.id)
+                                        ? t("common.voted", "Voted!")
+                                        : t("common.vote", "Vote")}
+                                    </>
+                                  )}
+                                </motion.button>
+                              ) : (
+                                <motion.button
+                                  whileHover={{ scale: 1.05 }}
+                                  whileTap={{ scale: 0.95 }}
+                                  className="flex items-center px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 bg-blue-50 dark:bg-blue-900/50 text-blue-600 dark:text-blue-300 hover:bg-blue-100 dark:hover:bg-blue-800/70"
+                                  onClick={() => {
+                                    localStorage.setItem("redirectAfterAuth", `/creators/${username}`);
+                                    navigate(`/auth?referrer=/creators/${username}`);
+                                  }}
+                                >
+                                  <motion.div
+                                    whileHover={{ rotate: 10, scale: 1.1 }}
+                                    className="mr-2"
+                                  >
+                                    <ThumbsUp className="w-4 h-4" />
+                                  </motion.div>
+                                  {t("common.loginToVote", "Login to Vote")}
+                                </motion.button>
+                              )}
                             </div>
                           </div>
                         </div>
