@@ -244,7 +244,9 @@
     "loadError": "Error al cargar la página del creador",
     "publicProfileView": "Perfil Público",
     "voteHeaderTitle": "Vota por Ideas de Contenido",
-    "defaultProfileDescription": "Ingeniero QA y creador de contenido enfocado en testing de software, automatización y mejores prácticas de control de calidad."
+    "defaultProfileDescription": "Ingeniero QA y creador de contenido enfocado en testing de software, automatización y mejores prácticas de control de calidad.",
+    "cantVoteOwn": "No podés votar tus propias ideas",
+    "cantVoteOwnDesc": "No podés votar tus propias ideas 😅"
   },
   "roles": {
     "audience": "Miembro de la audiencia"

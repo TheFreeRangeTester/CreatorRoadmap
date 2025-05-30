@@ -116,13 +116,16 @@ export default function CreatorProfileUnified() {
 
     const checkVotedIdeas = async () => {
       const votedSet = new Set<number>();
-      
+
       for (const idea of data.ideas) {
         try {
-          const response = await fetch(`/api/creators/${username}/ideas/${idea.id}/vote-status`, {
-            credentials: 'include'
-          });
-          
+          const response = await fetch(
+            `/api/creators/${username}/ideas/${idea.id}/vote-status`,
+            {
+              credentials: "include",
+            }
+          );
+
           if (response.ok) {
             const voteData = await response.json();
             if (voteData.hasVoted) {
@@ -130,13 +133,16 @@ export default function CreatorProfileUnified() {
             }
           }
         } catch (error) {
-          console.error(`Error checking vote status for idea ${idea.id}:`, error);
+          console.error(
+            `Error checking vote status for idea ${idea.id}:`,
+            error
+          );
         }
       }
-      
+
       setVotedIdeas(votedSet);
     };
-    
+
     checkVotedIdeas();
   }, [data?.ideas, user, username]);
 
@@ -181,11 +187,8 @@ export default function CreatorProfileUnified() {
     // Prevent voting on own ideas
     if (isOwnProfile) {
       toast({
-        title: t("creator.cantVoteOwn", "Can't vote on own ideas"),
-        description: t(
-          "creator.cantVoteOwnDesc",
-          "No podés votar tus propias ideas 😅"
-        ),
+        title: t("creator.cantVoteOwn"),
+        description: t("creator.cantVoteOwnDesc"),
         variant: "destructive",
       });
       return;
