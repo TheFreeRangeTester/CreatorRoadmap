@@ -96,7 +96,7 @@ export const MobileMenu = ({
               <div className="flex-1 px-4 py-6">
                 <div className="flex flex-col gap-6">
                   {/* Theme and Language toggles for mobile */}
-                  <div className="flex justify-center gap-4 pb-4 border-b border-gray-200 dark:border-gray-700">
+                  <div className="flex md:hidden justify-center gap-4 pb-4 border-b border-gray-200 dark:border-gray-700">
                     <ThemeToggle />
                     <LanguageToggle />
                   </div>
@@ -104,8 +104,11 @@ export const MobileMenu = ({
                   {user ? (
                     <div className="w-full flex flex-col items-center space-y-6">
                       {/* Solo mostrar perfil/dashboard si es creador */}
-                      {user.userRole === 'creator' && (
-                        <Link href="/dashboard" onClick={() => setIsOpen(false)}>
+                      {user.userRole === "creator" && (
+                        <Link
+                          href="/dashboard"
+                          onClick={() => setIsOpen(false)}
+                        >
                           <Button
                             className="w-full justify-center"
                             variant="outline"
@@ -118,18 +121,23 @@ export const MobileMenu = ({
                       )}
 
                       {/* Mostrar perfil solo si es creador y estamos en su perfil */}
-                      {user.userRole === 'creator' && isCreatorProfile && user.username === username && (
-                        <Link href="/profile" onClick={() => setIsOpen(false)}>
-                          <Button
-                            className="w-full justify-center"
-                            variant="outline"
-                            size="lg"
+                      {user.userRole === "creator" &&
+                        isCreatorProfile &&
+                        user.username === username && (
+                          <Link
+                            href="/profile"
+                            onClick={() => setIsOpen(false)}
                           >
-                            <User className="h-5 w-5 mr-2" />
-                            {t("common.profile", "Settings")}
-                          </Button>
-                        </Link>
-                      )}
+                            <Button
+                              className="w-full justify-center"
+                              variant="outline"
+                              size="lg"
+                            >
+                              <User className="h-5 w-5 mr-2" />
+                              {t("common.profile", "Settings")}
+                            </Button>
+                          </Link>
+                        )}
 
                       {/* Botón de refrescar para todos los usuarios autenticados */}
                       {isCreatorProfile && onRefresh && (
