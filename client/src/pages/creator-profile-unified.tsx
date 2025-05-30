@@ -122,6 +122,9 @@ export default function CreatorProfileUnified() {
 
   const { ideas, creator } = data;
 
+  // Check if current user is the profile owner
+  const isOwnProfile = user?.username === creator.username;
+
   const handleVote = async (ideaId: number) => {
     if (!user) {
       // Store current page as redirect destination
@@ -133,6 +136,16 @@ export default function CreatorProfileUnified() {
         variant: "destructive",
       });
       navigate(`/auth?referrer=/creators/${username}`);
+      return;
+    }
+
+    // Prevent voting on own ideas
+    if (isOwnProfile) {
+      toast({
+        title: t("creator.cantVoteOwn", "Can't vote on own ideas"),
+        description: t("creator.cantVoteOwnDesc", "No podés votar tus propias ideas 😅"),
+        variant: "destructive",
+      });
       return;
     }
 
@@ -363,9 +376,22 @@ export default function CreatorProfileUnified() {
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center mt-8">
             <Button
-              onClick={() => setSuggestDialogOpen(true)}
+              onClick={() => {
+                if (isOwnProfile) {
+                  toast({
+                    title: t("creator.cantSuggestOwn", "Can't suggest to yourself"),
+                    description: t("creator.cantSuggestOwnDesc", "No podés sugerir ideas a tu propio perfil 😅"),
+                    variant: "destructive",
+                  });
+                  return;
+                }
+                setSuggestDialogOpen(true);
+              }}
+              disabled={isOwnProfile}
               className={cn(
-                isCustomBackground
+                isOwnProfile 
+                  ? "bg-gray-400 text-gray-600 cursor-not-allowed opacity-50"
+                  : isCustomBackground
                   ? "bg-blue-600 text-white hover:bg-blue-700"
                   : "bg-white text-blue-600 hover:bg-white/90"
               )}

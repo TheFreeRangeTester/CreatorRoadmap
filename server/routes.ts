@@ -124,6 +124,26 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // User audience stats route
+  app.get("/api/user/audience-stats", async (req: Request, res: Response) => {
+    try {
+      // Verificar autenticación
+      if (!req.isAuthenticated()) {
+        return res.status(401).json({ message: "Unauthorized" });
+      }
+
+      const userId = req.user.id;
+
+      // Obtener estadísticas de audiencia
+      const stats = await storage.getUserAudienceStats(userId);
+
+      res.json(stats);
+    } catch (error) {
+      console.error("Error fetching audience stats:", error);
+      res.status(500).json({ message: "Failed to fetch audience stats" });
+    }
+  });
+
   // Ideas API routes
   // Get all ideas
   app.get("/api/ideas", async (req: Request, res: Response) => {
