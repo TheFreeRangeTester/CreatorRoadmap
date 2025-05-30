@@ -132,54 +132,70 @@ export default function CreatorProfileUnified() {
   const isOwnProfile = user?.username === creator.username;
 
   const handleVote = async (ideaId: number) => {
-    if (!user || votedIdeas.has(ideaId) || isVoting[ideaId]) return;
+    if (!user) {
+      // Store current page as redirect destination
+      localStorage.setItem("redirectAfterAuth", `/creators/${username}`);
+
+      toast({
+        title: t("common.loginRequired", "Login required"),
+        description: t("common.loginRequiredDesc", "Please log in to vote"),
+        variant: "destructive",
+      });
+      navigate(`/auth?referrer=/creators/${username}`);
+      return;
+    }
+
+    // Prevent voting on own ideas
+    if (isOwnProfile) {
+      toast({
+        title: t("creator.cantVoteOwn", "Can't vote on own ideas"),
+        description: t(
+          "creator.cantVoteOwnDesc",
+          "No podés votar tus propias ideas 😅"
+        ),
+        variant: "destructive",
+      });
+      return;
+    }
+
+    if (votedIdeas.has(ideaId) || isVoting[ideaId]) {
+      return;
+    }
 
     setIsVoting((prev) => ({ ...prev, [ideaId]: true }));
 
     try {
-      const response = await fetch(
-        `/api/creators/${username}/ideas/${ideaId}/vote`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
+      await apiRequest(
+        "POST",
+        `/api/creators/${username}/ideas/${ideaId}/vote`
       );
 
-      if (!response.ok) {
-        throw new Error("Failed to vote");
-      }
+      // Update voted ideas
+      const newVotedIdeas = new Set(votedIdeas);
+      newVotedIdeas.add(ideaId);
+      setVotedIdeas(newVotedIdeas);
 
-      // Actualizar el estado local de votación
-      setVotedIdeas((prev) => {
-        const newSet = new Set(prev);
-        newSet.add(ideaId);
-        return newSet;
-      });
-
-      // Actualizar localStorage
-      if (user) {
-        const userKey = `votedIdeas_${user.id}`;
-        const votedIdeasFromStorage = JSON.parse(
-          localStorage.getItem(userKey) || "[]"
-        );
-        votedIdeasFromStorage.push(ideaId);
-        localStorage.setItem(userKey, JSON.stringify(votedIdeasFromStorage));
-      }
-
-      // Refetch para actualizar los datos
-      await refetch();
+      // Update localStorage with user-specific key
+      const userKey = `votedIdeas_${user.id}`;
+      const votedArray = Array.from(newVotedIdeas);
+      localStorage.setItem(userKey, JSON.stringify(votedArray));
 
       toast({
-        title: t("creator.voteSuccess"),
-        description: t("creator.voteSuccessDesc"),
+        title: t("creator.voteSuccess", "Vote registered!"),
+        description: t(
+          "creator.voteSuccessDesc",
+          "Your vote has been registered successfully"
+        ),
       });
+
+      refetch();
     } catch (error) {
-      console.error("Error voting:", error);
       toast({
-        title: t("creator.voteError"),
-        description: t("creator.voteErrorDesc"),
+        title: t("creator.voteError", "Vote failed"),
+        description: t(
+          "creator.voteErrorDesc",
+          "Could not register your vote. Please try again."
+        ),
         variant: "destructive",
       });
     } finally {
@@ -521,14 +537,155 @@ export default function CreatorProfileUnified() {
               <div ref={ideasContainerRef} className="space-y-4">
                 {ideas.map((idea, index) => {
                   const rank = index + 1;
+
+                  // Gradientes basados en el ranking como en la página QA original
+                  const gradientClasses = {
+                    1: "bg-gradient-to-r from-yellow-400 to-amber-500 hover:from-yellow-500 hover:to-amber-600", // #1 Oro
+                    2: "bg-gradient-to-r from-purple-400 to-violet-600 hover:from-purple-500 hover:to-violet-700", // #2 Púrpura
+                    3: "bg-gradient-to-r from-rose-400 to-pink-500 hover:from-rose-500 hover:to-pink-600", // #3 Rosa
+                    4: "bg-gradient-to-r from-blue-400 to-indigo-500 hover:from-blue-500 hover:to-indigo-600", // #4 Azul
+                    5: "bg-gradient-to-r from-green-400 to-emerald-500 hover:from-green-500 hover:to-emerald-600", // #5 Verde
+                    default:
+                      "bg-gradient-to-r from-gray-400 to-slate-500 hover:from-gray-500 hover:to-slate-600",
+                  };
+
+                  const gradientClass =
+                    rank <= 5
+                      ? gradientClasses[rank as keyof typeof gradientClasses]
+                      : gradientClasses.default;
+
                   return (
-                    <IdeaCard
+                    <motion.div
                       key={idea.id}
-                      idea={idea}
-                      onVote={handleVote}
-                      isVoting={isVoting[idea.id]}
-                      hasVoted={votedIdeas.has(idea.id)}
-                    />
+                      className="gsap-card"
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{
+                        duration: 0.4,
+                        delay: rank * 0.05,
+                        ease: [0.25, 0.1, 0.25, 1.0],
+                      }}
+                      whileHover={{ scale: 1.01 }}
+                    >
+                      <Card className="overflow-hidden border-0 shadow-md hover:shadow-lg transition-all duration-300">
+                        <div className="flex items-stretch">
+                          {/* Indicador de posición con emojis animados */}
+                          <div
+                            className={`flex items-center justify-center w-16 text-white font-bold text-xl ${gradientClass} relative`}
+                          >
+                            <span className="relative z-10">
+                              {rank > 3 ? `#${rank}` : ""}
+                            </span>
+                            {rank <= 3 && (
+                              <span
+                                className={`absolute trophy-icon text-2xl ${
+                                  rank === 1
+                                    ? "text-yellow-400"
+                                    : rank === 2
+                                    ? "text-gray-300"
+                                    : "text-amber-700"
+                                }`}
+                                ref={(el) => {
+                                  if (el) {
+                                    gsap.fromTo(
+                                      el,
+                                      { scale: 0.8, opacity: 0, y: 10 },
+                                      {
+                                        scale: 1,
+                                        opacity: 1,
+                                        y: 0,
+                                        duration: 0.6,
+                                        ease: "elastic.out(1, 0.5)",
+                                        repeat: -1,
+                                        yoyo: true,
+                                        repeatDelay: 2,
+                                        yoyoEase: "power2.out",
+                                      }
+                                    );
+                                  }
+                                }}
+                              >
+                                {rank === 1 ? "🏆" : rank === 2 ? "🥈" : "🥉"}
+                              </span>
+                            )}
+                          </div>
+
+                          {/* Contenido */}
+                          <div className="flex-1 p-4">
+                            <h3 className="text-lg font-bold dark:text-white mb-2">
+                              {idea.title}
+                            </h3>
+                            <p className="text-sm text-gray-600 dark:text-gray-300 line-clamp-2 mb-3">
+                              {idea.description}
+                            </p>
+
+                            <div className="flex items-center justify-between">
+                              <div className="flex flex-col sm:flex-row gap-2">
+                                {/* Contador de votos */}
+                                <div className="flex items-center gap-2">
+                                  <div className="bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 text-xs rounded-full px-2 py-1 flex items-center">
+                                    <ThumbsUp className="h-3 w-3 mr-1" />
+                                    {idea.votes}{" "}
+                                    {idea.votes === 1
+                                      ? t("badges.vote")
+                                      : t("badges.votes")}
+                                  </div>
+                                </div>
+
+                                {/* Información de quién sugirió la idea */}
+                                {idea.suggestedByUsername && (
+                                  <div className="flex items-center gap-2">
+                                    <div className="bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 text-xs rounded-full px-2 py-1 flex items-center">
+                                      <User className="h-3 w-3 mr-1" />
+                                      {t("ideas.suggestedBy")}:{" "}
+                                      {idea.suggestedByUsername}
+                                    </div>
+                                  </div>
+                                )}
+                              </div>
+
+                              <motion.button
+                                whileHover={{ scale: 1.05 }}
+                                whileTap={{ scale: 0.95 }}
+                                className={cn(
+                                  "flex items-center px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200",
+                                  votedIdeas.has(idea.id)
+                                    ? "bg-green-100 dark:bg-green-900/50 text-green-700 dark:text-green-300 cursor-not-allowed"
+                                    : user
+                                    ? "bg-blue-50 dark:bg-blue-900/50 text-blue-600 dark:text-blue-300 hover:bg-blue-100 dark:hover:bg-blue-800/70"
+                                    : "bg-gray-100 dark:bg-gray-700 text-gray-500 dark:text-gray-400 cursor-not-allowed"
+                                )}
+                                onClick={() => handleVote(idea.id)}
+                                disabled={
+                                  votedIdeas.has(idea.id) ||
+                                  isVoting[idea.id] ||
+                                  !user
+                                }
+                              >
+                                {isVoting[idea.id] ? (
+                                  <>
+                                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                                    {t("common.voting", "Voting...")}
+                                  </>
+                                ) : (
+                                  <>
+                                    <motion.div
+                                      whileHover={{ rotate: 10, scale: 1.1 }}
+                                      className="mr-2"
+                                    >
+                                      <ThumbsUp className="w-4 h-4" />
+                                    </motion.div>
+                                    {votedIdeas.has(idea.id)
+                                      ? t("common.voted", "Voted!")
+                                      : t("common.vote", "Vote")}
+                                  </>
+                                )}
+                              </motion.button>
+                            </div>
+                          </div>
+                        </div>
+                      </Card>
+                    </motion.div>
                   );
                 })}
               </div>
