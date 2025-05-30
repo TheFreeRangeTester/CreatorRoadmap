@@ -244,7 +244,11 @@
     "loadError": "Failed to load creator page",
     "publicProfileView": "Public Profile",
     "voteHeaderTitle": "Vote for Content Ideas",
-    "defaultProfileDescription": "QA Engineer and content creator focused on software testing, automation, and quality control best practices."
+    "defaultProfileDescription": "QA Engineer and content creator focused on software testing, automation, and quality control best practices.",
+    "cantVoteOwn": "Can't vote on own ideas",
+    "cantVoteOwnDesc": "No podés votar tus propias ideas 😅",
+    "cantSuggestOwn": "Can't suggest to yourself",
+    "cantSuggestOwnDesc": "No podés sugerir ideas a tu propio perfil 😅"
   },
   "roles": {
     "audience": "Audience member"
