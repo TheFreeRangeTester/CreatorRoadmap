@@ -70,7 +70,7 @@ export default function CreatorControls({ onAddIdea }: CreatorControlsProps) {
   };
 
   const handleCSVImportClick = () => {
-    if (user?.subscriptionStatus !== "premium") {
+    if (user?.subscriptionStatus !== "premium" && user?.subscriptionStatus !== "trial") {
       toast({
         title: t("csvImport.proRequired.title", "Pro Feature"),
         description: t("csvImport.proRequired.description", "CSV import is available for Pro users only. Upgrade to access this feature."),
@@ -81,7 +81,7 @@ export default function CreatorControls({ onAddIdea }: CreatorControlsProps) {
     setCsvImportOpen(true);
   };
 
-  const isProUser = user?.subscriptionStatus === "premium";
+  const isProUser = user?.subscriptionStatus === "premium" || user?.subscriptionStatus === "trial";
 
   // Determinar qué botón mostrar basado en el estado del usuario
   const renderSubscriptionButton = () => {
