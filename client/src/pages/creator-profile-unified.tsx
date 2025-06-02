@@ -345,20 +345,10 @@ export default function CreatorProfileUnified() {
             // Remover @ si existe al inicio
             let cleanUrl = url.startsWith("@") ? url.substring(1) : url;
 
-            // Si ya tiene http:// o https://, asegurarse de que no tenga doble barra
-            if (
-              cleanUrl.startsWith("http://") ||
-              cleanUrl.startsWith("https://")
-            ) {
-              return cleanUrl.replace(/(https?:\/\/)\/+/g, "$1");
-            }
+            // Remover cualquier https:// o http:// existente
+            cleanUrl = cleanUrl.replace(/^https?:\/\//, "");
 
-            // Si comienza con www., agregar https://
-            if (cleanUrl.startsWith("www.")) {
-              return `https://${cleanUrl}`;
-            }
-
-            // Para otros casos, agregar https://
+            // Agregar https:// al principio
             return `https://${cleanUrl}`;
           })();
 
