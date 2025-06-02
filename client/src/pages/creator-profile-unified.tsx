@@ -337,23 +337,33 @@ export default function CreatorProfileUnified() {
 
     return (
       <div className="flex flex-wrap gap-3 justify-center mb-6">
-        {socialLinks.map(({ platform, url, label }) => (
-          <a
-            key={platform}
-            href={url!}
-            target="_blank"
-            rel="noopener noreferrer"
-            className={cn(
-              "p-3 rounded-full transition-all duration-200 hover:scale-110",
-              isCustomBackground
-                ? "bg-gray-200 hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300"
-                : "bg-white/10 hover:bg-white/20 text-white"
-            )}
-            aria-label={label}
-          >
-            {getSocialIcon(platform, url!)}
-          </a>
-        ))}
+        {socialLinks.map(({ platform, url, label }) => {
+          if (!url) return null;
+
+          // Asegurarse de que la URL comience con http:// o https://
+          const formattedUrl =
+            url.startsWith("http://") || url.startsWith("https://")
+              ? url
+              : `https://${url}`;
+
+          return (
+            <a
+              key={platform}
+              href={formattedUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className={cn(
+                "p-3 rounded-full transition-all duration-200 hover:scale-110",
+                isCustomBackground
+                  ? "bg-gray-200 hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300"
+                  : "bg-white/10 hover:bg-white/20 text-white"
+              )}
+              aria-label={label}
+            >
+              {getSocialIcon(platform, url)}
+            </a>
+          );
+        })}
       </div>
     );
   };
@@ -388,11 +398,11 @@ export default function CreatorProfileUnified() {
                         await fetch("/api/logout", {
                           method: "POST",
                           headers: {
-                            "X-Requested-With": "XMLHttpRequest"
+                            "X-Requested-With": "XMLHttpRequest",
                           },
-                          credentials: "same-origin"
+                          credentials: "same-origin",
                         });
-                        
+
                         // Stay on the same public profile after logout
                         window.location.reload();
                       } catch (error) {
@@ -508,13 +518,13 @@ export default function CreatorProfileUnified() {
                     });
                     return;
                   }
-                  
+
                   if (!user) {
                     localStorage.setItem("redirectAfterAuth", `/${username}`);
                     navigate(`/auth?referrer=/${username}`);
                     return;
                   }
-                  
+
                   setSuggestDialogOpen(true);
                 }}
                 disabled={isOwnProfile}
@@ -527,10 +537,9 @@ export default function CreatorProfileUnified() {
                 )}
               >
                 <UserPlus className="w-4 h-4 mr-2" />
-                {user 
+                {user
                   ? t("suggestIdea.button", "Suggest Idea")
-                  : t("common.loginToSuggest", "Login to suggest ideas")
-                }
+                  : t("common.loginToSuggest", "Login to suggest ideas")}
               </Button>
 
               <Button
@@ -713,8 +722,7 @@ export default function CreatorProfileUnified() {
                                   )}
                                   onClick={() => handleVote(idea.id)}
                                   disabled={
-                                    votedIdeas.has(idea.id) ||
-                                    isVoting[idea.id]
+                                    votedIdeas.has(idea.id) || isVoting[idea.id]
                                   }
                                 >
                                   {isVoting[idea.id] ? (
@@ -742,7 +750,10 @@ export default function CreatorProfileUnified() {
                                   whileTap={{ scale: 0.95 }}
                                   className="flex items-center px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 bg-blue-50 dark:bg-blue-900/50 text-blue-600 dark:text-blue-300 hover:bg-blue-100 dark:hover:bg-blue-800/70"
                                   onClick={() => {
-                                    localStorage.setItem("redirectAfterAuth", `/${username}`);
+                                    localStorage.setItem(
+                                      "redirectAfterAuth",
+                                      `/${username}`
+                                    );
                                     navigate(`/auth?referrer=/${username}`);
                                   }}
                                 >
