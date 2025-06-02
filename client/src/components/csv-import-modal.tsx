@@ -92,7 +92,11 @@ export default function CSVImportModal({
       
       // Validate using Zod schema
       try {
-        ideaSchema.parse({ title, description: description || undefined });
+        const validationData = {
+          title,
+          description: description.trim() === '' ? undefined : description
+        };
+        ideaSchema.parse(validationData);
       } catch (error) {
         if (error instanceof z.ZodError) {
           errors.push(...error.errors.map(err => err.message));
