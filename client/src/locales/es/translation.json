@@ -374,6 +374,11 @@
       "parseError": "Error al procesar el CSV",
       "noValidIdeas": "No hay ideas válidas para importar",
       "importError": "Error al importar ideas"
+    },
+    "proRequired": {
+      "title": "Función Pro",
+      "description": "La importación CSV está disponible solo para usuarios Pro. Mejora tu plan para acceder a esta función.",
+      "tooltip": "Función exclusiva de Pro"
     }
   },
   "badges": {
@@ -433,6 +438,9 @@
     "premiumFeaturesActive": "Funciones Premium Activas",
     "upToIdeas": "Hasta 50 ideas visibles",
     "unlimitedVotes": "Votos ilimitados",
+    "embedLeaderboard": "Incrustar leaderboard",
+    "noBranding": "Sin marca Fanlist",
+    "csvImport": "Importación masiva CSV",
     "noPlatformBranding": "Sin marca de la plataforma",
     "advancedAnalytics": "Analíticas avanzadas",
     "prioritySupport": "Soporte prioritario",

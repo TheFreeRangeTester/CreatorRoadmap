@@ -369,6 +369,11 @@
       "parseError": "Error parsing CSV",
       "noValidIdeas": "No valid ideas to import",
       "importError": "Error importing ideas"
+    },
+    "proRequired": {
+      "title": "Pro Feature",
+      "description": "CSV import is available for Pro users only. Upgrade to access this feature.",
+      "tooltip": "Pro exclusive feature"
     }
   },
   "badges": {
@@ -428,6 +433,9 @@
     "premiumFeaturesActive": "Active Premium Features",
     "upToIdeas": "Up to 50 visible ideas",
     "unlimitedVotes": "Unlimited votes",
+    "embedLeaderboard": "Embed leaderboard",
+    "noBranding": "No Fanlist branding",
+    "csvImport": "CSV bulk import",
     "noPlatformBranding": "No platform branding",
     "advancedAnalytics": "Advanced analytics",
     "prioritySupport": "Priority support",
