@@ -341,10 +341,16 @@ export default function CreatorProfileUnified() {
           if (!url) return null;
 
           // Asegurarse de que la URL comience con http:// o https://
-          const formattedUrl =
-            url.startsWith("http://") || url.startsWith("https://")
-              ? url
-              : `https://${url}`;
+          const formattedUrl = (() => {
+            if (url.startsWith("http://") || url.startsWith("https://")) {
+              return url;
+            }
+            // Si la URL comienza con @, lo removemos antes de agregar https://
+            if (url.startsWith("@")) {
+              return `https://${url.substring(1)}`;
+            }
+            return `https://${url}`;
+          })();
 
           return (
             <a

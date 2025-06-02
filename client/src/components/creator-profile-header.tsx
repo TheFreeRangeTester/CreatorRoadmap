@@ -137,10 +137,17 @@ function SocialLink({
   hasExternalIcon?: boolean;
 }) {
   // Asegurarse de que la URL comience con http:// o https://
-  const formattedUrl =
-    href.startsWith("http://") || href.startsWith("https://")
-      ? href
-      : `https://${href}`;
+  const formattedUrl = (() => {
+    if (!href) return "";
+    if (href.startsWith("http://") || href.startsWith("https://")) {
+      return href;
+    }
+    // Si la URL comienza con @, lo removemos antes de agregar https://
+    if (href.startsWith("@")) {
+      return `https://${href.substring(1)}`;
+    }
+    return `https://${href}`;
+  })();
 
   return (
     <motion.a
