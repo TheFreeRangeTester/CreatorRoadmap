@@ -338,6 +338,44 @@
     "editTitle": "Editar idea",
     "editDescription": "Realiza cambios en tu idea."
   },
+  "csvImport": {
+    "title": "Importar Ideas desde CSV",
+    "description": "Sube un archivo CSV para importar múltiples ideas de una vez",
+    "button": "Importar CSV",
+    "dragDrop": "Arrastra y suelta tu archivo CSV aquí, o haz clic para seleccionar",
+    "dropHere": "Suelta tu archivo CSV aquí...",
+    "fileTypes": "Solo acepta archivos .csv",
+    "processing": "Procesando archivo...",
+    "importing": "Importando...",
+    "importButton": "Importar {{count}} Ideas",
+    "template": {
+      "title": "¿Necesitas una plantilla?",
+      "description": "Descarga un archivo CSV de ejemplo para comenzar",
+      "download": "Descargar Plantilla"
+    },
+    "format": {
+      "title": "Formato CSV:",
+      "description": "Tu CSV debe tener una columna 'title' (obligatoria) y opcionalmente una columna 'description'. Título máximo 100 caracteres, descripción máximo 280 caracteres."
+    },
+    "preview": {
+      "title": "Vista Previa de Importación",
+      "validIdeas": "Ideas Válidas",
+      "invalidIdeas": "Ideas Inválidas",
+      "row": "Fila",
+      "emptyTitle": "(Título vacío)"
+    },
+    "success": {
+      "title": "Ideas importadas exitosamente",
+      "description": "{{count}} ideas han sido importadas a tu dashboard"
+    },
+    "errors": {
+      "emptyFile": "El archivo está vacío",
+      "missingTitleColumn": "Falta la columna 'title' en el encabezado",
+      "parseError": "Error al procesar el CSV",
+      "noValidIdeas": "No hay ideas válidas para importar",
+      "importError": "Error al importar ideas"
+    }
+  },
   "badges": {
     "votes": "votos",
     "vote": "voto",

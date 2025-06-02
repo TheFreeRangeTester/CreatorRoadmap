@@ -216,6 +216,13 @@ export default function CreatorControls({ onAddIdea }: CreatorControlsProps) {
           </div>
         )}
       </div>
+
+      {/* CSV Import Modal */}
+      <CSVImportModal
+        open={csvImportOpen}
+        onOpenChange={setCsvImportOpen}
+        onImportSuccess={handleCSVImportSuccess}
+      />
     </div>
   );
 }
