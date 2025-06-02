@@ -333,6 +333,49 @@
     "addDescription": "Share your idea with the community. Be clear and concise to get more votes!",
     "submitIdea": "Save idea"
   },
+  "csvImport": {
+    "title": "Import Ideas from CSV",
+    "description": "Upload a CSV file to import multiple ideas at once",
+    "button": "Import CSV",
+    "dragDrop": "Drag and drop your CSV file here, or click to select",
+    "dropHere": "Drop your CSV file here...",
+    "fileTypes": "Supports .csv files only",
+    "processing": "Processing file...",
+    "importing": "Importing...",
+    "importButton": "Import {{count}} Ideas",
+    "template": {
+      "title": "Need a template?",
+      "description": "Download a sample CSV file to get started",
+      "download": "Download Template"
+    },
+    "format": {
+      "title": "CSV Format:",
+      "description": "Your CSV must have a 'title' column (required) and optionally a 'description' column. Title max 100 characters, description max 280 characters."
+    },
+    "preview": {
+      "title": "Import Preview",
+      "validIdeas": "Valid Ideas",
+      "invalidIdeas": "Invalid Ideas",
+      "row": "Row",
+      "emptyTitle": "(Empty title)"
+    },
+    "success": {
+      "title": "Ideas imported successfully",
+      "description": "{{count}} ideas have been imported to your dashboard"
+    },
+    "errors": {
+      "emptyFile": "File is empty",
+      "missingTitleColumn": "Missing 'title' column in header",
+      "parseError": "Error parsing CSV",
+      "noValidIdeas": "No valid ideas to import",
+      "importError": "Error importing ideas"
+    },
+    "proRequired": {
+      "title": "Pro Feature",
+      "description": "CSV import is available for Pro users only. Upgrade to access this feature.",
+      "tooltip": "Pro exclusive feature"
+    }
+  },
   "badges": {
     "votes": "votes",
     "vote": "vote",
@@ -390,6 +433,9 @@
     "premiumFeaturesActive": "Active Premium Features",
     "upToIdeas": "Up to 50 visible ideas",
     "unlimitedVotes": "Unlimited votes",
+    "embedLeaderboard": "Embed leaderboard",
+    "noBranding": "No Fanlist branding",
+    "csvImport": "CSV bulk import",
     "noPlatformBranding": "No platform branding",
     "advancedAnalytics": "Advanced analytics",
     "prioritySupport": "Priority support",

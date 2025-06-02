@@ -1,5 +1,7 @@
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { PlusCircle, Crown, Sparkles, CheckCircle } from "lucide-react";
+import { PlusCircle, Crown, Sparkles, CheckCircle, Upload, Lock } from "lucide-react";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { useTranslation } from "react-i18next";
 import { useAuth } from "@/hooks/use-auth";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
@@ -7,6 +9,7 @@ import { useToast } from "@/hooks/use-toast";
 import { Link } from "wouter";
 import type { UserResponse } from "@shared/schema";
 import { SharingTipsTooltip } from "./sharing-tips-tooltip";
+import CSVImportModal from "./csv-import-modal";
 
 interface CreatorControlsProps {
   onAddIdea: () => void;
@@ -16,6 +19,7 @@ export default function CreatorControls({ onAddIdea }: CreatorControlsProps) {
   const { t } = useTranslation();
   const { toast } = useToast();
   const queryClient = useQueryClient();
+  const [csvImportOpen, setCsvImportOpen] = useState(false);
 
   // Obtener datos del usuario para saber su estado de suscripción
   const { data: user, isLoading: userLoading } = useQuery<UserResponse>({
@@ -56,6 +60,28 @@ export default function CreatorControls({ onAddIdea }: CreatorControlsProps) {
   const handleStartTrial = () => {
     startTrialMutation.mutate();
   };
+
+  const handleCSVImportSuccess = (count: number) => {
+    queryClient.invalidateQueries({ queryKey: ["/api/ideas"] });
+    toast({
+      title: t("csvImport.success.title", "Ideas imported successfully"),
+      description: t("csvImport.success.description", "{{count}} ideas have been imported to your dashboard", { count }),
+    });
+  };
+
+  const handleCSVImportClick = () => {
+    if (user?.subscriptionStatus !== "premium" && user?.subscriptionStatus !== "trial") {
+      toast({
+        title: t("csvImport.proRequired.title", "Pro Feature"),
+        description: t("csvImport.proRequired.description", "CSV import is available for Pro users only. Upgrade to access this feature."),
+        variant: "destructive",
+      });
+      return;
+    }
+    setCsvImportOpen(true);
+  };
+
+  const isProUser = user?.subscriptionStatus === "premium" || user?.subscriptionStatus === "trial";
 
   // Determinar qué botón mostrar basado en el estado del usuario
   const renderSubscriptionButton = () => {
@@ -136,17 +162,48 @@ export default function CreatorControls({ onAddIdea }: CreatorControlsProps) {
           </h2>
         </div>
 
-        {/* Botón de agregar idea - ahora más prominente */}
-        <Button
-          onClick={onAddIdea}
-          className="w-full sm:w-auto bg-gradient-to-r from-primary to-blue-600 hover:from-primary/90 hover:to-blue-700 text-white shadow-lg"
-          size="lg"
-        >
-          <PlusCircle className="w-5 h-5 mr-2" />
-          <span className="text-base">
-            {t("ideas.addIdea", "Add New Idea")}
-          </span>
-        </Button>
+        {/* Botones de gestión de ideas */}
+        <div className="flex flex-col sm:flex-row gap-3">
+          <Button
+            onClick={onAddIdea}
+            className="flex-1 sm:flex-none bg-gradient-to-r from-primary to-blue-600 hover:from-primary/90 hover:to-blue-700 text-white shadow-lg"
+            size="lg"
+          >
+            <PlusCircle className="w-5 h-5 mr-2" />
+            <span className="text-base">
+              {t("ideas.addIdea", "Add New Idea")}
+            </span>
+          </Button>
+          
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button
+                  onClick={handleCSVImportClick}
+                  variant="outline"
+                  className={`flex-1 sm:flex-none border-primary/20 hover:bg-primary/5 hover:border-primary/40 ${
+                    !isProUser ? 'opacity-75' : ''
+                  }`}
+                  size="lg"
+                >
+                  {!isProUser && <Lock className="w-4 h-4 mr-2" />}
+                  <Upload className="w-5 h-5 mr-2" />
+                  <span className="text-base">
+                    {t("csvImport.button", "Import CSV")}
+                  </span>
+                  {!isProUser && (
+                    <Crown className="w-4 h-4 ml-2 text-amber-500" />
+                  )}
+                </Button>
+              </TooltipTrigger>
+              {!isProUser && (
+                <TooltipContent>
+                  <p>{t("csvImport.proRequired.tooltip", "Pro exclusive feature")}</p>
+                </TooltipContent>
+              )}
+            </Tooltip>
+          </TooltipProvider>
+        </div>
 
         {/* Subscription promotion row - mobile optimized */}
         {user && user.subscriptionStatus !== "premium" && (
@@ -184,6 +241,12 @@ export default function CreatorControls({ onAddIdea }: CreatorControlsProps) {
                       {t("subscription.noBranding")}
                     </span>
                   </div>
+                  <div className="flex items-center gap-1.5">
+                    <CheckCircle className="w-4 h-4 text-green-500" />
+                    <span className="text-xs text-gray-600 dark:text-gray-300">
+                      {t("subscription.csvImport")}
+                    </span>
+                  </div>
                 </div>
               </div>
             </div>
@@ -191,6 +254,13 @@ export default function CreatorControls({ onAddIdea }: CreatorControlsProps) {
           </div>
         )}
       </div>
+
+      {/* CSV Import Modal */}
+      <CSVImportModal
+        open={csvImportOpen}
+        onOpenChange={setCsvImportOpen}
+        onImportSuccess={handleCSVImportSuccess}
+      />
     </div>
   );
 }
