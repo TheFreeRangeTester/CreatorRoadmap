@@ -136,18 +136,30 @@ function SocialLink({
   hoverClass?: string;
   hasExternalIcon?: boolean;
 }) {
-  // Asegurarse de que la URL comience con http:// o https://
+  // Formatear la URL según la plataforma
   const formattedUrl = (() => {
     if (!href) return "";
 
     // Remover @ si existe al inicio
     let cleanUrl = href.startsWith("@") ? href.substring(1) : href;
 
-    // Remover cualquier https:// o http:// existente
-    cleanUrl = cleanUrl.replace(/^https?:\/\//, "");
+    // Si es un sitio web (hasExternalIcon es true), usar la URL tal cual
+    if (hasExternalIcon) {
+      return cleanUrl.startsWith("http://") || cleanUrl.startsWith("https://")
+        ? cleanUrl
+        : `https://${cleanUrl}`;
+    }
 
-    // Agregar https:// al principio
-    return `https://${cleanUrl}`;
+    // Para redes sociales, construir la URL base según la plataforma
+    const baseUrls = {
+      Twitter: "https://www.x.com/",
+      Instagram: "https://www.instagram.com/",
+      YouTube: "https://www.youtube.com/@",
+      TikTok: "https://www.tiktok.com/@",
+      Threads: "https://www.threads.net/@",
+    };
+
+    return `${baseUrls[name as keyof typeof baseUrls]}${cleanUrl}`;
   })();
 
   return (

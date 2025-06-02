@@ -340,16 +340,29 @@ export default function CreatorProfileUnified() {
         {socialLinks.map(({ platform, url, label }) => {
           if (!url) return null;
 
-          // Asegurarse de que la URL comience con http:// o https://
+          // Formatear la URL según la plataforma
           const formattedUrl = (() => {
             // Remover @ si existe al inicio
             let cleanUrl = url.startsWith("@") ? url.substring(1) : url;
 
-            // Remover cualquier https:// o http:// existente
-            cleanUrl = cleanUrl.replace(/^https?:\/\//, "");
+            // Si es un sitio web, usar la URL tal cual
+            if (platform === "website") {
+              return cleanUrl.startsWith("http://") ||
+                cleanUrl.startsWith("https://")
+                ? cleanUrl
+                : `https://${cleanUrl}`;
+            }
 
-            // Agregar https:// al principio
-            return `https://${cleanUrl}`;
+            // Para redes sociales, construir la URL base según la plataforma
+            const baseUrls = {
+              twitter: "https://www.x.com/",
+              instagram: "https://www.instagram.com/",
+              youtube: "https://www.youtube.com/@",
+              tiktok: "https://www.tiktok.com/@",
+              threads: "https://www.threads.net/@",
+            };
+
+            return `${baseUrls[platform as keyof typeof baseUrls]}${cleanUrl}`;
           })();
 
           return (
