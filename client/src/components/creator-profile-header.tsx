@@ -139,14 +139,22 @@ function SocialLink({
   // Asegurarse de que la URL comience con http:// o https://
   const formattedUrl = (() => {
     if (!href) return "";
-    if (href.startsWith("http://") || href.startsWith("https://")) {
-      return href;
+
+    // Remover @ si existe al inicio
+    let cleanUrl = href.startsWith("@") ? href.substring(1) : href;
+
+    // Si ya tiene http:// o https://, asegurarse de que no tenga doble barra
+    if (cleanUrl.startsWith("http://") || cleanUrl.startsWith("https://")) {
+      return cleanUrl.replace(/(https?:\/\/)\/+/g, "$1");
     }
-    // Si la URL comienza con @, lo removemos antes de agregar https://
-    if (href.startsWith("@")) {
-      return `https://${href.substring(1)}`;
+
+    // Si comienza con www., agregar https://
+    if (cleanUrl.startsWith("www.")) {
+      return `https://${cleanUrl}`;
     }
-    return `https://${href}`;
+
+    // Para otros casos, agregar https://
+    return `https://${cleanUrl}`;
   })();
 
   return (

@@ -342,14 +342,24 @@ export default function CreatorProfileUnified() {
 
           // Asegurarse de que la URL comience con http:// o https://
           const formattedUrl = (() => {
-            if (url.startsWith("http://") || url.startsWith("https://")) {
-              return url;
+            // Remover @ si existe al inicio
+            let cleanUrl = url.startsWith("@") ? url.substring(1) : url;
+
+            // Si ya tiene http:// o https://, asegurarse de que no tenga doble barra
+            if (
+              cleanUrl.startsWith("http://") ||
+              cleanUrl.startsWith("https://")
+            ) {
+              return cleanUrl.replace(/(https?:\/\/)\/+/g, "$1");
             }
-            // Si la URL comienza con @, lo removemos antes de agregar https://
-            if (url.startsWith("@")) {
-              return `https://${url.substring(1)}`;
+
+            // Si comienza con www., agregar https://
+            if (cleanUrl.startsWith("www.")) {
+              return `https://${cleanUrl}`;
             }
-            return `https://${url}`;
+
+            // Para otros casos, agregar https://
+            return `https://${cleanUrl}`;
           })();
 
           return (
