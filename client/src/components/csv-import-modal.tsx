@@ -94,7 +94,7 @@ export default function CSVImportModal({
       try {
         const validationData = {
           title,
-          description: description.trim() === '' ? undefined : description
+          description: description && description.trim() !== '' ? description : undefined
         };
         ideaSchema.parse(validationData);
       } catch (error) {
@@ -105,7 +105,7 @@ export default function CSVImportModal({
 
       ideas.push({
         title,
-        description: description || undefined,
+        description: description && description.trim() !== '' ? description : undefined,
         rowNumber,
         isValid: errors.length === 0,
         errors,
