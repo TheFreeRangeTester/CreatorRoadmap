@@ -12,13 +12,15 @@
       "seeDemo": "See Demo",
       "startButton": "Get Started Free",
       "demoButton": "View Demo",
-      "title": "Ready to Start?",
-      "subtitle": "Join thousands of creators already using Fanlist",
+      "title": "Ready to let your audience tell you what to create?",
+      "subtitle": "Join thousands of creators already using Fanlist to create content their audience actually wants to see",
+      "finalTitle": "Ready to Start?",
+      "finalSubtitle": "Join thousands of creators already using Fanlist",
       "noCreditCard": "No credit card required"
     },
     "hero": {
-      "title": "Transform Ideas into Reality",
-      "subtitle": "The platform where the best ideas come to life through community collaboration",
+      "title": "Create content your audience actually wants to see",
+      "subtitle": "Fanlist lets you receive ideas, suggestions and votes directly from your followers",
       "tagline": "Connect with your audience like never before",
       "noCreditCard": "No credit card required",
       "leaderboardPreview": "Leaderboard preview",
@@ -67,18 +69,38 @@
     },
     "howItWorks": {
       "title": "How It Works",
-      "subtitle": "A simple process to keep your fans connected",
+      "subtitle": "A simple 3-step process",
       "step1": {
-        "title": "Create your idea",
-        "description": "Share your concept with the community and get valuable feedback"
+        "title": "Create your Fanlist",
+        "description": "Set up your profile and add your first content ideas"
       },
       "step2": {
-        "title": "Get votes",
-        "description": "The community votes for the most promising ideas for your website"
+        "title": "Share with your followers",
+        "description": "Send the link to your audience on social media and other channels"
       },
       "step3": {
-        "title": "Get feedback and grow",
-        "description": "Analyze the results and use feedback to create content that truly connects"
+        "title": "Receive ideas and votes",
+        "description": "Your audience votes and suggests content they actually want to see"
+      }
+    },
+    "benefits": {
+      "title": "Key Benefits",
+      "subtitle": "Supercharge your content creation with real data",
+      "benefit1": {
+        "title": "Validate your ideas before recording",
+        "description": "Avoid creating content that doesn't interest and focus on what your audience really wants"
+      },
+      "benefit2": {
+        "title": "Increase engagement with your community",
+        "description": "Involve your community in the creative process and generate more interaction"
+      },
+      "benefit3": {
+        "title": "Get useful feedback without getting overwhelmed",
+        "description": "Organize all suggestions in one place, without losing valuable ideas"
+      },
+      "benefit4": {
+        "title": "Perfect for content creators",
+        "description": "Ideal for YouTubers, streamers, podcasters and any digital creator"
       }
     },
     "pricing": {

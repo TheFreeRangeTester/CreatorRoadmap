@@ -1,0 +1,62 @@
+Estoy trabajando en la mejora de la landing page ya existente. Esta página presenta una app web para creadores de contenido donde sus seguidores pueden votar ideas, sugerir contenido y ayudar a priorizar qué crear. Quiero que me ayudes a renovar el diseño y la estructura de la landing page usando HTML y TailwindCSS.
+
+Quiero conservar la funcionalidad y estilo general, pero rediseñarla con foco en claridad, conversión y modernidad. Estas son las pautas clave para la nueva versión:
+	1.	Hero principal
+
+- Rediseñar el encabezado con un mensaje claro y directo que explique qué hace Fanlist. Ejemplo:
+
+> “Crea contenido que tu audiencia realmente quiere ver”
+
+- Subtítulo corto: “Fanlist te permite recibir ideas, sugerencias y votos directamente de tus seguidores.”
+- Botón de llamado a la acción visible: “Crea tu Fanlist gratis”
+- Imagen o ilustración de producto a la derecha (usa un placeholder o mockup si no hay aún una imagen definida)
+- Fondo claro y tipografía fuerte (ej. font-bold, text-3xl o superior)
+
+	2.	Cómo funciona
+
+Agregar una nueva sección (o rediseñar la actual si ya existe) que explique el flujo en 3 pasos:
+
+- Crear Fanlist
+- Compartir con tus seguidores
+- Recibir ideas y votos
+
+Usar íconos (Heroicons o placeholders) y un layout de 3 columnas en desktop / stack en mobile.
+	3.	Beneficios
+
+Crear una sección con bloques de beneficios:
+
+- Valida tus ideas antes de grabar
+- Aumenta el engagement con tu comunidad
+- Recibe feedback útil sin saturarte
+- Ideal para YouTubers, streamers y podcasters
+
+Diseñarlo con tarjetas (divs con shadow-md, rounded-lg, p-6) o bloques en 2 columnas.
+	4.	Testimonios
+
+Agregar una sección con testimonios de usuarios si hay disponibles. Si no, usar placeholders para tres perfiles con nombre, mini foto y frase breve. Diseño tipo grid responsive.
+	5.	Call to Action final
+
+Una sección al final con fondo diferenciado (ej. bg-gray-100), título fuerte, subtítulo y CTA. Ejemplo:
+
+- Título: “¿Listo para dejar que tu audiencia te diga qué crear?”
+- Botón CTA: “Empieza gratis”
+
+	6.	Mobile-first y limpio
+
+- La landing debe verse bien en celulares primero.
+- Usar mx-auto, px-4, max-w-7xl para contenedores.
+- Usar responsive text sizes: text-xl md:text-2xl lg:text-4xl
+
+	7.	Otros detalles
+
+- Evitar scroll innecesario: condensar información pero sin sacrificar legibilidad.
+- Revisar contraste de texto sobre fondo.
+- Revisar performance en Lighthouse (accessibility, SEO y performance).
+- Todos los textos tienen su traducción al inglés o español dependiendo del toggle de language.
+- Toda la UI está lista para una UX perfecta en escritorio y mobile.
+
+Salidas esperadas:
+
+- Código HTML/TailwindCSS refactorizado que reemplaza el layout actual.
+- Las clases CSS deben estar optimizadas para claridad.
+- Debe poder desplegarse directamente en Vercel, Netlify o Replit static hosting.
