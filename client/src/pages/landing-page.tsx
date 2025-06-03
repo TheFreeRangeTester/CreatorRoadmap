@@ -134,19 +134,23 @@ function PricingCard({
   return (
     <motion.div
       variants={fadeIn}
-      className={`bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow-lg border transition-all duration-300 hover:-translate-y-1 ${
+      className={`bg-gradient-to-br from-white via-gray-50/80 to-primary/[0.02] dark:from-gray-800 dark:via-gray-900 dark:to-primary/[0.03] rounded-xl overflow-hidden shadow-lg border transition-all duration-300 hover:-translate-y-1 ${
         isPopular
           ? "border-primary/50 dark:border-primary/70 shadow-primary/10"
           : "border-gray-200 dark:border-gray-700"
       }`}
     >
       {isPopular && (
-        <div className="bg-gradient-to-r from-primary to-blue-600 text-white text-xs font-semibold text-center py-1.5">
+        <div className="bg-gradient-to-r from-primary via-blue-500 to-primary text-white text-xs font-semibold text-center py-1.5">
           {t("landing.pricing.popular")}
         </div>
       )}
       <CardHeader
-        className={`${isPopular ? "bg-primary/5 dark:bg-primary/10" : ""}`}
+        className={`${
+          isPopular
+            ? "bg-gradient-to-br from-primary/5 via-primary/10 to-primary/5 dark:from-primary/10 dark:via-primary/20 dark:to-primary/10"
+            : ""
+        }`}
       >
         <CardTitle className="text-xl font-bold text-center dark:text-white">
           {name}
@@ -188,8 +192,8 @@ function PricingCard({
         <Button
           className={`w-full ${
             isPopular
-              ? "bg-gradient-to-r from-primary to-blue-600 hover:from-primary/90 hover:to-blue-700 text-white"
-              : ""
+              ? "bg-gradient-to-r from-primary via-blue-500 to-primary hover:from-primary/90 hover:via-blue-600 hover:to-primary/90 text-white"
+              : "bg-gradient-to-r from-gray-100 to-gray-50 dark:from-gray-800 dark:to-gray-700 hover:from-gray-200 hover:to-gray-100 dark:hover:from-gray-700 dark:hover:to-gray-600"
           }`}
           variant={isPopular ? "default" : "outline"}
         >
@@ -260,18 +264,25 @@ export default function LandingPage() {
 
   // Check for audience user trying to access creator features
   useEffect(() => {
-    const audienceTriedAccess = localStorage.getItem('audienceTriedCreatorAccess');
-    const attemptingCreatorLogin = localStorage.getItem('attemptingCreatorLogin');
-    
-    if (audienceTriedAccess === 'true' || attemptingCreatorLogin === 'true') {
+    const audienceTriedAccess = localStorage.getItem(
+      "audienceTriedCreatorAccess"
+    );
+    const attemptingCreatorLogin = localStorage.getItem(
+      "attemptingCreatorLogin"
+    );
+
+    if (audienceTriedAccess === "true" || attemptingCreatorLogin === "true") {
       // Clear the flags
-      localStorage.removeItem('audienceTriedCreatorAccess');
-      localStorage.removeItem('attemptingCreatorLogin');
-      
+      localStorage.removeItem("audienceTriedCreatorAccess");
+      localStorage.removeItem("attemptingCreatorLogin");
+
       // Show error message
       toast({
         title: t("auth.notCreatorAccount", "No es una cuenta de creador"),
-        description: t("auth.notCreatorAccountDesc", "No es una cuenta de creador. Por favor registrate como creador si querés usar las funciones de Fanlist para creadores."),
+        description: t(
+          "auth.notCreatorAccountDesc",
+          "No es una cuenta de creador. Por favor registrate como creador si querés usar las funciones de Fanlist para creadores."
+        ),
         variant: "destructive",
         duration: 8000,
       });
@@ -453,7 +464,7 @@ export default function LandingPage() {
                     size="lg"
                     className="font-medium text-base bg-gradient-to-r from-primary to-blue-600 hover:from-primary/90 hover:to-blue-700 text-white"
                     onClick={() => {
-                      localStorage.setItem('attemptingCreatorLogin', 'true');
+                      localStorage.setItem("attemptingCreatorLogin", "true");
                     }}
                   >
                     {t("landing.cta.startFree")}
