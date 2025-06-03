@@ -1,10 +1,11 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Link, useLocation } from "wouter";
 import { motion } from "framer-motion";
 import { useToast } from "@/hooks/use-toast";
 import {
   ArrowRight,
   Check,
+  CircleCheck,
   Users,
   Star,
   Plus,
@@ -12,6 +13,7 @@ import {
   Vote,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { useTranslation } from "react-i18next";
 import DemoDialog from "@/components/demo-dialog";
@@ -42,6 +44,144 @@ const staggerContainer = {
   },
 };
 
+// Componente de testimonio
+function FeatureCard({
+  icon,
+  title,
+  description,
+}: {
+  icon: React.ReactNode;
+  title: string;
+  description: string;
+}) {
+  return (
+    <motion.div
+      variants={fadeIn}
+      className="feature-card bg-gradient-to-br from-white via-gray-50/80 to-primary/[0.02] dark:from-gray-800 dark:via-gray-900 dark:to-primary/[0.03] p-6 rounded-xl shadow-soft border border-gray-100/50 dark:border-gray-700/50 transition-all duration-300 hover:shadow-lg hover:-translate-y-1 hover:bg-gradient-to-br hover:from-white hover:via-gray-50 hover:to-primary/[0.08] dark:hover:from-gray-800 dark:hover:via-gray-900 dark:hover:to-primary/[0.12]"
+    >
+      <div className="flex items-start gap-4">
+        <div className="bg-gradient-to-br from-primary/10 to-primary/5 dark:from-primary/20 dark:to-primary/10 p-3 rounded-lg transition-colors group-hover:from-primary/15 group-hover:to-primary/10 dark:group-hover:from-primary/30 dark:group-hover:to-primary/20">
+          {icon}
+        </div>
+        <div>
+          <h3 className="text-lg font-semibold mb-2 dark:text-white">
+            {title}
+          </h3>
+          <p className="text-gray-600 dark:text-gray-300 text-sm">
+            {description}
+          </p>
+        </div>
+      </div>
+    </motion.div>
+  );
+}
+
+// Componente de tarjeta de plan de precios
+function PricingCard({
+  name,
+  price,
+  description,
+  features,
+  isPopular,
+  ctaText,
+  freeLabel,
+  perMonth,
+}: {
+  name: string;
+  price: string;
+  description: string;
+  features: any;
+  isPopular?: boolean;
+  ctaText: string;
+  freeLabel: string;
+  perMonth: string;
+  yearlyPrice?: string;
+  savings?: string;
+  className?: string;
+}) {
+  const { t } = useTranslation();
+  const priceAnimation = {
+    initial: { opacity: 0, y: 10 },
+    animate: { opacity: 1, y: 0 },
+    exit: { opacity: 0, y: -10 },
+    transition: { duration: 0.2, ease: "easeOut" },
+  };
+  // Ensure features is an array
+  const featuresList: string[] = Array.isArray(features) ? features : [];
+  return (
+    <motion.div
+      variants={fadeIn}
+      className={`bg-gradient-to-br from-white via-gray-50/80 to-primary/[0.02] dark:from-gray-800 dark:via-gray-900 dark:to-primary/[0.03] rounded-xl overflow-hidden shadow-lg border transition-all duration-300 hover:-translate-y-1 ${
+        isPopular
+          ? "border-primary/50 dark:border-primary/70 shadow-primary/10"
+          : "border-gray-200 dark:border-gray-700"
+      }`}
+    >
+      {isPopular && (
+        <div className="bg-gradient-to-r from-primary via-blue-500 to-primary text-white text-xs font-semibold text-center py-1.5">
+          {t("landing.pricing.popular")}
+        </div>
+      )}
+      <CardHeader
+        className={`${
+          isPopular
+            ? "bg-gradient-to-br from-primary/5 via-primary/10 to-primary/5 dark:from-primary/10 dark:via-primary/20 dark:to-primary/10"
+            : ""
+        }`}
+      >
+        <CardTitle className="text-xl font-bold text-center dark:text-white">
+          {name}
+        </CardTitle>
+        <div className="mt-4 text-center">
+          <motion.div
+            key={price}
+            variants={priceAnimation}
+            initial="initial"
+            animate="animate"
+            exit="exit"
+            style={{ display: "inline-block" }}
+          >
+            <span className="text-3xl font-bold dark:text-white">{price}</span>
+          </motion.div>
+          {price !== freeLabel && (
+            <span className="text-gray-500 dark:text-gray-400 ml-1">
+              {perMonth}
+            </span>
+          )}
+        </div>
+        <CardDescription className="text-center mt-2 text-gray-600 dark:text-gray-300">
+          {description}
+        </CardDescription>
+      </CardHeader>
+      <CardContent className="p-6">
+        <ul className="space-y-3">
+          {featuresList.map((feature, index) => (
+            <li key={index} className="flex items-start gap-2">
+              <CircleCheck className="h-5 w-5 text-primary shrink-0 mt-0.5" />
+              <span className="text-sm text-gray-600 dark:text-gray-300">
+                {feature}
+              </span>
+            </li>
+          ))}
+        </ul>
+      </CardContent>
+      <CardFooter className="pb-6 px-6">
+        <Button
+          className={`w-full ${
+            isPopular
+              ? "bg-gradient-to-r from-primary via-blue-500 to-primary hover:from-primary/90 hover:via-blue-600 hover:to-primary/90 text-white"
+              : "bg-gradient-to-r from-gray-100 to-gray-50 dark:from-gray-800 dark:to-gray-700 hover:from-gray-200 hover:to-gray-100 dark:hover:from-gray-700 dark:hover:to-gray-600"
+          }`}
+          variant={isPopular ? "default" : "outline"}
+        >
+          {ctaText}
+        </Button>
+      </CardFooter>
+    </motion.div>
+  );
+}
+
+// Componente de testimonio
 function Testimonial({
   quote,
   author,
@@ -82,17 +222,27 @@ export default function LandingPage() {
   const { toast } = useToast();
   const isMobile = useIsMobile();
 
+  // Check for audience user trying to access creator features
   useEffect(() => {
-    const audienceTriedAccess = localStorage.getItem('audienceTriedCreatorAccess');
-    const attemptingCreatorLogin = localStorage.getItem('attemptingCreatorLogin');
-    
-    if (audienceTriedAccess === 'true' || attemptingCreatorLogin === 'true') {
-      localStorage.removeItem('audienceTriedCreatorAccess');
-      localStorage.removeItem('attemptingCreatorLogin');
-      
+    const audienceTriedAccess = localStorage.getItem(
+      "audienceTriedCreatorAccess"
+    );
+    const attemptingCreatorLogin = localStorage.getItem(
+      "attemptingCreatorLogin"
+    );
+
+    if (audienceTriedAccess === "true" || attemptingCreatorLogin === "true") {
+      // Clear the flags
+      localStorage.removeItem("audienceTriedCreatorAccess");
+      localStorage.removeItem("attemptingCreatorLogin");
+
+      // Show error message
       toast({
         title: t("auth.notCreatorAccount", "No es una cuenta de creador"),
-        description: t("auth.notCreatorAccountDesc", "No es una cuenta de creador. Por favor registrate como creador si querés usar las funciones de Fanlist para creadores."),
+        description: t(
+          "auth.notCreatorAccountDesc",
+          "No es una cuenta de creador. Por favor registrate como creador si querés usar las funciones de Fanlist para creadores."
+        ),
         variant: "destructive",
         duration: 8000,
       });
@@ -101,13 +251,17 @@ export default function LandingPage() {
 
   return (
     <div className="min-h-screen bg-white dark:bg-gray-950">
+      {/* Modal de demostración */}
       <DemoDialog open={isDemoOpen} onOpenChange={setIsDemoOpen} />
+
+      {/* Header */}
       <LandingHeader />
 
       {/* Hero Principal */}
       <section className="pt-20 pb-16 md:pt-32 md:pb-24 relative overflow-hidden">
         <div className="container mx-auto px-4 max-w-7xl">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
+            {/* Contenido principal */}
             <motion.div
               initial="hidden"
               animate="visible"
@@ -128,7 +282,7 @@ export default function LandingPage() {
                     size="lg"
                     className="font-medium text-base bg-primary hover:bg-primary/90 text-white px-8 py-3"
                     onClick={() => {
-                      localStorage.setItem('attemptingCreatorLogin', 'true');
+                      localStorage.setItem("attemptingCreatorLogin", "true");
                     }}
                   >
                     {t("landing.cta.startFree")}
@@ -150,6 +304,7 @@ export default function LandingPage() {
               </p>
             </motion.div>
 
+            {/* Imagen/Demo a la derecha */}
             <motion.div
               initial={{ opacity: 0, x: 20 }}
               animate={{ opacity: 1, x: 0 }}
@@ -336,6 +491,7 @@ export default function LandingPage() {
         </div>
       </section>
 
+      {/* Footer placeholder for future implementation */}
       <footer className="bg-white dark:bg-gray-950 border-t border-gray-200 dark:border-gray-800 py-8">
         <div className="container mx-auto px-4 max-w-7xl text-center">
           <p className="text-gray-600 dark:text-gray-400">
