@@ -462,6 +462,21 @@ export default function CreatorProfileUnified() {
                   onRefresh={async () => {
                     await refetch();
                   }}
+                  onLogout={async () => {
+                    try {
+                      await fetch("/api/logout", {
+                        method: "POST",
+                        headers: {
+                          "X-Requested-With": "XMLHttpRequest",
+                        },
+                        credentials: "same-origin",
+                      });
+                      window.location.reload();
+                    } catch (error) {
+                      console.error("Mobile logout error:", error);
+                      window.location.reload();
+                    }
+                  }}
                 />
               </div>
             </div>

@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useQuery, useMutation } from "@tanstack/react-query";
+import { motion } from "framer-motion";
 import {
   Loader2,
   CheckCircle,
@@ -9,6 +10,9 @@ import {
   User,
   ListFilter,
   Plus,
+  Sparkles,
+  TrendingUp,
+  Users,
 } from "lucide-react";
 import { useAuth } from "@/hooks/use-auth";
 import { useToast } from "@/hooks/use-toast";
@@ -137,43 +141,63 @@ export default function HomePage() {
   };
 
   return (
-    <div className="bg-gray-50 dark:bg-gray-950 min-h-screen">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50 to-indigo-100 dark:from-gray-900 dark:via-blue-900/20 dark:to-indigo-900/30">
       {/* Header */}
-      <header className="bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800 sticky top-0 z-10">
+      <motion.header 
+        initial={{ opacity: 0, y: -10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+        className="bg-gradient-to-r from-white/90 via-white/85 to-white/90 dark:from-gray-900/90 dark:via-gray-900/85 dark:to-gray-900/90 backdrop-blur-xl border-b border-gray-200/50 dark:border-gray-800/50 shadow-lg sticky top-0 z-10"
+      >
         <div className="container mx-auto px-3 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             {/* Logo and title section - responsive */}
-            <div className="flex items-center min-w-0 flex-1">
-              <img
-                src={new URL("@/assets/logo.png", import.meta.url).href}
-                alt="Logo"
-                className="h-7 sm:h-8 w-auto flex-shrink-0"
-              />
-              <div className="ml-2 min-w-0 flex-1">
-                <h1 className="text-base sm:text-xl font-bold text-neutral-800 dark:text-white truncate">
+            <motion.div 
+              className="flex items-center min-w-0 flex-1"
+              whileHover={{ scale: 1.02 }}
+              transition={{ type: "spring", stiffness: 400, damping: 10 }}
+            >
+              <div className="relative">
+                <img
+                  src={new URL("@/assets/logo.png", import.meta.url).href}
+                  alt="Logo"
+                  className="h-7 sm:h-10 w-auto flex-shrink-0"
+                />
+                <div className="absolute -inset-1 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full opacity-20 blur-sm animate-pulse"></div>
+              </div>
+              <div className="ml-3 min-w-0 flex-1">
+                <h1 className="text-base sm:text-2xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-600 bg-clip-text text-transparent truncate">
                   {t("dashboard.appName", "Fanlist")}
                 </h1>
               </div>
-            </div>
+            </motion.div>
 
             {/* Desktop menu */}
             <div className="hidden md:flex items-center gap-3">
               {user ? (
                 <div className="flex items-center gap-3">
                   <Link href="/profile">
-                    <Button variant="outline" size="sm">
-                      <User className="h-4 w-4 mr-2" />
-                      {t("common.profile", "Perfil")}
-                    </Button>
+                    <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                      <Button 
+                        variant="outline" 
+                        size="sm"
+                        className="bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 border-blue-200 dark:border-blue-800 hover:from-blue-100 hover:to-indigo-100 dark:hover:from-blue-900/30 dark:hover:to-indigo-900/30"
+                      >
+                        <User className="h-4 w-4 mr-2" />
+                        {t("common.profile", "Perfil")}
+                      </Button>
+                    </motion.div>
                   </Link>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={handleLogout}
-                    className="text-red-600 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300"
-                  >
-                    {t("common.logout")}
-                  </Button>
+                  <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={handleLogout}
+                      className="text-red-600 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300 border-red-200 dark:border-red-800 hover:bg-red-50 dark:hover:bg-red-900/20"
+                    >
+                      {t("common.logout")}
+                    </Button>
+                  </motion.div>
                 </div>
               ) : (
                 <div className="flex items-center gap-3">
@@ -221,7 +245,7 @@ export default function HomePage() {
             </div>
           </div>
         </div>
-      </header>
+      </motion.header>
 
       <main className="container mx-auto px-3 sm:px-6 lg:px-8 py-4 sm:py-6">
         {/* Main content for both authenticated and non-authenticated users */}
