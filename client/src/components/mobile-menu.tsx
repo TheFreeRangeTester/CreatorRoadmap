@@ -87,31 +87,31 @@ export const MobileMenu = ({
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
             transition={{ duration: 0.2 }}
-            className="fixed inset-0 z-50 bg-background md:hidden"
+            className="fixed inset-0 z-50 bg-white/95 dark:bg-gray-900/95 backdrop-blur-xl md:hidden"
           >
             <div className="flex flex-col h-full">
-              <div className="flex justify-between items-center p-4 border-b">
-                <h2 className="text-lg font-semibold">
+              <div className="flex justify-between items-center p-4 border-b border-gray-200 dark:border-gray-700 bg-white/90 dark:bg-gray-900/90">
+                <h2 className="text-lg font-semibold text-gray-900 dark:text-white">
                   {t("common.menu", "Menú")}
                 </h2>
                 <Button
                   variant="ghost"
                   size="icon"
                   onClick={toggleMenu}
-                  className="text-foreground"
+                  className="text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-800"
                 >
                   <X className="h-6 w-6" />
                 </Button>
               </div>
 
-              <div className="flex-1 px-4 py-6">
+              <div className="flex-1 px-6 py-8 bg-white/80 dark:bg-gray-900/80">
                 <div className="flex flex-col gap-6">
                   {user ? (
                     <div className="w-full flex flex-col items-center space-y-6">
                       {/* User info for mobile */}
-                      <div className="w-full flex items-center gap-2 text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-800 px-4 py-3 rounded-lg">
-                        <User className="h-5 w-5" />
-                        <span className="font-medium">{user.username}</span>
+                      <div className="w-full flex items-center gap-3 text-gray-800 dark:text-gray-200 bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/30 dark:to-indigo-900/30 px-4 py-4 rounded-xl border border-blue-200/50 dark:border-blue-800/50">
+                        <User className="h-5 w-5 text-blue-600 dark:text-blue-400" />
+                        <span className="font-semibold">{user.username}</span>
                       </div>
 
                       {/* Solo mostrar perfil/dashboard si es creador */}
@@ -121,8 +121,7 @@ export const MobileMenu = ({
                           onClick={() => setIsOpen(false)}
                         >
                           <Button
-                            className="w-full justify-center"
-                            variant="outline"
+                            className="w-full justify-center bg-blue-600 hover:bg-blue-700 text-white border-0 shadow-lg"
                             size="lg"
                           >
                             <User className="h-5 w-5 mr-2" />
@@ -165,7 +164,7 @@ export const MobileMenu = ({
 
                       <Button
                         onClick={handleLogout}
-                        className="w-full justify-center text-red-600 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300"
+                        className="w-full justify-center text-red-600 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300 border-red-200 dark:border-red-800 hover:bg-red-50 dark:hover:bg-red-900/20"
                         variant="outline"
                         size="lg"
                       >
@@ -174,22 +173,20 @@ export const MobileMenu = ({
                       </Button>
                     </div>
                   ) : (
-                    <div className="w-full flex flex-col items-center space-y-6">
-                      <Link href="/auth?direct=true">
+                    <div className="w-full flex flex-col items-center space-y-4">
+                      <Link href="/auth?direct=true" className="w-full">
                         <Button
                           variant="outline"
-                          className="w-full justify-start gap-2"
-                          size="lg"
+                          className="w-full justify-center gap-3 h-14 text-base font-medium border-2 border-gray-300 dark:border-gray-600 hover:border-blue-500 dark:hover:border-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/20"
                           onClick={toggleMenu}
                         >
                           <LogIn className="h-5 w-5" />
                           {t("landing.cta.login")}
                         </Button>
                       </Link>
-                      <Link href="/auth?direct=true&register=true">
+                      <Link href="/auth?direct=true&register=true" className="w-full">
                         <Button
-                          className="w-full justify-start gap-2"
-                          size="lg"
+                          className="w-full justify-center gap-3 h-14 text-base font-medium bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white border-0 shadow-lg"
                           onClick={toggleMenu}
                         >
                           <User className="h-5 w-5" />
@@ -202,10 +199,16 @@ export const MobileMenu = ({
               </div>
               
               {/* Bottom section with toggles */}
-              <div className="border-t p-4">
-                <div className="flex items-center justify-center gap-4">
-                  <LanguageToggle />
-                  <ThemeToggle />
+              <div className="border-t border-gray-200 dark:border-gray-700 bg-white/90 dark:bg-gray-900/90 p-6">
+                <div className="flex items-center justify-center gap-6">
+                  <div className="flex items-center gap-2">
+                    <span className="text-sm font-medium text-gray-600 dark:text-gray-400">Idioma:</span>
+                    <LanguageToggle />
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <span className="text-sm font-medium text-gray-600 dark:text-gray-400">Tema:</span>
+                    <ThemeToggle />
+                  </div>
                 </div>
               </div>
             </div>
