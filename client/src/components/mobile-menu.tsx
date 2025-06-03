@@ -33,9 +33,20 @@ export const MobileMenu = ({
     setIsOpen(!isOpen);
   };
 
-  const handleLogout = () => {
-    if (onLogout) {
-      onLogout();
+  const handleLogout = async () => {
+    try {
+      if (onLogout) {
+        await onLogout();
+      } else {
+        // Default logout behavior if no onLogout prop is provided
+        await fetch("/api/auth/logout", {
+          method: "POST",
+          credentials: "include",
+        });
+        window.location.href = "/";
+      }
+    } catch (error) {
+      console.error("Logout error:", error);
     }
     setIsOpen(false);
   };
@@ -187,6 +198,14 @@ export const MobileMenu = ({
                       </Link>
                     </div>
                   )}
+                </div>
+              </div>
+              
+              {/* Bottom section with toggles */}
+              <div className="border-t p-4">
+                <div className="flex items-center justify-center gap-4">
+                  <LanguageToggle />
+                  <ThemeToggle />
                 </div>
               </div>
             </div>

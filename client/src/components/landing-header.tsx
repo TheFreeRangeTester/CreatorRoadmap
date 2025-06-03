@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Logo } from "@/components/logo";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { LanguageToggle } from "@/components/language-toggle";
+import { MobileMenu } from "@/components/mobile-menu";
 
 interface LandingHeaderProps {
   className?: string;
@@ -20,6 +21,7 @@ export function LandingHeader({ className = "" }: LandingHeaderProps) {
         <div className="flex justify-between items-center h-16">
           <Logo />
           <div className="flex items-center gap-4">
+            {/* Desktop buttons */}
             <div className="hidden md:flex gap-2">
               <Link href="/auth?direct=true">
                 <Button
@@ -35,9 +37,16 @@ export function LandingHeader({ className = "" }: LandingHeaderProps) {
                 </Button>
               </Link>
             </div>
-            <div className="flex items-center gap-2">
+            
+            {/* Desktop toggles */}
+            <div className="hidden md:flex items-center gap-2">
               <LanguageToggle />
               <ThemeToggle />
+            </div>
+            
+            {/* Mobile menu */}
+            <div className="md:hidden">
+              <MobileMenu transparent={true} />
             </div>
           </div>
         </div>
