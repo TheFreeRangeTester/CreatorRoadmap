@@ -17,8 +17,8 @@
       "noCreditCard": "No se requiere tarjeta de crédito"
     },
     "hero": {
-      "title": "Transforma Ideas en Realidad",
-      "subtitle": "La plataforma donde las mejores ideas cobran vida a través de la colaboración comunitaria",
+      "title": "Crea contenido que tu audiencia realmente quiere ver",
+      "subtitle": "Fanlist te permite recibir ideas, sugerencias y votos directamente de tus seguidores",
       "tagline": "Conecta con tu audiencia como nunca antes",
       "noCreditCard": "No se requiere tarjeta de crédito",
       "leaderboardPreview": "Vista previa del ranking",
@@ -67,18 +67,38 @@
     },
     "howItWorks": {
       "title": "Cómo Funciona",
-      "subtitle": "Un proceso simple para mantener a tus fans conectados",
+      "subtitle": "Un proceso simple en 3 pasos",
       "step1": {
-        "title": "Crea tu idea",
-        "description": "Comparte tu concepto con la comunidad y recibe comentarios valiosos"
+        "title": "Crea tu Fanlist",
+        "description": "Configura tu perfil y agrega tus primeras ideas de contenido"
       },
       "step2": {
-        "title": "Obtén votos",
-        "description": "La comunidad vota por las ideas más prometedoras para tu sitio web"
+        "title": "Comparte con tus seguidores",
+        "description": "Envía el enlace a tu audiencia en redes sociales y otros canales"
       },
       "step3": {
-        "title": "Recibe comentarios y crece",
-        "description": "Analiza los resultados y usa los comentarios para crear contenido que realmente conecte"
+        "title": "Recibe ideas y votos",
+        "description": "Tu audiencia vota y sugiere contenido que realmente quiere ver"
+      }
+    },
+    "benefits": {
+      "title": "Beneficios Clave",
+      "subtitle": "Potencia tu creación de contenido con datos reales",
+      "benefit1": {
+        "title": "Valida tus ideas antes de grabar",
+        "description": "Evita crear contenido que no interesa y enfócate en lo que tu audiencia realmente quiere"
+      },
+      "benefit2": {
+        "title": "Aumenta el engagement",
+        "description": "Involucra a tu comunidad en el proceso creativo y genera más interacción"
+      },
+      "benefit3": {
+        "title": "Recibe feedback útil sin saturarte",
+        "description": "Organiza todas las sugerencias en un solo lugar, sin perder ideas valiosas"
+      },
+      "benefit4": {
+        "title": "Ideal para creadores de contenido",
+        "description": "Perfecto para YouTubers, streamers, podcasters y cualquier creador digital"
       }
     },
     "pricing": {

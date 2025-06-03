@@ -240,6 +240,7 @@ export default function LandingPage() {
   const [billingPeriod, setBillingPeriod] = useState("monthly");
   const { t } = useTranslation();
   const { toast } = useToast();
+  const isMobile = useIsMobile();
 
   const heroTitleRef = useRef(null);
   const heroTextRef = useRef(null);
@@ -395,120 +396,254 @@ export default function LandingPage() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white dark:from-gray-950 dark:to-gray-900">
+    <div className="min-h-screen bg-white dark:bg-gray-950">
       {/* Modal de demostración */}
       <DemoDialog open={isDemoOpen} onOpenChange={setIsDemoOpen} />
 
       {/* Header */}
       <LandingHeader />
 
-      {/* Hero */}
-      <section className="pt-32 pb-20 md:pt-40 md:pb-32 relative overflow-hidden">
-        <div className="absolute inset-0 bg-grid-gray-200/50 dark:bg-grid-gray-900/20 bg-[length:20px_20px] [mask-image:radial-gradient(ellipse_at_center,white,transparent_75%)]"></div>
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative">
-          <motion.div
-            initial="hidden"
-            animate="visible"
-            variants={staggerContainer}
-            className="max-w-4xl mx-auto text-center"
-          >
-            <div ref={heroBadgeRef}>
-              <Badge
-                variant="outline"
-                className="px-3 py-1 bg-primary/10 text-primary-600 border-primary-200 dark:bg-primary-900/30 dark:text-primary-400 dark:border-primary-800/50 mb-4"
-              >
-                {t("landing.hero.tagline")}
-              </Badge>
-            </div>
-
-            {/* Título con animación antigua para compatibilidad */}
-            <h1
-              ref={heroTitleRef}
-              className="text-4xl md:text-6xl font-bold tracking-tight mb-6 bg-clip-text text-transparent bg-gradient-to-r from-gray-900 to-gray-700 dark:from-white dark:to-gray-300 hidden"
+      {/* Hero Principal */}
+      <section className="pt-20 pb-16 md:pt-32 md:pb-24 relative overflow-hidden">
+        <div className="container mx-auto px-4 max-w-7xl">
+          <div className="grid lg:grid-cols-2 gap-12 items-center">
+            {/* Contenido principal */}
+            <motion.div
+              initial="hidden"
+              animate="visible"
+              variants={staggerContainer}
+              className="text-left"
             >
-              {t("landing.hero.title")}
-            </h1>
+              <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 dark:text-white mb-4 leading-tight">
+                {t("landing.hero.title")}
+              </h1>
+              
+              <p className="text-lg md:text-xl text-gray-600 dark:text-gray-300 mb-8 max-w-2xl">
+                {t("landing.hero.subtitle")}
+              </p>
 
-            {/* Título con animación 3D al estilo GSAP.com */}
-            <div className="mb-6">
-              <AnimatedTitle
-                text={t("landing.hero.title")}
-                effect={ANIMATION_EFFECTS.TEXT_REVEAL}
-                className="text-4xl md:text-6xl font-bold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-gray-900 to-gray-700 dark:from-white dark:to-gray-300"
-                direction="center"
-              />
-            </div>
-
-            <p
-              ref={heroTextRef}
-              className="text-lg md:text-xl text-gray-600 dark:text-gray-300 mb-8 max-w-3xl mx-auto"
-            >
-              {t("landing.hero.subtitle")}
-            </p>
-
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <div ref={heroButtonRef}>
+              <div className="flex flex-col sm:flex-row gap-4 mb-6">
                 <Link href="/auth?direct=true&register=true">
                   <Button
                     size="lg"
-                    className="font-medium text-base bg-gradient-to-r from-primary to-blue-600 hover:from-primary/90 hover:to-blue-700 text-white"
+                    className="font-medium text-base bg-primary hover:bg-primary/90 text-white px-8 py-3"
                     onClick={() => {
                       localStorage.setItem('attemptingCreatorLogin', 'true');
                     }}
                   >
-                    {t("landing.cta.startFree")}
+                    Crea tu Fanlist gratis
                     <ArrowRight className="h-4 w-4 ml-2" />
                   </Button>
                 </Link>
+                <Button
+                  onClick={() => setIsDemoOpen(true)}
+                  size="lg"
+                  variant="outline"
+                  className="font-medium text-base px-8 py-3"
+                >
+                  {t("landing.cta.seeDemo")}
+                </Button>
               </div>
-              <Button
-                onClick={() => setIsDemoOpen(true)}
-                size="lg"
-                variant="outline"
-                className="font-medium text-base"
-              >
-                {t("landing.cta.seeDemo")}
-              </Button>
-            </div>
 
-            <div className="mt-8 text-sm text-gray-500 dark:text-gray-400">
-              {t("landing.hero.noCreditCard")}
-            </div>
+              <p className="text-sm text-gray-500 dark:text-gray-400">
+                {t("landing.hero.noCreditCard")}
+              </p>
+            </motion.div>
 
-            <div
-              ref={heroGraphicRef}
-              className="mt-16 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl shadow-xl overflow-hidden cursor-pointer"
-              onClick={() => setIsDemoOpen(true)}
+            {/* Imagen/Demo a la derecha */}
+            <motion.div
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.8, delay: 0.2 }}
+              className="lg:order-2"
             >
-              <div className="relative aspect-video overflow-hidden">
-                <img
-                  src={demoGifPath}
-                  alt="Demostración de IdeaVote"
-                  className="w-full h-full object-cover"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <div className="text-center">
-                    <p className="text-lg font-medium text-white mb-2 drop-shadow-md">
-                      {t("landing.hero.leaderboardPreview")}
-                    </p>
+              <div
+                className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl shadow-xl overflow-hidden cursor-pointer"
+                onClick={() => setIsDemoOpen(true)}
+              >
+                <div className="relative aspect-video overflow-hidden">
+                  <img
+                    src={demoGifPath}
+                    alt="Demo de Fanlist"
+                    className="w-full h-full object-cover"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent"></div>
+                  <div className="absolute inset-0 flex items-center justify-center">
                     <Button
-                      variant="secondary"
-                      size="sm"
-                      className="backdrop-blur-sm"
+                      size="lg"
+                      className="bg-white/90 text-gray-900 hover:bg-white"
                     >
-                      {t("landing.hero.seeFullDemo")}
+                      ▶ Ver Demo
                     </Button>
                   </div>
                 </div>
               </div>
-            </div>
+            </motion.div>
+          </div>
+        </div>
+      </section>
+
+      {/* Cómo Funciona */}
+      <section className="py-16 md:py-24 bg-gray-50 dark:bg-gray-900">
+        <div className="container mx-auto px-4 max-w-7xl">
+          <motion.div
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+            variants={staggerContainer}
+            className="text-center mb-16"
+          >
+            <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-gray-900 dark:text-white mb-4">
+              {t("landing.howItWorks.title")}
+            </h2>
+            <p className="text-lg text-gray-600 dark:text-gray-300">
+              {t("landing.howItWorks.subtitle")}
+            </p>
+          </motion.div>
+
+          <div className="grid md:grid-cols-3 gap-8 md:gap-12">
+            {[1, 2, 3].map((step) => (
+              <motion.div
+                key={step}
+                variants={fadeIn}
+                className="text-center"
+              >
+                <div className="w-16 h-16 bg-primary text-white rounded-full flex items-center justify-center mx-auto mb-6 text-2xl font-bold">
+                  {step}
+                </div>
+                <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">
+                  {t(`landing.howItWorks.step${step}.title`)}
+                </h3>
+                <p className="text-gray-600 dark:text-gray-300">
+                  {t(`landing.howItWorks.step${step}.description`)}
+                </p>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Beneficios */}
+      <section className="py-16 md:py-24">
+        <div className="container mx-auto px-4 max-w-7xl">
+          <motion.div
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+            variants={staggerContainer}
+            className="text-center mb-16"
+          >
+            <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-gray-900 dark:text-white mb-4">
+              {t("landing.benefits.title")}
+            </h2>
+            <p className="text-lg text-gray-600 dark:text-gray-300">
+              {t("landing.benefits.subtitle")}
+            </p>
+          </motion.div>
+
+          <div className="grid md:grid-cols-2 gap-6 md:gap-8">
+            {[1, 2, 3, 4].map((benefit) => (
+              <motion.div
+                key={benefit}
+                variants={fadeIn}
+                className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md border border-gray-200 dark:border-gray-700"
+              >
+                <div className="flex items-start gap-4">
+                  <div className="w-12 h-12 bg-primary/10 dark:bg-primary/20 rounded-lg flex items-center justify-center flex-shrink-0">
+                    <Check className="h-6 w-6 text-primary" />
+                  </div>
+                  <div>
+                    <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
+                      {t(`landing.benefits.benefit${benefit}.title`)}
+                    </h3>
+                    <p className="text-gray-600 dark:text-gray-300">
+                      {t(`landing.benefits.benefit${benefit}.description`)}
+                    </p>
+                  </div>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Testimonios */}
+      <section className="py-16 md:py-24 bg-gray-50 dark:bg-gray-900">
+        <div className="container mx-auto px-4 max-w-7xl">
+          <motion.div
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+            variants={staggerContainer}
+            className="text-center mb-16"
+          >
+            <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-gray-900 dark:text-white mb-4">
+              {t("landing.testimonials.title")}
+            </h2>
+            <p className="text-lg text-gray-600 dark:text-gray-300">
+              {t("landing.testimonials.subtitle")}
+            </p>
+          </motion.div>
+
+          <div className="grid md:grid-cols-3 gap-8">
+            {[1, 2, 3].map((testimonial) => (
+              <Testimonial
+                key={testimonial}
+                quote={t(`landing.testimonials.testimonial${testimonial}.quote`)}
+                author={t(`landing.testimonials.testimonial${testimonial}.author`)}
+                role={t(`landing.testimonials.testimonial${testimonial}.role`)}
+              />
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* CTA Final */}
+      <section className="py-16 md:py-24 bg-gray-100 dark:bg-gray-800">
+        <div className="container mx-auto px-4 max-w-7xl">
+          <motion.div
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+            variants={staggerContainer}
+            className="text-center"
+          >
+            <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-gray-900 dark:text-white mb-4">
+              ¿Listo para dejar que tu audiencia te diga qué crear?
+            </h2>
+            <p className="text-lg text-gray-600 dark:text-gray-300 mb-8 max-w-2xl mx-auto">
+              Únete a miles de creadores que ya están usando Fanlist para crear contenido que su audiencia realmente quiere ver.
+            </p>
+            <Link href="/auth?direct=true&register=true">
+              <Button
+                size="lg"
+                className="font-medium text-lg bg-primary hover:bg-primary/90 text-white px-12 py-4"
+                onClick={() => {
+                  localStorage.setItem('attemptingCreatorLogin', 'true');
+                }}
+              >
+                Empieza gratis
+                <ArrowRight className="h-5 w-5 ml-2" />
+              </Button>
+            </Link>
+            <p className="text-sm text-gray-500 dark:text-gray-400 mt-4">
+              {t("landing.hero.noCreditCard")}
+            </p>
           </motion.div>
         </div>
       </section>
 
-      {/* Stats */}
-      <section className="py-12 bg-gray-50 dark:bg-gray-900 border-y border-gray-200 dark:border-gray-800">
+      {/* Footer placeholder for future implementation */}
+      <footer className="bg-white dark:bg-gray-950 border-t border-gray-200 dark:border-gray-800 py-8">
+        <div className="container mx-auto px-4 max-w-7xl text-center">
+          <p className="text-gray-600 dark:text-gray-400">
+            {t("landing.footer.copyright")}
+          </p>
+        </div>
+      </footer>
+    </div>
+  );
+}
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
             initial="hidden"
