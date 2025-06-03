@@ -298,7 +298,7 @@ export default function LandingPage() {
             variants={staggerContainer}
             className="text-center mb-16"
           >
-            <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-purple-600 via-blue-600 to-indigo-600 mb-4">
+            <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-gray-900 dark:text-white mb-4">
               {t("landing.howItWorks.title")}
             </h2>
             <p className="text-lg text-gray-600 dark:text-gray-300">
@@ -350,7 +350,7 @@ export default function LandingPage() {
             variants={staggerContainer}
             className="text-center mb-16"
           >
-            <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-emerald-600 via-green-600 to-teal-600 mb-4">
+            <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-gray-900 dark:text-white mb-4">
               {t("landing.benefits.title")}
             </h2>
             <p className="text-lg text-gray-600 dark:text-gray-300">
@@ -452,16 +452,15 @@ export default function LandingPage() {
           >
             <motion.h2 
               variants={fadeIn}
-              className="text-2xl md:text-3xl lg:text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-violet-600 via-purple-600 to-fuchsia-600 mb-4"
+              className="text-2xl md:text-3xl lg:text-4xl font-bold text-gray-900 dark:text-white mb-4"
             >
-              ¿Listo para dejar que tu audiencia te diga qué crear?
+              {t("landing.cta.title")}
             </motion.h2>
             <motion.p 
               variants={fadeIn}
               className="text-lg text-gray-600 dark:text-gray-300 mb-8 max-w-2xl mx-auto"
             >
-              Únete a miles de creadores que ya están usando Fanlist para crear
-              contenido que su audiencia realmente quiere ver.
+              {t("landing.cta.subtitle")}
             </motion.p>
             <motion.div variants={fadeIn}>
               <Link href="/auth?direct=true&register=true">
@@ -478,7 +477,7 @@ export default function LandingPage() {
                     }}
                   >
                     <Sparkles className="h-5 w-5 mr-2" />
-                    Empieza gratis
+                    {t("landing.cta.startFree")}
                     <ArrowRight className="h-5 w-5 ml-2" />
                   </Button>
                 </motion.div>
