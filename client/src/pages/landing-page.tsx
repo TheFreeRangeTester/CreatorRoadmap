@@ -1,7 +1,9 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Link, useLocation } from "wouter";
 import { motion } from "framer-motion";
 import { useToast } from "@/hooks/use-toast";
+import gsap from "gsap";
+import { SplitText } from "gsap/SplitText";
 import {
   ArrowRight,
   Check,
@@ -42,6 +44,20 @@ const staggerContainer = {
   },
 };
 
+// Estilos para el efecto de split text
+const splitTextStyles = `
+  .char {
+    display: inline-block;
+    transform-origin: center;
+    will-change: transform;
+  }
+  
+  .word {
+    display: inline-block;
+    margin-right: 0.25em;
+  }
+`;
+
 function Testimonial({
   quote,
   author,
@@ -81,6 +97,7 @@ export default function LandingPage() {
   const { t } = useTranslation();
   const { toast } = useToast();
   const isMobile = useIsMobile();
+  const titleRef = useRef(null);
 
   useEffect(() => {
     const audienceTriedAccess = localStorage.getItem(
@@ -106,8 +123,30 @@ export default function LandingPage() {
     }
   }, [toast, t]);
 
+  useEffect(() => {
+    gsap.registerPlugin(SplitText);
+
+    if (titleRef.current) {
+      const splitTitle = new SplitText(titleRef.current, {
+        type: "chars,words",
+        charsClass: "char",
+        wordsClass: "word",
+      });
+
+      gsap.from(splitTitle.chars, {
+        opacity: 0,
+        y: 50,
+        duration: 0.5,
+        stagger: 0.02,
+        ease: "back.out(1.7)",
+        delay: 0.2,
+      });
+    }
+  }, []);
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white dark:from-gray-950 dark:to-gray-900">
+      <style>{splitTextStyles}</style>
       <DemoDialog open={isDemoOpen} onOpenChange={setIsDemoOpen} />
       <LandingHeader />
 
@@ -122,7 +161,10 @@ export default function LandingPage() {
               variants={staggerContainer}
               className="text-left"
             >
-              <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-gray-900 to-gray-700 dark:from-white dark:to-gray-300 mb-4 leading-tight">
+              <h1
+                ref={titleRef}
+                className="text-3xl md:text-4xl lg:text-5xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-gray-900 to-gray-700 dark:from-white dark:to-gray-300 mb-4 leading-tight"
+              >
                 {t("landing.hero.title")}
               </h1>
 
