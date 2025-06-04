@@ -263,24 +263,24 @@ export default function SubscriptionPage() {
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2">
                     <CreditCard className="w-5 h-5" />
-                    Estado Actual
+                    {t("subscription.currentStatus")}
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                     <div>
                       <p className="text-sm text-gray-600 dark:text-gray-400">
-                        Estado
+                        {t("subscription.status")}
                       </p>
                       <p className="font-semibold">{getStatusBadge()}</p>
                     </div>
                     {user.subscriptionStatus === "trial" && (
                       <div>
                         <p className="text-sm text-gray-600 dark:text-gray-400">
-                          Días restantes
+                          {t("subscription.daysRemaining")}
                         </p>
                         <p className="font-semibold text-orange-600">
-                          {getTrialDaysLeft()} días
+                          {getTrialDaysLeft()} {t("subscription.days")}
                         </p>
                       </div>
                     )}
@@ -288,7 +288,7 @@ export default function SubscriptionPage() {
                       user.subscriptionPlan && (
                         <div>
                           <p className="text-sm text-gray-600 dark:text-gray-400">
-                            Plan
+                            {t("subscription.plan")}
                           </p>
                           <p className="font-semibold capitalize">
                             {user.subscriptionPlan}
@@ -306,7 +306,7 @@ export default function SubscriptionPage() {
                         className="text-red-600 hover:text-red-700"
                       >
                         <X className="w-4 h-4 mr-2" />
-                        Cancelar Suscripción
+                        {t("subscription.cancelSubscription")}
                       </Button>
                     </div>
                   )}
@@ -322,10 +322,10 @@ export default function SubscriptionPage() {
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2 text-primary">
                     <Zap className="w-5 h-5" />
-                    Prueba Gratuita de 14 Días
+                    {t("subscription.freeTrial.title")}
                   </CardTitle>
                   <CardDescription>
-                    Experimenta todas las funciones premium sin compromiso
+                    {t("subscription.freeTrial.description")}
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
@@ -335,7 +335,7 @@ export default function SubscriptionPage() {
                     className="w-full"
                   >
                     <Star className="w-4 h-4 mr-2" />
-                    Comenzar Trial Gratuito
+                    {t("subscription.freeTrial.startButton")}
                   </Button>
                 </CardContent>
               </Card>
@@ -365,12 +365,12 @@ export default function SubscriptionPage() {
                   >
                     <CardHeader>
                       <CardTitle className="text-center">
-                        Plan Mensual
+                        {t("subscription.plans.monthly.title")}
                       </CardTitle>
                       <div className="text-center">
                         <span className="text-3xl font-bold">$5</span>
                         <span className="text-gray-600 dark:text-gray-400">
-                          /mes
+                          {t("subscription.plans.perMonth")}
                         </span>
                       </div>
                     </CardHeader>
@@ -379,26 +379,32 @@ export default function SubscriptionPage() {
                         <li className="flex items-center gap-2">
                           <CheckCircle className="w-4 h-4 text-green-500" />
                           <span className="text-sm">
-                            Hasta 50 ideas visibles
+                            {t("subscription.plans.features.visibleIdeas")}
                           </span>
-                        </li>
-                        <li className="flex items-center gap-2">
-                          <CheckCircle className="w-4 h-4 text-green-500" />
-                          <span className="text-sm">Votos ilimitados</span>
                         </li>
                         <li className="flex items-center gap-2">
                           <CheckCircle className="w-4 h-4 text-green-500" />
                           <span className="text-sm">
-                            Sin marca de la plataforma
+                            {t("subscription.plans.features.unlimitedVotes")}
                           </span>
                         </li>
                         <li className="flex items-center gap-2">
                           <CheckCircle className="w-4 h-4 text-green-500" />
-                          <span className="text-sm">Analíticas avanzadas</span>
+                          <span className="text-sm">
+                            {t("subscription.plans.features.noBranding")}
+                          </span>
                         </li>
                         <li className="flex items-center gap-2">
                           <CheckCircle className="w-4 h-4 text-green-500" />
-                          <span className="text-sm">Soporte prioritario</span>
+                          <span className="text-sm">
+                            {t("subscription.plans.features.advancedAnalytics")}
+                          </span>
+                        </li>
+                        <li className="flex items-center gap-2">
+                          <CheckCircle className="w-4 h-4 text-green-500" />
+                          <span className="text-sm">
+                            {t("subscription.plans.features.prioritySupport")}
+                          </span>
                         </li>
                       </ul>
                       <Button
@@ -406,7 +412,7 @@ export default function SubscriptionPage() {
                         onClick={() => handleSubscribe("monthly")}
                         disabled={createCheckoutMutation.isPending}
                       >
-                        Suscribirse Mensual
+                        {t("subscription.plans.monthly.subscribe")}
                       </Button>
                     </CardContent>
                   </Card>
@@ -422,17 +428,19 @@ export default function SubscriptionPage() {
                     <CardHeader>
                       <div className="text-center mb-2">
                         <Badge className="bg-green-500 text-white">
-                          Ahorra $24/año
+                          {t("subscription.plans.yearly.saveBadge")}
                         </Badge>
                       </div>
-                      <CardTitle className="text-center">Plan Anual</CardTitle>
+                      <CardTitle className="text-center">
+                        {t("subscription.plans.yearly.title")}
+                      </CardTitle>
                       <div className="text-center">
                         <span className="text-3xl font-bold">$36</span>
                         <span className="text-gray-600 dark:text-gray-400">
-                          /año
+                          {t("subscription.plans.perYear")}
                         </span>
                         <div className="text-sm text-gray-600 dark:text-gray-400">
-                          ($3/mes)
+                          {t("subscription.plans.yearly.monthlyPrice")}
                         </div>
                       </div>
                     </CardHeader>
@@ -441,26 +449,32 @@ export default function SubscriptionPage() {
                         <li className="flex items-center gap-2">
                           <CheckCircle className="w-4 h-4 text-green-500" />
                           <span className="text-sm">
-                            Hasta 50 ideas visibles
+                            {t("subscription.plans.features.visibleIdeas")}
                           </span>
-                        </li>
-                        <li className="flex items-center gap-2">
-                          <CheckCircle className="w-4 h-4 text-green-500" />
-                          <span className="text-sm">Votos ilimitados</span>
                         </li>
                         <li className="flex items-center gap-2">
                           <CheckCircle className="w-4 h-4 text-green-500" />
                           <span className="text-sm">
-                            Sin marca de la plataforma
+                            {t("subscription.plans.features.unlimitedVotes")}
                           </span>
                         </li>
                         <li className="flex items-center gap-2">
                           <CheckCircle className="w-4 h-4 text-green-500" />
-                          <span className="text-sm">Analíticas avanzadas</span>
+                          <span className="text-sm">
+                            {t("subscription.plans.features.noBranding")}
+                          </span>
                         </li>
                         <li className="flex items-center gap-2">
                           <CheckCircle className="w-4 h-4 text-green-500" />
-                          <span className="text-sm">Soporte prioritario</span>
+                          <span className="text-sm">
+                            {t("subscription.plans.features.advancedAnalytics")}
+                          </span>
+                        </li>
+                        <li className="flex items-center gap-2">
+                          <CheckCircle className="w-4 h-4 text-green-500" />
+                          <span className="text-sm">
+                            {t("subscription.plans.features.prioritySupport")}
+                          </span>
                         </li>
                       </ul>
                       <Button
@@ -468,7 +482,7 @@ export default function SubscriptionPage() {
                         onClick={() => handleSubscribe("yearly")}
                         disabled={createCheckoutMutation.isPending}
                       >
-                        Suscribirse Anual
+                        {t("subscription.plans.yearly.subscribe")}
                       </Button>
                     </CardContent>
                   </Card>
@@ -483,26 +497,32 @@ export default function SubscriptionPage() {
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2">
                     <Crown className="w-5 h-5 text-yellow-500" />
-                    Funciones Premium Activas
+                    {t("subscription.premiumFeatures.title")}
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div className="flex items-center gap-3 p-3 bg-green-50 dark:bg-green-900/20 rounded-lg">
                       <CheckCircle className="w-5 h-5 text-green-500" />
-                      <span>Hasta 50 ideas visibles</span>
+                      <span>
+                        {t("subscription.plans.features.visibleIdeas")}
+                      </span>
                     </div>
                     <div className="flex items-center gap-3 p-3 bg-green-50 dark:bg-green-900/20 rounded-lg">
                       <CheckCircle className="w-5 h-5 text-green-500" />
-                      <span>Votos ilimitados</span>
+                      <span>
+                        {t("subscription.plans.features.unlimitedVotes")}
+                      </span>
                     </div>
                     <div className="flex items-center gap-3 p-3 bg-green-50 dark:bg-green-900/20 rounded-lg">
                       <CheckCircle className="w-5 h-5 text-green-500" />
-                      <span>Sin marca de la plataforma</span>
+                      <span>{t("subscription.plans.features.noBranding")}</span>
                     </div>
                     <div className="flex items-center gap-3 p-3 bg-green-50 dark:bg-green-900/20 rounded-lg">
                       <CheckCircle className="w-5 h-5 text-green-500" />
-                      <span>Analíticas avanzadas</span>
+                      <span>
+                        {t("subscription.plans.features.advancedAnalytics")}
+                      </span>
                     </div>
                   </div>
                 </CardContent>
