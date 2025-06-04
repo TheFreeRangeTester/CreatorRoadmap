@@ -333,12 +333,12 @@
   },
   "dashboard": {
     "welcome": "Hello",
-    "welcomeSubtitle": "Welcome to your ideas panel",
-    "creatorDashboard": "Idea Creation",
+    "welcomeSubtitle": "Welcome to your ideas dashboard",
+    "creatorDashboard": "Creator Dashboard",
     "topIdeas": "Idea Management",
     "voteDescription": "This is what your audience is looking for 🙌🏻",
     "yourPublicProfile": "Your Public Profile",
-    "publicView": "Public View",
+    "publicView": "Public Link",
     "shareProfileDesc": "This link directs your followers to the public version of your profile, where they can view and vote on your content ideas.",
     "aboutPublicProfile": "About your public profile:",
     "publicProfileVisibility": "This page is visible to anyone with the link, even if they don't have an account on the platform.",
@@ -349,7 +349,11 @@
     "sharingTips": "Sharing tips:",
     "shareTip1": "Share your link on social media to get more votes",
     "shareTip2": "Include the link in your videos or posts description",
-    "shareTip3": "Encourage your audience to vote to influence your next content"
+    "shareTip3": "Encourage your audience to vote to influence your next content",
+    "myIdeas": "My Ideas",
+    "published": "Ideas",
+    "suggested": "Suggested",
+    "suggestions": "Suggested"
   },
   "ideaForm": {
     "addTitle": "Add new idea",

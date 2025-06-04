@@ -334,7 +334,7 @@
   "dashboard": {
     "welcome": "Hola",
     "welcomeSubtitle": "Bienvenido a tu panel de ideas",
-    "creatorDashboard": "Creación de Ideas",
+    "creatorDashboard": "Panel de Creador",
     "topIdeas": "Gestión de Ideas",
     "voteDescription": "Esto es lo que tu audiencia está buscando 🙌🏻",
     "yourPublicProfile": "Tu Perfil Público",
@@ -349,7 +349,11 @@
     "sharingTips": "Consejos para compartir:",
     "shareTip1": "Comparte tu enlace en redes sociales para obtener más votos",
     "shareTip2": "Incluye el enlace en la descripción de tus videos o posts",
-    "shareTip3": "Anima a tu audiencia a votar para influir en tu próximo contenido"
+    "shareTip3": "Anima a tu audiencia a votar para influir en tu próximo contenido",
+    "myIdeas": "Mis Ideas",
+    "published": "Ideas",
+    "suggested": "Sugeridas",
+    "suggestions": "Sugeridas"
   },
   "ideaForm": {
     "addTitle": "Agregar nueva idea",
