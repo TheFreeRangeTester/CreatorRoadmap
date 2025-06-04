@@ -332,6 +332,8 @@
     "rejectErrorDesc": "No se pudo rechazar la idea. Por favor intenta de nuevo."
   },
   "dashboard": {
+    "welcome": "Hola",
+    "welcomeSubtitle": "Bienvenido a tu panel de ideas",
     "topIdeas": "Ideas Principales",
     "voteDescription": "Esto es lo que tu audiencia está buscando 🙌🏻",
     "yourPublicProfile": "Tu Perfil Público",
