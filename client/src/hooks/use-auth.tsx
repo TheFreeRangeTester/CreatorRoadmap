@@ -146,13 +146,34 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         // Clear the flag
         localStorage.removeItem('attemptingCreatorLogin');
         
-        // Show error message for audience trying to access creator features
-        toast({
-          title: i18n.t("auth.notCreatorAccount", "Not a creator account"),
-          description: i18n.t("auth.notCreatorAccountDesc", "No es una cuenta de creador. Por favor registrate como creador si querés usar las funciones de Fanlist para creadores."),
-          variant: "destructive",
-          duration: 6000,
+        // Store flag for landing page to show error
+        localStorage.setItem('audienceTriedCreatorAccess', 'true');
+        
+        // Immediately logout the audience user to prevent limbo state
+        fetch("/api/logout", {
+          method: "POST",
+          headers: {
+            "X-Requested-With": "XMLHttpRequest"
+          },
+          credentials: "same-origin"
+        }).then(() => {
+          // Clear user from cache
+          queryClient.setQueryData(["/api/user"], null);
+          queryClient.invalidateQueries({ queryKey: ["/api/user"] });
+          
+          // Redirect to landing page where error will be shown
+          window.location.href = "/";
+        }).catch((error) => {
+          console.error("Auto-logout failed:", error);
+          // Fallback: show error and let user manually logout
+          toast({
+            title: i18n.t("auth.notCreatorAccount", "Not a creator account"),
+            description: i18n.t("auth.notCreatorAccountDesc", "No es una cuenta de creador. Por favor registrate como creador si querés usar las funciones de Fanlist para creadores."),
+            variant: "destructive",
+            duration: 8000,
+          });
         });
+        
         return; // Don't show success message or redirect
       }
       
