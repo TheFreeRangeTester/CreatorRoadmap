@@ -41,22 +41,22 @@ export function ThemeToggle() {
           <span className="sr-only">Toggle theme</span>
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end" className="z-40">
+      <DropdownMenuContent align="end" className="z-40 w-10 p-1">
         <DropdownMenuItem
           onClick={() => setTheme("light")}
-          className="cursor-pointer"
+          className="cursor-pointer h-8 justify-center"
         >
           <Sun className="h-4 w-4 text-amber-500" />
         </DropdownMenuItem>
         <DropdownMenuItem
           onClick={() => setTheme("dark")}
-          className="cursor-pointer"
+          className="cursor-pointer h-8 justify-center"
         >
           <Moon className="h-4 w-4 text-blue-400" />
         </DropdownMenuItem>
         <DropdownMenuItem
           onClick={() => setTheme("system")}
-          className="cursor-pointer"
+          className="cursor-pointer h-8 justify-center"
         >
           <Laptop className="h-4 w-4 text-slate-600" />
         </DropdownMenuItem>
