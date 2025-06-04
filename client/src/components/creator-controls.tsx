@@ -1,7 +1,19 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { PlusCircle, Crown, Sparkles, CheckCircle, Upload, Lock } from "lucide-react";
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import {
+  PlusCircle,
+  Crown,
+  Sparkles,
+  CheckCircle,
+  Upload,
+  Lock,
+} from "lucide-react";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { useTranslation } from "react-i18next";
 import { useAuth } from "@/hooks/use-auth";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
@@ -65,15 +77,25 @@ export default function CreatorControls({ onAddIdea }: CreatorControlsProps) {
     queryClient.invalidateQueries({ queryKey: ["/api/ideas"] });
     toast({
       title: t("csvImport.success.title", "Ideas imported successfully"),
-      description: t("csvImport.success.description", "{{count}} ideas have been imported to your dashboard", { count }),
+      description: t(
+        "csvImport.success.description",
+        "{{count}} ideas have been imported to your dashboard",
+        { count }
+      ),
     });
   };
 
   const handleCSVImportClick = () => {
-    if (user?.subscriptionStatus !== "premium" && user?.subscriptionStatus !== "trial") {
+    if (
+      user?.subscriptionStatus !== "premium" &&
+      user?.subscriptionStatus !== "trial"
+    ) {
       toast({
         title: t("csvImport.proRequired.title", "Pro Feature"),
-        description: t("csvImport.proRequired.description", "CSV import is available for Pro users only. Upgrade to access this feature."),
+        description: t(
+          "csvImport.proRequired.description",
+          "CSV import is available for Pro users only. Upgrade to access this feature."
+        ),
         variant: "destructive",
       });
       return;
@@ -81,7 +103,9 @@ export default function CreatorControls({ onAddIdea }: CreatorControlsProps) {
     setCsvImportOpen(true);
   };
 
-  const isProUser = user?.subscriptionStatus === "premium" || user?.subscriptionStatus === "trial";
+  const isProUser =
+    user?.subscriptionStatus === "premium" ||
+    user?.subscriptionStatus === "trial";
 
   // Determinar qué botón mostrar basado en el estado del usuario
   const renderSubscriptionButton = () => {
@@ -99,22 +123,15 @@ export default function CreatorControls({ onAddIdea }: CreatorControlsProps) {
       );
     }
 
-    // Si está en trial, mostrar estado
+    // Si está en trial, mostrar botón de actualizar a premium
     if (user.subscriptionStatus === "trial") {
       return (
-        <div className="flex flex-col sm:flex-row sm:items-center gap-2">
-          <div className="flex items-center gap-2 text-sm text-blue-600 dark:text-blue-400">
-            <Sparkles className="w-4 h-4" />
-            <span className="font-medium">
-              {t("subscription.badges.freeTrial")}
-            </span>
-          </div>
-          <Link to="/subscription">
-            <Button size="sm" variant="outline" className="text-xs">
-              {t("subscription.trial.upgradeButton")}
-            </Button>
-          </Link>
-        </div>
+        <Link to="/subscription">
+          <Button className="bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white">
+            <Crown className="w-4 h-4 mr-2" />
+            {t("subscription.trial.upgradeButton")}
+          </Button>
+        </Link>
       );
     }
 
@@ -174,7 +191,7 @@ export default function CreatorControls({ onAddIdea }: CreatorControlsProps) {
               {t("ideas.addIdea", "Add New Idea")}
             </span>
           </Button>
-          
+
           <TooltipProvider>
             <Tooltip>
               <TooltipTrigger asChild>
@@ -182,7 +199,7 @@ export default function CreatorControls({ onAddIdea }: CreatorControlsProps) {
                   onClick={handleCSVImportClick}
                   variant="outline"
                   className={`flex-1 sm:flex-none border-primary/20 hover:bg-primary/5 hover:border-primary/40 ${
-                    !isProUser ? 'opacity-75' : ''
+                    !isProUser ? "opacity-75" : ""
                   }`}
                   size="lg"
                 >
@@ -198,7 +215,12 @@ export default function CreatorControls({ onAddIdea }: CreatorControlsProps) {
               </TooltipTrigger>
               {!isProUser && (
                 <TooltipContent>
-                  <p>{t("csvImport.proRequired.tooltip", "Pro exclusive feature")}</p>
+                  <p>
+                    {t(
+                      "csvImport.proRequired.tooltip",
+                      "Pro exclusive feature"
+                    )}
+                  </p>
                 </TooltipContent>
               )}
             </Tooltip>
