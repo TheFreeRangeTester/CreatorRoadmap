@@ -345,8 +345,7 @@ export default function SubscriptionPage() {
           {/* Pricing Plans */}
           {user &&
             (user.subscriptionStatus === "free" ||
-              (user.subscriptionStatus === "trial" &&
-                getTrialDaysLeft() <= 3)) && (
+              user.subscriptionStatus === "trial") && (
               <motion.div variants={fadeIn}>
                 <div className="flex justify-center mb-8">
                   <BillingToggle
@@ -462,14 +461,6 @@ export default function SubscriptionPage() {
                         <li className="flex items-center gap-2">
                           <CheckCircle className="w-4 h-4 text-green-500" />
                           <span className="text-sm">Soporte prioritario</span>
-                        </li>
-                        <li className="flex items-center gap-2">
-                          <CheckCircle className="w-4 h-4 text-green-500" />
-                          <span className="text-sm">Exportación CSV</span>
-                        </li>
-                        <li className="flex items-center gap-2">
-                          <CheckCircle className="w-4 h-4 text-green-500" />
-                          <span className="text-sm">Dominio personalizado</span>
                         </li>
                       </ul>
                       <Button
