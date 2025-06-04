@@ -1,6 +1,11 @@
 import { Moon, Sun, Laptop } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { useTheme } from "next-themes";
 import { useEffect, useState } from "react";
 
@@ -37,17 +42,23 @@ export function ThemeToggle() {
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="z-40">
-        <DropdownMenuItem onClick={() => setTheme("light")} className="cursor-pointer">
-          <Sun className="h-4 w-4 mr-2 text-amber-500" />
-          <span>Claro</span>
+        <DropdownMenuItem
+          onClick={() => setTheme("light")}
+          className="cursor-pointer"
+        >
+          <Sun className="h-4 w-4 text-amber-500" />
         </DropdownMenuItem>
-        <DropdownMenuItem onClick={() => setTheme("dark")} className="cursor-pointer">
-          <Moon className="h-4 w-4 mr-2 text-blue-400" />
-          <span>Oscuro</span>
+        <DropdownMenuItem
+          onClick={() => setTheme("dark")}
+          className="cursor-pointer"
+        >
+          <Moon className="h-4 w-4 text-blue-400" />
         </DropdownMenuItem>
-        <DropdownMenuItem onClick={() => setTheme("system")} className="cursor-pointer">
-          <Laptop className="h-4 w-4 mr-2 text-slate-600" />
-          <span>Sistema</span>
+        <DropdownMenuItem
+          onClick={() => setTheme("system")}
+          className="cursor-pointer"
+        >
+          <Laptop className="h-4 w-4 text-slate-600" />
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
