@@ -486,6 +486,26 @@
     },
     "premiumFeatures": {
       "title": "Funciones Premium Activas"
+    },
+    "trial": {
+      "unlockFeatures": "Desbloquea Funciones Premium",
+      "upgradeButton": "Actualizar a Premium",
+      "activateButton": "🎉 Activar Trial Gratuito de 14 Días",
+      "activating": "Activando...",
+      "upgrading": "Actualizando...",
+      "unlockFeatures": "Desbloquea todas las funciones premium",
+      "noCommitment": "Sin compromiso, cancela cuando quieras"
+    },
+    "features": {
+      "upToIdeas": "Hasta 50 ideas visibles",
+      "unlimitedVotes": "Votos ilimitados",
+      "embedLeaderboard": "Incrustar leaderboard",
+      "noBranding": "Sin marca de la plataforma",
+      "csvImport": "Importación masiva CSV",
+      "advancedAnalytics": "Analíticas avanzadas",
+      "prioritySupport": "Soporte prioritario",
+      "csvExport": "Exportación CSV",
+      "customDomain": "Soporte de dominio personalizado"
     }
   },
   "profile": {

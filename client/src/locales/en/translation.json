@@ -479,6 +479,26 @@
     },
     "premiumFeatures": {
       "title": "Active Premium Features"
+    },
+    "trial": {
+      "unlockFeatures": "Unlock Premium Features",
+      "upgradeButton": "Upgrade to Premium",
+      "activateButton": "🎉 Activate 14-Day Free Trial",
+      "activating": "Activating...",
+      "upgrading": "Upgrading...",
+      "unlockFeatures": "Unlock all premium features",
+      "noCommitment": "No commitment, cancel anytime"
+    },
+    "features": {
+      "upToIdeas": "Up to 50 visible ideas",
+      "unlimitedVotes": "Unlimited votes",
+      "embedLeaderboard": "Embed leaderboard",
+      "noBranding": "No platform branding",
+      "csvImport": "CSV bulk import",
+      "advancedAnalytics": "Advanced analytics",
+      "prioritySupport": "Priority support",
+      "csvExport": "CSV export",
+      "customDomain": "Custom domain support"
     }
   },
   "profile": {
