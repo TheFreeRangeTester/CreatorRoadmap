@@ -334,6 +334,7 @@
   "dashboard": {
     "welcome": "Hello",
     "welcomeSubtitle": "Welcome to your ideas panel",
+    "creatorDashboard": "Idea Creation",
     "topIdeas": "Top Ideas",
     "voteDescription": "This is what your audience is looking for 🙌🏻",
     "yourPublicProfile": "Your Public Profile",
