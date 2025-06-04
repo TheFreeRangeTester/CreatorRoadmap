@@ -178,7 +178,10 @@ export const MobileMenu = ({
                         <Button
                           variant="outline"
                           className="w-full justify-center gap-3 h-14 text-base font-medium border-2 border-gray-300 dark:border-gray-600 hover:border-blue-500 dark:hover:border-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/20"
-                          onClick={toggleMenu}
+                          onClick={() => {
+                            localStorage.setItem('attemptingCreatorLogin', 'true');
+                            toggleMenu();
+                          }}
                         >
                           <LogIn className="h-5 w-5" />
                           {t("landing.cta.login")}

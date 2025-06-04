@@ -90,9 +90,10 @@ export default function AuthPage() {
       const attemptingCreatorLogin = localStorage.getItem('attemptingCreatorLogin') === 'true';
       
       if ((isDirect || attemptingCreatorLogin) && user.userRole === 'audience') {
-        // Clear any flags
+        // This case should be handled by the auth hook's auto-logout
+        // but if we reach here, clear flags and redirect
         localStorage.removeItem('attemptingCreatorLogin');
-        // Redirect to landing page with error message already shown
+        localStorage.setItem('audienceTriedCreatorAccess', 'true');
         navigate('/');
         return;
       }
@@ -131,7 +132,7 @@ export default function AuthPage() {
   function onRegisterSubmit(values: { 
     username: string; 
     password: string; 
-    email?: string;
+    email: string;
     userRole: "creator" | "audience";
   }) {
     registerMutation.mutate(values);
