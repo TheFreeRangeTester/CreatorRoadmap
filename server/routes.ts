@@ -1005,8 +1005,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
           userId: userId.toString(),
           plan: plan
         },
-        subscription_data: {
-          trial_period_days: user.hasUsedTrial ? 0 : 14,
+        subscription_data: user.hasUsedTrial ? {
+          metadata: {
+            userId: userId.toString(),
+            plan: plan
+          }
+        } : {
+          trial_period_days: 14,
           metadata: {
             userId: userId.toString(),
             plan: plan
