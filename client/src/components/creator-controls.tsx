@@ -237,53 +237,57 @@ export default function CreatorControls({ onAddIdea }: CreatorControlsProps) {
         </div>
 
         {/* Subscription promotion row - mobile optimized */}
-        {user && user.subscriptionStatus !== "premium" && (
-          <div className="flex flex-col gap-3 p-4 bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-900/20 dark:to-purple-900/20 rounded-lg border border-blue-200 dark:border-blue-700">
-            <div className="flex items-start gap-3">
-              <div className="p-2 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg">
-                <Sparkles className="w-5 h-5 text-white" />
-              </div>
-              <div className="flex-1">
-                <p className="text-sm font-semibold text-gray-900 dark:text-white leading-tight">
-                  {t("subscription.trial.unlockFeatures")}
-                </p>
-                <div className="mt-2 grid grid-cols-2 gap-2">
-                  <div className="flex items-center gap-1.5">
-                    <CheckCircle className="w-4 h-4 text-green-500" />
-                    <span className="text-xs text-gray-600 dark:text-gray-300">
-                      {t("subscription.upToIdeas")}
-                    </span>
-                  </div>
-                  <div className="flex items-center gap-1.5">
-                    <CheckCircle className="w-4 h-4 text-green-500" />
-                    <span className="text-xs text-gray-600 dark:text-gray-300">
-                      {t("subscription.unlimitedVotes")}
-                    </span>
-                  </div>
-                  <div className="flex items-center gap-1.5">
-                    <CheckCircle className="w-4 h-4 text-green-500" />
-                    <span className="text-xs text-gray-600 dark:text-gray-300">
-                      {t("subscription.embedLeaderboard")}
-                    </span>
-                  </div>
-                  <div className="flex items-center gap-1.5">
-                    <CheckCircle className="w-4 h-4 text-green-500" />
-                    <span className="text-xs text-gray-600 dark:text-gray-300">
-                      {t("subscription.noBranding")}
-                    </span>
-                  </div>
-                  <div className="flex items-center gap-1.5">
-                    <CheckCircle className="w-4 h-4 text-green-500" />
-                    <span className="text-xs text-gray-600 dark:text-gray-300">
-                      {t("subscription.csvImport")}
-                    </span>
+        {user &&
+          (user.subscriptionStatus === "free" ||
+            user.subscriptionStatus === "trial") && (
+            <div className="flex flex-col gap-3 p-4 bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-900/20 dark:to-purple-900/20 rounded-lg border border-blue-200 dark:border-blue-700">
+              <div className="flex items-start gap-3">
+                <div className="p-2 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg">
+                  <Sparkles className="w-5 h-5 text-white" />
+                </div>
+                <div className="flex-1">
+                  <p className="text-sm font-semibold text-gray-900 dark:text-white leading-tight">
+                    {t("subscription.trial.unlockFeatures")}
+                  </p>
+                  <div className="mt-2 grid grid-cols-2 gap-2">
+                    <div className="flex items-center gap-1.5">
+                      <CheckCircle className="w-4 h-4 text-green-500" />
+                      <span className="text-xs text-gray-600 dark:text-gray-300">
+                        {t("subscription.upToIdeas")}
+                      </span>
+                    </div>
+                    <div className="flex items-center gap-1.5">
+                      <CheckCircle className="w-4 h-4 text-green-500" />
+                      <span className="text-xs text-gray-600 dark:text-gray-300">
+                        {t("subscription.unlimitedVotes")}
+                      </span>
+                    </div>
+                    <div className="flex items-center gap-1.5">
+                      <CheckCircle className="w-4 h-4 text-green-500" />
+                      <span className="text-xs text-gray-600 dark:text-gray-300">
+                        {t("subscription.embedLeaderboard")}
+                      </span>
+                    </div>
+                    <div className="flex items-center gap-1.5">
+                      <CheckCircle className="w-4 h-4 text-green-500" />
+                      <span className="text-xs text-gray-600 dark:text-gray-300">
+                        {t("subscription.noBranding")}
+                      </span>
+                    </div>
+                    <div className="flex items-center gap-1.5">
+                      <CheckCircle className="w-4 h-4 text-green-500" />
+                      <span className="text-xs text-gray-600 dark:text-gray-300">
+                        {t("subscription.csvImport")}
+                      </span>
+                    </div>
                   </div>
                 </div>
               </div>
+              <div className="flex justify-end">
+                {renderSubscriptionButton()}
+              </div>
             </div>
-            <div className="flex justify-end">{renderSubscriptionButton()}</div>
-          </div>
-        )}
+          )}
       </div>
 
       {/* CSV Import Modal */}
