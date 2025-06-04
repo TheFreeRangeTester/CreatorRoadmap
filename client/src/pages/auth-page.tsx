@@ -132,7 +132,7 @@ export default function AuthPage() {
   function onRegisterSubmit(values: { 
     username: string; 
     password: string; 
-    email?: string;
+    email: string;
     userRole: "creator" | "audience";
   }) {
     registerMutation.mutate(values);

@@ -7,6 +7,7 @@ import {
 } from "@tanstack/react-query";
 import { insertUserSchema, InsertUser } from "@shared/schema";
 import { useToast } from "@/hooks/use-toast";
+import { useLocation } from "wouter";
 import i18n from "../i18n";
 
 // Define the structure of our user object
@@ -55,6 +56,7 @@ export function useAuth() {
 export function AuthProvider({ children }: { children: ReactNode }) {
   const { toast } = useToast();
   const queryClient = useQueryClient();
+  const [, navigate] = useLocation();
   
   // Get current user
   const {
@@ -149,7 +151,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         // Store flag for landing page to show error
         localStorage.setItem('audienceTriedCreatorAccess', 'true');
         
-        // Immediately logout the audience user to prevent limbo state
+        // Show immediate error message without blocking
+        toast({
+          title: i18n.t("auth.notCreatorAccount", "No es una cuenta de creador"),
+          description: i18n.t("auth.notCreatorAccountDesc", "No es una cuenta de creador. Por favor registrate como creador si querés usar las funciones de Fanlist para creadores."),
+          variant: "destructive",
+          duration: 8000,
+        });
+
+        // Perform logout in background without page reload
         fetch("/api/logout", {
           method: "POST",
           headers: {
@@ -157,21 +167,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           },
           credentials: "same-origin"
         }).then(() => {
-          // Clear user from cache
+          // Clear user from cache smoothly
           queryClient.setQueryData(["/api/user"], null);
           queryClient.invalidateQueries({ queryKey: ["/api/user"] });
           
-          // Redirect to landing page where error will be shown
-          window.location.href = "/";
+          // Navigate smoothly to landing page using React navigation
+          setTimeout(() => {
+            navigate('/');
+          }, 100);
         }).catch((error) => {
           console.error("Auto-logout failed:", error);
-          // Fallback: show error and let user manually logout
-          toast({
-            title: i18n.t("auth.notCreatorAccount", "Not a creator account"),
-            description: i18n.t("auth.notCreatorAccountDesc", "No es una cuenta de creador. Por favor registrate como creador si querés usar las funciones de Fanlist para creadores."),
-            variant: "destructive",
-            duration: 8000,
-          });
         });
         
         return; // Don't show success message or redirect
