@@ -133,12 +133,13 @@ export default function CreatorControls({ onAddIdea }: CreatorControlsProps) {
               {t("subscription.badges.freeTrial")}
             </span>
           </div>
-          <Link to="/subscription">
-            <Button className="bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white">
-              <Crown className="w-4 h-4 mr-2" />
-              {t("subscription.trial.upgradeButton")}
-            </Button>
-          </Link>
+          <Button
+            onClick={() => (window.location.href = "/subscription")}
+            className="bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white"
+          >
+            <Crown className="w-4 h-4 mr-2" />
+            {t("subscription.trial.upgradeButton")}
+          </Button>
         </div>
       );
     }
