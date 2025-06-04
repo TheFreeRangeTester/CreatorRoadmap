@@ -123,15 +123,23 @@ export default function CreatorControls({ onAddIdea }: CreatorControlsProps) {
       );
     }
 
-    // Si está en trial, mostrar botón de actualizar a premium
+    // Si está en trial, mostrar estado y botón de actualizar a premium
     if (user.subscriptionStatus === "trial") {
       return (
-        <Link to="/subscription">
-          <Button className="bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white">
-            <Crown className="w-4 h-4 mr-2" />
-            {t("subscription.trial.upgradeButton")}
-          </Button>
-        </Link>
+        <div className="flex flex-col sm:flex-row sm:items-center gap-2">
+          <div className="flex items-center gap-2 text-sm text-blue-600 dark:text-blue-400">
+            <Sparkles className="w-4 h-4" />
+            <span className="font-medium">
+              {t("subscription.badges.freeTrial")}
+            </span>
+          </div>
+          <Link to="/subscription">
+            <Button className="bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white">
+              <Crown className="w-4 h-4 mr-2" />
+              {t("subscription.trial.upgradeButton")}
+            </Button>
+          </Link>
+        </div>
       );
     }
 

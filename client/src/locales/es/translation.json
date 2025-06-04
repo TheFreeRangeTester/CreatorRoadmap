@@ -472,9 +472,8 @@
     "csvExport": "Exportación CSV",
     "customDomain": "Soporte de dominio personalizado",
     "badges": {
-      "premium": "Premium",
       "freeTrial": "Trial Gratuito",
-      "freePlan": "Plan Gratuito"
+      "premium": "Premium"
     },
     "paymentSuccess": {
       "title": "¡Pago Exitoso!",
@@ -500,12 +499,9 @@
       "dashboard": "Dashboard"
     },
     "trial": {
-      "activateButton": "🎉 Activar 14 Días de Prueba Gratis",
-      "upgradeButton": "🚀 Actualizar a Premium",
+      "activateButton": "Activar Trial Gratuito",
       "activating": "Activando...",
-      "upgrading": "Actualizando...",
-      "unlockFeatures": "Desbloquea todas las funciones premium",
-      "noCommitment": "Sin compromiso, cancela en cualquier momento"
+      "upgradeButton": "Actualizar a Premium"
     },
     "embedLeaderboard": "Incrustar el leaderboard",
     "noBranding": "Sin marca Fanlist"
