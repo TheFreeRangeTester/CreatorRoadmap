@@ -22,6 +22,7 @@ import { Link } from "wouter";
 import type { UserResponse } from "@shared/schema";
 import { SharingTipsTooltip } from "./sharing-tips-tooltip";
 import CSVImportModal from "./csv-import-modal";
+import { hasActivePremiumAccess, getPremiumAccessStatus } from "@shared/premium-utils";
 
 interface CreatorControlsProps {
   onAddIdea: () => void;
@@ -86,16 +87,36 @@ export default function CreatorControls({ onAddIdea }: CreatorControlsProps) {
   };
 
   const handleCSVImportClick = () => {
-    if (
-      user?.subscriptionStatus !== "premium" &&
-      user?.subscriptionStatus !== "trial"
-    ) {
+    if (!user) return;
+    
+    const premiumStatus = getPremiumAccessStatus(user);
+    
+    if (!premiumStatus.hasAccess) {
+      let description = "";
+      
+      switch (premiumStatus.reason) {
+        case 'trial_expired':
+          description = t(
+            "csvImport.trialExpired.description",
+            "Your free trial has expired. Upgrade to continue using CSV import."
+          );
+          break;
+        case 'premium_expired':
+          description = t(
+            "csvImport.premiumExpired.description", 
+            "Your premium subscription has expired. Renew to continue using CSV import."
+          );
+          break;
+        default:
+          description = t(
+            "csvImport.proRequired.description",
+            "CSV import is available for Pro users only. Upgrade to access this feature."
+          );
+      }
+      
       toast({
         title: t("csvImport.proRequired.title", "Pro Feature"),
-        description: t(
-          "csvImport.proRequired.description",
-          "CSV import is available for Pro users only. Upgrade to access this feature."
-        ),
+        description,
         variant: "destructive",
       });
       return;
@@ -103,16 +124,16 @@ export default function CreatorControls({ onAddIdea }: CreatorControlsProps) {
     setCsvImportOpen(true);
   };
 
-  const isProUser =
-    user?.subscriptionStatus === "premium" ||
-    user?.subscriptionStatus === "trial";
+  const isProUser = user ? hasActivePremiumAccess(user) : false;
 
   // Determinar qué botón mostrar basado en el estado del usuario
   const renderSubscriptionButton = () => {
     if (userLoading || !user) return null;
 
-    // Si ya es premium, no mostrar botón
-    if (user.subscriptionStatus === "premium") {
+    const premiumStatus = getPremiumAccessStatus(user);
+
+    // Si tiene acceso premium activo
+    if (premiumStatus.hasAccess && premiumStatus.reason === "premium") {
       return (
         <div className="flex items-center gap-2 text-sm text-green-600 dark:text-green-400">
           <Crown className="w-4 h-4" />
@@ -123,19 +144,61 @@ export default function CreatorControls({ onAddIdea }: CreatorControlsProps) {
       );
     }
 
-    // Si está en trial, mostrar estado y botón de actualizar a premium
-    if (user.subscriptionStatus === "trial") {
+    // Si está en trial activo, mostrar días restantes
+    if (premiumStatus.hasAccess && premiumStatus.reason === "trial") {
       return (
         <div className="flex flex-col sm:flex-row sm:items-center gap-2">
           <div className="flex items-center gap-2 text-sm text-blue-600 dark:text-blue-400">
             <Sparkles className="w-4 h-4" />
             <span className="font-medium">
-              {t("subscription.badges.freeTrial")}
+              {t("subscription.badges.freeTrial")} ({premiumStatus.daysRemaining} días restantes)
             </span>
           </div>
           <Button
             onClick={() => (window.location.href = "/subscription")}
             className="bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white"
+          >
+            <Crown className="w-4 h-4 mr-2" />
+            {t("subscription.trial.upgradeButton")}
+          </Button>
+        </div>
+      );
+    }
+
+    // Si el trial expiró, mostrar mensaje de expiración
+    if (premiumStatus.reason === "trial_expired") {
+      return (
+        <div className="flex flex-col sm:flex-row sm:items-center gap-2">
+          <div className="flex items-center gap-2 text-sm text-red-600 dark:text-red-400">
+            <Sparkles className="w-4 h-4" />
+            <span className="font-medium">
+              {t("subscription.badges.trialExpired", "Trial Expired")}
+            </span>
+          </div>
+          <Button
+            onClick={() => (window.location.href = "/subscription")}
+            className="bg-gradient-to-r from-red-500 to-pink-600 hover:from-red-600 hover:to-pink-700 text-white"
+          >
+            <Crown className="w-4 h-4 mr-2" />
+            {t("subscription.trial.upgradeButton")}
+          </Button>
+        </div>
+      );
+    }
+
+    // Si premium expiró, mostrar mensaje de expiración
+    if (premiumStatus.reason === "premium_expired") {
+      return (
+        <div className="flex flex-col sm:flex-row sm:items-center gap-2">
+          <div className="flex items-center gap-2 text-sm text-orange-600 dark:text-orange-400">
+            <Crown className="w-4 h-4" />
+            <span className="font-medium">
+              {t("subscription.badges.premiumExpired", "Premium Expired")}
+            </span>
+          </div>
+          <Button
+            onClick={() => (window.location.href = "/subscription")}
+            className="bg-gradient-to-r from-orange-500 to-red-600 hover:from-orange-600 hover:to-red-700 text-white"
           >
             <Crown className="w-4 h-4 mr-2" />
             {t("subscription.trial.upgradeButton")}
