@@ -169,6 +169,7 @@ export default function CSVImportModal({
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
+            'X-CSV-Import': 'true',
           },
           credentials: 'include',
           body: JSON.stringify({

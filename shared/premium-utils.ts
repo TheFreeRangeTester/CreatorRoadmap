@@ -1,10 +1,15 @@
-import type { User, UserResponse } from "./schema";
+// Tipo base para las propiedades de suscripción necesarias
+type SubscriptionUser = {
+  subscriptionStatus: "free" | "trial" | "premium";
+  trialEndDate?: Date | null;
+  subscriptionEndDate?: Date | null;
+};
 
 /**
  * Verifica si un usuario tiene acceso activo a funcionalidades premium
  * Considera el estado de suscripción y fechas de expiración
  */
-export function hasActivePremiumAccess(user: User | UserResponse): boolean {
+export function hasActivePremiumAccess(user: SubscriptionUser | null | undefined): boolean {
   if (!user) return false;
 
   const now = new Date();
@@ -33,7 +38,7 @@ export function hasActivePremiumAccess(user: User | UserResponse): boolean {
 /**
  * Obtiene los días restantes del trial
  */
-export function getTrialDaysRemaining(user: User | UserResponse): number {
+export function getTrialDaysRemaining(user: SubscriptionUser | null | undefined): number {
   if (!user?.trialEndDate || user.subscriptionStatus !== "trial") {
     return 0;
   }
@@ -49,7 +54,7 @@ export function getTrialDaysRemaining(user: User | UserResponse): number {
 /**
  * Verifica si el trial ha expirado
  */
-export function isTrialExpired(user: User | UserResponse): boolean {
+export function isTrialExpired(user: SubscriptionUser | null | undefined): boolean {
   if (!user?.trialEndDate || user.subscriptionStatus !== "trial") {
     return false;
   }
@@ -60,8 +65,8 @@ export function isTrialExpired(user: User | UserResponse): boolean {
 /**
  * Verifica si la suscripción premium ha expirado
  */
-export function isPremiumExpired(user: User | UserResponse): boolean {
-  if (user.subscriptionStatus !== "premium" || !user.subscriptionEndDate) {
+export function isPremiumExpired(user: SubscriptionUser | null | undefined): boolean {
+  if (!user || user.subscriptionStatus !== "premium" || !user.subscriptionEndDate) {
     return false;
   }
 
@@ -71,7 +76,7 @@ export function isPremiumExpired(user: User | UserResponse): boolean {
 /**
  * Obtiene el estado detallado del acceso premium del usuario
  */
-export function getPremiumAccessStatus(user: User | UserResponse): {
+export function getPremiumAccessStatus(user: SubscriptionUser | null | undefined): {
   hasAccess: boolean;
   reason: 'premium' | 'trial' | 'trial_expired' | 'premium_expired' | 'no_subscription';
   daysRemaining?: number;

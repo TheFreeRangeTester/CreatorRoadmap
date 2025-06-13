@@ -401,6 +401,12 @@
       "title": "Pro Feature",
       "description": "CSV import is available for Pro users only. Upgrade to access this feature.",
       "tooltip": "Pro exclusive feature"
+    },
+    "trialExpired": {
+      "description": "Your free trial has expired. Upgrade to continue using CSV import."
+    },
+    "premiumExpired": {
+      "description": "Your premium subscription has expired. Renew to continue using CSV import."
     }
   },
   "badges": {
