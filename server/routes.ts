@@ -6,6 +6,7 @@ import { insertIdeaSchema, updateIdeaSchema, insertVoteSchema, insertPublicLinkS
 import { ZodError } from "zod";
 import { fromZodError } from "zod-validation-error";
 import Stripe from "stripe";
+import { conditionalPremiumAccess } from "./premium-middleware";
 
 // Initialize Stripe
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
@@ -198,7 +199,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Create new idea
-  app.post("/api/ideas", async (req: Request, res: Response) => {
+  app.post("/api/ideas", conditionalPremiumAccess, async (req: Request, res: Response) => {
     try {
       console.log("POST /api/ideas - Request received");
       console.log("Authentication state:", req.isAuthenticated());
