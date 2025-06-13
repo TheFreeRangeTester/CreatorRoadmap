@@ -453,7 +453,9 @@
     "badges": {
       "premium": "Premium",
       "freeTrial": "Free Trial",
-      "freePlan": "Free Plan"
+      "freePlan": "Free Plan",
+      "trialExpired": "Trial Expired",
+      "premiumExpired": "Premium Expired"
     },
     "currentStatus": "Current Status",
     "status": "Status",
