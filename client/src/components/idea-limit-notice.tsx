@@ -16,9 +16,9 @@ export const IdeaLimitNotice = () => {
   if (!user || isLoading || !quota) return null;
   
   const hasPremium = hasActivePremiumAccess({
-    subscriptionStatus: user.subscriptionStatus as "free" | "trial" | "premium" | "canceled",
-    trialEndDate: user.trialEndDate,
-    subscriptionEndDate: user.subscriptionEndDate
+    subscriptionStatus: (user.subscriptionStatus || "free") as "free" | "trial" | "premium" | "canceled",
+    trialEndDate: user.trialEndDate || null,
+    subscriptionEndDate: user.subscriptionEndDate || null
   });
   
   if (hasPremium || !quota.hasReachedLimit) return null;

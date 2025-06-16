@@ -46,9 +46,9 @@ export default function IdeaForm({ isOpen, idea, onClose }: IdeaFormProps) {
 
   // Check if user has premium access
   const hasPremium = user ? hasActivePremiumAccess({
-    subscriptionStatus: user.subscriptionStatus as "free" | "trial" | "premium" | "canceled",
-    trialEndDate: user.trialEndDate,
-    subscriptionEndDate: user.subscriptionEndDate
+    subscriptionStatus: (user.subscriptionStatus || "free") as "free" | "trial" | "premium" | "canceled",
+    trialEndDate: user.trialEndDate || null,
+    subscriptionEndDate: user.subscriptionEndDate || null
   }) : false;
 
   // Check if limit is reached for non-premium users
@@ -251,25 +251,22 @@ export default function IdeaForm({ isOpen, idea, onClose }: IdeaFormProps) {
               <Button type="button" variant="outline" onClick={onClose}>
                 {t("common.cancel", "Cancel")}
               </Button>
-              <Button
-                type="submit"
-                disabled={createMutation.isPending || updateMutation.isPending || isLimitReached}
-                className="min-w-[100px]"
-              >
-                {createMutation.isPending || updateMutation.isPending ? (
-                  <span className="flex items-center justify-center">
-                    <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                    {t("common.saving", "Saving...")}
-                  </span>
-                ) : isLimitReached ? (
-                  <span className="flex items-center justify-center">
-                    <Crown className="h-4 w-4 mr-2" />
-                    {t("ideaLimit.upgradeButton")}
-                  </span>
-                ) : (
-                  t("ideaForm.submitIdea", "Save idea")
-                )}
-              </Button>
+              {!isLimitReached && (
+                <Button
+                  type="submit"
+                  disabled={createMutation.isPending || updateMutation.isPending}
+                  className="min-w-[100px]"
+                >
+                  {createMutation.isPending || updateMutation.isPending ? (
+                    <span className="flex items-center justify-center">
+                      <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                      {t("common.saving", "Saving...")}
+                    </span>
+                  ) : (
+                    t("ideaForm.submitIdea", "Save idea")
+                  )}
+                </Button>
+              )}
             </div>
           </form>
         </Form>
