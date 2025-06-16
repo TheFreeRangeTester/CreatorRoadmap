@@ -34,6 +34,7 @@ import { useTranslation } from "react-i18next";
 import { IdeasTabView } from "@/components/ideas-tab-view";
 import { LanguageToggle } from "@/components/language-toggle";
 import { ThemeToggle } from "@/components/theme-toggle";
+import { IdeaLimitNotice } from "@/components/idea-limit-notice";
 
 export default function HomePage() {
   const { user, logoutMutation } = useAuth();
@@ -273,6 +274,7 @@ export default function HomePage() {
                 {/* Tabs for ideas view - Only for creators */}
                 {user.userRole === "creator" ? (
                   <>
+                    <IdeaLimitNotice />
                     <CreatorControls onAddIdea={handleAddIdea} />
                     <LeaderboardInfo />
                     <Tabs defaultValue="published" className="w-full">

@@ -244,6 +244,16 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const validatedData = insertIdeaSchema.parse(req.body);
       const creatorId = req.user!.id;
 
+      // Check idea quota for non-premium users
+      const quota = await storage.getUserIdeaQuota(creatorId);
+      if (quota.hasReachedLimit) {
+        return res.status(403).json({ 
+          message: "Idea limit reached. Upgrade to premium to create unlimited ideas.",
+          premiumRequired: true,
+          quota
+        });
+      }
+
       console.log("Creating idea for creator:", creatorId);
       const idea = await storage.createIdea(validatedData, creatorId);
       const ideasWithPositions = await storage.getIdeasWithPositions();

@@ -106,7 +106,7 @@ export const userResponseSchema = z.object({
   threadsUrl: z.string().nullable().optional(),
   websiteUrl: z.string().nullable().optional(),
   profileBackground: z.string().default("gradient-1"),
-  email: z.string().optional(), // Eliminada la validación de email
+  email: z.string().optional(),
   // Campos de suscripción
   subscriptionStatus: z.enum(['free', 'trial', 'premium', 'canceled']).default('free'),
   hasUsedTrial: z.boolean().default(false),

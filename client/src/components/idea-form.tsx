@@ -192,7 +192,8 @@ export default function IdeaForm({ isOpen, idea, onClose }: IdeaFormProps) {
           </DialogDescription>
         </DialogHeader>
 
-        {/* El modal ya tiene su propio botón de cierre integrado */}
+        {/* Show idea limit notice for non-premium users who have reached the limit */}
+        {!isEditing && <IdeaLimitNotice />}
 
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
@@ -209,6 +210,7 @@ export default function IdeaForm({ isOpen, idea, onClose }: IdeaFormProps) {
                         "Enter a catchy title (required)"
                       )}
                       maxLength={100}
+                      disabled={isLimitReached}
                       {...field}
                     />
                   </FormControl>
@@ -233,6 +235,7 @@ export default function IdeaForm({ isOpen, idea, onClose }: IdeaFormProps) {
                       )}
                       maxLength={280}
                       className="resize-none h-24"
+                      disabled={isLimitReached}
                       {...field}
                     />
                   </FormControl>
@@ -250,13 +253,18 @@ export default function IdeaForm({ isOpen, idea, onClose }: IdeaFormProps) {
               </Button>
               <Button
                 type="submit"
-                disabled={createMutation.isPending || updateMutation.isPending}
+                disabled={createMutation.isPending || updateMutation.isPending || isLimitReached}
                 className="min-w-[100px]"
               >
                 {createMutation.isPending || updateMutation.isPending ? (
                   <span className="flex items-center justify-center">
                     <Loader2 className="h-4 w-4 mr-2 animate-spin" />
                     {t("common.saving", "Saving...")}
+                  </span>
+                ) : isLimitReached ? (
+                  <span className="flex items-center justify-center">
+                    <Crown className="h-4 w-4 mr-2" />
+                    {t("ideaLimit.upgradeButton")}
                   </span>
                 ) : (
                   t("ideaForm.submitIdea", "Save idea")
