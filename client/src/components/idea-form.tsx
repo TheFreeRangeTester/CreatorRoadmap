@@ -46,9 +46,9 @@ export default function IdeaForm({ isOpen, idea, onClose }: IdeaFormProps) {
 
   // Check if user has premium access
   const hasPremium = user ? hasActivePremiumAccess({
-    subscriptionStatus: (user.subscriptionStatus || "free") as "free" | "trial" | "premium" | "canceled",
-    trialEndDate: user.trialEndDate || null,
-    subscriptionEndDate: user.subscriptionEndDate || null
+    subscriptionStatus: ((user as any).subscriptionStatus || "free") as "free" | "trial" | "premium" | "canceled",
+    trialEndDate: (user as any).trialEndDate || null,
+    subscriptionEndDate: (user as any).subscriptionEndDate || null
   }) : false;
 
   // Check if limit is reached for non-premium users
