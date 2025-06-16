@@ -70,6 +70,37 @@ export default function CreatorControls({ onAddIdea }: CreatorControlsProps) {
     },
   });
 
+  // Mutación para cancelar suscripción
+  const cancelSubscriptionMutation = useMutation({
+    mutationFn: async () => {
+      const response = await fetch("/api/stripe/cancel-subscription", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || "Failed to cancel subscription");
+      }
+      return response.json();
+    },
+    onSuccess: () => {
+      toast({
+        title: t("subscription.canceled"),
+        description: t("subscription.canceledDesc"),
+      });
+      queryClient.invalidateQueries({ queryKey: ["/api/user"] });
+    },
+    onError: (error: Error) => {
+      toast({
+        title: t("subscription.error"),
+        description: error.message || t("subscription.cancelError"),
+        variant: "destructive",
+      });
+    },
+  });
+
   const handleStartTrial = () => {
     startTrialMutation.mutate();
   };
@@ -149,9 +180,48 @@ export default function CreatorControls({ onAddIdea }: CreatorControlsProps) {
         statusText: t("subscription.badges.premium"),
         statusColor: "text-green-600 dark:text-green-400",
         action: (
+          <Button 
+            variant="outline" 
+            className="text-red-600 hover:text-red-700 border-red-200 hover:border-red-300"
+            onClick={() => cancelSubscriptionMutation.mutate()}
+            disabled={cancelSubscriptionMutation.isPending}
+          >
+            {cancelSubscriptionMutation.isPending ? (
+              <>
+                <div className="w-4 h-4 mr-2 animate-spin rounded-full border-2 border-red-600 border-t-transparent" />
+                {t("subscription.canceling", "Cancelando...")}
+              </>
+            ) : (
+              t("subscription.cancel", "Cancelar suscripción")
+            )}
+          </Button>
+        )
+      };
+    }
+
+    // Estado 6: Suscripción cancelada pero activa hasta fecha
+    if (premiumStatus.hasAccess && premiumStatus.reason === "premium_canceled") {
+      return {
+        showPanel: true,
+        title: t("subscription.canceled.active", "Tu suscripción se cancelará pronto"),
+        description: user.subscriptionEndDate 
+          ? t("subscription.canceled.activeDesc", "Tienes acceso hasta {{date}}", { 
+              date: new Date(user.subscriptionEndDate).toLocaleDateString() 
+            })
+          : t("subscription.canceled.activeDescGeneric", "Tienes acceso hasta el final del período actual"),
+        bgClass: "from-yellow-50 to-orange-50 dark:from-yellow-900/20 dark:to-orange-900/20",
+        borderClass: "border-yellow-200 dark:border-yellow-700",
+        icon: <Crown className="w-5 h-5 text-white" />,
+        iconBg: "bg-gradient-to-br from-yellow-500 to-orange-600",
+        statusText: t("subscription.badges.canceledButActive", "Cancelada (activa hasta {{date}})", {
+          date: user.subscriptionEndDate ? new Date(user.subscriptionEndDate).toLocaleDateString() : ""
+        }),
+        statusColor: "text-yellow-600 dark:text-yellow-400",
+        action: (
           <Link to="/subscription">
-            <Button variant="outline" className="text-green-600 hover:text-green-700 border-green-200 hover:border-green-300">
-              {t("subscription.manage", "Administrar suscripción")}
+            <Button className="bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white">
+              <Crown className="w-4 h-4 mr-2" />
+              {t("subscription.reactivate", "Reactivar suscripción")}
             </Button>
           </Link>
         )
