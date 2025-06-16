@@ -484,7 +484,7 @@
       "perYear": "/year",
       "features": {
         "visibleIdeas": "Up to 50 visible ideas",
-        "unlimitedVotes": "Unlimited votes",
+        "unlimitedIdeas": "Unlimited ideas",
         "noBranding": "No platform branding",
         "advancedAnalytics": "Advanced analytics",
         "prioritySupport": "Priority support"
@@ -574,5 +574,10 @@
     "becomeCreatorConfirm": "Are you sure you want to become a creator? You'll be able to start managing your own idea leaderboard.",
     "becomeCreatorSuccess": "Role Updated!",
     "becomeCreatorSuccessDesc": "Your account has been updated to creator. You'll be redirected to the dashboard."
+  },
+  "ideaLimit": {
+    "title": "Idea limit reached",
+    "description": "You've reached the limit of {{count}}/{{limit}} ideas. Upgrade to premium to create unlimited ideas!",
+    "upgradeButton": "Upgrade to Premium"
   }
 }

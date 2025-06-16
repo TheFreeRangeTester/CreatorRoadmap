@@ -40,7 +40,19 @@ interface IdeaFormProps {
 export default function IdeaForm({ isOpen, idea, onClose }: IdeaFormProps) {
   const { toast } = useToast();
   const { t } = useTranslation();
+  const { user } = useAuth();
+  const { data: quota, isLoading: quotaLoading } = useIdeaQuota();
   const isEditing = !!idea;
+
+  // Check if user has premium access
+  const hasPremium = user ? hasActivePremiumAccess({
+    subscriptionStatus: user.subscriptionStatus as "free" | "trial" | "premium" | "canceled",
+    trialEndDate: user.trialEndDate,
+    subscriptionEndDate: user.subscriptionEndDate
+  }) : false;
+
+  // Check if limit is reached for non-premium users
+  const isLimitReached = !isEditing && !hasPremium && quota?.hasReachedLimit;
 
   // Form definition
   const form = useForm<z.infer<typeof insertIdeaSchema>>({
@@ -85,6 +97,7 @@ export default function IdeaForm({ isOpen, idea, onClose }: IdeaFormProps) {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/ideas"] });
+      queryClient.invalidateQueries({ queryKey: ["ideaQuota", user?.id] });
       toast({
         title: t("ideas.created", "Idea created"),
         description: t(
