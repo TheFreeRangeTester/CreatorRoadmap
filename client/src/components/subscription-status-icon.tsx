@@ -165,26 +165,26 @@ export default function SubscriptionStatusIcon() {
         statusColor: "text-green-600 dark:text-green-400",
         icon: <Crown className="w-5 h-5 text-yellow-500" />,
         action: (
-          <div className="flex gap-2">
+          <div className="flex flex-col sm:flex-row gap-2 w-full">
             <Button 
               variant="outline" 
               size="sm"
-              className="text-red-600 hover:text-red-700 border-red-200 hover:border-red-300"
+              className="flex-1 text-red-600 hover:text-red-700 border-red-200 hover:border-red-300 text-xs"
               onClick={() => cancelSubscriptionMutation.mutate()}
               disabled={cancelSubscriptionMutation.isPending}
             >
               {cancelSubscriptionMutation.isPending ? (
                 <>
                   <div className="w-3 h-3 mr-1 animate-spin rounded-full border border-red-600 border-t-transparent" />
-                  {t("subscription.canceling")}
+                  <span className="truncate">{t("subscription.canceling")}</span>
                 </>
               ) : (
-                t("subscription.cancel")
+                <span className="truncate">{t("subscription.cancel")}</span>
               )}
             </Button>
-            <Link to="/subscription">
-              <Button variant="outline" size="sm" onClick={() => setIsOpen(false)}>
-                {t("subscription.manage")}
+            <Link to="/subscription" className="flex-1">
+              <Button variant="outline" size="sm" className="w-full text-xs" onClick={() => setIsOpen(false)}>
+                <span className="truncate">{t("subscription.manage")}</span>
               </Button>
             </Link>
           </div>
@@ -204,10 +204,10 @@ export default function SubscriptionStatusIcon() {
         statusColor: "text-orange-600 dark:text-orange-400",
         icon: <Crown className="w-5 h-5 text-orange-500" />,
         action: (
-          <Link to="/subscription">
-            <Button size="sm" onClick={() => setIsOpen(false)}>
+          <Link to="/subscription" className="w-full">
+            <Button size="sm" className="w-full text-xs" onClick={() => setIsOpen(false)}>
               <Crown className="w-3 h-3 mr-1" />
-              {t("subscription.reactivate")}
+              <span className="truncate">{t("subscription.reactivate")}</span>
             </Button>
           </Link>
         )
@@ -225,10 +225,10 @@ export default function SubscriptionStatusIcon() {
         statusColor: "text-blue-600 dark:text-blue-400",
         icon: <Sparkles className="w-5 h-5 text-blue-500" />,
         action: (
-          <Link to="/subscription">
-            <Button size="sm" onClick={() => setIsOpen(false)}>
+          <Link to="/subscription" className="w-full">
+            <Button size="sm" className="w-full text-xs" onClick={() => setIsOpen(false)}>
               <Crown className="w-3 h-3 mr-1" />
-              {t("subscription.trial.upgradeButton")}
+              <span className="truncate">{t("subscription.trial.upgradeButton")}</span>
             </Button>
           </Link>
         )
@@ -243,10 +243,10 @@ export default function SubscriptionStatusIcon() {
         statusColor: "text-red-600 dark:text-red-400",
         icon: <AlertCircle className="w-5 h-5 text-red-500" />,
         action: (
-          <Link to="/subscription">
-            <Button size="sm" onClick={() => setIsOpen(false)}>
+          <Link to="/subscription" className="w-full">
+            <Button size="sm" className="w-full text-xs" onClick={() => setIsOpen(false)}>
               <Crown className="w-3 h-3 mr-1" />
-              {t("subscription.subscribe")}
+              <span className="truncate">{t("subscription.subscribe")}</span>
             </Button>
           </Link>
         )
@@ -340,13 +340,13 @@ export default function SubscriptionStatusIcon() {
           )}
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-80 p-0" align="end">
+      <PopoverContent className="w-80 max-w-[calc(100vw-2rem)] p-0" align="end">
         <div className="p-4">
           <div className="flex items-start gap-3 mb-3">
             {popoverContent.icon}
-            <div className="flex-1">
-              <h3 className="font-semibold text-sm">{popoverContent.title}</h3>
-              <p className="text-xs text-gray-600 dark:text-gray-300 mt-1">
+            <div className="flex-1 min-w-0">
+              <h3 className="font-semibold text-sm leading-tight">{popoverContent.title}</h3>
+              <p className="text-xs text-gray-600 dark:text-gray-300 mt-1 leading-relaxed">
                 {popoverContent.description}
               </p>
             </div>
@@ -356,19 +356,19 @@ export default function SubscriptionStatusIcon() {
           {!isProUser && (
             <div className="grid grid-cols-1 gap-1.5 mb-3 p-3 bg-gray-50 dark:bg-gray-800/50 rounded-lg">
               <div className="flex items-center gap-2">
-                <CheckCircle className="w-3 h-3 text-green-500" />
+                <CheckCircle className="w-3 h-3 text-green-500 flex-shrink-0" />
                 <span className="text-xs text-gray-600 dark:text-gray-300">
                   {t("subscription.features.upToIdeas")}
                 </span>
               </div>
               <div className="flex items-center gap-2">
-                <CheckCircle className="w-3 h-3 text-green-500" />
+                <CheckCircle className="w-3 h-3 text-green-500 flex-shrink-0" />
                 <span className="text-xs text-gray-600 dark:text-gray-300">
                   {t("subscription.features.csvImport")}
                 </span>
               </div>
               <div className="flex items-center gap-2">
-                <CheckCircle className="w-3 h-3 text-green-500" />
+                <CheckCircle className="w-3 h-3 text-green-500 flex-shrink-0" />
                 <span className="text-xs text-gray-600 dark:text-gray-300">
                   {t("subscription.features.noBranding")}
                 </span>
@@ -376,7 +376,7 @@ export default function SubscriptionStatusIcon() {
             </div>
           )}
           
-          <div className="flex justify-end">
+          <div className="w-full">
             {popoverContent.action}
           </div>
         </div>
