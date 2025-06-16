@@ -30,7 +30,7 @@ export default function CreatorControls({ onAddIdea }: CreatorControlsProps) {
   const queryClient = useQueryClient();
   const [csvImportOpen, setCsvImportOpen] = useState(false);
 
-  // Obtener datos del usuario para saber su estado de suscripción
+  // Get user data for subscription status
   const { data: user } = useQuery<UserResponse>({
     queryKey: ["/api/user"],
   });
@@ -90,7 +90,7 @@ export default function CreatorControls({ onAddIdea }: CreatorControlsProps) {
   return (
     <div className="bg-white p-3 sm:p-4 rounded-lg shadow mb-4 sm:mb-6 dark:bg-neutral-800">
       <div className="flex flex-col gap-3 sm:gap-4">
-        {/* Header row - responsive */}
+        {/* Header row with subscription status icon */}
         <div className="flex flex-col space-y-3 sm:flex-row sm:items-center sm:justify-between sm:space-y-0">
           <h2 className="text-base sm:text-lg font-medium text-neutral-800 dark:text-white">
             {t("dashboard.creatorDashboard", "Creator Dashboard")}
@@ -98,7 +98,7 @@ export default function CreatorControls({ onAddIdea }: CreatorControlsProps) {
           <SubscriptionStatusIcon />
         </div>
 
-        {/* Botones de gestión de ideas */}
+        {/* Action buttons */}
         <div className="flex flex-col sm:flex-row gap-3">
           <Button
             onClick={onAddIdea}
@@ -128,7 +128,9 @@ export default function CreatorControls({ onAddIdea }: CreatorControlsProps) {
                     {t("csvImport.button", "Import CSV")}
                   </span>
                   {!isProUser && (
-                    <Crown className="w-4 h-4 ml-2 text-amber-500" />
+                    <svg className="w-4 h-4 ml-2 text-amber-500" viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M12 2L15.09 8.26L22 9L17 14L18.18 21L12 17.77L5.82 21L7 14L2 9L8.91 8.26L12 2Z"/>
+                    </svg>
                   )}
                 </Button>
               </TooltipTrigger>
@@ -145,8 +147,6 @@ export default function CreatorControls({ onAddIdea }: CreatorControlsProps) {
             </Tooltip>
           </TooltipProvider>
         </div>
-
-
       </div>
 
       {/* CSV Import Modal */}
