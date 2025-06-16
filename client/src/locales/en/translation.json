@@ -455,7 +455,8 @@
       "freeTrial": "Free Trial",
       "freePlan": "Free Plan",
       "trialExpired": "Trial Expired",
-      "premiumExpired": "Premium Expired"
+      "premiumExpired": "Premium Expired",
+      "canceledButActive": "Canceled (active until {{date}})"
     },
     "currentStatus": "Current Status",
     "status": "Status",
@@ -493,13 +494,19 @@
       "title": "Active Premium Features"
     },
     "trial": {
-      "unlockFeatures": "Unlock Premium Features",
+      "unlockFeatures": "Unlock all premium features",
       "upgradeButton": "Upgrade to Premium",
-      "activateButton": "🎉 Activate 14-Day Free Trial",
+      "activateButton": "Activate free trial",
       "activating": "Activating...",
       "upgrading": "Upgrading...",
-      "unlockFeatures": "Unlock all premium features",
-      "noCommitment": "No commitment, cancel anytime"
+      "noCommitment": "No commitment, cancel anytime",
+      "available": "You have a free trial ready to use",
+      "availableDesc": "7 days free of all premium features",
+      "ready": "Trial Available",
+      "active": "You're on free trial",
+      "activeDesc": "Until {{date}} ({{days}} days remaining)",
+      "expired": "Your free trial has expired",
+      "expiredDesc": "Subscribe to continue enjoying premium features"
     },
     "features": {
       "upToIdeas": "Up to 50 visible ideas",
@@ -511,7 +518,29 @@
       "prioritySupport": "Priority support",
       "csvExport": "CSV export",
       "customDomain": "Custom domain support"
-    }
+    },
+    "premium": {
+      "activate": "Reactivate Premium",
+      "activateDesc": "Access all premium features",
+      "active": "Subscription active",
+      "nextRenewal": "Next renewal: {{date}}",
+      "expired": "Your subscription has expired",
+      "expiredDesc": "Renew your subscription to continue accessing premium features"
+    },
+    "canceled": {
+      "active": "Your subscription will be canceled soon",
+      "activeDesc": "You have access until {{date}}",
+      "activeDescGeneric": "You have access until the end of the current period"
+    },
+    "manage": "Manage subscription",
+    "cancel": "Cancel subscription",
+    "canceling": "Canceling...",
+    "canceled": "Subscription Canceled",
+    "canceledDesc": "Your subscription has been canceled. You maintain access until the end of the current period.",
+    "cancelError": "Error canceling",
+    "reactivate": "Reactivate subscription",
+    "renew": "Renew subscription",
+    "subscribe": "Subscribe"
   },
   "profile": {
     "editProfile": "Edit Profile",

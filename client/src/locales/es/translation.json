@@ -454,7 +454,10 @@
     "badges": {
       "premium": "Premium",
       "freeTrial": "Prueba Gratuita",
-      "freePlan": "Plan Gratuito"
+      "freePlan": "Plan Gratuito",
+      "trialExpired": "Trial Expirado",
+      "premiumExpired": "Premium Expirado",
+      "canceledButActive": "Cancelada (activa hasta {{date}})"
     },
     "currentStatus": "Estado Actual",
     "status": "Estado",
@@ -492,13 +495,19 @@
       "title": "Funciones Premium Activas"
     },
     "trial": {
-      "unlockFeatures": "Desbloquea Funciones Premium",
+      "unlockFeatures": "Desbloquea todas las funciones premium",
       "upgradeButton": "Actualizar a Premium",
-      "activateButton": "🎉 Activar Trial Gratuito de 14 Días",
+      "activateButton": "Activar prueba gratuita",
       "activating": "Activando...",
       "upgrading": "Actualizando...",
-      "unlockFeatures": "Desbloquea todas las funciones premium",
-      "noCommitment": "Sin compromiso, cancela cuando quieras"
+      "noCommitment": "Sin compromiso, cancela cuando quieras",
+      "available": "Tenés una prueba gratuita lista para usar",
+      "availableDesc": "7 días gratis de todas las funcionalidades premium",
+      "ready": "Trial Disponible",
+      "active": "Estás en prueba gratuita",
+      "activeDesc": "Hasta {{date}} ({{days}} días restantes)",
+      "expired": "Tu prueba gratuita expiró",
+      "expiredDesc": "Suscríbete para seguir disfrutando de las funcionalidades premium"
     },
     "features": {
       "upToIdeas": "Hasta 50 ideas visibles",
@@ -510,7 +519,29 @@
       "prioritySupport": "Soporte prioritario",
       "csvExport": "Exportación CSV",
       "customDomain": "Soporte de dominio personalizado"
-    }
+    },
+    "premium": {
+      "activate": "Volver a activar Premium",
+      "activateDesc": "Accede a todas las funcionalidades premium",
+      "active": "Suscripción activa",
+      "nextRenewal": "Próxima renovación: {{date}}",
+      "expired": "Tu suscripción ha expirado",
+      "expiredDesc": "Renueva tu suscripción para seguir accediendo a las funcionalidades premium"
+    },
+    "canceled": {
+      "active": "Tu suscripción se cancelará pronto",
+      "activeDesc": "Tienes acceso hasta {{date}}",
+      "activeDescGeneric": "Tienes acceso hasta el final del período actual"
+    },
+    "manage": "Administrar suscripción",
+    "cancel": "Cancelar suscripción",
+    "canceling": "Cancelando...",
+    "canceled": "Suscripción Cancelada",
+    "canceledDesc": "Tu suscripción ha sido cancelada. Mantienes acceso hasta el final del período actual.",
+    "cancelError": "Error al cancelar",
+    "reactivate": "Reactivar suscripción",
+    "renew": "Renovar suscripción",
+    "subscribe": "Suscribirse"
   },
   "profile": {
     "editProfile": "Editar Perfil",
