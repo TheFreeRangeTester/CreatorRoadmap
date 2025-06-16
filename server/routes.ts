@@ -145,6 +145,26 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // User idea quota route
+  app.get("/api/user/idea-quota", async (req: Request, res: Response) => {
+    try {
+      // Verificar autenticación
+      if (!req.isAuthenticated()) {
+        return res.status(401).json({ message: "Unauthorized" });
+      }
+
+      const userId = req.user.id;
+
+      // Obtener cuota de ideas del usuario
+      const quota = await storage.getUserIdeaQuota(userId);
+
+      res.json(quota);
+    } catch (error) {
+      console.error("Error fetching idea quota:", error);
+      res.status(500).json({ message: "Failed to fetch idea quota" });
+    }
+  });
+
   // Ideas API routes
   // Get all ideas
   app.get("/api/ideas", async (req: Request, res: Response) => {

@@ -53,6 +53,9 @@ export interface IStorage {
   // Audience stats operations
   getUserAudienceStats(userId: number): Promise<{ votesGiven: number; ideasSuggested: number; ideasApproved: number; }>;
   
+  // Idea quota operations
+  getUserIdeaQuota(userId: number): Promise<{ count: number; limit: number; hasReachedLimit: boolean; }>;
+  
   // Session store
   sessionStore: any;
 }
