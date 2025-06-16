@@ -1081,6 +1081,201 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Testing routes for Stripe flows (only available in development)
+  if (process.env.NODE_ENV === 'development') {
+    // Simulate successful payment
+    app.post("/api/stripe/test/simulate-payment", async (req: Request, res: Response) => {
+      try {
+        if (!req.isAuthenticated()) {
+          return res.status(401).json({ message: "Authentication required" });
+        }
+
+        const { plan, scenario } = req.body;
+        if (!plan || !['monthly', 'yearly'].includes(plan)) {
+          return res.status(400).json({ message: "Valid plan required (monthly or yearly)" });
+        }
+
+        const userId = req.user!.id;
+        
+        if (scenario === 'success') {
+          // Simular pago exitoso
+          const endDate = new Date();
+          if (plan === 'monthly') {
+            endDate.setMonth(endDate.getMonth() + 1);
+          } else {
+            endDate.setFullYear(endDate.getFullYear() + 1);
+          }
+
+          const updatedUser = await storage.updateUserSubscription(userId, {
+            subscriptionStatus: 'premium',
+            subscriptionPlan: plan,
+            subscriptionEndDate: endDate,
+            stripeCustomerId: `test_customer_${userId}`,
+            stripeSubscriptionId: `test_sub_${userId}_${Date.now()}`
+          });
+
+          const { password, ...userWithoutPassword } = updatedUser!;
+          return res.json({ 
+            success: true, 
+            message: "Payment simulation successful",
+            user: userWithoutPassword,
+            confetti: true // Trigger confetti animation
+          });
+        } else if (scenario === 'cancel') {
+          return res.json({ 
+            success: false, 
+            message: "Payment was cancelled by user",
+            cancelled: true 
+          });
+        } else if (scenario === 'fail') {
+          return res.status(400).json({ 
+            success: false, 
+            message: "Payment failed - insufficient funds",
+            error: "payment_failed" 
+          });
+        }
+
+        res.status(400).json({ message: "Invalid scenario. Use: success, cancel, or fail" });
+      } catch (error) {
+        console.error("Error simulating payment:", error);
+        res.status(500).json({ message: "Failed to simulate payment" });
+      }
+    });
+
+    // Simulate subscription cancellation
+    app.post("/api/stripe/test/simulate-cancellation", async (req: Request, res: Response) => {
+      try {
+        if (!req.isAuthenticated()) {
+          return res.status(401).json({ message: "Authentication required" });
+        }
+
+        const userId = req.user!.id;
+        const user = await storage.getUser(userId);
+
+        if (!user) {
+          return res.status(404).json({ message: "User not found" });
+        }
+
+        if (user.subscriptionStatus !== 'premium') {
+          return res.status(400).json({ message: "No active subscription to cancel" });
+        }
+
+        const updatedUser = await storage.updateUserSubscription(userId, {
+          subscriptionStatus: 'free',
+          subscriptionPlan: undefined,
+          subscriptionEndDate: undefined,
+          stripeSubscriptionId: undefined
+        });
+
+        const { password, ...userWithoutPassword } = updatedUser!;
+        res.json({ 
+          success: true,
+          message: "Subscription cancelled successfully",
+          user: userWithoutPassword
+        });
+      } catch (error) {
+        console.error("Error simulating cancellation:", error);
+        res.status(500).json({ message: "Failed to simulate cancellation" });
+      }
+    });
+
+    // Test webhook events
+    app.post("/api/stripe/test/webhook", async (req: Request, res: Response) => {
+      try {
+        const { eventType, userId, plan } = req.body;
+        
+        if (!userId || !eventType) {
+          return res.status(400).json({ message: "userId and eventType required" });
+        }
+
+        // Simulate different webhook events
+        switch (eventType) {
+          case 'customer.subscription.created':
+          case 'customer.subscription.updated': {
+            const endDate = new Date();
+            if (plan === 'monthly') {
+              endDate.setMonth(endDate.getMonth() + 1);
+            } else {
+              endDate.setFullYear(endDate.getFullYear() + 1);
+            }
+
+            await storage.updateUserSubscription(userId, {
+              subscriptionStatus: 'premium',
+              subscriptionPlan: plan || 'monthly',
+              subscriptionEndDate: endDate,
+              stripeCustomerId: `test_customer_${userId}`,
+              stripeSubscriptionId: `test_sub_${userId}_${Date.now()}`
+            });
+
+            res.json({ 
+              success: true, 
+              message: `Webhook ${eventType} processed successfully` 
+            });
+            break;
+          }
+
+          case 'customer.subscription.deleted': {
+            await storage.updateUserSubscription(userId, {
+              subscriptionStatus: 'free',
+              subscriptionPlan: undefined,
+              subscriptionEndDate: undefined,
+              stripeSubscriptionId: undefined
+            });
+
+            res.json({ 
+              success: true, 
+              message: "Subscription deleted webhook processed" 
+            });
+            break;
+          }
+
+          case 'invoice.payment_failed': {
+            res.json({ 
+              success: true, 
+              message: "Payment failed webhook processed - subscription remains active" 
+            });
+            break;
+          }
+
+          default:
+            res.status(400).json({ message: "Unsupported event type for testing" });
+        }
+      } catch (error) {
+        console.error("Error processing test webhook:", error);
+        res.status(500).json({ message: "Failed to process test webhook" });
+      }
+    });
+
+    // Get test payment cards info
+    app.get("/api/stripe/test/cards", async (req: Request, res: Response) => {
+      res.json({
+        testCards: {
+          success: {
+            number: "4242424242424242",
+            description: "Visa - Always succeeds"
+          },
+          decline: {
+            number: "4000000000000002",
+            description: "Visa - Always declined"
+          },
+          insufficient_funds: {
+            number: "4000000000009995",
+            description: "Visa - Insufficient funds"
+          },
+          expired: {
+            number: "4000000000000069",
+            description: "Visa - Expired card"
+          },
+          processing_error: {
+            number: "4000000000000119",
+            description: "Visa - Processing error"
+          }
+        },
+        instructions: "Use any future expiry date (e.g., 12/34) and any 3-digit CVC"
+      });
+    });
+  }
+
   // Stripe webhook endpoint
   app.post("/api/stripe/webhook", async (req: Request, res: Response) => {
     const sig = req.headers['stripe-signature'] as string;

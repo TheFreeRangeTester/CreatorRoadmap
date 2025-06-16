@@ -29,6 +29,7 @@ import { UserResponse } from "@shared/schema";
 import { useToast } from "@/hooks/use-toast";
 import logoImage from "@/assets/logo.png";
 import { hasActivePremiumAccess, getPremiumAccessStatus, getTrialDaysRemaining } from "@shared/premium-utils";
+import StripeTestPanel from "@/components/stripe-test-panel";
 
 const fadeIn = {
   hidden: { opacity: 0, y: 20 },
@@ -530,6 +531,9 @@ export default function SubscriptionPage() {
               </Card>
             </motion.div>
           )}
+
+          {/* Stripe Testing Panel (Development Only) */}
+          <StripeTestPanel />
         </motion.div>
       </div>
     </div>
