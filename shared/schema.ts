@@ -18,7 +18,7 @@ export const users = pgTable("users", {
   profileBackground: text("profile_background").default("gradient-1"),
   email: text("email").notNull().unique(),
   // Campos para suscripciones premium
-  subscriptionStatus: text("subscription_status").notNull().default("free"), // 'free', 'trial', 'premium'
+  subscriptionStatus: text("subscription_status").notNull().default("free"), // 'free', 'trial', 'premium', 'canceled'
   hasUsedTrial: boolean("has_used_trial").notNull().default(false),
   trialStartDate: timestamp("trial_start_date"),
   trialEndDate: timestamp("trial_end_date"),
@@ -27,6 +27,7 @@ export const users = pgTable("users", {
   subscriptionPlan: text("subscription_plan"), // 'monthly', 'yearly'
   subscriptionStartDate: timestamp("subscription_start_date"),
   subscriptionEndDate: timestamp("subscription_end_date"),
+  subscriptionCanceledAt: timestamp("subscription_canceled_at"), // Fecha de cancelación
 });
 
 export const ideas = pgTable("ideas", {
@@ -107,13 +108,14 @@ export const userResponseSchema = z.object({
   profileBackground: z.string().default("gradient-1"),
   email: z.string().optional(), // Eliminada la validación de email
   // Campos de suscripción
-  subscriptionStatus: z.enum(['free', 'trial', 'premium']).default('free'),
+  subscriptionStatus: z.enum(['free', 'trial', 'premium', 'canceled']).default('free'),
   hasUsedTrial: z.boolean().default(false),
   trialStartDate: z.date().nullable().optional(),
   trialEndDate: z.date().nullable().optional(),
   subscriptionPlan: z.enum(['monthly', 'yearly']).nullable().optional(),
   subscriptionStartDate: z.date().nullable().optional(),
   subscriptionEndDate: z.date().nullable().optional(),
+  subscriptionCanceledAt: z.date().nullable().optional(),
 });
 
 // Idea schemas

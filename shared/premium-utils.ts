@@ -1,8 +1,9 @@
 // Tipo base para las propiedades de suscripción necesarias
 type SubscriptionUser = {
-  subscriptionStatus: "free" | "trial" | "premium";
+  subscriptionStatus: "free" | "trial" | "premium" | "canceled";
   trialEndDate?: Date | null;
   subscriptionEndDate?: Date | null;
+  subscriptionCanceledAt?: Date | null;
 };
 
 /**
@@ -20,6 +21,15 @@ export function hasActivePremiumAccess(user: SubscriptionUser | null | undefined
     if (!user.subscriptionEndDate) return true;
     
     // Verificar que la suscripción no haya expirado
+    return new Date(user.subscriptionEndDate) > now;
+  }
+
+  // Usuario con suscripción cancelada pero aún activa hasta la fecha de vencimiento
+  if (user.subscriptionStatus === "canceled") {
+    // Si no hay fecha de finalización, considerar como expirado
+    if (!user.subscriptionEndDate) return false;
+    
+    // Verificar que la suscripción cancelada aún esté activa
     return new Date(user.subscriptionEndDate) > now;
   }
 
@@ -78,7 +88,7 @@ export function isPremiumExpired(user: SubscriptionUser | null | undefined): boo
  */
 export function getPremiumAccessStatus(user: SubscriptionUser | null | undefined): {
   hasAccess: boolean;
-  reason: 'premium' | 'trial' | 'trial_expired' | 'premium_expired' | 'no_subscription';
+  reason: 'premium' | 'trial' | 'trial_expired' | 'premium_expired' | 'premium_canceled' | 'no_subscription';
   daysRemaining?: number;
 } {
   if (!user) {
@@ -91,6 +101,15 @@ export function getPremiumAccessStatus(user: SubscriptionUser | null | undefined
   if (user.subscriptionStatus === "premium") {
     if (!user.subscriptionEndDate || new Date(user.subscriptionEndDate) > now) {
       return { hasAccess: true, reason: 'premium' };
+    } else {
+      return { hasAccess: false, reason: 'premium_expired' };
+    }
+  }
+
+  // Verificar suscripción cancelada pero aún activa
+  if (user.subscriptionStatus === "canceled") {
+    if (user.subscriptionEndDate && new Date(user.subscriptionEndDate) > now) {
+      return { hasAccess: true, reason: 'premium_canceled' };
     } else {
       return { hasAccess: false, reason: 'premium_expired' };
     }
