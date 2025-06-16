@@ -44,6 +44,11 @@ import SubscriptionSuccessPage from "@/pages/subscription-success-page";
 import SubscriptionCancelPage from "@/pages/subscription-cancel-page";
 import DashboardSettingsPage from "@/pages/dashboard-settings-page";
 
+// Páginas de flujo de pago de testing
+import PaymentSuccessPage from "@/pages/payment-success-page";
+import PaymentCancelPage from "@/pages/payment-cancel-page";
+import PaymentFailurePage from "@/pages/payment-failure-page";
+
 function App() {
   return (
     <>
@@ -97,6 +102,11 @@ function App() {
           component={SubscriptionSuccessPage}
         />
         <Route path="/subscription/cancel" component={SubscriptionCancelPage} />
+
+        {/* Rutas de testing de pagos (solo desarrollo) */}
+        <Route path="/payment/success" component={PaymentSuccessPage} />
+        <Route path="/payment/cancel" component={PaymentCancelPage} />
+        <Route path="/payment/failure" component={PaymentFailurePage} />
 
         {/* Rutas unificadas del creador - ambas apuntan a la misma página */}
         <Route path="/creators/:username" component={CreatorProfileUnified} />
