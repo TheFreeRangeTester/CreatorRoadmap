@@ -261,10 +261,10 @@ export default function SubscriptionStatusIcon() {
         statusColor: "text-red-600 dark:text-red-400",
         icon: <AlertCircle className="w-5 h-5 text-red-500" />,
         action: (
-          <Link to="/subscription">
-            <Button size="sm" onClick={() => setIsOpen(false)}>
+          <Link to="/subscription" className="w-full">
+            <Button size="sm" className="w-full text-xs" onClick={() => setIsOpen(false)}>
               <Crown className="w-3 h-3 mr-1" />
-              {t("subscription.renew")}
+              <span className="truncate">{t("subscription.renew")}</span>
             </Button>
           </Link>
         )
@@ -281,18 +281,19 @@ export default function SubscriptionStatusIcon() {
         action: (
           <Button
             size="sm"
+            className="w-full text-xs"
             onClick={() => startTrialMutation.mutate()}
             disabled={startTrialMutation.isPending}
           >
             {startTrialMutation.isPending ? (
               <>
                 <div className="w-3 h-3 mr-1 animate-spin rounded-full border border-white border-t-transparent" />
-                {t("subscription.trial.activating")}
+                <span className="truncate">{t("subscription.trial.activating")}</span>
               </>
             ) : (
               <>
                 <Sparkles className="w-3 h-3 mr-1" />
-                {t("subscription.trial.activateButton")}
+                <span className="truncate">{t("subscription.trial.activateButton")}</span>
               </>
             )}
           </Button>
@@ -307,10 +308,10 @@ export default function SubscriptionStatusIcon() {
       statusColor: "text-gray-600 dark:text-gray-400",
       icon: <Crown className="w-5 h-5 text-gray-400" />,
       action: (
-        <Link to="/subscription">
-          <Button size="sm" onClick={() => setIsOpen(false)}>
+        <Link to="/subscription" className="w-full">
+          <Button size="sm" className="w-full text-xs" onClick={() => setIsOpen(false)}>
             <Crown className="w-3 h-3 mr-1" />
-            {t("subscription.subscribe")}
+            <span className="truncate">{t("subscription.subscribe")}</span>
           </Button>
         </Link>
       )
