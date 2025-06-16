@@ -484,7 +484,7 @@
       "perMonth": "/mes",
       "perYear": "/año",
       "features": {
-        "visibleIdeas": "Hasta 50 ideas visibles",
+        "visibleIdeas": "Hasta 10 ideas",
         "unlimitedIdeas": "Ideas ilimitadas",
         "noBranding": "Sin marca de la plataforma",
         "advancedAnalytics": "Analíticas avanzadas",
@@ -592,7 +592,7 @@
   },
   "ideaLimit": {
     "title": "Límite de ideas alcanzado",
-    "description": "Has alcanzado el límite de {{count}}/{{limit}} ideas. ¡Actualiza a premium para crear ideas ilimitadas!",
+    "description": "Tienes {{count}} ideas creadas. El límite para usuarios gratuitos es de {{limit}} ideas. ¡Actualiza a premium para crear ideas ilimitadas!",
     "upgradeButton": "Actualizar a Premium"
   }
 }
