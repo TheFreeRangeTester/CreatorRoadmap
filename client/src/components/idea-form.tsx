@@ -2,10 +2,12 @@ import { useEffect } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { useMutation } from "@tanstack/react-query";
-import { Loader2 } from "lucide-react";
+import { Loader2, Crown } from "lucide-react";
 import { insertIdeaSchema, IdeaResponse } from "@shared/schema";
 import { queryClient } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
+import { useAuth } from "@/hooks/use-auth";
+import { useIdeaQuota } from "@/hooks/useIdeaQuota";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -26,6 +28,8 @@ import {
 } from "@/components/ui/dialog";
 import { z } from "zod";
 import { useTranslation } from "react-i18next";
+import { IdeaLimitNotice } from "./idea-limit-notice";
+import { hasActivePremiumAccess } from "@shared/premium-utils";
 
 interface IdeaFormProps {
   isOpen: boolean;

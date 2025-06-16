@@ -509,6 +509,38 @@ export class MemStorage implements IStorage {
       ideasApproved,
     };
   }
+
+  async getUserIdeaQuota(userId: number): Promise<{ count: number; limit: number; hasReachedLimit: boolean; }> {
+    // Obtener información del usuario para verificar si tiene premium
+    const user = this.users.get(userId);
+    if (!user) {
+      throw new Error('User not found');
+    }
+
+    // Verificar si el usuario tiene acceso premium
+    const { hasActivePremiumAccess } = await import('@shared/premium-utils');
+    const hasPremium = hasActivePremiumAccess({
+      subscriptionStatus: user.subscriptionStatus as "free" | "trial" | "premium" | "canceled",
+      trialEndDate: user.trialEndDate,
+      subscriptionEndDate: user.subscriptionEndDate
+    });
+
+    // Usuarios premium tienen límite ilimitado (representado como 999999)
+    const limit = hasPremium ? 999999 : 10;
+
+    // Contar ideas creadas por el usuario (incluyendo aprobadas y pendientes, pero no rechazadas)
+    const count = Array.from(this.ideas.values()).filter(idea => 
+      idea.creatorId === userId && (idea.status === 'approved' || idea.status === 'pending')
+    ).length;
+
+    const hasReachedLimit = !hasPremium && count >= limit;
+
+    return {
+      count,
+      limit,
+      hasReachedLimit
+    };
+  }
 }
 
 // Import the DatabaseStorage implementation

@@ -6,7 +6,7 @@ import session from "express-session";
 import connectPg from "connect-pg-simple";
 import { db, pool } from "./db";
 import { randomBytes } from "crypto";
-import { eq, desc, and, asc, sql } from "drizzle-orm";
+import { eq, desc, and, asc, sql, or } from "drizzle-orm";
 import { IStorage, IdeaWithPosition } from "./storage";
 
 const PostgresSessionStore = connectPg(session);
@@ -449,6 +449,46 @@ export class DatabaseStorage implements IStorage {
       votesGiven: votesResult[0]?.count || 0,
       ideasSuggested: suggestedResult[0]?.count || 0,
       ideasApproved: approvedResult[0]?.count || 0,
+    };
+  }
+
+  async getUserIdeaQuota(userId: number): Promise<{ count: number; limit: number; hasReachedLimit: boolean; }> {
+    // Obtener información del usuario para verificar si tiene premium
+    const user = await this.getUser(userId);
+    if (!user) {
+      throw new Error('User not found');
+    }
+
+    // Verificar si el usuario tiene acceso premium
+    const { hasActivePremiumAccess } = await import('@shared/premium-utils');
+    const hasPremium = hasActivePremiumAccess({
+      subscriptionStatus: user.subscriptionStatus as "free" | "trial" | "premium" | "canceled",
+      trialEndDate: user.trialEndDate,
+      subscriptionEndDate: user.subscriptionEndDate
+    });
+
+    // Usuarios premium tienen límite ilimitado (representado como 999999)
+    const limit = hasPremium ? 999999 : 10;
+
+    // Contar ideas creadas por el usuario (incluyendo aprobadas y pendientes, pero no rechazadas)
+    const [{ count: ideaCount }] = await db
+      .select({ count: sql<number>`count(*)` })
+      .from(ideas)
+      .where(and(
+        eq(ideas.creatorId, userId),
+        or(
+          eq(ideas.status, 'approved'),
+          eq(ideas.status, 'pending')
+        )
+      ));
+
+    const count = Number(ideaCount) || 0;
+    const hasReachedLimit = !hasPremium && count >= limit;
+
+    return {
+      count,
+      limit,
+      hasReachedLimit
     };
   }
 }
