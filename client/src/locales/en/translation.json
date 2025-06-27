@@ -257,7 +257,13 @@
     "profile": "Profile",
     "refresh": "Refresh",
     "loginRequired": "Login required",
-    "loginRequiredDesc": "Please log in to vote"
+    "loginRequiredDesc": "Please log in to vote",
+    "votes": "votes",
+    "votesToNextRank": "votes to climb",
+    "recentVotesToday": "+{{count}} today",
+    "voteRegistered": "Vote registered!",
+    "voteHelpedTopIdea": "Your vote helped this idea in the top {{rank}}!",
+    "voteCountsPosition": "Your vote counts. This idea is in position #{{rank}}"
   },
   "creator": {
     "voteSuccess": "Vote registered!",

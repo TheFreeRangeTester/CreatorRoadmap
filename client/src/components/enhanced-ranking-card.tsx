@@ -201,11 +201,11 @@ export default function EnhancedRankingCard({
         )}
       </AnimatePresence>
 
-      <Card className={`overflow-hidden border-0 ${medalInfo.shadow} hover:${medalInfo.glow} transition-all duration-500 ${medalInfo.bgColor}`}>
+      <Card className={`overflow-hidden border-0 ${medalInfo.shadow} hover:${medalInfo.glow} transition-all duration-500 ${medalInfo.bgColor} rounded-xl`}>
         <div className="flex items-stretch">
           {/* Indicador de posición con medallas */}
           <motion.div 
-            className={`flex flex-col items-center justify-center w-20 md:w-24 text-white font-bold relative ${medalInfo.gradient}`}
+            className={`flex flex-col items-center justify-center w-20 md:w-24 text-white font-bold relative ${medalInfo.gradient} rounded-l-xl`}
             whileHover={{ scale: 1.05 }}
           >
             {/* Número de ranking */}
@@ -251,7 +251,7 @@ export default function EnhancedRankingCard({
                     variant="secondary" 
                     className="text-xs bg-green-100 text-green-800 dark:bg-green-900/50 dark:text-green-300"
                   >
-                    🔥 +{recentVotes24h} hoy
+                    🔥 {t("common.recentVotesToday", "+{{count}} hoy", { count: recentVotes24h })}
                   </Badge>
                 )}
                 {showVotePreview && votesToNextRank > 0 && (
@@ -260,7 +260,7 @@ export default function EnhancedRankingCard({
                     animate={{ opacity: 1, scale: 1 }}
                     className="text-xs bg-primary/10 text-primary px-2 py-1 rounded-full"
                   >
-                    {votesToNextRank} votos para subir
+                    {votesToNextRank} {t("common.votesToNextRank", "votos para subir")}
                   </motion.div>
                 )}
               </div>

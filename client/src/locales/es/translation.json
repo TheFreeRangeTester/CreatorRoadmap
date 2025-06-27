@@ -257,7 +257,13 @@
     "profile": "Perfil",
     "refresh": "Actualizar",
     "loginRequired": "Inicio de sesión requerido",
-    "loginRequiredDesc": "Por favor inicia sesión para votar"
+    "loginRequiredDesc": "Por favor inicia sesión para votar",
+    "votes": "votos",
+    "votesToNextRank": "votos para subir",
+    "recentVotesToday": "+{{count}} hoy",
+    "voteRegistered": "¡Voto registrado!",
+    "voteHelpedTopIdea": "¡Tu voto ayudó a esta idea en el top {{rank}}!",
+    "voteCountsPosition": "Tu voto cuenta. Esta idea está en la posición #{{rank}}"
   },
   "creator": {
     "voteSuccess": "¡Voto registrado!",
