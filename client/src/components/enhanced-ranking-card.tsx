@@ -231,8 +231,8 @@ export default function EnhancedRankingCard({
               </motion.span>
             )}
             
-            {/* Indicador de tendencia */}
-            <div className="absolute top-2 right-2">
+            {/* Indicador de tendencia - más visible */}
+            <div className="absolute -top-1 -right-1 z-10">
               {getTrendIcon()}
             </div>
           </motion.div>
@@ -289,12 +289,12 @@ export default function EnhancedRankingCard({
                   <Button 
                     disabled
                     className="rounded-full w-14 h-14 text-white bg-green-500 hover:bg-green-500 mb-2"
-                    aria-label="Ya votado"
+                    aria-label={t("common.voted", "Ya votado")}
                   >
                     <ThumbsUp className="h-6 w-6" />
                   </Button>
                   <span className="text-xs text-green-600 dark:text-green-400 font-medium">
-                    Votado
+                    {t("common.voted", "Votado")}
                   </span>
                 </motion.div>
               ) : (
@@ -311,7 +311,7 @@ export default function EnhancedRankingCard({
                           ? "bg-green-500 hover:bg-green-500" 
                           : `${medalInfo.gradient} hover:shadow-lg`
                       } mb-2`}
-                      aria-label="Votar"
+                      aria-label={t("common.vote", "Votar")}
                     >
                       {isVoting ? (
                         <Loader2 className="h-6 w-6 animate-spin" />
@@ -370,14 +370,14 @@ export default function EnhancedRankingCard({
                 {idea.votes}
               </div>
               <div className="text-xs text-gray-500 dark:text-gray-400">
-                {idea.votes === 1 ? "voto" : "votos"}
+                {idea.votes === 1 ? t("badges.vote", "voto") : t("common.votes", "votos")}
               </div>
             </motion.div>
           </div>
         </div>
 
-        {/* Botón de votación móvil */}
-        <div className="md:hidden p-4 pt-0">
+        {/* Botón de votación móvil - con mejor espaciado */}
+        <div className="md:hidden p-4 pt-3 mt-2 border-t border-gray-100 dark:border-gray-700">
           {isLoggedIn ? (
             isVoted ? (
               <Button 
@@ -385,7 +385,7 @@ export default function EnhancedRankingCard({
                 className="w-full bg-green-500 hover:bg-green-500 text-white"
               >
                 <ThumbsUp className="h-4 w-4 mr-2" />
-                Ya votaste ({idea.votes} votos)
+                {t("common.voted", "Ya votaste")} ({idea.votes} {t("common.votes", "votos")})
               </Button>
             ) : (
               <motion.div whileTap={{ scale: 0.98 }}>
@@ -401,7 +401,7 @@ export default function EnhancedRankingCard({
                   {isVoting ? (
                     <>
                       <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                      Votando...
+                      {t("common.voting", "Votando...")}
                     </>
                   ) : isSuccessVote ? (
                     <>
