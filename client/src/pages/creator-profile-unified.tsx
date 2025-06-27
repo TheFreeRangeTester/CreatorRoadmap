@@ -222,19 +222,20 @@ export default function CreatorProfileUnified() {
       setSuccessVote(ideaId);
       setTimeout(() => setSuccessVote(null), 3000);
 
-      // Calcular posición actual para feedback mejorado
-      const ideaIndex = data?.ideas.findIndex(idea => idea.id === ideaId);
-      const currentRank = ideaIndex !== undefined ? ideaIndex + 1 : 0;
+      // Refetch para obtener las posiciones actualizadas
+      const refreshedData = await refetch();
+      
+      // Calcular nueva posición después del refetch
+      const newIdeaIndex = refreshedData.data?.ideas.findIndex(idea => idea.id === ideaId);
+      const newRank = newIdeaIndex !== undefined ? newIdeaIndex + 1 : 0;
 
       toast({
         title: t("common.voteRegistered", "¡Voto registrado!"),
-        description: currentRank <= 3 
-          ? t("common.voteHelpedTopIdea", "¡Tu voto ayudó a esta idea en el top {{rank}}!", { rank: currentRank })
-          : t("common.voteCountsPosition", "Tu voto cuenta. Esta idea está en la posición #{{rank}}", { rank: currentRank }),
+        description: newRank <= 3 
+          ? t("common.voteHelpedTopIdea", "¡Tu voto ayudó a esta idea en el top {{rank}}!", { rank: newRank })
+          : t("common.voteCountsPosition", "Tu voto cuenta. Esta idea está en la posición #{{rank}}", { rank: newRank }),
         className: "bg-gradient-to-r from-green-50 to-emerald-50 border-green-200 dark:from-green-900/30 dark:to-emerald-900/30 dark:border-green-800",
       });
-
-      refetch();
     } catch (error) {
       toast({
         title: t("creator.voteError", "Vote failed"),
