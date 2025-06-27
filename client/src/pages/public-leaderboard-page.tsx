@@ -117,10 +117,10 @@ export default function PublicLeaderboardPage() {
       const currentRank = ideaIndex !== undefined ? ideaIndex + 1 : 0;
       
       toast({
-        title: "¡Voto registrado!",
+        title: t("common.voteRegistered", "¡Voto registrado!"),
         description: currentRank <= 3 
-          ? `¡Tu voto ayudó a esta idea en el top ${currentRank}!`
-          : `Tu voto cuenta. Esta idea está en la posición #${currentRank}`,
+          ? t("common.voteHelpedTopIdea", "¡Tu voto ayudó a esta idea en el top {{rank}}!", { rank: currentRank })
+          : t("common.voteCountsPosition", "Tu voto cuenta. Esta idea está en la posición #{{rank}}", { rank: currentRank }),
         className: "bg-gradient-to-r from-green-50 to-emerald-50 border-green-200 dark:from-green-900/30 dark:to-emerald-900/30 dark:border-green-800",
       });
     } catch (error) {

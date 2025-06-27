@@ -275,7 +275,7 @@ export default function EnhancedRankingCard({
               <div className="flex items-center gap-2">
                 <ThumbsUp className="h-4 w-4 text-gray-500" />
                 <span className="text-sm font-medium dark:text-white">
-                  {idea.votes} votos
+                  {idea.votes} {t("common.votes", "votos")}
                 </span>
               </div>
             </div>
@@ -333,7 +333,7 @@ export default function EnhancedRankingCard({
                     </Button>
                   </motion.div>
                   <span className="text-xs text-gray-600 dark:text-gray-400">
-                    {isSuccessVote ? "¡Votado!" : "Votar"}
+                    {isSuccessVote ? t("common.voted", "¡Votado!") : t("common.vote", "Votar")}
                   </span>
                 </motion.div>
               )
@@ -345,7 +345,7 @@ export default function EnhancedRankingCard({
                 >
                   <Button
                     className={`rounded-full w-14 h-14 text-white ${medalInfo.gradient} hover:shadow-lg mb-2`}
-                    aria-label={t("common.loginToVote")}
+                    aria-label={t("common.loginToVote", "Inicia sesión para votar")}
                     onClick={() => {
                       localStorage.setItem('redirectAfterAuth', window.location.href);
                       window.location.href = '/auth';
@@ -355,7 +355,7 @@ export default function EnhancedRankingCard({
                   </Button>
                 </motion.div>
                 <span className="text-xs text-gray-600 dark:text-gray-400">
-                  Inicia sesión
+                  {t("common.loginToVote", "Inicia sesión")}
                 </span>
               </motion.div>
             )}
