@@ -99,7 +99,11 @@ export default function PublicLeaderboardPage() {
       const response = await apiRequest("POST", endpoint);
 
       // Optimistically update voted ideas
-      setVotedIdeas(prev => new Set(Array.from(prev).concat(ideaId)));
+      setVotedIdeas(prev => {
+        const newSet = new Set(prev);
+        newSet.add(ideaId);
+        return newSet;
+      });
 
       // Show success animation
       setSuccessVote(ideaId);
