@@ -120,6 +120,7 @@ The application uses a monorepo structure with shared TypeScript types between c
 
 ## Changelog
 - June 27, 2025. Initial setup
+- June 27, 2025. Enhanced public profile UI with improved mobile UX, gamification features, and complete multilingual support
 
 ## User Preferences
 

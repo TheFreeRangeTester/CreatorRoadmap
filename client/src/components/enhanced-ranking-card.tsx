@@ -108,17 +108,29 @@ export default function EnhancedRankingCard({
     return gradients[(rank - 4) % gradients.length];
   };
 
-  // Determinar tendencia
+  // Determinar tendencia con mejor visibilidad
   const getTrendIcon = () => {
     if (!idea.position) return null;
     const { change } = idea.position;
     
     if (change === null || change === 0) {
-      return <Minus className="w-4 h-4 text-gray-500" />;
+      return (
+        <div className="bg-gray-500/20 rounded-full p-1">
+          <Minus className="w-3 h-3 text-gray-600 dark:text-gray-400" />
+        </div>
+      );
     } else if (change > 0) {
-      return <TrendingUp className="w-4 h-4 text-green-500" />;
+      return (
+        <div className="bg-green-500/20 rounded-full p-1">
+          <TrendingUp className="w-3 h-3 text-green-600 dark:text-green-400" />
+        </div>
+      );
     } else {
-      return <TrendingDown className="w-4 h-4 text-red-500" />;
+      return (
+        <div className="bg-red-500/20 rounded-full p-1">
+          <TrendingDown className="w-3 h-3 text-red-600 dark:text-red-400" />
+        </div>
+      );
     }
   };
 
@@ -406,12 +418,12 @@ export default function EnhancedRankingCard({
                   ) : isSuccessVote ? (
                     <>
                       <ThumbsUp className="h-4 w-4 mr-2 animate-bounce" />
-                      ¡Votado! ({idea.votes} votos)
+                      {t("common.voted", "¡Votado!")} ({idea.votes} {t("common.votes", "votos")})
                     </>
                   ) : (
                     <>
                       <ChevronUp className="h-4 w-4 mr-2" />
-                      Votar ({idea.votes} votos)
+                      {t("common.vote", "Votar")} ({idea.votes} {t("common.votes", "votos")})
                     </>
                   )}
                 </Button>
@@ -426,7 +438,7 @@ export default function EnhancedRankingCard({
               }}
             >
               <ChevronUp className="h-4 w-4 mr-2" />
-              Inicia sesión para votar ({idea.votes} votos)
+              {t("common.loginToVote", "Inicia sesión para votar")} ({idea.votes} {t("common.votes", "votos")})
             </Button>
           )}
         </div>
