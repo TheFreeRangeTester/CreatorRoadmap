@@ -12,7 +12,6 @@ import {
   User,
 } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { IdeaResponse } from "@shared/schema";
 import { useTranslation } from "react-i18next";
 import { useAuth } from "@/hooks/use-auth";
@@ -261,8 +260,10 @@ export default function IdeaCard({
           <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center space-y-3 sm:space-y-0">
             <div className="flex items-center">
               {/* Solo mostrar el botón de voto cuando NO estamos en el dashboard del creador y no es el creador de la idea */}
-              {!onEdit && !onDelete && !isCreator && (
-                user ? (
+              {!onEdit &&
+                !onDelete &&
+                !isCreator &&
+                (user ? (
                   <motion.button
                     variants={buttonVariants}
                     whileHover="hover"
@@ -297,8 +298,11 @@ export default function IdeaCard({
                     className="flex items-center px-3 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-1 dark:focus:ring-offset-gray-800 min-w-[80px] text-sm bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 hover:bg-blue-100 dark:hover:bg-blue-800/50 border border-blue-200 dark:border-blue-700"
                     onClick={() => {
                       // Store the current page for redirect after login
-                      localStorage.setItem('redirectAfterAuth', window.location.href);
-                      window.location.href = '/auth';
+                      localStorage.setItem(
+                        "redirectAfterAuth",
+                        window.location.href
+                      );
+                      window.location.href = "/auth";
                     }}
                   >
                     <motion.div variants={iconVariants}>
@@ -306,8 +310,7 @@ export default function IdeaCard({
                     </motion.div>
                     {t("common.loginToVote")}
                   </motion.button>
-                )
-              )}
+                ))}
               <motion.span
                 className={`${
                   !onEdit && !onDelete ? "ml-2" : ""

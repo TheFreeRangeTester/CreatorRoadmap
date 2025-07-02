@@ -1,13 +1,13 @@
 import { useState, useEffect, useRef } from "react";
 import { Link, useLocation } from "wouter";
-import { motion, useScroll, useTransform, AnimatePresence } from "framer-motion";
+import {
+  motion,
+} from "framer-motion";
 import { useToast } from "@/hooks/use-toast";
 import gsap from "gsap";
 import { SplitText } from "gsap/SplitText";
 import {
   ArrowRight,
-  Check,
-  Users,
   Star,
   Plus,
   Share2,
@@ -19,7 +19,6 @@ import {
   TrendingUp,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { useIsMobile } from "@/hooks/use-mobile";
 import { useTranslation } from "react-i18next";
 import DemoDialog from "@/components/demo-dialog";
 import demoGifPath from "@assets/DemoGIF.gif";
@@ -120,7 +119,6 @@ export default function LandingPage() {
   const [isDemoOpen, setIsDemoOpen] = useState(false);
   const { t } = useTranslation();
   const { toast } = useToast();
-  const isMobile = useIsMobile();
   const titleRef = useRef(null);
 
   useEffect(() => {
@@ -178,20 +176,26 @@ export default function LandingPage() {
       <section className="pt-20 pb-16 md:pt-32 md:pb-24 relative overflow-hidden">
         {/* Animated background elements */}
         <div className="absolute inset-0 overflow-hidden">
-          <motion.div 
+          <motion.div
             animate={floatingAnimation}
             className="absolute top-20 left-10 w-20 h-20 bg-gradient-to-r from-purple-400 to-pink-400 rounded-full opacity-20 blur-xl"
           />
-          <motion.div 
-            animate={{ ...floatingAnimation, transition: { ...floatingAnimation.transition, delay: 1 } }}
+          <motion.div
+            animate={{
+              ...floatingAnimation,
+              transition: { ...floatingAnimation.transition, delay: 1 },
+            }}
             className="absolute top-40 right-20 w-32 h-32 bg-gradient-to-r from-blue-400 to-cyan-400 rounded-full opacity-20 blur-xl"
           />
-          <motion.div 
-            animate={{ ...floatingAnimation, transition: { ...floatingAnimation.transition, delay: 2 } }}
+          <motion.div
+            animate={{
+              ...floatingAnimation,
+              transition: { ...floatingAnimation.transition, delay: 2 },
+            }}
             className="absolute bottom-40 left-20 w-24 h-24 bg-gradient-to-r from-green-400 to-emerald-400 rounded-full opacity-20 blur-xl"
           />
         </div>
-        
+
         <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent dark:via-white/5"></div>
         <div className="container mx-auto px-4 max-w-7xl relative z-10">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
@@ -289,7 +293,7 @@ export default function LandingPage() {
         {/* Background decorative elements */}
         <div className="absolute top-10 right-10 w-32 h-32 bg-gradient-to-r from-yellow-300 to-orange-400 rounded-full opacity-10 blur-2xl"></div>
         <div className="absolute bottom-10 left-10 w-24 h-24 bg-gradient-to-r from-green-300 to-blue-400 rounded-full opacity-10 blur-2xl"></div>
-        
+
         <div className="container mx-auto px-4 max-w-7xl relative z-10">
           <motion.div
             initial="hidden"
@@ -308,17 +312,35 @@ export default function LandingPage() {
 
           <div className="grid md:grid-cols-3 gap-8 md:gap-12">
             {[
-              { icon: Plus, step: 1, gradient: "from-emerald-500 to-teal-500", bgGradient: "from-emerald-50 to-teal-50", darkBg: "dark:from-emerald-950/20 dark:to-teal-950/20" },
-              { icon: Share2, step: 2, gradient: "from-blue-500 to-cyan-500", bgGradient: "from-blue-50 to-cyan-50", darkBg: "dark:from-blue-950/20 dark:to-cyan-950/20" },
-              { icon: Vote, step: 3, gradient: "from-purple-500 to-pink-500", bgGradient: "from-purple-50 to-pink-50", darkBg: "dark:from-purple-950/20 dark:to-pink-950/20" },
+              {
+                icon: Plus,
+                step: 1,
+                gradient: "from-emerald-500 to-teal-500",
+                bgGradient: "from-emerald-50 to-teal-50",
+                darkBg: "dark:from-emerald-950/20 dark:to-teal-950/20",
+              },
+              {
+                icon: Share2,
+                step: 2,
+                gradient: "from-blue-500 to-cyan-500",
+                bgGradient: "from-blue-50 to-cyan-50",
+                darkBg: "dark:from-blue-950/20 dark:to-cyan-950/20",
+              },
+              {
+                icon: Vote,
+                step: 3,
+                gradient: "from-purple-500 to-pink-500",
+                bgGradient: "from-purple-50 to-pink-50",
+                darkBg: "dark:from-purple-950/20 dark:to-pink-950/20",
+              },
             ].map(({ icon: Icon, step, gradient, bgGradient, darkBg }) => (
-              <motion.div 
-                key={step} 
-                variants={fadeIn} 
+              <motion.div
+                key={step}
+                variants={fadeIn}
                 whileHover={{ y: -5, scale: 1.02 }}
                 className={`text-center p-6 rounded-2xl bg-gradient-to-br ${bgGradient} ${darkBg} backdrop-blur-sm border border-white/20 dark:border-gray-700/30 shadow-lg hover:shadow-xl transition-all duration-300`}
               >
-                <motion.div 
+                <motion.div
                   className={`w-16 h-16 bg-gradient-to-br ${gradient} text-white rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg`}
                   animate={pulseAnimation}
                 >
@@ -341,7 +363,7 @@ export default function LandingPage() {
         {/* Background decorative elements */}
         <div className="absolute top-0 left-1/4 w-40 h-40 bg-gradient-to-r from-emerald-300 to-teal-400 rounded-full opacity-10 blur-3xl"></div>
         <div className="absolute bottom-0 right-1/4 w-32 h-32 bg-gradient-to-r from-green-300 to-blue-400 rounded-full opacity-10 blur-3xl"></div>
-        
+
         <div className="container mx-auto px-4 max-w-7xl relative z-10">
           <motion.div
             initial="hidden"
@@ -360,10 +382,34 @@ export default function LandingPage() {
 
           <div className="grid md:grid-cols-2 gap-6 md:gap-8">
             {[
-              { benefit: 1, icon: Target, gradient: "from-emerald-500 to-green-500", bgGradient: "from-emerald-50 to-green-50", darkBg: "dark:from-emerald-950/20 dark:to-green-950/20" },
-              { benefit: 2, icon: Heart, gradient: "from-pink-500 to-rose-500", bgGradient: "from-pink-50 to-rose-50", darkBg: "dark:from-pink-950/20 dark:to-rose-950/20" },
-              { benefit: 3, icon: Zap, gradient: "from-yellow-500 to-orange-500", bgGradient: "from-yellow-50 to-orange-50", darkBg: "dark:from-yellow-950/20 dark:to-orange-950/20" },
-              { benefit: 4, icon: TrendingUp, gradient: "from-purple-500 to-indigo-500", bgGradient: "from-purple-50 to-indigo-50", darkBg: "dark:from-purple-950/20 dark:to-indigo-950/20" },
+              {
+                benefit: 1,
+                icon: Target,
+                gradient: "from-emerald-500 to-green-500",
+                bgGradient: "from-emerald-50 to-green-50",
+                darkBg: "dark:from-emerald-950/20 dark:to-green-950/20",
+              },
+              {
+                benefit: 2,
+                icon: Heart,
+                gradient: "from-pink-500 to-rose-500",
+                bgGradient: "from-pink-50 to-rose-50",
+                darkBg: "dark:from-pink-950/20 dark:to-rose-950/20",
+              },
+              {
+                benefit: 3,
+                icon: Zap,
+                gradient: "from-yellow-500 to-orange-500",
+                bgGradient: "from-yellow-50 to-orange-50",
+                darkBg: "dark:from-yellow-950/20 dark:to-orange-950/20",
+              },
+              {
+                benefit: 4,
+                icon: TrendingUp,
+                gradient: "from-purple-500 to-indigo-500",
+                bgGradient: "from-purple-50 to-indigo-50",
+                darkBg: "dark:from-purple-950/20 dark:to-indigo-950/20",
+              },
             ].map(({ benefit, icon: Icon, gradient, bgGradient, darkBg }) => (
               <motion.div
                 key={benefit}
@@ -372,7 +418,7 @@ export default function LandingPage() {
                 className={`bg-gradient-to-br ${bgGradient} ${darkBg} p-6 rounded-2xl shadow-lg border border-white/20 dark:border-gray-700/30 backdrop-blur-sm hover:shadow-xl transition-all duration-300`}
               >
                 <div className="flex items-start gap-4">
-                  <motion.div 
+                  <motion.div
                     className={`w-12 h-12 bg-gradient-to-br ${gradient} rounded-xl flex items-center justify-center flex-shrink-0 shadow-lg`}
                     animate={pulseAnimation}
                   >
@@ -432,16 +478,19 @@ export default function LandingPage() {
       <section className="py-16 md:py-24 bg-gradient-to-br from-violet-100 via-purple-100 to-fuchsia-100 dark:from-gray-900 dark:via-violet-950/20 dark:to-purple-950/20 relative overflow-hidden">
         {/* Animated background elements */}
         <div className="absolute inset-0 overflow-hidden">
-          <motion.div 
+          <motion.div
             animate={floatingAnimation}
             className="absolute top-10 left-1/4 w-24 h-24 bg-gradient-to-r from-violet-400 to-purple-500 rounded-full opacity-20 blur-xl"
           />
-          <motion.div 
-            animate={{ ...floatingAnimation, transition: { ...floatingAnimation.transition, delay: 1.5 } }}
+          <motion.div
+            animate={{
+              ...floatingAnimation,
+              transition: { ...floatingAnimation.transition, delay: 1.5 },
+            }}
             className="absolute bottom-10 right-1/4 w-32 h-32 bg-gradient-to-r from-fuchsia-400 to-pink-500 rounded-full opacity-20 blur-xl"
           />
         </div>
-        
+
         <div className="container mx-auto px-4 max-w-7xl relative z-10">
           <motion.div
             initial="hidden"
@@ -450,13 +499,13 @@ export default function LandingPage() {
             variants={staggerContainer}
             className="text-center"
           >
-            <motion.h2 
+            <motion.h2
               variants={fadeIn}
               className="text-2xl md:text-3xl lg:text-4xl font-bold text-gray-900 dark:text-white mb-4"
             >
               {t("landing.cta.title")}
             </motion.h2>
-            <motion.p 
+            <motion.p
               variants={fadeIn}
               className="text-lg text-gray-600 dark:text-gray-300 mb-8 max-w-2xl mx-auto"
             >
@@ -483,7 +532,7 @@ export default function LandingPage() {
                 </motion.div>
               </Link>
             </motion.div>
-            <motion.p 
+            <motion.p
               variants={fadeIn}
               className="text-sm text-gray-500 dark:text-gray-400 mt-4"
             >

@@ -3,16 +3,9 @@ import { useQuery, useMutation } from "@tanstack/react-query";
 import { motion } from "framer-motion";
 import {
   Loader2,
-  CheckCircle,
-  XCircle,
   Lightbulb,
-  Clock,
   User,
   ListFilter,
-  Plus,
-  Sparkles,
-  TrendingUp,
-  Users,
 } from "lucide-react";
 import { useAuth } from "@/hooks/use-auth";
 import { useToast } from "@/hooks/use-toast";
@@ -26,7 +19,6 @@ import LeaderboardInfo from "@/components/leaderboard-info";
 import EmptyState from "@/components/empty-state";
 import ShareProfile from "@/components/share-profile";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import { Link } from "wouter";
 import { IdeaResponse } from "@shared/schema";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -35,6 +27,7 @@ import { IdeasTabView } from "@/components/ideas-tab-view";
 import { LanguageToggle } from "@/components/language-toggle";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { IdeaLimitNotice } from "@/components/idea-limit-notice";
+import logoPng from "@/assets/logo.png";
 
 export default function HomePage() {
   const { user, logoutMutation } = useAuth();
@@ -43,7 +36,7 @@ export default function HomePage() {
   const [isIdeaFormOpen, setIsIdeaFormOpen] = useState(false);
   const [currentIdea, setCurrentIdea] = useState<IdeaResponse | null>(null);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
-  const [ideaToDelete, setIdeaToDelete] = useState<number | null>(null);
+  const [ideaToDelete] = useState<number | null>(null);
 
   // Fetch ideas
   const {
@@ -117,15 +110,7 @@ export default function HomePage() {
     setIsIdeaFormOpen(true);
   };
 
-  const handleEditIdea = (idea: IdeaResponse) => {
-    setCurrentIdea(idea);
-    setIsIdeaFormOpen(true);
-  };
 
-  const handleDeleteIdea = (ideaId: number) => {
-    setIdeaToDelete(ideaId);
-    setIsDeleteModalOpen(true);
-  };
 
   const handleConfirmDelete = () => {
     if (ideaToDelete !== null) {
@@ -144,7 +129,7 @@ export default function HomePage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50 to-indigo-100 dark:from-gray-900 dark:via-blue-900/20 dark:to-indigo-900/30">
       {/* Header */}
-      <motion.header 
+      <motion.header
         initial={{ opacity: 0, y: -10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
@@ -153,14 +138,14 @@ export default function HomePage() {
         <div className="container mx-auto px-3 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             {/* Logo and title section - responsive */}
-            <motion.div 
+            <motion.div
               className="flex items-center min-w-0 flex-1"
               whileHover={{ scale: 1.02 }}
               transition={{ type: "spring", stiffness: 400, damping: 10 }}
             >
               <div className="relative">
                 <img
-                  src={new URL("@/assets/logo.png", import.meta.url).href}
+                  src={logoPng}
                   alt="Logo"
                   className="h-7 sm:h-10 w-auto flex-shrink-0"
                 />
@@ -178,9 +163,12 @@ export default function HomePage() {
               {user ? (
                 <div className="flex items-center gap-3">
                   <Link href="/profile">
-                    <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                      <Button 
-                        variant="outline" 
+                    <motion.div
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                    >
+                      <Button
+                        variant="outline"
                         size="sm"
                         className="bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 border-blue-200 dark:border-blue-800 hover:from-blue-100 hover:to-indigo-100 dark:hover:from-blue-900/30 dark:hover:to-indigo-900/30"
                       >
@@ -189,7 +177,10 @@ export default function HomePage() {
                       </Button>
                     </motion.div>
                   </Link>
-                  <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                  <motion.div
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                  >
                     <Button
                       variant="outline"
                       size="sm"
@@ -219,7 +210,7 @@ export default function HomePage() {
               {/* Left section - Logo and title */}
               <div className="flex items-center min-w-0 flex-1">
                 <img
-                  src={new URL("@/assets/logo.png", import.meta.url).href}
+                  src={logoPng}
                   alt="Logo"
                   className="h-7 w-auto flex-shrink-0"
                 />
