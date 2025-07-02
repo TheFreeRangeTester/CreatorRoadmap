@@ -21,7 +21,7 @@ describe('Auth Module', () => {
   beforeEach(() => {
     app = express();
     storage = new MemStorage();
-    
+
     app.use(express.json());
     app.use(session({
       secret: 'test-secret',
@@ -30,9 +30,11 @@ describe('Auth Module', () => {
       store: storage.sessionStore,
     }));
 
-    setupAuth(app);
+    // Forzamos el tipo para pruebas, ya que setupAuth espera un tipo Express específico
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    setupAuth(app as any);
 
-    // Mock crypto functions
+    // Mock de funciones de crypto
     mockCrypto.randomBytes.mockImplementation((size: number) => {
       return Buffer.from('a'.repeat(size));
     });
@@ -54,7 +56,7 @@ describe('Auth Module', () => {
     it('should hash passwords consistently', async () => {
       // This test would need to import the hashPassword function
       // For now, we'll test through the registration endpoint
-      
+
       const userData = {
         username: 'testuser',
         password: 'testpassword',
@@ -68,7 +70,7 @@ describe('Auth Module', () => {
 
       expect(response.status).toBe(201);
       expect(response.body.user.username).toBe('testuser');
-      
+
       // Verify password was hashed (should not equal original)
       const user = await storage.getUserByUsername('testuser');
       expect(user?.password).not.toBe('testpassword');

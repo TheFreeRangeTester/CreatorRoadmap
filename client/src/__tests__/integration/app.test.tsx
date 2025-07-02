@@ -1,25 +1,40 @@
-import { describe, it, expect, jest, beforeEach, afterEach } from '@jest/globals';
-import { render, screen, waitFor, fireEvent } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
-import App from '../../App';
+import {
+  describe,
+  it,
+  expect,
+  jest,
+  beforeEach,
+  afterEach,
+} from "@jest/globals";
+import { render, screen, waitFor, fireEvent } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
+import App from "../../App";
 
 // Mock external dependencies
-jest.mock('wouter', () => ({
-  Route: ({ children, path }: any) => <div data-testid={`route-${path}`}>{children}</div>,
+jest.mock("wouter", () => ({
+  Route: ({ children, path }: any) => (
+    <div data-testid={`route-${path}`}>{children}</div>
+  ),
   Router: ({ children }: any) => <div data-testid="router">{children}</div>,
-  useLocation: () => ['/', jest.fn()],
-  Link: ({ children, href, ...props }: any) => <a href={href} {...props}>{children}</a>,
+  useLocation: () => ["/", jest.fn()],
+  Link: ({ children, href, ...props }: any) => (
+    <a href={href} {...props}>
+      {children}
+    </a>
+  ),
 }));
 
-jest.mock('framer-motion', () => ({
+jest.mock("framer-motion", () => ({
   motion: {
     div: ({ children, ...props }: any) => <div {...props}>{children}</div>,
-    button: ({ children, ...props }: any) => <button {...props}>{children}</button>,
+    button: ({ children, ...props }: any) => (
+      <button {...props}>{children}</button>
+    ),
   },
   AnimatePresence: ({ children }: any) => children,
 }));
 
-jest.mock('lucide-react', () => ({
+jest.mock("lucide-react", () => ({
   Heart: () => <div data-testid="heart-icon">♥</div>,
   User: () => <div data-testid="user-icon">👤</div>,
   Settings: () => <div data-testid="settings-icon">⚙</div>,
@@ -28,16 +43,16 @@ jest.mock('lucide-react', () => ({
 }));
 
 // Mock i18next
-jest.mock('react-i18next', () => ({
+jest.mock("react-i18next", () => ({
   useTranslation: () => ({
     t: (key: string) => key,
     i18n: {
       changeLanguage: jest.fn(),
-      language: 'es',
+      language: "es",
     },
   }),
   initReactI18next: {
-    type: '3rdParty',
+    type: "3rdParty",
     init: jest.fn(),
   },
 }));
@@ -46,15 +61,15 @@ jest.mock('react-i18next', () => ({
 const mockFetch = jest.fn() as jest.MockedFunction<typeof fetch>;
 global.fetch = mockFetch;
 
-describe('App Integration Tests', () => {
+describe("App Integration Tests", () => {
   beforeEach(() => {
     jest.clearAllMocks();
-    
+
     // Default fetch mock for user authentication
     mockFetch.mockResolvedValue({
       ok: false,
       status: 401,
-      json: async () => ({ message: 'Not authenticated' }),
+      json: async () => ({ message: "Not authenticated" }),
     } as Response);
   });
 
@@ -62,79 +77,79 @@ describe('App Integration Tests', () => {
     jest.resetAllMocks();
   });
 
-  describe('Application Initialization', () => {
-    it('should render the app without crashing', () => {
+  describe("Application Initialization", () => {
+    it("should render the app without crashing", () => {
       render(<App />);
-      
-      expect(screen.getByTestId('router')).toBeInTheDocument();
+
+      expect(screen.getByTestId("router")).toBeDefined();
     });
 
-    it('should initialize with theme provider', () => {
+    it("should initialize with theme provider", () => {
       render(<App />);
-      
+
       // Should have theme context available
-      const app = screen.getByTestId('router');
-      expect(app).toBeInTheDocument();
+      const app = screen.getByTestId("router");
+      expect(app).toBeDefined();
     });
 
-    it('should initialize with query client', () => {
+    it("should initialize with query client", () => {
       render(<App />);
-      
+
       // React Query should be available for data fetching
-      expect(mockFetch).toHaveBeenCalledWith('/api/user');
+      expect(mockFetch).toHaveBeenCalledWith("/api/user");
     });
 
-    it('should handle loading states gracefully', async () => {
-      let resolveAuth: (value: any) => void;
-      const authPromise = new Promise((resolve) => {
+    it("should handle loading states gracefully", async () => {
+      let resolveAuth: (value: Response) => void;
+      const authPromise = new Promise<Response>((resolve) => {
         resolveAuth = resolve;
       });
-      
+
       mockFetch.mockImplementation(() => authPromise);
-      
+
       render(<App />);
-      
+
       // Should show some loading state initially
-      expect(screen.getByTestId('router')).toBeInTheDocument();
-      
+      expect(screen.getByTestId("router")).toBeDefined();
+
       // Resolve authentication
       resolveAuth!({
         ok: false,
         status: 401,
-        json: async () => ({ message: 'Not authenticated' }),
-      });
-      
+        json: async () => ({ message: "Not authenticated" }),
+      } as Response);
+
       await waitFor(() => {
-        expect(screen.getByTestId('router')).toBeInTheDocument();
+        expect(screen.getByTestId("router")).toBeDefined();
       });
     });
   });
 
-  describe('Authentication Flow', () => {
-    it('should handle unauthenticated users', async () => {
+  describe("Authentication Flow", () => {
+    it("should handle unauthenticated users", async () => {
       mockFetch.mockResolvedValueOnce({
         ok: false,
         status: 401,
-        json: async () => ({ message: 'Not authenticated' }),
+        json: async () => ({ message: "Not authenticated" }),
       } as Response);
 
       render(<App />);
 
       await waitFor(() => {
-        expect(mockFetch).toHaveBeenCalledWith('/api/user');
+        expect(mockFetch).toHaveBeenCalledWith("/api/user");
       });
 
       // Should show appropriate UI for unauthenticated users
-      expect(screen.getByTestId('router')).toBeInTheDocument();
+      expect(screen.getByTestId("router")).toBeDefined();
     });
 
-    it('should handle authenticated users', async () => {
+    it("should handle authenticated users", async () => {
       const mockUser = {
         id: 1,
-        username: 'testuser',
-        email: 'test@example.com',
-        userRole: 'creator',
-        subscriptionStatus: 'premium',
+        username: "testuser",
+        email: "test@example.com",
+        userRole: "creator",
+        subscriptionStatus: "premium",
       };
 
       mockFetch.mockResolvedValueOnce({
@@ -145,43 +160,43 @@ describe('App Integration Tests', () => {
       render(<App />);
 
       await waitFor(() => {
-        expect(mockFetch).toHaveBeenCalledWith('/api/user');
+        expect(mockFetch).toHaveBeenCalledWith("/api/user");
       });
 
       // Should show appropriate UI for authenticated users
-      expect(screen.getByTestId('router')).toBeInTheDocument();
+      expect(screen.getByTestId("router")).toBeDefined();
     });
 
-    it('should handle authentication errors gracefully', async () => {
-      mockFetch.mockRejectedValueOnce(new Error('Network error'));
+    it("should handle authentication errors gracefully", async () => {
+      mockFetch.mockRejectedValueOnce(new Error("Network error"));
 
       render(<App />);
 
       await waitFor(() => {
-        expect(mockFetch).toHaveBeenCalledWith('/api/user');
+        expect(mockFetch).toHaveBeenCalledWith("/api/user");
       });
 
       // Should not crash and show appropriate error handling
-      expect(screen.getByTestId('router')).toBeInTheDocument();
+      expect(screen.getByTestId("router")).toBeDefined();
     });
   });
 
-  describe('Routing and Navigation', () => {
-    it('should render different routes correctly', () => {
+  describe("Routing and Navigation", () => {
+    it("should render different routes correctly", () => {
       render(<App />);
 
       // Check that routes are set up
-      expect(screen.getByTestId('route-/')).toBeInTheDocument();
-      expect(screen.getByTestId('route-/auth')).toBeInTheDocument();
-      expect(screen.getByTestId('route-/dashboard')).toBeInTheDocument();
+      expect(screen.getByTestId("route-/")).toBeDefined();
+      expect(screen.getByTestId("route-/auth")).toBeDefined();
+      expect(screen.getByTestId("route-/dashboard")).toBeDefined();
     });
 
-    it('should handle protected routes for authenticated users', async () => {
+    it("should handle protected routes for authenticated users", async () => {
       const mockUser = {
         id: 1,
-        username: 'testuser',
-        userRole: 'creator',
-        subscriptionStatus: 'premium',
+        username: "testuser",
+        userRole: "creator",
+        subscriptionStatus: "premium",
       };
 
       mockFetch.mockResolvedValueOnce({
@@ -193,48 +208,48 @@ describe('App Integration Tests', () => {
 
       await waitFor(() => {
         // Protected routes should be accessible
-        expect(screen.getByTestId('route-/dashboard')).toBeInTheDocument();
-        expect(screen.getByTestId('route-/subscription')).toBeInTheDocument();
+        expect(screen.getByTestId("route-/dashboard")).toBeDefined();
+        expect(screen.getByTestId("route-/subscription")).toBeDefined();
       });
     });
 
-    it('should handle public routes for unauthenticated users', async () => {
+    it("should handle public routes for unauthenticated users", async () => {
       mockFetch.mockResolvedValueOnce({
         ok: false,
         status: 401,
-        json: async () => ({ message: 'Not authenticated' }),
+        json: async () => ({ message: "Not authenticated" }),
       } as Response);
 
       render(<App />);
 
       await waitFor(() => {
         // Public routes should be accessible
-        expect(screen.getByTestId('route-/')).toBeInTheDocument();
-        expect(screen.getByTestId('route-/auth')).toBeInTheDocument();
+        expect(screen.getByTestId("route-/")).toBeDefined();
+        expect(screen.getByTestId("route-/auth")).toBeDefined();
       });
     });
   });
 
-  describe('Theme Management', () => {
-    it('should support theme switching', () => {
+  describe("Theme Management", () => {
+    it("should support theme switching", () => {
       render(<App />);
 
       // Theme context should be available
-      expect(screen.getByTestId('router')).toBeInTheDocument();
-      
+      expect(screen.getByTestId("router")).toBeDefined();
+
       // Should have default theme classes
-      const appContainer = screen.getByTestId('router');
+      const appContainer = screen.getByTestId("router");
       expect(appContainer).toBeDefined();
     });
 
-    it('should persist theme preference', () => {
+    it("should persist theme preference", () => {
       // Mock localStorage
       const mockLocalStorage = {
         getItem: jest.fn(),
         setItem: jest.fn(),
         removeItem: jest.fn(),
       };
-      Object.defineProperty(window, 'localStorage', {
+      Object.defineProperty(window, "localStorage", {
         value: mockLocalStorage,
       });
 
@@ -245,83 +260,95 @@ describe('App Integration Tests', () => {
     });
   });
 
-  describe('Internationalization', () => {
-    it('should initialize with default language', () => {
+  describe("Internationalization", () => {
+    it("should initialize with default language", () => {
       render(<App />);
 
       // i18n should be initialized
-      expect(screen.getByTestId('router')).toBeInTheDocument();
+      expect(screen.getByTestId("router")).toBeDefined();
     });
 
-    it('should support language switching', () => {
+    it("should support language switching", () => {
       const { rerender } = render(<App />);
 
       // Should support multiple languages
-      expect(screen.getByTestId('router')).toBeInTheDocument();
+      expect(screen.getByTestId("router")).toBeDefined();
 
       // Re-render with different language context
       rerender(<App />);
-      expect(screen.getByTestId('router')).toBeInTheDocument();
+      expect(screen.getByTestId("router")).toBeDefined();
     });
   });
 
-  describe('Error Handling', () => {
-    it('should handle API errors gracefully', async () => {
+  describe("Error Handling", () => {
+    it("should handle API errors gracefully", async () => {
       // Mock various API error scenarios
       mockFetch
-        .mockRejectedValueOnce(new Error('Network error'))
+        .mockRejectedValueOnce(new Error("Network error"))
         .mockResolvedValueOnce({
           ok: false,
           status: 500,
-          json: async () => ({ error: 'Server error' }),
+          json: async () => ({ error: "Server error" }),
         } as Response);
 
       render(<App />);
 
       await waitFor(() => {
         // Should not crash on API errors
-        expect(screen.getByTestId('router')).toBeInTheDocument();
+        expect(screen.getByTestId("router")).toBeDefined();
       });
     });
 
-    it('should handle component errors gracefully', () => {
+    it("should handle component errors gracefully", () => {
       // Mock console.error to avoid noise in tests
-      const consoleSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
+      const consoleSpy = jest
+        .spyOn(console, "error")
+        .mockImplementation(() => {});
 
       render(<App />);
 
       // Should render without throwing
-      expect(screen.getByTestId('router')).toBeInTheDocument();
+      expect(screen.getByTestId("router")).toBeDefined();
 
       consoleSpy.mockRestore();
     });
 
-    it('should handle invalid routes', () => {
+    it("should handle invalid routes", () => {
       // Mock useLocation to return invalid route
-      jest.doMock('wouter', () => ({
-        ...jest.requireActual('wouter'),
-        useLocation: () => ['/invalid-route', jest.fn()],
+      jest.doMock("wouter", () => ({
+        Route: ({ children, path }: any) => (
+          <div data-testid={`route-${path}`}>{children}</div>
+        ),
+        Router: ({ children }: any) => (
+          <div data-testid="router">{children}</div>
+        ),
+        useLocation: () => ["/invalid-route", jest.fn()],
+        Link: ({ children, href, ...props }: any) => (
+          <a href={href} {...props}>
+            {children}
+          </a>
+        ),
       }));
 
       render(<App />);
 
       // Should handle invalid routes gracefully
-      expect(screen.getByTestId('router')).toBeInTheDocument();
+      expect(screen.getByTestId("router")).toBeDefined();
     });
   });
 
-  describe('Performance', () => {
-    it('should load efficiently', () => {
+  describe("Performance", () => {
+    it("should load efficiently", () => {
       const start = performance.now();
       render(<App />);
       const end = performance.now();
 
       // Should render quickly
       expect(end - start).toBeLessThan(1000);
-      expect(screen.getByTestId('router')).toBeInTheDocument();
+      expect(screen.getByTestId("router")).toBeDefined();
     });
 
-    it('should not cause memory leaks', () => {
+    it("should not cause memory leaks", () => {
       const { unmount } = render(<App />);
 
       // Should clean up properly
@@ -330,44 +357,44 @@ describe('App Integration Tests', () => {
     });
   });
 
-  describe('Accessibility', () => {
-    it('should be keyboard navigable', async () => {
+  describe("Accessibility", () => {
+    it("should be keyboard navigable", async () => {
       const user = userEvent.setup();
       render(<App />);
 
       // Should support keyboard navigation
       await user.tab();
-      
+
       // Focus should be manageable
       expect(document.activeElement).toBeDefined();
     });
 
-    it('should have proper ARIA labels', () => {
+    it("should have proper ARIA labels", () => {
       render(<App />);
 
       // Should have accessible structure
-      expect(screen.getByTestId('router')).toBeInTheDocument();
+      expect(screen.getByTestId("router")).toBeDefined();
     });
 
-    it('should support screen readers', () => {
+    it("should support screen readers", () => {
       render(<App />);
 
       // Should have semantic HTML structure
-      const appContainer = screen.getByTestId('router');
-      expect(appContainer).toBeInTheDocument();
+      const appContainer = screen.getByTestId("router");
+      expect(appContainer).toBeDefined();
     });
   });
 
-  describe('Mobile Responsiveness', () => {
-    it('should adapt to mobile viewports', () => {
+  describe("Mobile Responsiveness", () => {
+    it("should adapt to mobile viewports", () => {
       // Mock mobile viewport
-      Object.defineProperty(window, 'innerWidth', {
+      Object.defineProperty(window, "innerWidth", {
         writable: true,
         configurable: true,
         value: 375,
       });
 
-      Object.defineProperty(window, 'innerHeight', {
+      Object.defineProperty(window, "innerHeight", {
         writable: true,
         configurable: true,
         value: 667,
@@ -376,28 +403,28 @@ describe('App Integration Tests', () => {
       render(<App />);
 
       // Should render appropriately for mobile
-      expect(screen.getByTestId('router')).toBeInTheDocument();
+      expect(screen.getByTestId("router")).toBeDefined();
     });
 
-    it('should handle orientation changes', () => {
+    it("should handle orientation changes", () => {
       render(<App />);
 
       // Simulate orientation change
-      Object.defineProperty(window, 'innerWidth', { value: 667 });
-      Object.defineProperty(window, 'innerHeight', { value: 375 });
-      fireEvent(window, new Event('resize'));
+      Object.defineProperty(window, "innerWidth", { value: 667 });
+      Object.defineProperty(window, "innerHeight", { value: 375 });
+      fireEvent(window, new Event("resize"));
 
-      expect(screen.getByTestId('router')).toBeInTheDocument();
+      expect(screen.getByTestId("router")).toBeDefined();
     });
   });
 
-  describe('Data Flow', () => {
-    it('should handle real-time updates', async () => {
+  describe("Data Flow", () => {
+    it("should handle real-time updates", async () => {
       const mockUser = {
         id: 1,
-        username: 'testuser',
-        userRole: 'creator',
-        subscriptionStatus: 'premium',
+        username: "testuser",
+        userRole: "creator",
+        subscriptionStatus: "premium",
       };
 
       mockFetch.mockResolvedValueOnce({
@@ -408,18 +435,18 @@ describe('App Integration Tests', () => {
       render(<App />);
 
       await waitFor(() => {
-        expect(mockFetch).toHaveBeenCalledWith('/api/user');
+        expect(mockFetch).toHaveBeenCalledWith("/api/user");
       });
 
       // Should handle data updates properly
-      expect(screen.getByTestId('router')).toBeInTheDocument();
+      expect(screen.getByTestId("router")).toBeDefined();
     });
 
-    it('should sync state across components', async () => {
+    it("should sync state across components", async () => {
       render(<App />);
 
       // Should maintain consistent state
-      expect(screen.getByTestId('router')).toBeInTheDocument();
+      expect(screen.getByTestId("router")).toBeDefined();
     });
   });
 });

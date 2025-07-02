@@ -12,23 +12,43 @@ describe('Premium Middleware', () => {
       user: undefined,
       headers: {},
     };
-    
+
     mockResponse = {
       status: jest.fn().mockReturnThis() as jest.MockedFunction<any>,
       json: jest.fn().mockReturnThis() as jest.MockedFunction<any>,
     };
-    
+
     mockNext = jest.fn() as NextFunction;
   });
 
   describe('requirePremiumAccess', () => {
     it('should allow access for premium users', () => {
-      mockRequest.user = {
+      const mockUser = {
         id: 1,
-        subscriptionStatus: 'premium',
         username: 'premium-user',
+        password: '',
         userRole: 'creator',
+        profileDescription: null,
+        logoUrl: null,
+        twitterUrl: null,
+        instagramUrl: null,
+        subscriptionStatus: 'premium',
+        subscriptionCanceledAt: null,
+        youtubeUrl: null,
+        tiktokUrl: null,
+        threadsUrl: null,
+        websiteUrl: null,
+        facebookUrl: null,
+        linkedinUrl: null,
+        githubUrl: null,
+        personalEmail: null,
+        businessEmail: null,
+        phone: null,
+        address: null,
+        city: null,
+        country: null,
       };
+      mockRequest.user = mockUser;
 
       requirePremiumAccess(mockRequest as Request, mockResponse as Response, mockNext);
 
@@ -43,7 +63,7 @@ describe('Premium Middleware', () => {
         username: 'trial-user',
         userRole: 'creator',
         trialEndDate: new Date(Date.now() + 24 * 60 * 60 * 1000), // Tomorrow
-      };
+      } as any;
 
       requirePremiumAccess(mockRequest as Request, mockResponse as Response, mockNext);
 
@@ -57,7 +77,7 @@ describe('Premium Middleware', () => {
         subscriptionStatus: 'free',
         username: 'free-user',
         userRole: 'creator',
-      };
+      } as any;
 
       requirePremiumAccess(mockRequest as Request, mockResponse as Response, mockNext);
 
@@ -75,7 +95,7 @@ describe('Premium Middleware', () => {
         subscriptionStatus: 'canceled',
         username: 'canceled-user',
         userRole: 'creator',
-      };
+      } as any;
 
       requirePremiumAccess(mockRequest as Request, mockResponse as Response, mockNext);
 
@@ -102,7 +122,7 @@ describe('Premium Middleware', () => {
         username: 'expired-trial-user',
         userRole: 'creator',
         trialEndDate: new Date(Date.now() - 24 * 60 * 60 * 1000), // Yesterday
-      };
+      } as any;
 
       requirePremiumAccess(mockRequest as Request, mockResponse as Response, mockNext);
 
@@ -161,12 +181,13 @@ describe('Premium Middleware', () => {
       mockRequest.headers = {
         'x-premium-operation': 'true',
       };
-      mockRequest.user = {
+      const mockUser = {
         id: 1,
         subscriptionStatus: 'free',
         username: 'free-user',
         userRole: 'creator',
       };
+      mockRequest.user = mockUser;
 
       conditionalPremiumAccess(mockRequest as Request, mockResponse as Response, mockNext);
 
@@ -176,12 +197,13 @@ describe('Premium Middleware', () => {
 
     it('should skip premium validation for regular operations', () => {
       mockRequest.headers = {};
-      mockRequest.user = {
+      const mockUser = {
         id: 1,
         subscriptionStatus: 'free',
         username: 'free-user',
         userRole: 'creator',
       };
+      mockRequest.user = mockUser;
 
       conditionalPremiumAccess(mockRequest as Request, mockResponse as Response, mockNext);
 
@@ -193,12 +215,13 @@ describe('Premium Middleware', () => {
       mockRequest.headers = {
         'x-premium-operation': 'true',
       };
-      mockRequest.user = {
+      const mockUser = {
         id: 1,
         subscriptionStatus: 'premium',
         username: 'premium-user',
         userRole: 'creator',
       };
+      mockRequest.user = mockUser;
 
       conditionalPremiumAccess(mockRequest as Request, mockResponse as Response, mockNext);
 
@@ -215,7 +238,7 @@ describe('Premium Middleware', () => {
         username: 'trial-user',
         userRole: 'creator',
         // trialEndDate is undefined
-      };
+      } as any;
 
       requirePremiumAccess(mockRequest as Request, mockResponse as Response, mockNext);
 
@@ -230,7 +253,7 @@ describe('Premium Middleware', () => {
         username: 'trial-user',
         userRole: 'creator',
         trialEndDate: 'invalid-date' as any,
-      };
+      } as any;
 
       requirePremiumAccess(mockRequest as Request, mockResponse as Response, mockNext);
 

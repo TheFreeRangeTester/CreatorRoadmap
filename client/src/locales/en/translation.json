@@ -533,17 +533,12 @@
       "expired": "Your subscription has expired",
       "expiredDesc": "Renew your subscription to continue accessing premium features"
     },
-    "canceled": {
-      "active": "Your subscription will be canceled soon",
-      "activeDesc": "You have access until {{date}}",
-      "activeDescGeneric": "You have access until the end of the current period"
-    },
+    "canceledStatus": "Subscription Canceled",
     "manage": "Manage subscription",
     "cancel": "Cancel subscription",
     "canceling": "Canceling...",
     "canceled": "Subscription Canceled",
     "canceledDesc": "Your subscription has been canceled. You maintain access until the end of the current period.",
-    "cancelError": "Error canceling",
     "reactivate": "Reactivate subscription",
     "renew": "Renew subscription",
     "subscribe": "Subscribe"

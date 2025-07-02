@@ -542,9 +542,8 @@
     "manage": "Administrar suscripción",
     "cancel": "Cancelar suscripción",
     "canceling": "Cancelando...",
-    "canceled": "Suscripción Cancelada",
+    "canceledStatus": "Suscripción Cancelada",
     "canceledDesc": "Tu suscripción ha sido cancelada. Mantienes acceso hasta el final del período actual.",
-    "cancelError": "Error al cancelar",
     "reactivate": "Reactivar suscripción",
     "renew": "Renovar suscripción",
     "subscribe": "Suscribirse"

@@ -6,19 +6,16 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { Badge } from "@/components/ui/badge";
-import {
-  Crown,
-  Sparkles,
-  CheckCircle,
-  Calendar,
-  AlertCircle,
-} from "lucide-react";
+import { Crown, Sparkles, CheckCircle, AlertCircle } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useToast } from "@/hooks/use-toast";
 import { Link } from "wouter";
 import type { UserResponse } from "@shared/schema";
-import { hasActivePremiumAccess, getPremiumAccessStatus } from "@shared/premium-utils";
+import {
+  hasActivePremiumAccess,
+  getPremiumAccessStatus,
+} from "@shared/premium-utils";
 
 export default function SubscriptionStatusIcon() {
   const { t } = useTranslation();
@@ -42,7 +39,7 @@ export default function SubscriptionStatusIcon() {
       });
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.message || "Failed to start trial");
+        throw new Error(errorData.message ?? "Failed to start trial");
       }
       return response.json();
     },
@@ -57,7 +54,7 @@ export default function SubscriptionStatusIcon() {
     onError: (error: Error) => {
       toast({
         title: t("subscription.error"),
-        description: error.message || t("subscription.startTrialError"),
+        description: error.message ?? t("subscription.startTrialError"),
         variant: "destructive",
       });
     },
@@ -74,13 +71,13 @@ export default function SubscriptionStatusIcon() {
       });
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.message || "Failed to cancel subscription");
+        throw new Error(errorData.message ?? "Failed to cancel subscription");
       }
       return response.json();
     },
     onSuccess: () => {
       toast({
-        title: t("subscription.canceled"),
+        title: t("subscription.canceledStatus"),
         description: t("subscription.canceledDesc"),
       });
       queryClient.invalidateQueries({ queryKey: ["/api/user"] });
@@ -89,7 +86,7 @@ export default function SubscriptionStatusIcon() {
     onError: (error: Error) => {
       toast({
         title: t("subscription.error"),
-        description: error.message || t("subscription.cancelError"),
+        description: error.message ?? t("subscription.cancelError"),
         variant: "destructive",
       });
     },
@@ -122,7 +119,10 @@ export default function SubscriptionStatusIcon() {
       };
     }
 
-    if (premiumStatus.hasAccess && premiumStatus.reason === "premium_canceled") {
+    if (
+      premiumStatus.hasAccess &&
+      premiumStatus.reason === "premium_canceled"
+    ) {
       return {
         icon: Crown,
         color: "text-orange-500",
@@ -132,7 +132,10 @@ export default function SubscriptionStatusIcon() {
       };
     }
 
-    if (premiumStatus.reason === "trial_expired" || premiumStatus.reason === "premium_expired") {
+    if (
+      premiumStatus.reason === "trial_expired" ||
+      premiumStatus.reason === "premium_expired"
+    ) {
       return {
         icon: AlertCircle,
         color: "text-red-500",
@@ -151,171 +154,200 @@ export default function SubscriptionStatusIcon() {
     };
   };
 
-  // Get content for the popover based on subscription state
-  const getPopoverContent = () => {
-    // State 5: Active premium subscription
-    if (premiumStatus.hasAccess && premiumStatus.reason === "premium") {
-      return {
-        title: t("subscription.badges.premium"),
-        description: user.subscriptionEndDate 
-          ? t("subscription.premium.nextRenewal", { 
-              date: new Date(user.subscriptionEndDate).toLocaleDateString() 
-            })
-          : t("subscription.premium.active"),
-        statusColor: "text-green-600 dark:text-green-400",
-        icon: <Crown className="w-5 h-5 text-yellow-500" />,
-        action: (
-          <div className="flex flex-col sm:flex-row gap-2 w-full">
-            <Button 
-              variant="outline" 
-              size="sm"
-              className="flex-1 text-red-600 hover:text-red-700 border-red-200 hover:border-red-300 text-xs"
-              onClick={() => cancelSubscriptionMutation.mutate()}
-              disabled={cancelSubscriptionMutation.isPending}
-            >
-              {cancelSubscriptionMutation.isPending ? (
-                <>
-                  <div className="w-3 h-3 mr-1 animate-spin rounded-full border border-red-600 border-t-transparent" />
-                  <span className="truncate">{t("subscription.canceling")}</span>
-                </>
-              ) : (
-                <span className="truncate">{t("subscription.cancel")}</span>
-              )}
-            </Button>
-            <Link to="/subscription" className="flex-1">
-              <Button variant="outline" size="sm" className="w-full text-xs" onClick={() => setIsOpen(false)}>
-                <span className="truncate">{t("subscription.manage")}</span>
-              </Button>
-            </Link>
-          </div>
-        )
-      };
-    }
-
-    // State 6: Canceled but active until date
-    if (premiumStatus.hasAccess && premiumStatus.reason === "premium_canceled") {
-      return {
-        title: t("subscription.canceled.active"),
-        description: user.subscriptionEndDate 
-          ? t("subscription.canceled.activeDesc", { 
-              date: new Date(user.subscriptionEndDate).toLocaleDateString() 
-            })
-          : t("subscription.canceled.activeDescGeneric"),
-        statusColor: "text-orange-600 dark:text-orange-400",
-        icon: <Crown className="w-5 h-5 text-orange-500" />,
-        action: (
-          <Link to="/subscription" className="w-full">
-            <Button size="sm" className="w-full text-xs" onClick={() => setIsOpen(false)}>
-              <Crown className="w-3 h-3 mr-1" />
-              <span className="truncate">{t("subscription.reactivate")}</span>
-            </Button>
-          </Link>
-        )
-      };
-    }
-
-    // State 3: Active trial
-    if (premiumStatus.hasAccess && premiumStatus.reason === "trial") {
-      return {
-        title: t("subscription.trial.active"),
-        description: t("subscription.trial.activeDesc", {
-          date: user.trialEndDate ? new Date(user.trialEndDate).toLocaleDateString() : "",
-          days: premiumStatus.daysRemaining || 0
-        }),
-        statusColor: "text-blue-600 dark:text-blue-400",
-        icon: <Sparkles className="w-5 h-5 text-blue-500" />,
-        action: (
-          <Link to="/subscription" className="w-full">
-            <Button size="sm" className="w-full text-xs" onClick={() => setIsOpen(false)}>
-              <Crown className="w-3 h-3 mr-1" />
-              <span className="truncate">{t("subscription.trial.upgradeButton")}</span>
-            </Button>
-          </Link>
-        )
-      };
-    }
-
-    // State 4: Trial expired
-    if (premiumStatus.reason === "trial_expired") {
-      return {
-        title: t("subscription.trial.expired"),
-        description: t("subscription.trial.expiredDesc"),
-        statusColor: "text-red-600 dark:text-red-400",
-        icon: <AlertCircle className="w-5 h-5 text-red-500" />,
-        action: (
-          <Link to="/subscription" className="w-full">
-            <Button size="sm" className="w-full text-xs" onClick={() => setIsOpen(false)}>
-              <Crown className="w-3 h-3 mr-1" />
-              <span className="truncate">{t("subscription.subscribe")}</span>
-            </Button>
-          </Link>
-        )
-      };
-    }
-
-    // State 7: Premium expired
-    if (premiumStatus.reason === "premium_expired") {
-      return {
-        title: t("subscription.premium.expired"),
-        description: t("subscription.premium.expiredDesc"),
-        statusColor: "text-red-600 dark:text-red-400",
-        icon: <AlertCircle className="w-5 h-5 text-red-500" />,
-        action: (
-          <Link to="/subscription" className="w-full">
-            <Button size="sm" className="w-full text-xs" onClick={() => setIsOpen(false)}>
-              <Crown className="w-3 h-3 mr-1" />
-              <span className="truncate">{t("subscription.renew")}</span>
-            </Button>
-          </Link>
-        )
-      };
-    }
-
-    // State 2: Trial available but not activated
-    if (!user.hasUsedTrial) {
-      return {
-        title: t("subscription.trial.available"),
-        description: t("subscription.trial.availableDesc"),
-        statusColor: "text-blue-600 dark:text-blue-400",
-        icon: <Sparkles className="w-5 h-5 text-blue-500" />,
-        action: (
+  // Helper functions for each subscription state
+  const getActivePremiumContent = () => ({
+    title: t("subscription.badges.premium"),
+    description: user.subscriptionEndDate
+      ? t("subscription.premium.nextRenewal", {
+          date: new Date(user.subscriptionEndDate).toLocaleDateString(),
+        })
+      : t("subscription.premium.active"),
+    statusColor: "text-green-600 dark:text-green-400",
+    icon: <Crown className="w-5 h-5 text-yellow-500" />,
+    action: (
+      <div className="flex flex-col sm:flex-row gap-2 w-full">
+        <Button
+          variant="outline"
+          size="sm"
+          className="flex-1 text-red-600 hover:text-red-700 border-red-200 hover:border-red-300 text-xs"
+          onClick={() => cancelSubscriptionMutation.mutate()}
+          disabled={cancelSubscriptionMutation.isPending}
+        >
+          {cancelSubscriptionMutation.isPending ? (
+            <>
+              <div className="w-3 h-3 mr-1 animate-spin rounded-full border border-red-600 border-t-transparent" />
+              <span className="truncate">{t("subscription.canceling")}</span>
+            </>
+          ) : (
+            <span className="truncate">{t("subscription.cancel")}</span>
+          )}
+        </Button>
+        <Link to="/subscription" className="flex-1">
           <Button
+            variant="outline"
             size="sm"
             className="w-full text-xs"
-            onClick={() => startTrialMutation.mutate()}
-            disabled={startTrialMutation.isPending}
+            onClick={() => setIsOpen(false)}
           >
-            {startTrialMutation.isPending ? (
-              <>
-                <div className="w-3 h-3 mr-1 animate-spin rounded-full border border-white border-t-transparent" />
-                <span className="truncate">{t("subscription.trial.activating")}</span>
-              </>
-            ) : (
-              <>
-                <Sparkles className="w-3 h-3 mr-1" />
-                <span className="truncate">{t("subscription.trial.activateButton")}</span>
-              </>
-            )}
-          </Button>
-        )
-      };
-    }
-
-    // State 1: No trial or subscription (already used trial)
-    return {
-      title: t("subscription.premium.activate"),
-      description: t("subscription.premium.activateDesc"),
-      statusColor: "text-gray-600 dark:text-gray-400",
-      icon: <Crown className="w-5 h-5 text-gray-400" />,
-      action: (
-        <Link to="/subscription" className="w-full">
-          <Button size="sm" className="w-full text-xs" onClick={() => setIsOpen(false)}>
-            <Crown className="w-3 h-3 mr-1" />
-            <span className="truncate">{t("subscription.subscribe")}</span>
+            <span className="truncate">{t("subscription.manage")}</span>
           </Button>
         </Link>
-      )
-    };
+      </div>
+    ),
+  });
+
+  const getCanceledActiveContent = () => ({
+    title: t("subscription.canceled.active"),
+    description: user.subscriptionEndDate
+      ? t("subscription.canceled.activeDesc", {
+          date: new Date(user.subscriptionEndDate).toLocaleDateString(),
+        })
+      : t("subscription.canceled.activeDescGeneric"),
+    statusColor: "text-orange-600 dark:text-orange-400",
+    icon: <Crown className="w-5 h-5 text-orange-500" />,
+    action: (
+      <Link to="/subscription" className="w-full">
+        <Button
+          size="sm"
+          className="w-full text-xs"
+          onClick={() => setIsOpen(false)}
+        >
+          <Crown className="w-3 h-3 mr-1" />
+          <span className="truncate">{t("subscription.reactivate")}</span>
+        </Button>
+      </Link>
+    ),
+  });
+
+  const getActiveTrialContent = () => ({
+    title: t("subscription.trial.active"),
+    description: t("subscription.trial.activeDesc", {
+      date: user.trialEndDate
+        ? new Date(user.trialEndDate).toLocaleDateString()
+        : "",
+      days: premiumStatus.daysRemaining ?? 0,
+    }),
+    statusColor: "text-blue-600 dark:text-blue-400",
+    icon: <Sparkles className="w-5 h-5 text-blue-500" />,
+    action: (
+      <Link to="/subscription" className="w-full">
+        <Button
+          size="sm"
+          className="w-full text-xs"
+          onClick={() => setIsOpen(false)}
+        >
+          <Crown className="w-3 h-3 mr-1" />
+          <span className="truncate">
+            {t("subscription.trial.upgradeButton")}
+          </span>
+        </Button>
+      </Link>
+    ),
+  });
+
+  const getExpiredContent = (type: "trial" | "premium") => ({
+    title: t(`subscription.${type}.expired`),
+    description: t(`subscription.${type}.expiredDesc`),
+    statusColor: "text-red-600 dark:text-red-400",
+    icon: <AlertCircle className="w-5 h-5 text-red-500" />,
+    action: (
+      <Link to="/subscription" className="w-full">
+        <Button
+          size="sm"
+          className="w-full text-xs"
+          onClick={() => setIsOpen(false)}
+        >
+          <Crown className="w-3 h-3 mr-1" />
+          <span className="truncate">
+            {type === "trial"
+              ? t("subscription.subscribe")
+              : t("subscription.renew")}
+          </span>
+        </Button>
+      </Link>
+    ),
+  });
+
+  const getTrialAvailableContent = () => ({
+    title: t("subscription.trial.available"),
+    description: t("subscription.trial.availableDesc"),
+    statusColor: "text-blue-600 dark:text-blue-400",
+    icon: <Sparkles className="w-5 h-5 text-blue-500" />,
+    action: (
+      <Button
+        size="sm"
+        className="w-full text-xs"
+        onClick={() => startTrialMutation.mutate()}
+        disabled={startTrialMutation.isPending}
+      >
+        {startTrialMutation.isPending ? (
+          <>
+            <div className="w-3 h-3 mr-1 animate-spin rounded-full border border-white border-t-transparent" />
+            <span className="truncate">
+              {t("subscription.trial.activating")}
+            </span>
+          </>
+        ) : (
+          <>
+            <Sparkles className="w-3 h-3 mr-1" />
+            <span className="truncate">
+              {t("subscription.trial.activateButton")}
+            </span>
+          </>
+        )}
+      </Button>
+    ),
+  });
+
+  const getDefaultContent = () => ({
+    title: t("subscription.premium.activate"),
+    description: t("subscription.premium.activateDesc"),
+    statusColor: "text-gray-600 dark:text-gray-400",
+    icon: <Crown className="w-5 h-5 text-gray-400" />,
+    action: (
+      <Link to="/subscription" className="w-full">
+        <Button
+          size="sm"
+          className="w-full text-xs"
+          onClick={() => setIsOpen(false)}
+        >
+          <Crown className="w-3 h-3 mr-1" />
+          <span className="truncate">{t("subscription.subscribe")}</span>
+        </Button>
+      </Link>
+    ),
+  });
+
+  // Get content for the popover based on subscription state
+  const getPopoverContent = () => {
+    if (premiumStatus.hasAccess && premiumStatus.reason === "premium") {
+      return getActivePremiumContent();
+    }
+
+    if (
+      premiumStatus.hasAccess &&
+      premiumStatus.reason === "premium_canceled"
+    ) {
+      return getCanceledActiveContent();
+    }
+
+    if (premiumStatus.hasAccess && premiumStatus.reason === "trial") {
+      return getActiveTrialContent();
+    }
+
+    if (premiumStatus.reason === "trial_expired") {
+      return getExpiredContent("trial");
+    }
+
+    if (premiumStatus.reason === "premium_expired") {
+      return getExpiredContent("premium");
+    }
+
+    if (!user.hasUsedTrial) {
+      return getTrialAvailableContent();
+    }
+
+    return getDefaultContent();
   };
 
   const iconConfig = getIconConfig();
@@ -332,8 +364,8 @@ export default function SubscriptionStatusIcon() {
         >
           <IconComponent className={`w-5 h-5 ${iconConfig.color}`} />
           {iconConfig.badge && (
-            <Badge 
-              variant="secondary" 
+            <Badge
+              variant="secondary"
               className="absolute -top-1 -right-1 h-5 w-5 text-xs p-0 flex items-center justify-center bg-blue-500 text-white border-white"
             >
               {iconConfig.badge}
@@ -346,13 +378,15 @@ export default function SubscriptionStatusIcon() {
           <div className="flex items-start gap-3 mb-3">
             {popoverContent.icon}
             <div className="flex-1 min-w-0">
-              <h3 className="font-semibold text-sm leading-tight">{popoverContent.title}</h3>
+              <h3 className="font-semibold text-sm leading-tight">
+                {popoverContent.title}
+              </h3>
               <p className="text-xs text-gray-600 dark:text-gray-300 mt-1 leading-relaxed">
                 {popoverContent.description}
               </p>
             </div>
           </div>
-          
+
           {/* Show features list only for non-premium users */}
           {!isProUser && (
             <div className="grid grid-cols-1 gap-1.5 mb-3 p-3 bg-gray-50 dark:bg-gray-800/50 rounded-lg">
@@ -376,10 +410,8 @@ export default function SubscriptionStatusIcon() {
               </div>
             </div>
           )}
-          
-          <div className="w-full">
-            {popoverContent.action}
-          </div>
+
+          <div className="w-full">{popoverContent.action}</div>
         </div>
       </PopoverContent>
     </Popover>
