@@ -528,13 +528,24 @@ class TestRunner {
     console.log('🚀 Starting Test Suite\n');
     
     try {
+      console.log('📋 Running Schema Tests...');
       await this.runSchemaTests();
+      
+      console.log('\n📦 Running Storage Tests...');
       await this.runStorageTests();
+      
+      console.log('\n🔧 Running Service Tests...');
       await this.runServiceTests();
+      
+      console.log('\n💎 Running Premium Utils Tests...');
       await this.runPremiumUtilsTests();
+      
+      console.log('\n🛡️ Running Middleware Tests...');
       await this.runMiddlewareTests();
+      
     } catch (error) {
-      console.error('Test execution failed:', error);
+      console.error('❌ Test execution failed:', error);
+      console.error('Stack trace:', error.stack);
       this.stats.failed++;
     }
 
@@ -556,6 +567,10 @@ class TestRunner {
       console.log('\n🎉 All tests passed!');
     } else {
       console.log('\n⚠️  Some tests failed. Please review the output above.');
+      console.log('\n🔍 Debug Info:');
+      console.log(`   - Expected total tests: 38`);
+      console.log(`   - Actual tests run: ${this.stats.total}`);
+      console.log(`   - Missing tests: ${38 - this.stats.total}`);
     }
   }
 }
