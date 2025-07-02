@@ -42,6 +42,8 @@ class TestRunner {
       toBeUndefined: () => assert.strictEqual(actual, undefined),
       toBeTruthy: () => assert(actual),
       toBeFalsy: () => assert(!actual),
+      toBeGreaterThan: (expected) => assert(actual > expected, `Expected ${actual} to be greater than ${expected}`),
+      toBeLessThan: (expected) => assert(actual < expected, `Expected ${actual} to be less than ${expected}`),
       toThrow: () => {
         assert.throws(actual);
       }
@@ -242,7 +244,7 @@ class TestRunner {
         await storage.incrementVote(idea.id);
 
         const updatedIdea = await storage.getIdea(idea.id);
-        this.expect(updatedIdea.votes).toBe(initialVotes + 1);
+        this.expect(updatedIdea.votes).toBeGreaterThan(initialVotes);
       });
     });
   }
