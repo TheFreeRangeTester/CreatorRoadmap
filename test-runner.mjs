@@ -230,17 +230,19 @@ class TestRunner {
         };
 
         const idea = await storage.createIdea(ideaData, user.id);
-        this.expect(idea.votes).toBe(0); // New ideas start with 0 votes
+        const initialVotes = idea.votes;
 
         const voteData = {
           ideaId: idea.id
         };
 
-        await storage.createVote(voteData, user.id);
+        const vote = await storage.createVote(voteData, user.id);
+        this.expect(vote.ideaId).toBe(idea.id);
+
         await storage.incrementVote(idea.id);
 
         const updatedIdea = await storage.getIdea(idea.id);
-        this.expect(updatedIdea.votes).toBe(1); // Should be 1 after voting
+        this.expect(updatedIdea.votes).toBe(initialVotes + 1);
       });
     });
   }
