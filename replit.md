@@ -128,19 +128,19 @@ The application uses a monorepo structure with shared TypeScript types between c
 
 ### Test Suite Implementation - ✅ COMPLETED
 - **Framework**: Custom TypeScript testing framework (due to ES modules compatibility)
-- **Status**: 100% tests passing (14/14 tests successful)
+- **Status**: 100% tests passing (38/38 tests successful)
 - **Coverage**: Schema validation, storage operations, business logic
 - **Execution**: `npm run test` or `npx tsx test-runner.mjs`
 
 ### Test Results Summary
 ```
-Total Tests: 14
-✅ Passed: 14  
+Total Tests: 38
+✅ Passed: 38  
 ❌ Failed: 0
 📈 Success Rate: 100.00%
 ```
 
-### Test Coverage Areas - ✅ IMPLEMENTED
+### Test Coverage Areas - ✅ EXPANDED & IMPLEMENTED
 1. **Schema Validation** (10 tests): All Zod schemas validated
    - User schemas: registration, validation, security
    - Idea schemas: creation, validation, constraints
@@ -152,6 +152,20 @@ Total Tests: 14
    - Idea management: create, retrieve, voting system
    - Data persistence: memory storage validation
    - Business logic: voting increments, relationships
+
+3. **Service Classes** (5 tests): Critical service functionality
+   - **TokenService**: Token generation and format validation
+   - **EmailService**: Configuration handling, URL generation, i18n support
+
+4. **Premium Utils** (16 tests): Subscription business logic
+   - **hasActivePremiumAccess**: 7 comprehensive scenarios
+   - **getTrialDaysRemaining**: Trial period calculations
+   - **isTrialExpired**: Expiration status validation
+   - **getPremiumAccessStatus**: Detailed access status reporting
+
+5. **Middleware Classes** (3 tests): Access control logic
+   - **Premium Middleware**: Operation identification and user validation
+   - **Authentication checks**: Premium access verification
 
 ### Testing Framework Features
 - **TypeScript Support**: Full type safety in tests
@@ -166,8 +180,9 @@ Total Tests: 14
 - Results logged with detailed pass/fail information
 
 ### Files Created
-- `test-runner.mjs` - Custom testing framework
-- `TESTING_RESULTS.md` - Detailed test execution report
+- `test-runner.mjs` - Custom testing framework (expanded)
+- `TESTING_RESULTS.md` - Original test execution report
+- `TESTING_RESULTS_EXPANDED.md` - Expanded test results with 38 tests
 - `TESTING_DOCUMENTATION.md` - Comprehensive testing guide
 
 ## User Preferences
