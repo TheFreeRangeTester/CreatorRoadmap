@@ -5,29 +5,43 @@ import { dirname, join } from 'path';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
-// Simple test framework
+// Enhanced test framework with accurate counting
 class TestRunner {
   constructor() {
     this.tests = [];
     this.currentSuite = null;
     this.stats = { passed: 0, failed: 0, total: 0 };
+    this.testResults = []; // Track all test results
+    this.suiteResults = []; // Track suite results
   }
 
   describe(name, fn) {
     this.currentSuite = name;
     console.log(`\n📋 ${name}`);
+    const suiteStart = this.stats.total;
     fn();
+    const suiteEnd = this.stats.total;
+    this.suiteResults.push({
+      name,
+      testCount: suiteEnd - suiteStart,
+      passed: this.stats.passed - (this.suiteResults.reduce((sum, s) => sum + s.passed, 0) || 0),
+      failed: this.stats.failed - (this.suiteResults.reduce((sum, s) => sum + s.failed, 0) || 0)
+    });
     this.currentSuite = null;
   }
 
   it(name, fn) {
     this.stats.total++;
+    const fullName = this.currentSuite ? `${this.currentSuite} > ${name}` : name;
+    
     try {
       fn();
       this.stats.passed++;
+      this.testResults.push({ name: fullName, status: 'PASSED', error: null });
       console.log(`  ✅ ${name}`);
     } catch (error) {
       this.stats.failed++;
+      this.testResults.push({ name: fullName, status: 'FAILED', error: error.message });
       console.log(`  ❌ ${name}`);
       console.log(`     Error: ${error.message}`);
     }
@@ -563,14 +577,49 @@ class TestRunner {
     const percentage = this.stats.total > 0 ? ((this.stats.passed / this.stats.total) * 100).toFixed(2) : 0;
     console.log(`📈 Success Rate: ${percentage}%`);
 
+    // Show detailed test results
+    if (this.testResults.length > 0) {
+      console.log('\n📋 Detailed Test Results:');
+      
+      let currentSuite = '';
+      for (const test of this.testResults) {
+        const [suite, testName] = test.name.includes(' > ') ? 
+          test.name.split(' > ') : ['', test.name];
+        
+        if (suite && suite !== currentSuite) {
+          console.log(`\n   📁 ${suite}:`);
+          currentSuite = suite;
+        }
+        
+        const status = test.status === 'PASSED' ? '✅' : '❌';
+        const indent = suite ? '     ' : '   ';
+        console.log(`${indent}${status} ${testName || test.name}`);
+        
+        if (test.error) {
+          console.log(`${indent}   💥 ${test.error}`);
+        }
+      }
+    }
+
+    // Show suite summary
+    if (this.suiteResults.length > 0) {
+      console.log('\n📊 Suite Breakdown:');
+      for (const suite of this.suiteResults) {
+        const suitePassed = this.testResults.filter(t => 
+          t.name.startsWith(suite.name) && t.status === 'PASSED'
+        ).length;
+        const suiteFailed = this.testResults.filter(t => 
+          t.name.startsWith(suite.name) && t.status === 'FAILED'
+        ).length;
+        
+        console.log(`   📁 ${suite.name}: ${suitePassed + suiteFailed} tests (${suitePassed} passed, ${suiteFailed} failed)`);
+      }
+    }
+
     if (this.stats.failed === 0) {
       console.log('\n🎉 All tests passed!');
     } else {
-      console.log('\n⚠️  Some tests failed. Please review the output above.');
-      console.log('\n🔍 Debug Info:');
-      console.log(`   - Expected total tests: 38`);
-      console.log(`   - Actual tests run: ${this.stats.total}`);
-      console.log(`   - Missing tests: ${38 - this.stats.total}`);
+      console.log('\n⚠️  Some tests failed. Please review the failed tests above.');
     }
   }
 }
