@@ -103,7 +103,6 @@ export default function SubscriptionSuccessPage() {
                   {t("subscription.paymentSuccess.featuresUnlocked")}
                 </h3>
                 <ul className="text-sm space-y-1 text-gray-600 dark:text-gray-300">
-                  <li>• {t("subscription.plans.features.visibleIdeas")}</li>
                   <li>• {t("subscription.plans.features.unlimitedIdeas")}</li>
                   <li>• {t("subscription.plans.features.creatorAnalytics")}</li>
                   <li>• {t("subscription.plans.features.pointsStore")}</li>

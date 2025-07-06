@@ -381,12 +381,6 @@ export default function SubscriptionPage() {
                         <li className="flex items-center gap-2">
                           <CheckCircle className="w-4 h-4 text-green-500" />
                           <span className="text-sm">
-                            {t("subscription.plans.features.visibleIdeas")}
-                          </span>
-                        </li>
-                        <li className="flex items-center gap-2">
-                          <CheckCircle className="w-4 h-4 text-green-500" />
-                          <span className="text-sm">
                             {t("subscription.plans.features.unlimitedIdeas")}
                           </span>
                         </li>
@@ -445,12 +439,6 @@ export default function SubscriptionPage() {
                         <li className="flex items-center gap-2">
                           <CheckCircle className="w-4 h-4 text-green-500" />
                           <span className="text-sm">
-                            {t("subscription.plans.features.visibleIdeas")}
-                          </span>
-                        </li>
-                        <li className="flex items-center gap-2">
-                          <CheckCircle className="w-4 h-4 text-green-500" />
-                          <span className="text-sm">
                             {t("subscription.plans.features.unlimitedIdeas")}
                           </span>
                         </li>
@@ -492,12 +480,6 @@ export default function SubscriptionPage() {
                 </CardHeader>
                 <CardContent>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div className="flex items-center gap-3 p-3 bg-green-50 dark:bg-green-900/20 rounded-lg">
-                      <CheckCircle className="w-5 h-5 text-green-500" />
-                      <span>
-                        {t("subscription.plans.features.visibleIdeas")}
-                      </span>
-                    </div>
                     <div className="flex items-center gap-3 p-3 bg-green-50 dark:bg-green-900/20 rounded-lg">
                       <CheckCircle className="w-5 h-5 text-green-500" />
                       <span>

@@ -489,7 +489,6 @@
       "perMonth": "/month",
       "perYear": "/year",
       "features": {
-        "visibleIdeas": "Up to 10 ideas",
         "unlimitedIdeas": "Unlimited ideas",
         "creatorAnalytics": "Creator analytics",
         "pointsStore": "Points store"
