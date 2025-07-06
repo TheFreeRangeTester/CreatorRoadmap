@@ -387,25 +387,19 @@ export default function SubscriptionPage() {
                         <li className="flex items-center gap-2">
                           <CheckCircle className="w-4 h-4 text-green-500" />
                           <span className="text-sm">
-                            {t("subscription.plans.features.unlimitedVotes")}
+                            {t("subscription.plans.features.unlimitedIdeas")}
                           </span>
                         </li>
                         <li className="flex items-center gap-2">
                           <CheckCircle className="w-4 h-4 text-green-500" />
                           <span className="text-sm">
-                            {t("subscription.plans.features.noBranding")}
+                            {t("subscription.plans.features.creatorAnalytics")}
                           </span>
                         </li>
                         <li className="flex items-center gap-2">
                           <CheckCircle className="w-4 h-4 text-green-500" />
                           <span className="text-sm">
-                            {t("subscription.plans.features.advancedAnalytics")}
-                          </span>
-                        </li>
-                        <li className="flex items-center gap-2">
-                          <CheckCircle className="w-4 h-4 text-green-500" />
-                          <span className="text-sm">
-                            {t("subscription.plans.features.prioritySupport")}
+                            {t("subscription.plans.features.pointsStore")}
                           </span>
                         </li>
                       </ul>
@@ -457,25 +451,19 @@ export default function SubscriptionPage() {
                         <li className="flex items-center gap-2">
                           <CheckCircle className="w-4 h-4 text-green-500" />
                           <span className="text-sm">
-                            {t("subscription.plans.features.unlimitedVotes")}
+                            {t("subscription.plans.features.unlimitedIdeas")}
                           </span>
                         </li>
                         <li className="flex items-center gap-2">
                           <CheckCircle className="w-4 h-4 text-green-500" />
                           <span className="text-sm">
-                            {t("subscription.plans.features.noBranding")}
+                            {t("subscription.plans.features.creatorAnalytics")}
                           </span>
                         </li>
                         <li className="flex items-center gap-2">
                           <CheckCircle className="w-4 h-4 text-green-500" />
                           <span className="text-sm">
-                            {t("subscription.plans.features.advancedAnalytics")}
-                          </span>
-                        </li>
-                        <li className="flex items-center gap-2">
-                          <CheckCircle className="w-4 h-4 text-green-500" />
-                          <span className="text-sm">
-                            {t("subscription.plans.features.prioritySupport")}
+                            {t("subscription.plans.features.pointsStore")}
                           </span>
                         </li>
                       </ul>
@@ -513,17 +501,19 @@ export default function SubscriptionPage() {
                     <div className="flex items-center gap-3 p-3 bg-green-50 dark:bg-green-900/20 rounded-lg">
                       <CheckCircle className="w-5 h-5 text-green-500" />
                       <span>
-                        {t("subscription.plans.features.unlimitedVotes")}
+                        {t("subscription.plans.features.unlimitedIdeas")}
                       </span>
                     </div>
                     <div className="flex items-center gap-3 p-3 bg-green-50 dark:bg-green-900/20 rounded-lg">
                       <CheckCircle className="w-5 h-5 text-green-500" />
-                      <span>{t("subscription.plans.features.noBranding")}</span>
+                      <span>
+                        {t("subscription.plans.features.creatorAnalytics")}
+                      </span>
                     </div>
                     <div className="flex items-center gap-3 p-3 bg-green-50 dark:bg-green-900/20 rounded-lg">
                       <CheckCircle className="w-5 h-5 text-green-500" />
                       <span>
-                        {t("subscription.plans.features.advancedAnalytics")}
+                        {t("subscription.plans.features.pointsStore")}
                       </span>
                     </div>
                   </div>

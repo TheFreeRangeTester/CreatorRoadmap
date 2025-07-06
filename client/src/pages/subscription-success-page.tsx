@@ -103,11 +103,10 @@ export default function SubscriptionSuccessPage() {
                   {t("subscription.paymentSuccess.featuresUnlocked")}
                 </h3>
                 <ul className="text-sm space-y-1 text-gray-600 dark:text-gray-300">
-                  <li>• {t("subscription.upToIdeas")}</li>
-                  <li>• {t("subscription.unlimitedVotes")}</li>
-                  <li>• {t("subscription.noPlatformBranding")}</li>
-                  <li>• {t("subscription.advancedAnalytics")}</li>
-                  <li>• {t("subscription.prioritySupport")}</li>
+                  <li>• {t("subscription.plans.features.visibleIdeas")}</li>
+                  <li>• {t("subscription.plans.features.unlimitedIdeas")}</li>
+                  <li>• {t("subscription.plans.features.creatorAnalytics")}</li>
+                  <li>• {t("subscription.plans.features.pointsStore")}</li>
                 </ul>
               </div>
 

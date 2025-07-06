@@ -491,9 +491,8 @@
       "features": {
         "visibleIdeas": "Up to 10 ideas",
         "unlimitedIdeas": "Unlimited ideas",
-        "noBranding": "No platform branding",
-        "advancedAnalytics": "Advanced analytics",
-        "prioritySupport": "Priority support"
+        "creatorAnalytics": "Creator analytics",
+        "pointsStore": "Points store"
       }
     },
     "premiumFeatures": {
@@ -516,12 +515,12 @@
     },
     "features": {
       "upToIdeas": "Up to 50 visible ideas",
-      "unlimitedVotes": "Unlimited votes",
+      "unlimitedIdeas": "Unlimited ideas",
       "embedLeaderboard": "Embed leaderboard",
       "noBranding": "No platform branding",
       "csvImport": "CSV bulk import",
-      "advancedAnalytics": "Advanced analytics",
-      "prioritySupport": "Priority support",
+      "creatorAnalytics": "Creator analytics",
+      "pointsStore": "Points store",
       "csvExport": "CSV export",
       "customDomain": "Custom domain support"
     },
