@@ -70,15 +70,16 @@ export function StoreItemForm({ isOpen, onClose, onSuccess, initialData }: Store
   }, [initialData, form]);
 
   const createMutation = useMutation({
-    mutationFn: (data: z.infer<typeof createFormSchema>) => {
+    mutationFn: async (data: z.infer<typeof createFormSchema>) => {
       const payload = {
         ...data,
         maxQuantity: hasMaxQuantity ? data.maxQuantity : null,
       };
-      return apiRequest('/api/store/items', {
+      const response = await apiRequest('/api/store/items', {
         method: 'POST',
         body: JSON.stringify(payload),
       });
+      return response.json();
     },
     onSuccess: () => {
       toast({
@@ -98,15 +99,16 @@ export function StoreItemForm({ isOpen, onClose, onSuccess, initialData }: Store
   });
 
   const updateMutation = useMutation({
-    mutationFn: (data: z.infer<typeof updateFormSchema>) => {
+    mutationFn: async (data: z.infer<typeof updateFormSchema>) => {
       const payload = {
         ...data,
         maxQuantity: hasMaxQuantity ? data.maxQuantity : null,
       };
-      return apiRequest(`/api/store/items/${initialData!.id}`, {
+      const response = await apiRequest(`/api/store/items/${initialData!.id}`, {
         method: 'PUT',
         body: JSON.stringify(payload),
       });
+      return response.json();
     },
     onSuccess: () => {
       toast({

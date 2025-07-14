@@ -30,7 +30,10 @@ export function RedemptionManagement() {
 
   const { data, isLoading } = useQuery<RedemptionData>({
     queryKey: ['/api/store/redemptions', currentPage],
-    queryFn: () => apiRequest(`/api/store/redemptions?page=${currentPage}`),
+    queryFn: async () => {
+      const response = await apiRequest(`/api/store/redemptions?page=${currentPage}`);
+      return response.json();
+    },
   });
 
   const updateStatusMutation = useMutation({

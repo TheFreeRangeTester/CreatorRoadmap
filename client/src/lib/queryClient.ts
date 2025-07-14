@@ -8,10 +8,15 @@ async function throwIfResNotOk(res: Response) {
 }
 
 export async function apiRequest(
-  method: string,
   url: string,
-  data?: unknown | undefined,
+  options: {
+    method?: string;
+    body?: string;
+    headers?: Record<string, string>;
+  } = {}
 ): Promise<Response> {
+  const { method = 'GET', body, headers = {} } = options;
+  
   // Para debugging
   console.log(`API Request: ${method} ${url}`);
   
@@ -26,15 +31,13 @@ export async function apiRequest(
   
   const res = await fetch(apiUrl, {
     method,
-    headers: data ? { 
-      "Content-Type": "application/json",
+    headers: {
+      ...headers,
       // Asegúrate de que la API sabe que esta es una solicitud AJAX
-      "X-Requested-With": "XMLHttpRequest" 
-    } : {
-      // Incluso sin datos, añade el encabezado X-Requested-With
-      "X-Requested-With": "XMLHttpRequest"
+      "X-Requested-With": "XMLHttpRequest",
+      ...(body ? { "Content-Type": "application/json" } : {}),
     },
-    body: data ? JSON.stringify(data) : undefined,
+    body,
     // Esto es crucial - asegura que las cookies de sesión se envían con cada solicitud
     credentials: "same-origin",
   });

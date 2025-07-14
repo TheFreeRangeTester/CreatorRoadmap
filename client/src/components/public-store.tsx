@@ -24,12 +24,18 @@ export function PublicStore({ creatorUsername, isAuthenticated }: PublicStorePro
 
   const { data: storeItems = [], isLoading } = useQuery<StoreItemResponse[]>({
     queryKey: ['/api/creators', creatorUsername, 'store'],
-    queryFn: () => apiRequest(`/api/creators/${creatorUsername}/store`),
+    queryFn: async () => {
+      const response = await apiRequest(`/api/creators/${creatorUsername}/store`);
+      return response.json();
+    },
   });
 
   const { data: userPoints } = useQuery<UserPointsResponse>({
     queryKey: ['/api/user/points'],
-    queryFn: () => apiRequest('/api/user/points'),
+    queryFn: async () => {
+      const response = await apiRequest('/api/user/points');
+      return response.json();
+    },
     enabled: isAuthenticated,
   });
 

@@ -20,7 +20,10 @@ export function StoreManagement() {
 
   const { data: storeItems = [], isLoading } = useQuery<StoreItemResponse[]>({
     queryKey: ['/api/store/items'],
-    queryFn: () => apiRequest('/api/store/items'),
+    queryFn: async () => {
+      const response = await apiRequest('/api/store/items');
+      return response.json();
+    },
   });
 
   const deleteItemMutation = useMutation({
