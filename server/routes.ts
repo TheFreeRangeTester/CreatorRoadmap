@@ -675,7 +675,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         }
 
         // Deduct 3 points for the suggestion
-        await storage.updateUserPoints(req.user!.id, -3, 'spent', 'idea_suggestion', null);
+        await storage.updateUserPoints(req.user!.id, 3, 'spent', 'idea_suggestion', null);
         console.log("✅ 3 puntos descontados del usuario");
 
         // Store the suggested idea with pending status
