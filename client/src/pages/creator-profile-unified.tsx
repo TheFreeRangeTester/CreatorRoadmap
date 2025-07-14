@@ -636,68 +636,80 @@ export default function CreatorProfileUnified() {
               {t("creator.voteHeaderTitle", "Vote for Content Ideas")}
             </h2>
 
-            {/* Points-based Suggestion Form - Show only for authenticated non-owner users */}
-            {user && !isOwnProfile && (
-              <div className="mb-8 max-w-md mx-auto">
-                <PointsSuggestionForm
-                  creatorId={creator.id}
-                  creatorUsername={creator.username}
-                  onSuccess={async () => {
-                    await refetch();
-                  }}
-                />
-              </div>
-            )}
+            {/* Grid layout for ideas and sidebar */}
+            <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
+              {/* Ideas list - takes 3/4 of the width on large screens */}
+              <div className="lg:col-span-3">
+                {ideas.length === 0 ? (
+                  <div className="text-center py-12">
+                    <p className="text-gray-600 dark:text-gray-400">
+                      {t(
+                        "suggestIdea.beFirstToSuggest",
+                        "Be the first to suggest a content idea"
+                      )}
+                    </p>
+                  </div>
+                ) : (
+                  <div ref={ideasContainerRef} className="space-y-4">
+                    {ideas.map((idea, index) => {
+                      const rank = index + 1;
+                      
+                      // Función para calcular votos necesarios para subir de posición
+                      const getVotesToNextRank = (currentRank: number, currentVotes: number) => {
+                        if (currentRank <= 1) return 0;
+                        const ideaAbove = ideas[currentRank - 2]; // -2 porque el array es 0-indexed y queremos la idea anterior
+                        if (ideaAbove) {
+                          return Math.max(0, ideaAbove.votes - currentVotes + 1);
+                        }
+                        return 0;
+                      };
 
-            {ideas.length === 0 ? (
-              <div className="text-center py-12">
-                <p className="text-gray-600 dark:text-gray-400">
-                  {t(
-                    "suggestIdea.beFirstToSuggest",
-                    "Be the first to suggest a content idea"
-                  )}
-                </p>
+                      // Simular votos recientes (esto normalmente vendría del backend)
+                      const getRecentVotes24h = (ideaId: number) => {
+                        return Math.floor(Math.random() * 3); // Simulación simple
+                      };
+
+                      const votesToNext = getVotesToNextRank(rank, idea.votes);
+                      const recentVotes = getRecentVotes24h(idea.id);
+
+                      return (
+                        <EnhancedRankingCard
+                          key={idea.id}
+                          rank={rank}
+                          idea={idea}
+                          isVoting={isVoting[idea.id]}
+                          isVoted={votedIdeas.has(idea.id)}
+                          isSuccessVote={successVote === idea.id}
+                          onVote={handleVote}
+                          isLoggedIn={!!user}
+                          votesToNextRank={votesToNext}
+                          recentVotes24h={recentVotes}
+                        />
+                      );
+                    })}
+                  </div>
+                )}
               </div>
-            ) : (
-              <div ref={ideasContainerRef} className="space-y-4">
-                {ideas.map((idea, index) => {
-                  const rank = index + 1;
+
+              {/* Sidebar - takes 1/4 of the width on large screens */}
+              {user && (
+                <div className="lg:col-span-1 space-y-6">
+                  {/* Points Display for all authenticated users */}
+                  <PointsDisplay />
                   
-                  // Función para calcular votos necesarios para subir de posición
-                  const getVotesToNextRank = (currentRank: number, currentVotes: number) => {
-                    if (currentRank <= 1) return 0;
-                    const ideaAbove = ideas[currentRank - 2]; // -2 porque el array es 0-indexed y queremos la idea anterior
-                    if (ideaAbove) {
-                      return Math.max(0, ideaAbove.votes - currentVotes + 1);
-                    }
-                    return 0;
-                  };
-
-                  // Simular votos recientes (esto normalmente vendría del backend)
-                  const getRecentVotes24h = (ideaId: number) => {
-                    return Math.floor(Math.random() * 3); // Simulación simple
-                  };
-
-                  const votesToNext = getVotesToNextRank(rank, idea.votes);
-                  const recentVotes = getRecentVotes24h(idea.id);
-
-                  return (
-                    <EnhancedRankingCard
-                      key={idea.id}
-                      rank={rank}
-                      idea={idea}
-                      isVoting={isVoting[idea.id]}
-                      isVoted={votedIdeas.has(idea.id)}
-                      isSuccessVote={successVote === idea.id}
-                      onVote={handleVote}
-                      isLoggedIn={!!user}
-                      votesToNextRank={votesToNext}
-                      recentVotes24h={recentVotes}
+                  {/* Points-based Suggestion Form - Show only for authenticated non-owner users */}
+                  {!isOwnProfile && (
+                    <PointsSuggestionForm
+                      creatorId={creator.id}
+                      creatorUsername={creator.username}
+                      onSuccess={async () => {
+                        await refetch();
+                      }}
                     />
-                  );
-                })}
-              </div>
-            )}
+                  )}
+                </div>
+              )}
+            </div>
           </div>
         </div>
 

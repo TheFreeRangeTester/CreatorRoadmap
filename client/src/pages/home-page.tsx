@@ -318,7 +318,6 @@ export default function HomePage() {
 
               {/* Sidebar for sharing (1/3 width on larger screens) */}
               <div className="lg:col-span-1 space-y-6">
-                <PointsDisplay />
                 <ShareProfile />
               </div>
             </div>
