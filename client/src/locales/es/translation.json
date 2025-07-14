@@ -678,7 +678,8 @@
     "redeemError": "Error al canjear artículo",
     "insufficientPoints": "Puntos insuficientes para canjear este artículo",
     "itemNotAvailable": "Este artículo ya no está disponible",
-    "browseStore": "Explorar Tienda",
+    "browseStore": "Tienda de Puntos",
+    "hideStore": "Ocultar Tienda",
     "emptyStore": "Esta tienda está vacía",
     "noActiveItems": "No hay artículos activos en esta tienda"
   },

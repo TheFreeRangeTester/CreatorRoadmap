@@ -23,6 +23,7 @@ import {
   ArrowDown,
   Plus,
   Minus,
+  Store,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "@/components/theme-toggle";
@@ -48,6 +49,7 @@ import { useStaggerCards } from "@/components/gsap-animations";
 import { gsap } from "gsap";
 import IdeaCard from "@/components/idea-card";
 import EnhancedRankingCard from "@/components/enhanced-ranking-card";
+import { PublicStore } from "@/components/public-store";
 
 interface CreatorPublicPageResponse {
   ideas: IdeaResponse[];
@@ -75,6 +77,7 @@ export default function CreatorProfileUnified() {
   const [successVote, setSuccessVote] = useState<number | null>(null);
   const [suggestDialogOpen, setSuggestDialogOpen] = useState(false);
   const [showAudienceStats, setShowAudienceStats] = useState(false);
+  const [showStore, setShowStore] = useState(false);
   const { toast } = useToast();
   const { user } = useAuth();
   const { t } = useTranslation();
@@ -610,7 +613,7 @@ export default function CreatorProfileUnified() {
               </Button>
 
               <Button
-                onClick={handleShare}
+                onClick={() => setShowStore(!showStore)}
                 variant="outline"
                 className={cn(
                   isCustomBackground
@@ -618,8 +621,10 @@ export default function CreatorProfileUnified() {
                     : "border-white text-white hover:bg-white hover:text-blue-600"
                 )}
               >
-                <Share2 className="w-4 h-4 mr-2" />
-                {t("common.share", "Share")}
+                <Store className="w-4 h-4 mr-2" />
+                {showStore
+                  ? t("store.hideStore", "Hide Store")
+                  : t("store.browseStore", "Points Store")}
               </Button>
 
               {/* Audience Stats Button - Only show if user is logged in */}
@@ -647,6 +652,18 @@ export default function CreatorProfileUnified() {
         {showAudienceStats && (
           <div className="bg-gray-50 dark:bg-gray-900 py-8">
             <AudienceStats isVisible={showAudienceStats} />
+          </div>
+        )}
+
+        {/* Store Section - Only show when toggled */}
+        {showStore && (
+          <div className="bg-gray-50 dark:bg-gray-900 py-8">
+            <div className="container mx-auto px-4">
+              <PublicStore 
+                creatorUsername={username!} 
+                isAuthenticated={!!user} 
+              />
+            </div>
           </div>
         )}
 

@@ -659,7 +659,8 @@
     "redeemError": "Error redeeming item",
     "insufficientPoints": "Insufficient points to redeem this item",
     "itemNotAvailable": "This item is no longer available",
-    "browseStore": "Browse Store",
+    "browseStore": "Points Store",
+    "hideStore": "Hide Store",
     "emptyStore": "This store is empty",
     "noActiveItems": "No active items in this store"
   },
