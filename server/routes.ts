@@ -667,6 +667,17 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
         console.log("✅ Datos validados:", validatedData);
 
+        // Check if user has enough points
+        const userPoints = await storage.getUserPoints(req.user!.id);
+        if (userPoints.totalPoints < 3) {
+          console.log("❌ ERROR: Usuario no tiene suficientes puntos:", userPoints.totalPoints);
+          return res.status(400).json({ message: "Insufficient points. You need 3 points to suggest an idea." });
+        }
+
+        // Deduct 3 points for the suggestion
+        await storage.updateUserPoints(req.user!.id, -3, 'spent', 'idea_suggestion', null);
+        console.log("✅ 3 puntos descontados del usuario");
+
         // Store the suggested idea with pending status
         const idea = await storage.suggestIdea(validatedData, req.user!.id);
         console.log("✅ Idea sugerida creada:", idea);

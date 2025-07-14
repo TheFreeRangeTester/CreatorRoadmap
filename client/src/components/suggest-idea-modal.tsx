@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/hooks/use-auth";
@@ -48,6 +48,7 @@ export default function SuggestIdeaModal({
   const { toast } = useToast();
   const { t } = useTranslation();
   const { user } = useAuth();
+  const queryClient = useQueryClient();
   const [formError, setFormError] = useState<string | null>(null);
   
   // Form validation setup with react-hook-form and zod
@@ -70,6 +71,11 @@ export default function SuggestIdeaModal({
     },
     onSuccess: async () => {
       form.reset();
+      
+      // Invalidate points cache to refresh the UI
+      queryClient.invalidateQueries({ queryKey: ["/api/user/points"] });
+      queryClient.invalidateQueries({ queryKey: ["userPoints"] });
+      
       toast({
         title: t('creator.suggestionSuccess'),
         description: t('creator.suggestionSuccessDesc'),
