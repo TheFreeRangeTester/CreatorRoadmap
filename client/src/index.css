@@ -76,4 +76,9 @@
   button, a {
     @apply transition-all duration-200;
   }
+
+  /* Safe area for mobile bottom navigation */
+  .safe-area-pb {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
 }

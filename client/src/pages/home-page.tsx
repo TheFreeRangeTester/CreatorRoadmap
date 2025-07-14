@@ -32,6 +32,7 @@ import { IdeaLimitNotice } from "@/components/idea-limit-notice";
 import { PointsDisplay } from "@/components/points-display";
 import { StoreManagement } from "@/components/store-management";
 import { RedemptionManagement } from "@/components/redemption-management";
+import { MobileBottomNavigation } from "@/components/mobile-bottom-navigation";
 import logoPng from "@/assets/logo.png";
 
 export default function HomePage() {
@@ -42,6 +43,7 @@ export default function HomePage() {
   const [currentIdea, setCurrentIdea] = useState<IdeaResponse | null>(null);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [ideaToDelete] = useState<number | null>(null);
+  const [activeTab, setActiveTab] = useState("published");
 
   // Fetch ideas
   const {
@@ -50,6 +52,12 @@ export default function HomePage() {
     isError,
   } = useQuery<IdeaResponse[]>({
     queryKey: ["/api/ideas"],
+  });
+
+  // Fetch pending ideas count for badge (only for creators)
+  const { data: pendingIdeas } = useQuery<IdeaResponse[]>({
+    queryKey: ["/api/pending-ideas"],
+    enabled: user?.userRole === "creator",
   });
 
   // State to track which ideas are being voted on
@@ -244,7 +252,7 @@ export default function HomePage() {
         </div>
       </motion.header>
 
-      <main className="container mx-auto px-3 sm:px-6 lg:px-8 py-4 sm:py-6">
+      <main className="container mx-auto px-3 sm:px-6 lg:px-8 py-4 sm:py-6 pb-20 md:pb-6">
         {/* Main content for both authenticated and non-authenticated users */}
         <div className="mt-4 sm:mt-6">
           {user ? (
@@ -273,9 +281,9 @@ export default function HomePage() {
                     <IdeaLimitNotice />
                     <CreatorControls onAddIdea={handleAddIdea} />
                     <LeaderboardInfo />
-                    <Tabs defaultValue="published" className="w-full">
+                    <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
                       <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-4 sm:mb-6 space-y-3 sm:space-y-0">
-                        <TabsList className="grid grid-cols-2 sm:grid-cols-4 w-full sm:w-auto">
+                        <TabsList className="hidden md:grid grid-cols-2 sm:grid-cols-4 w-full sm:w-auto">
                           <TabsTrigger
                             value="published"
                             className="flex items-center gap-1 text-xs sm:text-sm"
@@ -415,6 +423,15 @@ export default function HomePage() {
         onConfirm={handleConfirmDelete}
         isDeleting={deleteMutation.isPending}
       />
+
+      {/* Mobile Bottom Navigation - Only for creators */}
+      {user?.userRole === "creator" && (
+        <MobileBottomNavigation
+          activeTab={activeTab}
+          onTabChange={setActiveTab}
+          pendingCount={pendingIdeas?.length || 0}
+        />
+      )}
     </div>
   );
 }
