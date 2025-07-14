@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { motion } from "framer-motion";
 import { useTranslation } from "react-i18next";
-import { ThumbsUp, Send, CheckCircle, BarChart3 } from "lucide-react";
+import { ThumbsUp, Send, CheckCircle, BarChart3, Star } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { useAuth } from "@/hooks/use-auth";
@@ -11,6 +11,13 @@ interface AudienceStatsData {
   votesGiven: number;
   ideasSuggested: number;
   ideasApproved: number;
+}
+
+interface UserPointsData {
+  userId: number;
+  totalPoints: number;
+  pointsEarned: number;
+  pointsSpent: number;
 }
 
 interface AudienceStatsProps {
@@ -27,11 +34,24 @@ export default function AudienceStats({ isVisible }: AudienceStatsProps) {
     refetchOnWindowFocus: false,
   });
 
+  const { data: pointsData } = useQuery<UserPointsData>({
+    queryKey: ["/api/user/points"],
+    enabled: !!user && isVisible,
+    refetchOnWindowFocus: false,
+  });
+
   if (!isVisible || !user) {
     return null;
   }
 
   const statsItems = [
+    {
+      icon: <Star className="h-5 w-5 text-purple-500" />,
+      label: t("points.totalPoints", "Total Points"),
+      value: pointsData?.totalPoints || 0,
+      description: t("points.availableForSuggestions", "Available for suggestions"),
+      color: "bg-purple-50 dark:bg-purple-900/20",
+    },
     {
       icon: <ThumbsUp className="h-5 w-5 text-blue-500" />,
       label: t("audienceStats.votesGiven", "Votes Given"),

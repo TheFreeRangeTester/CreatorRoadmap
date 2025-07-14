@@ -602,7 +602,12 @@
     "howToSpend": {
       "title": "How to spend points",
       "suggestion": "3 points to submit suggestion"
-    }
+    },
+    "totalPoints": "Total Points",
+    "insufficientPoints": "Insufficient points",
+    "needPointsToSuggest": "You need 3 points to suggest an idea. Vote for ideas to earn points!",
+    "needMorePoints": "Need 3 points",
+    "availableForSuggestions": "Available for suggestions"
   },
   "suggestionForm": {
     "title": "Suggest Idea",

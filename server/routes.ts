@@ -869,6 +869,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Create the vote
       await storage.createVote({ ideaId }, userId);
 
+      // Award 1 point for voting
+      await storage.updateUserPoints(userId, 1, 'earned', 'vote_given', ideaId);
+
       // Get the updated idea with its new position
       const ideasWithPositions = await storage.getIdeasWithPositions();
       const updatedIdea = ideasWithPositions.find(i => i.id === ideaId);

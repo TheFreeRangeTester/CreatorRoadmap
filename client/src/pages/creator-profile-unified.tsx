@@ -86,6 +86,13 @@ export default function CreatorProfileUnified() {
       enabled: !!username,
     });
 
+  // Query user points to control suggestion button
+  const { data: userPoints } = useQuery<{ totalPoints: number }>({
+    queryKey: ["/api/user/points"],
+    enabled: !!user && !isOwnProfile,
+    refetchOnWindowFocus: false,
+  });
+
   useEffect(() => {
     if (error) {
       toast({
@@ -572,11 +579,21 @@ export default function CreatorProfileUnified() {
                     return;
                   }
 
+                  // Check if user has enough points
+                  if (user && userPoints && userPoints.totalPoints < 3) {
+                    toast({
+                      title: t("points.insufficientPoints", "Not enough points"),
+                      description: t("points.needPointsToSuggest", "You need 3 points to suggest an idea. Vote for ideas to earn points!"),
+                      variant: "destructive",
+                    });
+                    return;
+                  }
+
                   setSuggestDialogOpen(true);
                 }}
-                disabled={isOwnProfile}
+                disabled={isOwnProfile || (user && userPoints && userPoints.totalPoints < 3)}
                 className={cn(
-                  isOwnProfile
+                  isOwnProfile || (user && userPoints && userPoints.totalPoints < 3)
                     ? "bg-gray-400 text-gray-600 cursor-not-allowed opacity-50"
                     : isCustomBackground
                     ? "bg-blue-600 text-white hover:bg-blue-700"
@@ -584,9 +601,12 @@ export default function CreatorProfileUnified() {
                 )}
               >
                 <UserPlus className="w-4 h-4 mr-2" />
-                {user
-                  ? t("suggestIdea.button", "Suggest Idea")
-                  : t("common.loginToSuggest", "Login to suggest ideas")}
+                {!user
+                  ? t("common.loginToSuggest", "Login to suggest ideas")
+                  : user && userPoints && userPoints.totalPoints < 3
+                  ? t("points.needMorePoints", "Need 3 points")
+                  : t("suggestIdea.button", "Suggest Idea")
+                }
               </Button>
 
               <Button

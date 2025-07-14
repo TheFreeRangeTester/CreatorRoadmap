@@ -621,7 +621,12 @@
     "howToSpend": {
       "title": "Cómo gastar puntos",
       "suggestion": "3 puntos para enviar sugerencia"
-    }
+    },
+    "totalPoints": "Puntos Totales",
+    "insufficientPoints": "Puntos insuficientes",
+    "needPointsToSuggest": "Necesitas 3 puntos para sugerir una idea. ¡Vota por ideas para ganar puntos!",
+    "needMorePoints": "Necesitas 3 puntos",
+    "availableForSuggestions": "Disponibles para sugerencias"
   },
   "suggestionForm": {
     "title": "Sugerir Idea",
