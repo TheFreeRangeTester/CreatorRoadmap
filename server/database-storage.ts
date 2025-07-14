@@ -1,7 +1,8 @@
-import { ideas, users, votes, publicLinks, 
+import { ideas, users, votes, publicLinks, userPoints, pointTransactions,
   type User, type InsertUser, type Idea, type InsertIdea, type UpdateIdea, type SuggestIdea,
   type Vote, type InsertVote, type PublicLink, type InsertPublicLink, type PublicLinkResponse,
-  type UpdateProfile, type UpdateSubscription } from "@shared/schema";
+  type UpdateProfile, type UpdateSubscription, type UserPointsResponse, type InsertPointTransaction,
+  type PointTransactionResponse } from "@shared/schema";
 import session from "express-session";
 import connectPg from "connect-pg-simple";
 import { db, pool } from "./db";
@@ -490,5 +491,101 @@ export class DatabaseStorage implements IStorage {
       limit,
       hasReachedLimit
     };
+  }
+
+  // Points operations
+  async getUserPoints(userId: number): Promise<UserPointsResponse> {
+    const [userPointsRecord] = await db
+      .select()
+      .from(userPoints)
+      .where(eq(userPoints.userId, userId));
+    
+    if (!userPointsRecord) {
+      // Create initial points record if it doesn't exist
+      return await this.createUserPoints(userId);
+    }
+    
+    return {
+      userId: userPointsRecord.userId,
+      totalPoints: userPointsRecord.totalPoints,
+      pointsEarned: userPointsRecord.pointsEarned,
+      pointsSpent: userPointsRecord.pointsSpent,
+    };
+  }
+
+  async createUserPoints(userId: number): Promise<UserPointsResponse> {
+    const [newUserPoints] = await db
+      .insert(userPoints)
+      .values({ 
+        userId,
+        totalPoints: 0,
+        pointsEarned: 0,
+        pointsSpent: 0
+      })
+      .returning();
+    
+    return {
+      userId: newUserPoints.userId,
+      totalPoints: newUserPoints.totalPoints,
+      pointsEarned: newUserPoints.pointsEarned,
+      pointsSpent: newUserPoints.pointsSpent,
+    };
+  }
+
+  async updateUserPoints(userId: number, pointsChange: number, type: 'earned' | 'spent', reason: string, relatedId?: number): Promise<UserPointsResponse> {
+    // Get current points or create if doesn't exist
+    let currentPoints = await this.getUserPoints(userId);
+    
+    const updateData: any = { updatedAt: new Date() };
+    
+    if (type === 'earned') {
+      updateData.totalPoints = currentPoints.totalPoints + pointsChange;
+      updateData.pointsEarned = currentPoints.pointsEarned + pointsChange;
+    } else { // spent
+      updateData.totalPoints = currentPoints.totalPoints - pointsChange;
+      updateData.pointsSpent = currentPoints.pointsSpent + pointsChange;
+    }
+    
+    // Update points in transaction
+    await db.transaction(async (tx) => {
+      // Update user points
+      await tx
+        .update(userPoints)
+        .set(updateData)
+        .where(eq(userPoints.userId, userId));
+      
+      // Record transaction
+      await tx
+        .insert(pointTransactions)
+        .values({
+          userId,
+          type,
+          amount: pointsChange,
+          reason,
+          relatedId: relatedId || null,
+        });
+    });
+    
+    // Return updated points
+    return await this.getUserPoints(userId);
+  }
+
+  async getUserPointTransactions(userId: number, limit: number = 50): Promise<PointTransactionResponse[]> {
+    const transactions = await db
+      .select()
+      .from(pointTransactions)
+      .where(eq(pointTransactions.userId, userId))
+      .orderBy(desc(pointTransactions.createdAt))
+      .limit(limit);
+    
+    return transactions.map(t => ({
+      id: t.id,
+      userId: t.userId,
+      type: t.type as 'earned' | 'spent',
+      amount: t.amount,
+      reason: t.reason,
+      relatedId: t.relatedId,
+      createdAt: t.createdAt,
+    }));
   }
 }

@@ -72,6 +72,28 @@ export const publicLinks = pgTable("public_links", {
   expiresAt: timestamp("expires_at"), // Optional expiration date
 });
 
+// Table for user points
+export const userPoints = pgTable("user_points", {
+  id: serial("id").primaryKey(),
+  userId: integer("user_id").notNull().references(() => users.id).unique(),
+  totalPoints: integer("total_points").notNull().default(0),
+  pointsEarned: integer("points_earned").notNull().default(0), // Total points ever earned
+  pointsSpent: integer("points_spent").notNull().default(0), // Total points ever spent
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+  updatedAt: timestamp("updated_at").notNull().defaultNow(),
+});
+
+// Table for point transactions/history
+export const pointTransactions = pgTable("point_transactions", {
+  id: serial("id").primaryKey(),
+  userId: integer("user_id").notNull().references(() => users.id),
+  type: text("type").notNull(), // 'earned' or 'spent'
+  amount: integer("amount").notNull(),
+  reason: text("reason").notNull(), // 'vote_given', 'idea_approved', 'suggestion_submitted'
+  relatedId: integer("related_id"), // ID of the related idea, vote, etc.
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+});
+
 // User schemas
 export const insertUserSchema = createInsertSchema(users).pick({
   username: true,
@@ -260,3 +282,35 @@ export type PublicLinkResponse = z.infer<typeof publicLinkResponseSchema>;
 export type CreateCheckoutSession = z.infer<typeof createCheckoutSessionSchema>;
 export type UpdateSubscription = z.infer<typeof updateSubscriptionSchema>;
 export type SubscriptionResponse = z.infer<typeof subscriptionResponseSchema>;
+
+// Points schemas and types
+export const userPointsResponseSchema = z.object({
+  userId: z.number(),
+  totalPoints: z.number(),
+  pointsEarned: z.number(),
+  pointsSpent: z.number(),
+});
+
+export const insertPointTransactionSchema = createInsertSchema(pointTransactions).pick({
+  userId: true,
+  type: true,
+  amount: true,
+  reason: true,
+  relatedId: true,
+});
+
+export const pointTransactionResponseSchema = z.object({
+  id: z.number(),
+  userId: z.number(),
+  type: z.enum(['earned', 'spent']),
+  amount: z.number(),
+  reason: z.string(),
+  relatedId: z.number().nullable(),
+  createdAt: z.date(),
+});
+
+export type UserPoints = typeof userPoints.$inferSelect;
+export type UserPointsResponse = z.infer<typeof userPointsResponseSchema>;
+export type InsertPointTransaction = z.infer<typeof insertPointTransactionSchema>;
+export type PointTransaction = typeof pointTransactions.$inferSelect;
+export type PointTransactionResponse = z.infer<typeof pointTransactionResponseSchema>;

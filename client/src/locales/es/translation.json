@@ -597,5 +597,44 @@
     "title": "Límite de ideas alcanzado",
     "description": "Tienes {{count}} ideas creadas. El límite para usuarios gratuitos es de {{limit}} ideas. ¡Actualiza a premium para crear ideas ilimitadas!",
     "upgradeButton": "Actualizar a Premium"
+  },
+  "points": {
+    "title": "Puntos",
+    "currentPoints": "Tienes {{points}} puntos disponibles",
+    "notEnoughPoints": "No tienes suficientes puntos para enviar una sugerencia",
+    "pointsRequired": "Se requieren {{points}} puntos",
+    "earnPoints": "Gana Puntos",
+    "spendPoints": "Gastar Puntos",
+    "pointsHistory": "Historial de Puntos",
+    "earnedBy": "Ganado por",
+    "spentOn": "Gastado en",
+    "reasons": {
+      "vote_given": "Votar por una idea",
+      "idea_approved": "Idea aprobada",
+      "suggestion_submitted": "Sugerencia enviada"
+    },
+    "howToEarn": {
+      "title": "Cómo ganar puntos",
+      "vote": "1 punto por cada voto",
+      "approvedIdea": "5 puntos por idea aprobada"
+    },
+    "howToSpend": {
+      "title": "Cómo gastar puntos",
+      "suggestion": "3 puntos para enviar sugerencia"
+    }
+  },
+  "suggestionForm": {
+    "title": "Sugerir Idea",
+    "description": "Describe tu idea en detalle",
+    "submit": "Enviar Sugerencia",
+    "sending": "Enviando...",
+    "success": "¡Tu sugerencia fue enviada!",
+    "cost": "Costo: {{cost}} puntos"
+  },
+  "errors": {
+    "notEnoughPoints": "No tienes suficientes puntos para enviar una sugerencia",
+    "generic": "Ocurrió un error al enviar la sugerencia",
+    "unauthorized": "Necesitas iniciar sesión",
+    "invalidInput": "Campos inválidos"
   }
 }

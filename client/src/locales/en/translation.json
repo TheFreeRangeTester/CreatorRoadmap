@@ -578,5 +578,44 @@
     "title": "Idea limit reached",
     "description": "You have {{count}} ideas created. The limit for free users is {{limit}} ideas. Upgrade to premium to create unlimited ideas!",
     "upgradeButton": "Upgrade to Premium"
+  },
+  "points": {
+    "title": "Points",
+    "currentPoints": "You have {{points}} points available",
+    "notEnoughPoints": "Not enough points to submit a suggestion",
+    "pointsRequired": "{{points}} points required",
+    "earnPoints": "Earn Points",
+    "spendPoints": "Spend Points",
+    "pointsHistory": "Point History",
+    "earnedBy": "Earned by",
+    "spentOn": "Spent on",
+    "reasons": {
+      "vote_given": "Voting for an idea",
+      "idea_approved": "Idea approved",
+      "suggestion_submitted": "Suggestion submitted"
+    },
+    "howToEarn": {
+      "title": "How to earn points",
+      "vote": "1 point per vote",
+      "approvedIdea": "5 points per approved idea"
+    },
+    "howToSpend": {
+      "title": "How to spend points",
+      "suggestion": "3 points to submit suggestion"
+    }
+  },
+  "suggestionForm": {
+    "title": "Suggest Idea",
+    "description": "Describe your idea in detail",
+    "submit": "Submit Suggestion",
+    "sending": "Sending...",
+    "success": "Your suggestion was submitted!",
+    "cost": "Cost: {{cost}} points"
+  },
+  "errors": {
+    "notEnoughPoints": "Not enough points to submit a suggestion",
+    "generic": "An error occurred while submitting your suggestion",
+    "unauthorized": "You need to login",
+    "invalidInput": "Invalid fields"
   }
 }

@@ -27,6 +27,7 @@ import { IdeasTabView } from "@/components/ideas-tab-view";
 import { LanguageToggle } from "@/components/language-toggle";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { IdeaLimitNotice } from "@/components/idea-limit-notice";
+import { PointsDisplay } from "@/components/points-display";
 import logoPng from "@/assets/logo.png";
 
 export default function HomePage() {
@@ -317,6 +318,7 @@ export default function HomePage() {
 
               {/* Sidebar for sharing (1/3 width on larger screens) */}
               <div className="lg:col-span-1 space-y-6">
+                <PointsDisplay />
                 <ShareProfile />
               </div>
             </div>

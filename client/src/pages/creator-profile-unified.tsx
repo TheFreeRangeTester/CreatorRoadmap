@@ -40,6 +40,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { cn } from "@/lib/utils";
 import SuggestIdeaModal from "@/components/suggest-idea-modal";
 import AudienceStats from "@/components/audience-stats";
+import { PointsSuggestionForm } from "@/components/points-suggestion-form";
 import { FaTiktok } from "react-icons/fa";
 import { FaThreads } from "react-icons/fa6";
 import { useStaggerCards } from "@/components/gsap-animations";
@@ -634,6 +635,19 @@ export default function CreatorProfileUnified() {
             <h2 className="text-3xl font-bold text-center mb-8 text-gray-900 dark:text-white">
               {t("creator.voteHeaderTitle", "Vote for Content Ideas")}
             </h2>
+
+            {/* Points-based Suggestion Form - Show only for authenticated non-owner users */}
+            {user && !isOwnProfile && (
+              <div className="mb-8 max-w-md mx-auto">
+                <PointsSuggestionForm
+                  creatorId={creator.id}
+                  creatorUsername={creator.username}
+                  onSuccess={async () => {
+                    await refetch();
+                  }}
+                />
+              </div>
+            )}
 
             {ideas.length === 0 ? (
               <div className="text-center py-12">

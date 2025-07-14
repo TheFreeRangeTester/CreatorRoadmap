@@ -1,7 +1,8 @@
 import { ideas as ideasTable, users, votes as votesTable, publicLinks as publicLinksTable, 
   type User, type InsertUser, type Idea, type InsertIdea, type UpdateIdea, type SuggestIdea,
   type Vote, type InsertVote, type PublicLink, type InsertPublicLink, type PublicLinkResponse,
-  type UpdateProfile, type UpdateSubscription } from "@shared/schema";
+  type UpdateProfile, type UpdateSubscription, type UserPointsResponse, type InsertPointTransaction,
+  type PointTransactionResponse } from "@shared/schema";
 import session from "express-session";
 import createMemoryStore from "memorystore";
 import { randomBytes } from "crypto";
@@ -56,6 +57,12 @@ export interface IStorage {
   // Idea quota operations
   getUserIdeaQuota(userId: number): Promise<{ count: number; limit: number; hasReachedLimit: boolean; }>;
   
+  // Points operations
+  getUserPoints(userId: number): Promise<UserPointsResponse>;
+  createUserPoints(userId: number): Promise<UserPointsResponse>;
+  updateUserPoints(userId: number, pointsChange: number, type: 'earned' | 'spent', reason: string, relatedId?: number): Promise<UserPointsResponse>;
+  getUserPointTransactions(userId: number, limit?: number): Promise<PointTransactionResponse[]>;
+  
   // Session store
   sessionStore: any;
 }
@@ -83,10 +90,13 @@ export class MemStorage implements IStorage {
   private ideas: Map<number, Idea>;
   private votes: Map<number, Vote>;
   private publicLinks: Map<number, PublicLink>;
+  private userPointsMap: Map<number, UserPointsResponse>;
+  private pointTransactionsMap: Map<number, PointTransactionResponse>;
   currentUserId: number;
   currentIdeaId: number;
   currentVoteId: number;
   currentPublicLinkId: number;
+  currentPointTransactionId: number;
   sessionStore: any;
 
   constructor() {
@@ -94,10 +104,13 @@ export class MemStorage implements IStorage {
     this.ideas = new Map();
     this.votes = new Map();
     this.publicLinks = new Map();
+    this.userPointsMap = new Map();
+    this.pointTransactionsMap = new Map();
     this.currentUserId = 1;
     this.currentIdeaId = 1;
     this.currentVoteId = 1;
     this.currentPublicLinkId = 1;
+    this.currentPointTransactionId = 1;
     this.sessionStore = new MemoryStore({
       checkPeriod: 86400000, // Prune expired entries every 24h
     });
@@ -540,6 +553,70 @@ export class MemStorage implements IStorage {
       limit,
       hasReachedLimit
     };
+  }
+
+  // Points operations
+  async getUserPoints(userId: number): Promise<UserPointsResponse> {
+    let userPoints = this.userPointsMap.get(userId);
+    if (!userPoints) {
+      userPoints = await this.createUserPoints(userId);
+    }
+    return userPoints;
+  }
+
+  async createUserPoints(userId: number): Promise<UserPointsResponse> {
+    const userPoints: UserPointsResponse = {
+      userId,
+      totalPoints: 0,
+      pointsEarned: 0,
+      pointsSpent: 0,
+    };
+    this.userPointsMap.set(userId, userPoints);
+    return userPoints;
+  }
+
+  async updateUserPoints(userId: number, pointsChange: number, type: 'earned' | 'spent', reason: string, relatedId?: number): Promise<UserPointsResponse> {
+    let currentPoints = await this.getUserPoints(userId);
+    
+    // Update points
+    const updatedPoints: UserPointsResponse = {
+      userId,
+      totalPoints: type === 'earned' 
+        ? currentPoints.totalPoints + pointsChange 
+        : currentPoints.totalPoints - pointsChange,
+      pointsEarned: type === 'earned' 
+        ? currentPoints.pointsEarned + pointsChange 
+        : currentPoints.pointsEarned,
+      pointsSpent: type === 'spent' 
+        ? currentPoints.pointsSpent + pointsChange 
+        : currentPoints.pointsSpent,
+    };
+    
+    // Save updated points
+    this.userPointsMap.set(userId, updatedPoints);
+    
+    // Record transaction
+    const transaction: PointTransactionResponse = {
+      id: this.currentPointTransactionId++,
+      userId,
+      type,
+      amount: pointsChange,
+      reason,
+      relatedId: relatedId || null,
+      createdAt: new Date(),
+    };
+    this.pointTransactionsMap.set(transaction.id, transaction);
+    
+    return updatedPoints;
+  }
+
+  async getUserPointTransactions(userId: number, limit: number = 50): Promise<PointTransactionResponse[]> {
+    const transactions = Array.from(this.pointTransactionsMap.values())
+      .filter(t => t.userId === userId)
+      .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime())
+      .slice(0, limit);
+    
+    return transactions;
   }
 }
 

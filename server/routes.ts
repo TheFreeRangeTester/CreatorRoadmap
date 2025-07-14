@@ -165,6 +165,90 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Submit idea suggestion with points cost (for audience users)
+  app.post("/api/suggestions/submit", async (req: Request, res: Response) => {
+    try {
+      if (!req.isAuthenticated()) {
+        return res.status(401).json({ message: "Authentication required" });
+      }
+
+      const SUGGESTION_COST = 3;
+      const userId = req.user.id;
+
+      // Check if user has enough points
+      const userPoints = await storage.getUserPoints(userId);
+      if (userPoints.totalPoints < SUGGESTION_COST) {
+        return res.status(403).json({ 
+          message: "Not enough points",
+          currentPoints: userPoints.totalPoints,
+          requiredPoints: SUGGESTION_COST
+        });
+      }
+
+      // Validate suggestion data (expecting creatorId in the body)
+      const validatedData = suggestIdeaSchema.parse(req.body);
+
+      // Deduct points for suggestion
+      await storage.updateUserPoints(userId, SUGGESTION_COST, 'spent', 'suggestion_submitted');
+
+      // Create the suggestion
+      const idea = await storage.suggestIdea(validatedData, userId);
+
+      // Get updated points
+      const updatedPoints = await storage.getUserPoints(userId);
+
+      res.status(201).json({
+        success: true,
+        message: "Suggestion submitted",
+        idea,
+        updatedPoints: updatedPoints.totalPoints
+      });
+    } catch (error) {
+      if (error instanceof ZodError) {
+        const validationError = fromZodError(error);
+        return res.status(400).json({ message: validationError.message });
+      }
+      console.error("Error submitting suggestion:", error);
+      res.status(500).json({ message: "Failed to submit suggestion" });
+    }
+  });
+
+  // Points API routes
+  // Get user points
+  app.get("/api/user/points", async (req: Request, res: Response) => {
+    try {
+      if (!req.isAuthenticated()) {
+        return res.status(401).json({ message: "Authentication required" });
+      }
+
+      const userId = req.user.id;
+      const points = await storage.getUserPoints(userId);
+
+      res.json(points);
+    } catch (error) {
+      console.error("Error fetching user points:", error);
+      res.status(500).json({ message: "Failed to fetch user points" });
+    }
+  });
+
+  // Get user point transactions/history
+  app.get("/api/user/point-transactions", async (req: Request, res: Response) => {
+    try {
+      if (!req.isAuthenticated()) {
+        return res.status(401).json({ message: "Authentication required" });
+      }
+
+      const userId = req.user.id;
+      const limit = parseInt(req.query.limit as string) || 50;
+      const transactions = await storage.getUserPointTransactions(userId, limit);
+
+      res.json(transactions);
+    } catch (error) {
+      console.error("Error fetching point transactions:", error);
+      res.status(500).json({ message: "Failed to fetch point transactions" });
+    }
+  });
+
   // Ideas API routes
   // Get all ideas
   app.get("/api/ideas", async (req: Request, res: Response) => {
@@ -397,6 +481,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       // Create the vote
       await storage.createVote({ ideaId }, userId);
+
+      // Award 1 point for voting
+      await storage.updateUserPoints(userId, 1, 'earned', 'vote_given', ideaId);
 
       // Get the updated idea with its new position
       const ideasWithPositions = await storage.getIdeasWithPositions();
@@ -692,6 +779,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       // Approve the idea
       const approvedIdea = await storage.approveIdea(id);
+
+      // Award 2 points to the suggester for approved idea
+      if (idea.suggestedBy) {
+        await storage.updateUserPoints(idea.suggestedBy, 2, 'earned', 'idea_approved', id);
+      }
 
       // Get the approved idea with updated position 
       const ideasWithPositions = await storage.getIdeasWithPositions();
