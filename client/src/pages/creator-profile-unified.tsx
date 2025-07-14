@@ -41,6 +41,7 @@ import { cn } from "@/lib/utils";
 import SuggestIdeaModal from "@/components/suggest-idea-modal";
 import AudienceStats from "@/components/audience-stats";
 import { PointsSuggestionForm } from "@/components/points-suggestion-form";
+import { PointsDisplay } from "@/components/points-display";
 import { FaTiktok } from "react-icons/fa";
 import { FaThreads } from "react-icons/fa6";
 import { useStaggerCards } from "@/components/gsap-animations";
