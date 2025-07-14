@@ -72,6 +72,54 @@ export const publicLinks = pgTable("public_links", {
   expiresAt: timestamp("expires_at"), // Optional expiration date
 });
 
+// Table for user points
+export const userPoints = pgTable("user_points", {
+  id: serial("id").primaryKey(),
+  userId: integer("user_id").notNull().references(() => users.id).unique(),
+  totalPoints: integer("total_points").notNull().default(0),
+  pointsEarned: integer("points_earned").notNull().default(0), // Total points ever earned
+  pointsSpent: integer("points_spent").notNull().default(0), // Total points ever spent
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+  updatedAt: timestamp("updated_at").notNull().defaultNow(),
+});
+
+// Table for point transactions/history
+export const pointTransactions = pgTable("point_transactions", {
+  id: serial("id").primaryKey(),
+  userId: integer("user_id").notNull().references(() => users.id),
+  type: text("type").notNull(), // 'earned' or 'spent'
+  amount: integer("amount").notNull(),
+  reason: text("reason").notNull(), // 'vote_given', 'idea_approved', 'suggestion_submitted'
+  relatedId: integer("related_id"), // ID of the related idea, vote, etc.
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+});
+
+// Table for store items that creators can configure
+export const storeItems = pgTable("store_items", {
+  id: serial("id").primaryKey(),
+  creatorId: integer("creator_id").notNull().references(() => users.id),
+  title: text("title").notNull(),
+  description: text("description").notNull(),
+  pointsCost: integer("points_cost").notNull(),
+  maxQuantity: integer("max_quantity"), // null means unlimited
+  currentQuantity: integer("current_quantity").notNull().default(0), // how many have been redeemed
+  isActive: boolean("is_active").notNull().default(true),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+  updatedAt: timestamp("updated_at").notNull().defaultNow(),
+});
+
+// Table for store item redemptions
+export const storeRedemptions = pgTable("store_redemptions", {
+  id: serial("id").primaryKey(),
+  storeItemId: integer("store_item_id").notNull().references(() => storeItems.id),
+  userId: integer("user_id").notNull().references(() => users.id),
+  creatorId: integer("creator_id").notNull().references(() => users.id),
+  pointsSpent: integer("points_spent").notNull(),
+  status: text("status").notNull().default('pending'), // 'pending', 'completed'
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+  completedAt: timestamp("completed_at"),
+});
+
 // User schemas
 export const insertUserSchema = createInsertSchema(users).pick({
   username: true,
@@ -260,3 +308,95 @@ export type PublicLinkResponse = z.infer<typeof publicLinkResponseSchema>;
 export type CreateCheckoutSession = z.infer<typeof createCheckoutSessionSchema>;
 export type UpdateSubscription = z.infer<typeof updateSubscriptionSchema>;
 export type SubscriptionResponse = z.infer<typeof subscriptionResponseSchema>;
+
+// Points schemas and types
+export const userPointsResponseSchema = z.object({
+  userId: z.number(),
+  totalPoints: z.number(),
+  pointsEarned: z.number(),
+  pointsSpent: z.number(),
+});
+
+export const insertPointTransactionSchema = createInsertSchema(pointTransactions).pick({
+  userId: true,
+  type: true,
+  amount: true,
+  reason: true,
+  relatedId: true,
+});
+
+export const pointTransactionResponseSchema = z.object({
+  id: z.number(),
+  userId: z.number(),
+  type: z.enum(['earned', 'spent']),
+  amount: z.number(),
+  reason: z.string(),
+  relatedId: z.number().nullable(),
+  createdAt: z.date(),
+});
+
+export type UserPoints = typeof userPoints.$inferSelect;
+export type UserPointsResponse = z.infer<typeof userPointsResponseSchema>;
+export type InsertPointTransaction = z.infer<typeof insertPointTransactionSchema>;
+export type PointTransaction = typeof pointTransactions.$inferSelect;
+export type PointTransactionResponse = z.infer<typeof pointTransactionResponseSchema>;
+
+// Store items schemas and types
+export const insertStoreItemSchema = createInsertSchema(storeItems).pick({
+  title: true,
+  description: true,
+  pointsCost: true,
+  maxQuantity: true,
+}).extend({
+  title: z.string().min(1, { message: "Title is required" }).max(100, { message: "Title too long" }),
+  description: z.string().min(1, { message: "Description is required" }).max(500, { message: "Description too long" }),
+  pointsCost: z.number().min(1, { message: "Points cost must be at least 1" }),
+  maxQuantity: z.number().min(1, { message: "Quantity must be at least 1" }).nullable().optional(),
+});
+
+export const updateStoreItemSchema = insertStoreItemSchema.partial().extend({
+  isActive: z.boolean().optional(),
+});
+
+export const storeItemResponseSchema = z.object({
+  id: z.number(),
+  creatorId: z.number(),
+  title: z.string(),
+  description: z.string(),
+  pointsCost: z.number(),
+  maxQuantity: z.number().nullable(),
+  currentQuantity: z.number(),
+  isActive: z.boolean(),
+  createdAt: z.date(),
+  updatedAt: z.date(),
+  isAvailable: z.boolean(), // computed field
+});
+
+export const insertStoreRedemptionSchema = createInsertSchema(storeRedemptions).pick({
+  storeItemId: true,
+});
+
+export const storeRedemptionResponseSchema = z.object({
+  id: z.number(),
+  storeItemId: z.number(),
+  userId: z.number(),
+  creatorId: z.number(),
+  pointsSpent: z.number(),
+  status: z.enum(['pending', 'completed']),
+  createdAt: z.date(),
+  completedAt: z.date().nullable(),
+  // Additional fields for display
+  userUsername: z.string(),
+  userEmail: z.string(),
+  storeItemTitle: z.string(),
+  storeItemDescription: z.string(),
+});
+
+export type StoreItem = typeof storeItems.$inferSelect;
+export type InsertStoreItem = z.infer<typeof insertStoreItemSchema>;
+export type UpdateStoreItem = z.infer<typeof updateStoreItemSchema>;
+export type StoreItemResponse = z.infer<typeof storeItemResponseSchema>;
+
+export type StoreRedemption = typeof storeRedemptions.$inferSelect;
+export type InsertStoreRedemption = z.infer<typeof insertStoreRedemptionSchema>;
+export type StoreRedemptionResponse = z.infer<typeof storeRedemptionResponseSchema>;

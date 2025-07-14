@@ -359,7 +359,9 @@
     "myIdeas": "My Ideas",
     "published": "Ideas",
     "suggested": "Suggested",
-    "suggestions": "Suggested"
+    "suggestions": "Suggested",
+    "store": "Points Store",
+    "redemptions": "Redemptions"
   },
   "ideaForm": {
     "addTitle": "Add new idea",
@@ -578,5 +580,117 @@
     "title": "Idea limit reached",
     "description": "You have {{count}} ideas created. The limit for free users is {{limit}} ideas. Upgrade to premium to create unlimited ideas!",
     "upgradeButton": "Upgrade to Premium"
+  },
+  "points": {
+    "title": "Points",
+    "currentPoints": "You have {{points}} points available",
+    "notEnoughPoints": "Not enough points to submit a suggestion",
+    "pointsRequired": "{{points}} points required",
+    "earnPoints": "Earn Points",
+    "spendPoints": "Spend Points",
+    "pointsHistory": "Point History",
+    "earnedBy": "Earned by",
+    "spentOn": "Spent on",
+    "reasons": {
+      "vote_given": "Voting for an idea",
+      "idea_approved": "Idea approved",
+      "suggestion_submitted": "Suggestion submitted"
+    },
+    "howToEarn": {
+      "title": "How to earn points",
+      "vote": "1 point per vote",
+      "approvedIdea": "5 points per approved idea"
+    },
+    "howToSpend": {
+      "title": "How to spend points",
+      "suggestion": "3 points to submit suggestion"
+    },
+    "totalPoints": "Total Points",
+    "insufficientPoints": "Insufficient points",
+    "needPointsToSuggest": "You need 3 points to suggest an idea. Vote for ideas to earn points!",
+    "needMorePoints": "Need 3 points",
+    "availableForSuggestions": "Available for suggestions"
+  },
+  "suggestionForm": {
+    "title": "Suggest Idea",
+    "description": "Describe your idea in detail",
+    "submit": "Submit Suggestion",
+    "sending": "Sending...",
+    "success": "Your suggestion was submitted!",
+    "cost": "Cost: {{cost}} points"
+  },
+  "errors": {
+    "notEnoughPoints": "Not enough points to submit a suggestion",
+    "generic": "An error occurred while submitting your suggestion",
+    "unauthorized": "You need to login",
+    "invalidInput": "Invalid fields"
+  },
+  "store": {
+    "title": "Points Store",
+    "description": "Create rewards that your audience can redeem with points",
+    "noItems": "No items in store",
+    "createFirst": "Create your first store item",
+    "createItem": "Create Item",
+    "editItem": "Edit Item",
+    "deleteItem": "Delete Item",
+    "confirmDelete": "Are you sure you want to delete this item?",
+    "itemTitle": "Item Title",
+    "itemDescription": "Description",
+    "pointsCost": "Points Cost",
+    "maxQuantity": "Maximum Quantity",
+    "unlimited": "Unlimited",
+    "currentQuantity": "Current Quantity",
+    "isActive": "Active",
+    "available": "Available",
+    "unavailable": "Unavailable",
+    "outOfStock": "Out of stock",
+    "save": "Save",
+    "cancel": "Cancel",
+    "creating": "Creating...",
+    "updating": "Updating...",
+    "deleting": "Deleting...",
+    "itemCreated": "Item created successfully",
+    "itemUpdated": "Item updated successfully",
+    "itemDeleted": "Item deleted successfully",
+    "premiumRequired": "Premium required to create store items",
+    "maxItemsReached": "You've reached the limit of 5 items",
+    "redeemButton": "Redeem for {{points}} points",
+    "redeemSuccess": "Item redeemed successfully!",
+    "redeemError": "Error redeeming item",
+    "insufficientPoints": "Insufficient points to redeem this item",
+    "itemNotAvailable": "This item is no longer available",
+    "browseStore": "Points Store",
+    "hideStore": "Hide Store",
+    "itemsLeft": "Amount left",
+    "left": "",
+    "emptyStore": "This store is empty",
+    "noActiveItems": "No active items in this store"
+  },
+  "redemptions": {
+    "title": "Redemptions",
+    "description": "Manage redemption requests from your audience",
+    "noRedemptions": "No pending redemptions",
+    "allRedemptions": "All redemptions",
+    "pendingRedemptions": "Pending redemptions",
+    "completedRedemptions": "Completed redemptions",
+    "userName": "User",
+    "item": "Item",
+    "pointsSpent": "Points spent",
+    "date": "Date",
+    "status": "Status",
+    "email": "Email",
+    "pending": "Pending",
+    "completed": "Completed",
+    "markCompleted": "Mark as Completed",
+    "markPending": "Mark as Pending",
+    "statusUpdated": "Status updated successfully",
+    "statusUpdateError": "Error updating status",
+    "pagination": {
+      "previous": "Previous",
+      "next": "Next",
+      "page": "Page {{current}} of {{total}}"
+    },
+    "loadingRedemptions": "Loading redemptions...",
+    "loadError": "Error loading redemptions"
   }
 }

@@ -1,0 +1,220 @@
+Perfecto, Pato. A continuación te presento una propuesta completa para implementar la funcionalidad de limitar el envío de sugerencias de ideas por puntos en tu app.
+
+⸻
+
+🎯 Funcionalidad: Limitar envío de sugerencias de ideas por puntos
+
+⸻
+
+🧱 1. Descripción General del Proceso
+	1.	Asignación de puntos:
+	•	1 punto por cada voto realizado.
+	•	2 puntos por cada idea enviada y luego aprobada.
+	2.	Costo de sugerencia de idea:
+	•	El envío de una idea consume puntos (por ejemplo, 3 puntos).
+	•	Si el usuario no tiene suficientes puntos, no podrá enviar la sugerencia.
+	3.	Validación del saldo de puntos:
+	•	Validación al enviar idea, con mensaje contextualizado y traducido.
+	•	La lógica de puntos se mantiene del lado del servidor y se expone por API.
+	4.	Actualización del puntaje:
+	•	React Query se encarga del fetching del saldo actual.
+	•	Mutaciones para votos e ideas actualizan el saldo del usuario.
+
+⸻
+
+🔧 2. Tipado TypeScript Necesario
+
+// types/points.ts
+export interface UserPoints {
+  userId: string;
+  totalPoints: number;
+}
+
+export interface SuggestionPayload {
+  title: string;
+  description: string;
+}
+
+export interface SuggestionResponse {
+  success: boolean;
+  message: string;
+  updatedPoints?: number;
+}
+
+
+⸻
+
+📡 3. API Route: /api/suggestions/submit
+
+// app/api/suggestions/submit/route.ts
+import { NextResponse } from "next/server";
+import { getUserSession } from "@/lib/auth";
+import { z } from "zod";
+import { db } from "@/lib/db"; // Supuesto ORM/db adapter
+
+const SuggestionSchema = z.object({
+  title: z.string().min(5),
+  description: z.string().min(10),
+});
+
+const SUGGESTION_COST = 3;
+
+export async function POST(req: Request) {
+  const session = await getUserSession();
+  if (!session) return NextResponse.json({ success: false, message: "Unauthorized" }, { status: 401 });
+
+  const body = await req.json();
+  const parse = SuggestionSchema.safeParse(body);
+  if (!parse.success) {
+    return NextResponse.json({ success: false, message: "Invalid input" }, { status: 400 });
+  }
+
+  const userPoints = await db.userPoints.findUnique({ where: { userId: session.user.id } });
+  if (!userPoints || userPoints.totalPoints < SUGGESTION_COST) {
+    return NextResponse.json({ success: false, message: "Not enough points" }, { status: 403 });
+  }
+
+  await db.$transaction([
+    db.suggestion.create({
+      data: {
+        ...parse.data,
+        userId: session.user.id,
+        status: "pending",
+      },
+    }),
+    db.userPoints.update({
+      where: { userId: session.user.id },
+      data: { totalPoints: { decrement: SUGGESTION_COST } },
+    }),
+  ]);
+
+  const updated = await db.userPoints.findUnique({ where: { userId: session.user.id } });
+
+  return NextResponse.json({ success: true, message: "Suggestion submitted", updatedPoints: updated?.totalPoints });
+}
+
+
+⸻
+
+🧩 4. React Component: SuggestionForm.tsx
+
+"use client";
+
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { SuggestionPayload, UserPoints } from "@/types/points";
+import { z } from "zod";
+import { Textarea, Input, Button } from "@/components/ui";
+import { toast } from "sonner";
+import { useTranslation } from "react-i18next";
+
+const formSchema = z.object({
+  title: z.string().min(5),
+  description: z.string().min(10),
+});
+
+type FormValues = z.infer<typeof formSchema>;
+
+export function SuggestionForm() {
+  const { t } = useTranslation();
+
+  const { data: pointsData, isLoading: pointsLoading } = useQuery<UserPoints>({
+    queryKey: ["userPoints"],
+    queryFn: () => fetch("/api/user/points").then(res => res.json()),
+  });
+
+  const mutation = useMutation({
+    mutationFn: async (data: FormValues) => {
+      const res = await fetch("/api/suggestions/submit", {
+        method: "POST",
+        body: JSON.stringify(data),
+        headers: { "Content-Type": "application/json" },
+      });
+      return res.json();
+    },
+    onSuccess: (data) => {
+      if (data.success) {
+        toast.success(t("suggestion.success"));
+      } else {
+        toast.error(t(`errors.${data.message}`));
+      }
+    },
+    onError: () => toast.error(t("errors.generic")),
+  });
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<FormValues>({
+    resolver: zodResolver(formSchema),
+  });
+
+  const onSubmit = (data: FormValues) => {
+    if ((pointsData?.totalPoints ?? 0) < 3) {
+      toast.error(t("errors.notEnoughPoints"));
+      return;
+    }
+    mutation.mutate(data);
+  };
+
+  return (
+    <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 max-w-md">
+      <Input
+        {...register("title")}
+        placeholder={t("form.title")}
+        className={errors.title ? "border-red-500" : ""}
+      />
+      <Textarea
+        {...register("description")}
+        placeholder={t("form.description")}
+        className={errors.description ? "border-red-500" : ""}
+      />
+      <div className="text-sm text-muted-foreground">
+        {t("form.currentPoints", { points: pointsData?.totalPoints ?? 0 })}
+      </div>
+      <Button type="submit" disabled={pointsLoading || mutation.isLoading}>
+        {mutation.isLoading ? t("form.sending") : t("form.submit")}
+      </Button>
+    </form>
+  );
+}
+
+
+⸻
+
+🌐 5. Traducciones i18n
+
+// locales/es/common.json
+{
+  "form": {
+    "title": "Título de la idea",
+    "description": "Describe tu idea",
+    "submit": "Enviar sugerencia",
+    "sending": "Enviando...",
+    "currentPoints": "Tienes {{points}} puntos disponibles"
+  },
+  "suggestion": {
+    "success": "¡Tu sugerencia fue enviada!"
+  },
+  "errors": {
+    "notEnoughPoints": "No tienes suficientes puntos para enviar una sugerencia",
+    "generic": "Ocurrió un error al enviar la sugerencia",
+    "Unauthorized": "Necesitás iniciar sesión",
+    "Invalid input": "Campos inválidos"
+  }
+}
+
+(Agregar versión en similar en locales/en/common.json)
+
+⸻
+
+🧪 6. Integración con el resto de la app
+	•	Si ya usás un sistema de puntos en base de datos, este feature lo reutiliza.
+	•	El endpoint /api/user/points debería exponer los puntos actuales del usuario.
+	•	Se recomienda invalidar la query ["userPoints"] al votar o enviar sugerencias para mantener el estado actualizado.
+
+⸻
+
+¿Querés que te ayude también con la migración de datos o estructura en base de datos para los puntos o sugerencias? ¿O con la UI para visualizar el historial de puntos ganados/gastados?

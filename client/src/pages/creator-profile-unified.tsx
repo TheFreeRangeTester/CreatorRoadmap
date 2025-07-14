@@ -23,6 +23,7 @@ import {
   ArrowDown,
   Plus,
   Minus,
+  Store,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "@/components/theme-toggle";
@@ -40,12 +41,15 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { cn } from "@/lib/utils";
 import SuggestIdeaModal from "@/components/suggest-idea-modal";
 import AudienceStats from "@/components/audience-stats";
+import { PointsSuggestionForm } from "@/components/points-suggestion-form";
+import { PointsDisplay } from "@/components/points-display";
 import { FaTiktok } from "react-icons/fa";
 import { FaThreads } from "react-icons/fa6";
 import { useStaggerCards } from "@/components/gsap-animations";
 import { gsap } from "gsap";
 import IdeaCard from "@/components/idea-card";
 import EnhancedRankingCard from "@/components/enhanced-ranking-card";
+import { PublicStore } from "@/components/public-store";
 
 interface CreatorPublicPageResponse {
   ideas: IdeaResponse[];
@@ -73,6 +77,7 @@ export default function CreatorProfileUnified() {
   const [successVote, setSuccessVote] = useState<number | null>(null);
   const [suggestDialogOpen, setSuggestDialogOpen] = useState(false);
   const [showAudienceStats, setShowAudienceStats] = useState(false);
+  const [showStore, setShowStore] = useState(false);
   const { toast } = useToast();
   const { user } = useAuth();
   const { t } = useTranslation();
@@ -83,6 +88,16 @@ export default function CreatorProfileUnified() {
       queryKey: [`/api/creators/${username}`],
       enabled: !!username,
     });
+
+  // Check if current user is the profile owner
+  const isOwnProfile = user?.username === username;
+
+  // Query user points to control suggestion button
+  const { data: userPoints } = useQuery<{ totalPoints: number }>({
+    queryKey: ["/api/user/points"],
+    enabled: !!user && !isOwnProfile,
+    refetchOnWindowFocus: false,
+  });
 
   useEffect(() => {
     if (error) {
@@ -168,9 +183,6 @@ export default function CreatorProfileUnified() {
   }
 
   const { ideas, creator } = data;
-
-  // Check if current user is the profile owner
-  const isOwnProfile = user?.username === creator.username;
 
   const handleVote = async (ideaId: number) => {
     if (!user) {
@@ -570,11 +582,21 @@ export default function CreatorProfileUnified() {
                     return;
                   }
 
+                  // Check if user has enough points
+                  if (user && userPoints && userPoints.totalPoints < 3) {
+                    toast({
+                      title: t("points.insufficientPoints", "Not enough points"),
+                      description: t("points.needPointsToSuggest", "You need 3 points to suggest an idea. Vote for ideas to earn points!"),
+                      variant: "destructive",
+                    });
+                    return;
+                  }
+
                   setSuggestDialogOpen(true);
                 }}
-                disabled={isOwnProfile}
+                disabled={isOwnProfile || (user && userPoints && userPoints.totalPoints < 3)}
                 className={cn(
-                  isOwnProfile
+                  isOwnProfile || (user && userPoints && userPoints.totalPoints < 3)
                     ? "bg-gray-400 text-gray-600 cursor-not-allowed opacity-50"
                     : isCustomBackground
                     ? "bg-blue-600 text-white hover:bg-blue-700"
@@ -582,13 +604,16 @@ export default function CreatorProfileUnified() {
                 )}
               >
                 <UserPlus className="w-4 h-4 mr-2" />
-                {user
-                  ? t("suggestIdea.button", "Suggest Idea")
-                  : t("common.loginToSuggest", "Login to suggest ideas")}
+                {!user
+                  ? t("common.loginToSuggest", "Login to suggest ideas")
+                  : user && userPoints && userPoints.totalPoints < 3
+                  ? t("points.needMorePoints", "Need 3 points")
+                  : t("suggestIdea.button", "Suggest Idea")
+                }
               </Button>
 
               <Button
-                onClick={handleShare}
+                onClick={() => setShowStore(!showStore)}
                 variant="outline"
                 className={cn(
                   isCustomBackground
@@ -596,8 +621,10 @@ export default function CreatorProfileUnified() {
                     : "border-white text-white hover:bg-white hover:text-blue-600"
                 )}
               >
-                <Share2 className="w-4 h-4 mr-2" />
-                {t("common.share", "Share")}
+                <Store className="w-4 h-4 mr-2" />
+                {showStore
+                  ? t("store.hideStore", "Hide Store")
+                  : t("store.browseStore", "Points Store")}
               </Button>
 
               {/* Audience Stats Button - Only show if user is logged in */}
@@ -628,6 +655,18 @@ export default function CreatorProfileUnified() {
           </div>
         )}
 
+        {/* Store Section - Only show when toggled */}
+        {showStore && (
+          <div className="bg-gray-50 dark:bg-gray-900 py-8">
+            <div className="container mx-auto px-4">
+              <PublicStore 
+                creatorUsername={username!} 
+                isAuthenticated={!!user} 
+              />
+            </div>
+          </div>
+        )}
+
         {/* Ideas Section */}
         <div className="bg-gray-50 dark:bg-gray-900 min-h-screen">
           <div className="container mx-auto px-4 py-12">
@@ -635,55 +674,58 @@ export default function CreatorProfileUnified() {
               {t("creator.voteHeaderTitle", "Vote for Content Ideas")}
             </h2>
 
-            {ideas.length === 0 ? (
-              <div className="text-center py-12">
-                <p className="text-gray-600 dark:text-gray-400">
-                  {t(
-                    "suggestIdea.beFirstToSuggest",
-                    "Be the first to suggest a content idea"
-                  )}
-                </p>
-              </div>
-            ) : (
-              <div ref={ideasContainerRef} className="space-y-4">
-                {ideas.map((idea, index) => {
-                  const rank = index + 1;
-                  
-                  // Función para calcular votos necesarios para subir de posición
-                  const getVotesToNextRank = (currentRank: number, currentVotes: number) => {
-                    if (currentRank <= 1) return 0;
-                    const ideaAbove = ideas[currentRank - 2]; // -2 porque el array es 0-indexed y queremos la idea anterior
-                    if (ideaAbove) {
-                      return Math.max(0, ideaAbove.votes - currentVotes + 1);
-                    }
-                    return 0;
-                  };
+            {/* Ideas list - full width */}
+            <div className="w-full">
+              {ideas.length === 0 ? (
+                <div className="text-center py-12">
+                  <p className="text-gray-600 dark:text-gray-400">
+                    {t(
+                      "suggestIdea.beFirstToSuggest",
+                      "Be the first to suggest a content idea"
+                    )}
+                  </p>
+                </div>
+              ) : (
+                <div ref={ideasContainerRef} className="space-y-4">
+                  {ideas.map((idea, index) => {
+                    const rank = index + 1;
+                    
+                    // Función para calcular votos necesarios para subir de posición
+                    const getVotesToNextRank = (currentRank: number, currentVotes: number) => {
+                      if (currentRank <= 1) return 0;
+                      const ideaAbove = ideas[currentRank - 2]; // -2 porque el array es 0-indexed y queremos la idea anterior
+                      if (ideaAbove) {
+                        return Math.max(0, ideaAbove.votes - currentVotes + 1);
+                      }
+                      return 0;
+                    };
 
-                  // Simular votos recientes (esto normalmente vendría del backend)
-                  const getRecentVotes24h = (ideaId: number) => {
-                    return Math.floor(Math.random() * 3); // Simulación simple
-                  };
+                    // Simular votos recientes (esto normalmente vendría del backend)
+                    const getRecentVotes24h = (ideaId: number) => {
+                      return Math.floor(Math.random() * 3); // Simulación simple
+                    };
 
-                  const votesToNext = getVotesToNextRank(rank, idea.votes);
-                  const recentVotes = getRecentVotes24h(idea.id);
+                    const votesToNext = getVotesToNextRank(rank, idea.votes);
+                    const recentVotes = getRecentVotes24h(idea.id);
 
-                  return (
-                    <EnhancedRankingCard
-                      key={idea.id}
-                      rank={rank}
-                      idea={idea}
-                      isVoting={isVoting[idea.id]}
-                      isVoted={votedIdeas.has(idea.id)}
-                      isSuccessVote={successVote === idea.id}
-                      onVote={handleVote}
-                      isLoggedIn={!!user}
-                      votesToNextRank={votesToNext}
-                      recentVotes24h={recentVotes}
-                    />
-                  );
-                })}
-              </div>
-            )}
+                    return (
+                      <EnhancedRankingCard
+                        key={idea.id}
+                        rank={rank}
+                        idea={idea}
+                        isVoting={isVoting[idea.id]}
+                        isVoted={votedIdeas.has(idea.id)}
+                        isSuccessVote={successVote === idea.id}
+                        onVote={handleVote}
+                        isLoggedIn={!!user}
+                        votesToNextRank={votesToNext}
+                        recentVotes24h={recentVotes}
+                      />
+                    );
+                  })}
+                </div>
+              )}
+            </div>
           </div>
         </div>
 

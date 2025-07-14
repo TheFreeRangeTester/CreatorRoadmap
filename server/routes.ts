@@ -2,7 +2,7 @@ import type { Express, Request, Response } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import { setupAuth } from "./auth";
-import { insertIdeaSchema, updateIdeaSchema, insertVoteSchema, insertPublicLinkSchema, suggestIdeaSchema, updateProfileSchema, createCheckoutSessionSchema } from "@shared/schema";
+import { insertIdeaSchema, updateIdeaSchema, insertVoteSchema, insertPublicLinkSchema, suggestIdeaSchema, updateProfileSchema, createCheckoutSessionSchema, insertStoreItemSchema, updateStoreItemSchema, insertStoreRedemptionSchema } from "@shared/schema";
 import { ZodError } from "zod";
 import { fromZodError } from "zod-validation-error";
 import Stripe from "stripe";
@@ -162,6 +162,90 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       console.error("Error fetching idea quota:", error);
       res.status(500).json({ message: "Failed to fetch idea quota" });
+    }
+  });
+
+  // Submit idea suggestion with points cost (for audience users)
+  app.post("/api/suggestions/submit", async (req: Request, res: Response) => {
+    try {
+      if (!req.isAuthenticated()) {
+        return res.status(401).json({ message: "Authentication required" });
+      }
+
+      const SUGGESTION_COST = 3;
+      const userId = req.user.id;
+
+      // Check if user has enough points
+      const userPoints = await storage.getUserPoints(userId);
+      if (userPoints.totalPoints < SUGGESTION_COST) {
+        return res.status(403).json({ 
+          message: "Not enough points",
+          currentPoints: userPoints.totalPoints,
+          requiredPoints: SUGGESTION_COST
+        });
+      }
+
+      // Validate suggestion data (expecting creatorId in the body)
+      const validatedData = suggestIdeaSchema.parse(req.body);
+
+      // Deduct points for suggestion
+      await storage.updateUserPoints(userId, SUGGESTION_COST, 'spent', 'suggestion_submitted');
+
+      // Create the suggestion
+      const idea = await storage.suggestIdea(validatedData, userId);
+
+      // Get updated points
+      const updatedPoints = await storage.getUserPoints(userId);
+
+      res.status(201).json({
+        success: true,
+        message: "Suggestion submitted",
+        idea,
+        updatedPoints: updatedPoints.totalPoints
+      });
+    } catch (error) {
+      if (error instanceof ZodError) {
+        const validationError = fromZodError(error);
+        return res.status(400).json({ message: validationError.message });
+      }
+      console.error("Error submitting suggestion:", error);
+      res.status(500).json({ message: "Failed to submit suggestion" });
+    }
+  });
+
+  // Points API routes
+  // Get user points
+  app.get("/api/user/points", async (req: Request, res: Response) => {
+    try {
+      if (!req.isAuthenticated()) {
+        return res.status(401).json({ message: "Authentication required" });
+      }
+
+      const userId = req.user.id;
+      const points = await storage.getUserPoints(userId);
+
+      res.json(points);
+    } catch (error) {
+      console.error("Error fetching user points:", error);
+      res.status(500).json({ message: "Failed to fetch user points" });
+    }
+  });
+
+  // Get user point transactions/history
+  app.get("/api/user/point-transactions", async (req: Request, res: Response) => {
+    try {
+      if (!req.isAuthenticated()) {
+        return res.status(401).json({ message: "Authentication required" });
+      }
+
+      const userId = req.user.id;
+      const limit = parseInt(req.query.limit as string) || 50;
+      const transactions = await storage.getUserPointTransactions(userId, limit);
+
+      res.json(transactions);
+    } catch (error) {
+      console.error("Error fetching point transactions:", error);
+      res.status(500).json({ message: "Failed to fetch point transactions" });
     }
   });
 
@@ -398,6 +482,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Create the vote
       await storage.createVote({ ideaId }, userId);
 
+      // Award 1 point for voting
+      await storage.updateUserPoints(userId, 1, 'earned', 'vote_given', ideaId);
+
       // Get the updated idea with its new position
       const ideasWithPositions = await storage.getIdeasWithPositions();
       const updatedIdea = ideasWithPositions.find(i => i.id === ideaId);
@@ -580,6 +667,17 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
         console.log("✅ Datos validados:", validatedData);
 
+        // Check if user has enough points
+        const userPoints = await storage.getUserPoints(req.user!.id);
+        if (userPoints.totalPoints < 3) {
+          console.log("❌ ERROR: Usuario no tiene suficientes puntos:", userPoints.totalPoints);
+          return res.status(400).json({ message: "Insufficient points. You need 3 points to suggest an idea." });
+        }
+
+        // Deduct 3 points for the suggestion
+        await storage.updateUserPoints(req.user!.id, 3, 'spent', 'idea_suggestion', null);
+        console.log("✅ 3 puntos descontados del usuario");
+
         // Store the suggested idea with pending status
         const idea = await storage.suggestIdea(validatedData, req.user!.id);
         console.log("✅ Idea sugerida creada:", idea);
@@ -693,6 +791,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Approve the idea
       const approvedIdea = await storage.approveIdea(id);
 
+      // Award 2 points to the suggester for approved idea
+      if (idea.suggestedBy) {
+        await storage.updateUserPoints(idea.suggestedBy, 2, 'earned', 'idea_approved', id);
+      }
+
       // Get the approved idea with updated position 
       const ideasWithPositions = await storage.getIdeasWithPositions();
       const updatedIdeaWithPosition = ideasWithPositions.find(i => i.id === approvedIdea!.id);
@@ -776,6 +879,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       // Create the vote
       await storage.createVote({ ideaId }, userId);
+
+      // Award 1 point for voting
+      await storage.updateUserPoints(userId, 1, 'earned', 'vote_given', ideaId);
 
       // Get the updated idea with its new position
       const ideasWithPositions = await storage.getIdeasWithPositions();
@@ -1431,6 +1537,294 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       console.error('Error processing webhook:', error);
       res.status(500).json({ error: 'Webhook processing failed' });
+    }
+  });
+
+  // Store item management routes (for creators)
+  app.get("/api/store/items", async (req: Request, res: Response) => {
+    try {
+      if (!req.isAuthenticated()) {
+        return res.status(401).json({ message: "Authentication required" });
+      }
+
+      const userId = req.user!.id;
+      const user = await storage.getUser(userId);
+
+      if (!user || user.userRole !== 'creator') {
+        return res.status(403).json({ message: "Only creators can access store items" });
+      }
+
+      const items = await storage.getStoreItems(userId);
+      res.json(items);
+    } catch (error) {
+      console.error("Error fetching store items:", error);
+      res.status(500).json({ message: "Failed to fetch store items" });
+    }
+  });
+
+  app.post("/api/store/items", async (req: Request, res: Response) => {
+    try {
+      if (!req.isAuthenticated()) {
+        return res.status(401).json({ message: "Authentication required" });
+      }
+
+      const userId = req.user!.id;
+      const user = await storage.getUser(userId);
+
+      if (!user || user.userRole !== 'creator') {
+        return res.status(403).json({ message: "Only creators can create store items" });
+      }
+
+      // Check if user has premium access
+      const { hasActivePremiumAccess } = await import('@shared/premium-utils');
+      const hasPremium = hasActivePremiumAccess({
+        subscriptionStatus: user.subscriptionStatus as "free" | "trial" | "premium" | "canceled",
+        trialEndDate: user.trialEndDate,
+        subscriptionEndDate: user.subscriptionEndDate
+      });
+
+      if (!hasPremium) {
+        return res.status(403).json({ message: "Premium access required to create store items" });
+      }
+
+      // Check if user has reached the 5-item limit
+      const existingItems = await storage.getStoreItems(userId);
+      if (existingItems.length >= 5) {
+        return res.status(400).json({ message: "Maximum of 5 store items allowed" });
+      }
+
+      const validatedData = insertStoreItemSchema.parse(req.body);
+      const newItem = await storage.createStoreItem(validatedData, userId);
+      
+      res.status(201).json(newItem);
+    } catch (error) {
+      console.error("Error creating store item:", error);
+      if (error instanceof ZodError) {
+        const errorMessage = fromZodError(error).message;
+        return res.status(400).json({ message: errorMessage });
+      }
+      res.status(500).json({ message: "Failed to create store item" });
+    }
+  });
+
+  app.put("/api/store/items/:id", async (req: Request, res: Response) => {
+    try {
+      if (!req.isAuthenticated()) {
+        return res.status(401).json({ message: "Authentication required" });
+      }
+
+      const userId = req.user!.id;
+      const user = await storage.getUser(userId);
+
+      if (!user || user.userRole !== 'creator') {
+        return res.status(403).json({ message: "Only creators can update store items" });
+      }
+
+      const itemId = parseInt(req.params.id);
+      if (isNaN(itemId)) {
+        return res.status(400).json({ message: "Invalid item ID" });
+      }
+
+      // Check if the item belongs to the user
+      const existingItem = await storage.getStoreItem(itemId);
+      if (!existingItem || existingItem.creatorId !== userId) {
+        return res.status(404).json({ message: "Store item not found" });
+      }
+
+      const validatedData = updateStoreItemSchema.parse(req.body);
+      const updatedItem = await storage.updateStoreItem(itemId, validatedData);
+      
+      if (!updatedItem) {
+        return res.status(404).json({ message: "Store item not found" });
+      }
+
+      res.json(updatedItem);
+    } catch (error) {
+      console.error("Error updating store item:", error);
+      if (error instanceof ZodError) {
+        const errorMessage = fromZodError(error).message;
+        return res.status(400).json({ message: errorMessage });
+      }
+      res.status(500).json({ message: "Failed to update store item" });
+    }
+  });
+
+  app.delete("/api/store/items/:id", async (req: Request, res: Response) => {
+    try {
+      if (!req.isAuthenticated()) {
+        return res.status(401).json({ message: "Authentication required" });
+      }
+
+      const userId = req.user!.id;
+      const user = await storage.getUser(userId);
+
+      if (!user || user.userRole !== 'creator') {
+        return res.status(403).json({ message: "Only creators can delete store items" });
+      }
+
+      const itemId = parseInt(req.params.id);
+      if (isNaN(itemId)) {
+        return res.status(400).json({ message: "Invalid item ID" });
+      }
+
+      // Check if the item belongs to the user
+      const existingItem = await storage.getStoreItem(itemId);
+      if (!existingItem || existingItem.creatorId !== userId) {
+        return res.status(404).json({ message: "Store item not found" });
+      }
+
+      await storage.deleteStoreItem(itemId);
+      res.status(204).send();
+    } catch (error) {
+      console.error("Error deleting store item:", error);
+      res.status(500).json({ message: "Failed to delete store item" });
+    }
+  });
+
+  // Store redemption routes (for creators to manage redemptions)
+  app.get("/api/store/redemptions", async (req: Request, res: Response) => {
+    try {
+      if (!req.isAuthenticated()) {
+        return res.status(401).json({ message: "Authentication required" });
+      }
+
+      const userId = req.user!.id;
+      const user = await storage.getUser(userId);
+
+      if (!user || user.userRole !== 'creator') {
+        return res.status(403).json({ message: "Only creators can access redemptions" });
+      }
+
+      const page = parseInt(req.query.page as string) || 1;
+      const limit = 10;
+      const offset = (page - 1) * limit;
+
+      const result = await storage.getStoreRedemptions(userId, limit, offset);
+      
+      res.json({
+        redemptions: result.redemptions,
+        pagination: {
+          page,
+          limit,
+          total: result.total,
+          totalPages: Math.ceil(result.total / limit)
+        }
+      });
+    } catch (error) {
+      console.error("Error fetching store redemptions:", error);
+      res.status(500).json({ message: "Failed to fetch store redemptions" });
+    }
+  });
+
+  app.patch("/api/store/redemptions/:id", async (req: Request, res: Response) => {
+    try {
+      if (!req.isAuthenticated()) {
+        return res.status(401).json({ message: "Authentication required" });
+      }
+
+      const userId = req.user!.id;
+      const user = await storage.getUser(userId);
+
+      if (!user || user.userRole !== 'creator') {
+        return res.status(403).json({ message: "Only creators can update redemptions" });
+      }
+
+      const redemptionId = parseInt(req.params.id);
+      if (isNaN(redemptionId)) {
+        return res.status(400).json({ message: "Invalid redemption ID" });
+      }
+
+      const { status } = req.body;
+      if (!['pending', 'completed'].includes(status)) {
+        return res.status(400).json({ message: "Invalid status" });
+      }
+
+      const updatedRedemption = await storage.updateRedemptionStatus(redemptionId, status);
+      
+      if (!updatedRedemption) {
+        return res.status(404).json({ message: "Redemption not found" });
+      }
+
+      // Verify the redemption belongs to the creator
+      if (updatedRedemption.creatorId !== userId) {
+        return res.status(403).json({ message: "Not authorized to update this redemption" });
+      }
+
+      res.json(updatedRedemption);
+    } catch (error) {
+      console.error("Error updating redemption status:", error);
+      res.status(500).json({ message: "Failed to update redemption status" });
+    }
+  });
+
+  // Public store routes (for audience to view and redeem items)
+  app.get("/api/creators/:username/store", async (req: Request, res: Response) => {
+    try {
+      const { username } = req.params;
+      const creator = await storage.getUserByUsername(username);
+      
+      if (!creator || creator.userRole !== 'creator') {
+        return res.status(404).json({ message: "Creator not found" });
+      }
+
+      const items = await storage.getStoreItems(creator.id);
+      // Only return active and available items to the public
+      const publicItems = items.filter(item => item.isActive && item.isAvailable);
+      
+      res.json(publicItems);
+    } catch (error) {
+      console.error("Error fetching creator store:", error);
+      res.status(500).json({ message: "Failed to fetch creator store" });
+    }
+  });
+
+  app.post("/api/creators/:username/store/:itemId/redeem", async (req: Request, res: Response) => {
+    try {
+      if (!req.isAuthenticated()) {
+        return res.status(401).json({ message: "Authentication required to redeem items" });
+      }
+
+      const { username, itemId } = req.params;
+      const userId = req.user!.id;
+      
+      const creator = await storage.getUserByUsername(username);
+      if (!creator || creator.userRole !== 'creator') {
+        return res.status(404).json({ message: "Creator not found" });
+      }
+
+      const itemIdNum = parseInt(itemId);
+      if (isNaN(itemIdNum)) {
+        return res.status(400).json({ message: "Invalid item ID" });
+      }
+
+      const item = await storage.getStoreItem(itemIdNum);
+      if (!item || item.creatorId !== creator.id) {
+        return res.status(404).json({ message: "Store item not found" });
+      }
+
+      // Check if item is available
+      if (!item.isActive || (item.maxQuantity !== null && item.currentQuantity >= item.maxQuantity)) {
+        return res.status(400).json({ message: "This item is no longer available" });
+      }
+
+      // Check if user has enough points
+      const userPoints = await storage.getUserPoints(userId);
+      if (userPoints.totalPoints < item.pointsCost) {
+        return res.status(400).json({ 
+          message: `Insufficient points. You need ${item.pointsCost} points but only have ${userPoints.totalPoints}` 
+        });
+      }
+
+      // Create redemption and deduct points in transaction
+      const redemption = await storage.createStoreRedemption({ storeItemId: itemIdNum }, userId);
+      
+      // Deduct points from user
+      await storage.updateUserPoints(userId, item.pointsCost, 'spent', 'store_redemption', itemIdNum);
+
+      res.status(201).json(redemption);
+    } catch (error) {
+      console.error("Error redeeming store item:", error);
+      res.status(500).json({ message: "Failed to redeem store item" });
     }
   });
 

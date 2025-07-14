@@ -1,7 +1,9 @@
-import { ideas, users, votes, publicLinks, 
+import { ideas, users, votes, publicLinks, userPoints, pointTransactions, storeItems, storeRedemptions,
   type User, type InsertUser, type Idea, type InsertIdea, type UpdateIdea, type SuggestIdea,
   type Vote, type InsertVote, type PublicLink, type InsertPublicLink, type PublicLinkResponse,
-  type UpdateProfile, type UpdateSubscription } from "@shared/schema";
+  type UpdateProfile, type UpdateSubscription, type UserPointsResponse, type InsertPointTransaction,
+  type PointTransactionResponse, type StoreItem, type InsertStoreItem, type UpdateStoreItem,
+  type StoreItemResponse, type StoreRedemption, type InsertStoreRedemption, type StoreRedemptionResponse } from "@shared/schema";
 import session from "express-session";
 import connectPg from "connect-pg-simple";
 import { db, pool } from "./db";
@@ -489,6 +491,302 @@ export class DatabaseStorage implements IStorage {
       count,
       limit,
       hasReachedLimit
+    };
+  }
+
+  // Points operations
+  async getUserPoints(userId: number): Promise<UserPointsResponse> {
+    const [userPointsRecord] = await db
+      .select()
+      .from(userPoints)
+      .where(eq(userPoints.userId, userId));
+    
+    if (!userPointsRecord) {
+      // Create initial points record if it doesn't exist
+      return await this.createUserPoints(userId);
+    }
+    
+    return {
+      userId: userPointsRecord.userId,
+      totalPoints: userPointsRecord.totalPoints,
+      pointsEarned: userPointsRecord.pointsEarned,
+      pointsSpent: userPointsRecord.pointsSpent,
+    };
+  }
+
+  async createUserPoints(userId: number): Promise<UserPointsResponse> {
+    const [newUserPoints] = await db
+      .insert(userPoints)
+      .values({ 
+        userId,
+        totalPoints: 0,
+        pointsEarned: 0,
+        pointsSpent: 0
+      })
+      .returning();
+    
+    return {
+      userId: newUserPoints.userId,
+      totalPoints: newUserPoints.totalPoints,
+      pointsEarned: newUserPoints.pointsEarned,
+      pointsSpent: newUserPoints.pointsSpent,
+    };
+  }
+
+  async updateUserPoints(userId: number, pointsChange: number, type: 'earned' | 'spent', reason: string, relatedId?: number): Promise<UserPointsResponse> {
+    // Get current points or create if doesn't exist
+    let currentPoints = await this.getUserPoints(userId);
+    
+    const updateData: any = { updatedAt: new Date() };
+    
+    if (type === 'earned') {
+      updateData.totalPoints = currentPoints.totalPoints + pointsChange;
+      updateData.pointsEarned = currentPoints.pointsEarned + pointsChange;
+    } else { // spent
+      updateData.totalPoints = currentPoints.totalPoints - pointsChange;
+      updateData.pointsSpent = currentPoints.pointsSpent + pointsChange;
+    }
+    
+    // Update points in transaction
+    await db.transaction(async (tx) => {
+      // Update user points
+      await tx
+        .update(userPoints)
+        .set(updateData)
+        .where(eq(userPoints.userId, userId));
+      
+      // Record transaction
+      await tx
+        .insert(pointTransactions)
+        .values({
+          userId,
+          type,
+          amount: pointsChange,
+          reason,
+          relatedId: relatedId || null,
+        });
+    });
+    
+    // Return updated points
+    return await this.getUserPoints(userId);
+  }
+
+  async getUserPointTransactions(userId: number, limit: number = 50): Promise<PointTransactionResponse[]> {
+    const transactions = await db
+      .select()
+      .from(pointTransactions)
+      .where(eq(pointTransactions.userId, userId))
+      .orderBy(desc(pointTransactions.createdAt))
+      .limit(limit);
+    
+    return transactions.map(t => ({
+      id: t.id,
+      userId: t.userId,
+      type: t.type as 'earned' | 'spent',
+      amount: t.amount,
+      reason: t.reason,
+      relatedId: t.relatedId,
+      createdAt: t.createdAt,
+    }));
+  }
+
+  // Store operations
+  async getStoreItems(creatorId: number): Promise<StoreItemResponse[]> {
+    const items = await db
+      .select()
+      .from(storeItems)
+      .where(eq(storeItems.creatorId, creatorId))
+      .orderBy(desc(storeItems.createdAt));
+    
+    return items.map(item => ({
+      ...item,
+      isAvailable: item.isActive && (item.maxQuantity === null || item.currentQuantity < item.maxQuantity)
+    }));
+  }
+
+  async getStoreItem(id: number): Promise<StoreItem | undefined> {
+    const [item] = await db
+      .select()
+      .from(storeItems)
+      .where(eq(storeItems.id, id));
+    return item;
+  }
+
+  async createStoreItem(item: InsertStoreItem, creatorId: number): Promise<StoreItemResponse> {
+    const [storeItem] = await db
+      .insert(storeItems)
+      .values({
+        ...item,
+        creatorId,
+        currentQuantity: 0,
+        isActive: true,
+      })
+      .returning();
+    
+    return {
+      ...storeItem,
+      isAvailable: true
+    };
+  }
+
+  async updateStoreItem(id: number, item: UpdateStoreItem): Promise<StoreItemResponse | undefined> {
+    const [updatedItem] = await db
+      .update(storeItems)
+      .set({
+        ...item,
+        updatedAt: new Date(),
+      })
+      .where(eq(storeItems.id, id))
+      .returning();
+    
+    if (!updatedItem) return undefined;
+    
+    return {
+      ...updatedItem,
+      isAvailable: updatedItem.isActive && (updatedItem.maxQuantity === null || updatedItem.currentQuantity < updatedItem.maxQuantity)
+    };
+  }
+
+  async deleteStoreItem(id: number): Promise<void> {
+    await db.transaction(async (tx) => {
+      // Delete all redemptions for this item first
+      await tx.delete(storeRedemptions).where(eq(storeRedemptions.storeItemId, id));
+      // Then delete the item
+      await tx.delete(storeItems).where(eq(storeItems.id, id));
+    });
+  }
+
+  async getStoreRedemptions(creatorId: number, limit: number = 10, offset: number = 0): Promise<{ redemptions: StoreRedemptionResponse[]; total: number; }> {
+    // Get total count
+    const [totalResult] = await db
+      .select({ count: sql<number>`count(*)` })
+      .from(storeRedemptions)
+      .where(eq(storeRedemptions.creatorId, creatorId));
+    
+    const total = totalResult.count;
+    
+    // Get redemptions with user and store item data
+    const redemptions = await db
+      .select({
+        id: storeRedemptions.id,
+        storeItemId: storeRedemptions.storeItemId,
+        userId: storeRedemptions.userId,
+        creatorId: storeRedemptions.creatorId,
+        pointsSpent: storeRedemptions.pointsSpent,
+        status: storeRedemptions.status,
+        createdAt: storeRedemptions.createdAt,
+        completedAt: storeRedemptions.completedAt,
+        userUsername: users.username,
+        userEmail: users.email,
+        storeItemTitle: storeItems.title,
+        storeItemDescription: storeItems.description,
+      })
+      .from(storeRedemptions)
+      .innerJoin(users, eq(storeRedemptions.userId, users.id))
+      .innerJoin(storeItems, eq(storeRedemptions.storeItemId, storeItems.id))
+      .where(eq(storeRedemptions.creatorId, creatorId))
+      .orderBy(desc(storeRedemptions.createdAt))
+      .limit(limit)
+      .offset(offset);
+    
+    return {
+      redemptions: redemptions.map(r => ({
+        ...r,
+        status: r.status as 'pending' | 'completed'
+      })),
+      total
+    };
+  }
+
+  async createStoreRedemption(redemption: InsertStoreRedemption, userId: number): Promise<StoreRedemptionResponse> {
+    const result = await db.transaction(async (tx) => {
+      // Get store item
+      const [storeItem] = await tx
+        .select()
+        .from(storeItems)
+        .where(eq(storeItems.id, redemption.storeItemId));
+      
+      if (!storeItem) {
+        throw new Error('Store item not found');
+      }
+      
+      // Check if item is available
+      if (!storeItem.isActive || (storeItem.maxQuantity !== null && storeItem.currentQuantity >= storeItem.maxQuantity)) {
+        throw new Error('Store item is not available');
+      }
+      
+      // Create redemption
+      const [newRedemption] = await tx
+        .insert(storeRedemptions)
+        .values({
+          ...redemption,
+          userId,
+          creatorId: storeItem.creatorId,
+          pointsSpent: storeItem.pointsCost,
+          status: 'pending',
+        })
+        .returning();
+      
+      // Update store item quantity
+      await tx
+        .update(storeItems)
+        .set({
+          currentQuantity: storeItem.currentQuantity + 1,
+          updatedAt: new Date(),
+        })
+        .where(eq(storeItems.id, storeItem.id));
+      
+      return { newRedemption, storeItem };
+    });
+    
+    // Get user data
+    const [user] = await db
+      .select()
+      .from(users)
+      .where(eq(users.id, userId));
+    
+    return {
+      ...result.newRedemption,
+      status: result.newRedemption.status as 'pending' | 'completed',
+      userUsername: user?.username || 'Unknown',
+      userEmail: user?.email || 'Unknown',
+      storeItemTitle: result.storeItem.title,
+      storeItemDescription: result.storeItem.description,
+    };
+  }
+
+  async updateRedemptionStatus(id: number, status: 'pending' | 'completed'): Promise<StoreRedemptionResponse | undefined> {
+    const [updatedRedemption] = await db
+      .update(storeRedemptions)
+      .set({
+        status,
+        completedAt: status === 'completed' ? new Date() : null,
+      })
+      .where(eq(storeRedemptions.id, id))
+      .returning();
+    
+    if (!updatedRedemption) return undefined;
+    
+    // Get additional data for response
+    const [redemptionData] = await db
+      .select({
+        userUsername: users.username,
+        userEmail: users.email,
+        storeItemTitle: storeItems.title,
+        storeItemDescription: storeItems.description,
+      })
+      .from(storeRedemptions)
+      .innerJoin(users, eq(storeRedemptions.userId, users.id))
+      .innerJoin(storeItems, eq(storeRedemptions.storeItemId, storeItems.id))
+      .where(eq(storeRedemptions.id, id));
+    
+    return {
+      ...updatedRedemption,
+      status: updatedRedemption.status as 'pending' | 'completed',
+      userUsername: redemptionData?.userUsername || 'Unknown',
+      userEmail: redemptionData?.userEmail || 'Unknown',
+      storeItemTitle: redemptionData?.storeItemTitle || 'Unknown',
+      storeItemDescription: redemptionData?.storeItemDescription || 'Unknown',
     };
   }
 }
