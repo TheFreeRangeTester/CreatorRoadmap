@@ -94,6 +94,32 @@ export const pointTransactions = pgTable("point_transactions", {
   createdAt: timestamp("created_at").notNull().defaultNow(),
 });
 
+// Table for store items that creators can configure
+export const storeItems = pgTable("store_items", {
+  id: serial("id").primaryKey(),
+  creatorId: integer("creator_id").notNull().references(() => users.id),
+  title: text("title").notNull(),
+  description: text("description").notNull(),
+  pointsCost: integer("points_cost").notNull(),
+  maxQuantity: integer("max_quantity"), // null means unlimited
+  currentQuantity: integer("current_quantity").notNull().default(0), // how many have been redeemed
+  isActive: boolean("is_active").notNull().default(true),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+  updatedAt: timestamp("updated_at").notNull().defaultNow(),
+});
+
+// Table for store item redemptions
+export const storeRedemptions = pgTable("store_redemptions", {
+  id: serial("id").primaryKey(),
+  storeItemId: integer("store_item_id").notNull().references(() => storeItems.id),
+  userId: integer("user_id").notNull().references(() => users.id),
+  creatorId: integer("creator_id").notNull().references(() => users.id),
+  pointsSpent: integer("points_spent").notNull(),
+  status: text("status").notNull().default('pending'), // 'pending', 'completed'
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+  completedAt: timestamp("completed_at"),
+});
+
 // User schemas
 export const insertUserSchema = createInsertSchema(users).pick({
   username: true,
@@ -314,3 +340,63 @@ export type UserPointsResponse = z.infer<typeof userPointsResponseSchema>;
 export type InsertPointTransaction = z.infer<typeof insertPointTransactionSchema>;
 export type PointTransaction = typeof pointTransactions.$inferSelect;
 export type PointTransactionResponse = z.infer<typeof pointTransactionResponseSchema>;
+
+// Store items schemas and types
+export const insertStoreItemSchema = createInsertSchema(storeItems).pick({
+  title: true,
+  description: true,
+  pointsCost: true,
+  maxQuantity: true,
+}).extend({
+  title: z.string().min(1, { message: "Title is required" }).max(100, { message: "Title too long" }),
+  description: z.string().min(1, { message: "Description is required" }).max(500, { message: "Description too long" }),
+  pointsCost: z.number().min(1, { message: "Points cost must be at least 1" }),
+  maxQuantity: z.number().min(1, { message: "Quantity must be at least 1" }).nullable().optional(),
+});
+
+export const updateStoreItemSchema = insertStoreItemSchema.partial().extend({
+  isActive: z.boolean().optional(),
+});
+
+export const storeItemResponseSchema = z.object({
+  id: z.number(),
+  creatorId: z.number(),
+  title: z.string(),
+  description: z.string(),
+  pointsCost: z.number(),
+  maxQuantity: z.number().nullable(),
+  currentQuantity: z.number(),
+  isActive: z.boolean(),
+  createdAt: z.date(),
+  updatedAt: z.date(),
+  isAvailable: z.boolean(), // computed field
+});
+
+export const insertStoreRedemptionSchema = createInsertSchema(storeRedemptions).pick({
+  storeItemId: true,
+});
+
+export const storeRedemptionResponseSchema = z.object({
+  id: z.number(),
+  storeItemId: z.number(),
+  userId: z.number(),
+  creatorId: z.number(),
+  pointsSpent: z.number(),
+  status: z.enum(['pending', 'completed']),
+  createdAt: z.date(),
+  completedAt: z.date().nullable(),
+  // Additional fields for display
+  userUsername: z.string(),
+  userEmail: z.string(),
+  storeItemTitle: z.string(),
+  storeItemDescription: z.string(),
+});
+
+export type StoreItem = typeof storeItems.$inferSelect;
+export type InsertStoreItem = z.infer<typeof insertStoreItemSchema>;
+export type UpdateStoreItem = z.infer<typeof updateStoreItemSchema>;
+export type StoreItemResponse = z.infer<typeof storeItemResponseSchema>;
+
+export type StoreRedemption = typeof storeRedemptions.$inferSelect;
+export type InsertStoreRedemption = z.infer<typeof insertStoreRedemptionSchema>;
+export type StoreRedemptionResponse = z.infer<typeof storeRedemptionResponseSchema>;

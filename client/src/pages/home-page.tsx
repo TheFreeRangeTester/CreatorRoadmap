@@ -6,6 +6,8 @@ import {
   Lightbulb,
   User,
   ListFilter,
+  Gift,
+  Package,
 } from "lucide-react";
 import { useAuth } from "@/hooks/use-auth";
 import { useToast } from "@/hooks/use-toast";
@@ -28,6 +30,8 @@ import { LanguageToggle } from "@/components/language-toggle";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { IdeaLimitNotice } from "@/components/idea-limit-notice";
 import { PointsDisplay } from "@/components/points-display";
+import { StoreManagement } from "@/components/store-management";
+import { RedemptionManagement } from "@/components/redemption-management";
 import logoPng from "@/assets/logo.png";
 
 export default function HomePage() {
@@ -271,7 +275,7 @@ export default function HomePage() {
                     <LeaderboardInfo />
                     <Tabs defaultValue="published" className="w-full">
                       <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-4 sm:mb-6 space-y-3 sm:space-y-0">
-                        <TabsList className="grid grid-cols-2 w-full sm:w-60">
+                        <TabsList className="grid grid-cols-2 sm:grid-cols-4 w-full sm:w-auto">
                           <TabsTrigger
                             value="published"
                             className="flex items-center gap-1 text-xs sm:text-sm"
@@ -296,6 +300,30 @@ export default function HomePage() {
                               {t("dashboard.suggestions", "Sugeridas")}
                             </span>
                           </TabsTrigger>
+                          <TabsTrigger
+                            value="store"
+                            className="flex items-center gap-1 text-xs sm:text-sm"
+                          >
+                            <Gift className="w-3 h-3 sm:w-4 sm:h-4" />
+                            <span className="hidden xs:inline">
+                              {t("dashboard.store", "Tienda de Puntos")}
+                            </span>
+                            <span className="xs:hidden">
+                              {t("dashboard.store", "Tienda")}
+                            </span>
+                          </TabsTrigger>
+                          <TabsTrigger
+                            value="redemptions"
+                            className="flex items-center gap-1 text-xs sm:text-sm"
+                          >
+                            <Package className="w-3 h-3 sm:w-4 sm:h-4" />
+                            <span className="hidden xs:inline">
+                              {t("dashboard.redemptions", "Canjes")}
+                            </span>
+                            <span className="xs:hidden">
+                              {t("dashboard.redemptions", "Canjes")}
+                            </span>
+                          </TabsTrigger>
                         </TabsList>
                       </div>
 
@@ -305,6 +333,14 @@ export default function HomePage() {
 
                       <TabsContent value="suggested" className="mt-0 space-y-4">
                         <IdeasTabView mode="suggested" />
+                      </TabsContent>
+
+                      <TabsContent value="store" className="mt-0 space-y-4">
+                        <StoreManagement />
+                      </TabsContent>
+
+                      <TabsContent value="redemptions" className="mt-0 space-y-4">
+                        <RedemptionManagement />
                       </TabsContent>
                     </Tabs>
                   </>

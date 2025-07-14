@@ -2,7 +2,8 @@ import { ideas as ideasTable, users, votes as votesTable, publicLinks as publicL
   type User, type InsertUser, type Idea, type InsertIdea, type UpdateIdea, type SuggestIdea,
   type Vote, type InsertVote, type PublicLink, type InsertPublicLink, type PublicLinkResponse,
   type UpdateProfile, type UpdateSubscription, type UserPointsResponse, type InsertPointTransaction,
-  type PointTransactionResponse } from "@shared/schema";
+  type PointTransactionResponse, type StoreItem, type InsertStoreItem, type UpdateStoreItem, 
+  type StoreItemResponse, type StoreRedemption, type InsertStoreRedemption, type StoreRedemptionResponse } from "@shared/schema";
 import session from "express-session";
 import createMemoryStore from "memorystore";
 import { randomBytes } from "crypto";
@@ -63,6 +64,18 @@ export interface IStorage {
   updateUserPoints(userId: number, pointsChange: number, type: 'earned' | 'spent', reason: string, relatedId?: number): Promise<UserPointsResponse>;
   getUserPointTransactions(userId: number, limit?: number): Promise<PointTransactionResponse[]>;
   
+  // Store operations
+  getStoreItems(creatorId: number): Promise<StoreItemResponse[]>;
+  getStoreItem(id: number): Promise<StoreItem | undefined>;
+  createStoreItem(item: InsertStoreItem, creatorId: number): Promise<StoreItemResponse>;
+  updateStoreItem(id: number, item: UpdateStoreItem): Promise<StoreItemResponse | undefined>;
+  deleteStoreItem(id: number): Promise<void>;
+  
+  // Store redemption operations
+  getStoreRedemptions(creatorId: number, limit?: number, offset?: number): Promise<{ redemptions: StoreRedemptionResponse[]; total: number; }>;
+  createStoreRedemption(redemption: InsertStoreRedemption, userId: number): Promise<StoreRedemptionResponse>;
+  updateRedemptionStatus(id: number, status: 'pending' | 'completed'): Promise<StoreRedemptionResponse | undefined>;
+  
   // Session store
   sessionStore: any;
 }
@@ -92,11 +105,15 @@ export class MemStorage implements IStorage {
   private publicLinks: Map<number, PublicLink>;
   private userPointsMap: Map<number, UserPointsResponse>;
   private pointTransactionsMap: Map<number, PointTransactionResponse>;
+  private storeItems: Map<number, StoreItem>;
+  private storeRedemptions: Map<number, StoreRedemption>;
   currentUserId: number;
   currentIdeaId: number;
   currentVoteId: number;
   currentPublicLinkId: number;
   currentPointTransactionId: number;
+  currentStoreItemId: number;
+  currentStoreRedemptionId: number;
   sessionStore: any;
 
   constructor() {
@@ -106,11 +123,15 @@ export class MemStorage implements IStorage {
     this.publicLinks = new Map();
     this.userPointsMap = new Map();
     this.pointTransactionsMap = new Map();
+    this.storeItems = new Map();
+    this.storeRedemptions = new Map();
     this.currentUserId = 1;
     this.currentIdeaId = 1;
     this.currentVoteId = 1;
     this.currentPublicLinkId = 1;
     this.currentPointTransactionId = 1;
+    this.currentStoreItemId = 1;
+    this.currentStoreRedemptionId = 1;
     this.sessionStore = new MemoryStore({
       checkPeriod: 86400000, // Prune expired entries every 24h
     });
@@ -617,6 +638,165 @@ export class MemStorage implements IStorage {
       .slice(0, limit);
     
     return transactions;
+  }
+
+  // Store operations
+  async getStoreItems(creatorId: number): Promise<StoreItemResponse[]> {
+    const items = Array.from(this.storeItems.values())
+      .filter(item => item.creatorId === creatorId);
+    
+    return items.map(item => ({
+      ...item,
+      isAvailable: item.isActive && (item.maxQuantity === null || item.currentQuantity < item.maxQuantity)
+    }));
+  }
+
+  async getStoreItem(id: number): Promise<StoreItem | undefined> {
+    return this.storeItems.get(id);
+  }
+
+  async createStoreItem(item: InsertStoreItem, creatorId: number): Promise<StoreItemResponse> {
+    const id = this.currentStoreItemId++;
+    const now = new Date();
+    
+    const storeItem: StoreItem = {
+      id,
+      creatorId,
+      ...item,
+      currentQuantity: 0,
+      isActive: true,
+      createdAt: now,
+      updatedAt: now,
+    };
+    
+    this.storeItems.set(id, storeItem);
+    
+    return {
+      ...storeItem,
+      isAvailable: true
+    };
+  }
+
+  async updateStoreItem(id: number, item: UpdateStoreItem): Promise<StoreItemResponse | undefined> {
+    const existingItem = this.storeItems.get(id);
+    if (!existingItem) return undefined;
+    
+    const updatedItem: StoreItem = {
+      ...existingItem,
+      ...item,
+      updatedAt: new Date(),
+    };
+    
+    this.storeItems.set(id, updatedItem);
+    
+    return {
+      ...updatedItem,
+      isAvailable: updatedItem.isActive && (updatedItem.maxQuantity === null || updatedItem.currentQuantity < updatedItem.maxQuantity)
+    };
+  }
+
+  async deleteStoreItem(id: number): Promise<void> {
+    this.storeItems.delete(id);
+    // Also delete all redemptions for this item
+    Array.from(this.storeRedemptions.entries()).forEach(([redemptionId, redemption]) => {
+      if (redemption.storeItemId === id) {
+        this.storeRedemptions.delete(redemptionId);
+      }
+    });
+  }
+
+  async getStoreRedemptions(creatorId: number, limit: number = 10, offset: number = 0): Promise<{ redemptions: StoreRedemptionResponse[]; total: number; }> {
+    const allRedemptions = Array.from(this.storeRedemptions.values())
+      .filter(redemption => redemption.creatorId === creatorId)
+      .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
+    
+    const total = allRedemptions.length;
+    const redemptions = allRedemptions.slice(offset, offset + limit);
+    
+    // Enrich with user and store item data
+    const enrichedRedemptions: StoreRedemptionResponse[] = redemptions.map(redemption => {
+      const user = this.users.get(redemption.userId);
+      const storeItem = this.storeItems.get(redemption.storeItemId);
+      
+      return {
+        ...redemption,
+        userUsername: user?.username || 'Unknown',
+        userEmail: user?.email || 'Unknown',
+        storeItemTitle: storeItem?.title || 'Unknown',
+        storeItemDescription: storeItem?.description || 'Unknown',
+      };
+    });
+    
+    return { redemptions: enrichedRedemptions, total };
+  }
+
+  async createStoreRedemption(redemption: InsertStoreRedemption, userId: number): Promise<StoreRedemptionResponse> {
+    const storeItem = this.storeItems.get(redemption.storeItemId);
+    if (!storeItem) {
+      throw new Error('Store item not found');
+    }
+    
+    const user = this.users.get(userId);
+    if (!user) {
+      throw new Error('User not found');
+    }
+    
+    const id = this.currentStoreRedemptionId++;
+    const now = new Date();
+    
+    const storeRedemption: StoreRedemption = {
+      id,
+      ...redemption,
+      userId,
+      creatorId: storeItem.creatorId,
+      pointsSpent: storeItem.pointsCost,
+      status: 'pending',
+      createdAt: now,
+      completedAt: null,
+    };
+    
+    this.storeRedemptions.set(id, storeRedemption);
+    
+    // Update store item quantity
+    const updatedItem = {
+      ...storeItem,
+      currentQuantity: storeItem.currentQuantity + 1,
+      updatedAt: now,
+    };
+    this.storeItems.set(storeItem.id, updatedItem);
+    
+    return {
+      ...storeRedemption,
+      userUsername: user.username,
+      userEmail: user.email,
+      storeItemTitle: storeItem.title,
+      storeItemDescription: storeItem.description,
+    };
+  }
+
+  async updateRedemptionStatus(id: number, status: 'pending' | 'completed'): Promise<StoreRedemptionResponse | undefined> {
+    const redemption = this.storeRedemptions.get(id);
+    if (!redemption) return undefined;
+    
+    const updatedRedemption: StoreRedemption = {
+      ...redemption,
+      status,
+      completedAt: status === 'completed' ? new Date() : null,
+    };
+    
+    this.storeRedemptions.set(id, updatedRedemption);
+    
+    // Get user and store item data for response
+    const user = this.users.get(redemption.userId);
+    const storeItem = this.storeItems.get(redemption.storeItemId);
+    
+    return {
+      ...updatedRedemption,
+      userUsername: user?.username || 'Unknown',
+      userEmail: user?.email || 'Unknown',
+      storeItemTitle: storeItem?.title || 'Unknown',
+      storeItemDescription: storeItem?.description || 'Unknown',
+    };
   }
 }
 
