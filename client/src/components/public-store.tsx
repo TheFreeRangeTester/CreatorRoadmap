@@ -158,25 +158,22 @@ export function PublicStore({ creatorUsername, isAuthenticated }: PublicStorePro
                   {item.description}
                 </p>
                 
-                <div className="space-y-2 mb-4">
-                  {item.maxQuantity !== null && (
-                    <div className="flex items-center justify-between text-sm">
-                      <span>{t('store.currentQuantity')}:</span>
-                      <span>{item.currentQuantity} / {item.maxQuantity}</span>
-                    </div>
-                  )}
-                  
-                  <div className="flex items-center justify-between">
-                    <span className="text-sm font-medium">{t('common.status')}:</span>
-                    <Badge variant={isAvailable ? 'default' : 'secondary'}>
-                      {isOutOfStock 
-                        ? t('store.outOfStock')
-                        : isAvailable 
-                        ? t('store.available') 
-                        : t('store.unavailable')}
+                {item.maxQuantity !== null && (
+                  <div className="flex items-center justify-between text-sm mb-4">
+                    <span className="text-muted-foreground">{t('store.itemsLeft')}:</span>
+                    <span className="font-medium text-orange-600">
+                      {item.maxQuantity - item.currentQuantity} {t('store.left')}
+                    </span>
+                  </div>
+                )}
+                
+                {isOutOfStock && (
+                  <div className="mb-4">
+                    <Badge variant="destructive" className="w-full justify-center">
+                      {t('store.outOfStock')}
                     </Badge>
                   </div>
-                </div>
+                )}
 
                 <Button
                   onClick={() => handleRedeem(item)}
