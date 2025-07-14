@@ -162,7 +162,7 @@ export function PublicStore({ creatorUsername, isAuthenticated }: PublicStorePro
                   <div className="flex items-center justify-between text-sm mb-4">
                     <span className="text-muted-foreground">{t('store.itemsLeft')}:</span>
                     <span className="font-medium text-orange-600">
-                      {item.maxQuantity - item.currentQuantity} {t('store.left')}
+                      {item.maxQuantity - item.currentQuantity}
                     </span>
                   </div>
                 )}

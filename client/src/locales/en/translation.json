@@ -661,8 +661,8 @@
     "itemNotAvailable": "This item is no longer available",
     "browseStore": "Points Store",
     "hideStore": "Hide Store",
-    "itemsLeft": "Items left",
-    "left": "left",
+    "itemsLeft": "Amount left",
+    "left": "",
     "emptyStore": "This store is empty",
     "noActiveItems": "No active items in this store"
   },

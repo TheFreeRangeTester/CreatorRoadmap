@@ -680,8 +680,8 @@
     "itemNotAvailable": "Este artículo ya no está disponible",
     "browseStore": "Tienda de Puntos",
     "hideStore": "Ocultar Tienda",
-    "itemsLeft": "Quedan",
-    "left": "disponibles",
+    "itemsLeft": "Cantidad disponible",
+    "left": "",
     "emptyStore": "Esta tienda está vacía",
     "noActiveItems": "No hay artículos activos en esta tienda"
   },
