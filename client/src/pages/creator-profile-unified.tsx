@@ -86,6 +86,9 @@ export default function CreatorProfileUnified() {
       enabled: !!username,
     });
 
+  // Check if current user is the profile owner
+  const isOwnProfile = user?.username === username;
+
   // Query user points to control suggestion button
   const { data: userPoints } = useQuery<{ totalPoints: number }>({
     queryKey: ["/api/user/points"],
@@ -177,9 +180,6 @@ export default function CreatorProfileUnified() {
   }
 
   const { ideas, creator } = data;
-
-  // Check if current user is the profile owner
-  const isOwnProfile = user?.username === creator.username;
 
   const handleVote = async (ideaId: number) => {
     if (!user) {
