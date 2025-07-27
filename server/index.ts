@@ -1,4 +1,5 @@
 import express, { type Request, Response, NextFunction } from "express";
+import cors from "cors";
 import { registerRoutes } from "./routes";
 import { setupVite, serveStatic, log } from "./vite";
 import dotenv from "dotenv";
@@ -7,6 +8,14 @@ import dotenv from "dotenv";
 dotenv.config();
 
 const app = express();
+
+// Configure CORS to allow credentials
+app.use(cors({
+  origin: true, // Allow all origins in development
+  credentials: true, // Allow cookies to be sent
+  methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With']
+}));
 
 // Raw body middleware for Stripe webhooks - must come before express.json()
 app.use('/api/stripe/webhook', express.raw({ type: 'application/json' }));

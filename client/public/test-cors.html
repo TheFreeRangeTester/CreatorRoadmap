@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test CORS & Authentication</title>
+</head>
+<body>
+    <h1>Test CORS & Authentication</h1>
+    
+    <div id="status">Testing...</div>
+    
+    <div>
+        <h2>Login & Test</h2>
+        <button onclick="testComplete()">Test Complete Flow</button>
+        <div id="result"></div>
+    </div>
+    
+    <script>
+        async function testComplete() {
+            const result = document.getElementById('result');
+            result.innerHTML = 'Testing...';
+            
+            try {
+                // Step 1: Login
+                console.log('Step 1: Logging in...');
+                const loginResponse = await fetch('/api/auth/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-Requested-With': 'XMLHttpRequest'
+                    },
+                    body: JSON.stringify({
+                        username: 'TestUser2',
+                        password: '123456'
+                    }),
+                    credentials: 'include'
+                });
+                
+                if (!loginResponse.ok) {
+                    throw new Error(`Login failed: ${loginResponse.status}`);
+                }
+                
+                const loginData = await loginResponse.json();
+                console.log('Login successful:', loginData);
+                
+                // Step 2: Check auth
+                console.log('Step 2: Checking auth...');
+                const authResponse = await fetch('/api/user', {
+                    method: 'GET',
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest'
+                    },
+                    credentials: 'include'
+                });
+                
+                if (!authResponse.ok) {
+                    throw new Error(`Auth check failed: ${authResponse.status}`);
+                }
+                
+                const authData = await authResponse.json();
+                console.log('Auth check successful:', authData);
+                
+                // Step 3: Get points
+                console.log('Step 3: Getting points...');
+                const pointsResponse = await fetch('/api/user/points', {
+                    method: 'GET',
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest'
+                    },
+                    credentials: 'include'
+                });
+                
+                if (!pointsResponse.ok) {
+                    throw new Error(`Points check failed: ${pointsResponse.status}`);
+                }
+                
+                const pointsData = await pointsResponse.json();
+                console.log('Points check successful:', pointsData);
+                
+                // Step 4: Vote on an idea
+                console.log('Step 4: Voting on idea 107...');
+                const voteResponse = await fetch('/api/ideas/107/vote', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-Requested-With': 'XMLHttpRequest'
+                    },
+                    credentials: 'include'
+                });
+                
+                const voteData = await voteResponse.json();
+                console.log('Vote response:', voteData);
+                
+                // Step 5: Check points again
+                console.log('Step 5: Checking points after vote...');
+                const finalPointsResponse = await fetch('/api/user/points', {
+                    method: 'GET',
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest'
+                    },
+                    credentials: 'include'
+                });
+                
+                const finalPointsData = await finalPointsResponse.json();
+                console.log('Final points:', finalPointsData);
+                
+                result.innerHTML = `
+                    <h3>✅ All tests passed!</h3>
+                    <p><strong>Login:</strong> ${loginData.username}</p>
+                    <p><strong>Points Before:</strong> ${pointsData.totalPoints}</p>
+                    <p><strong>Points After:</strong> ${finalPointsData.totalPoints}</p>
+                    <p><strong>Vote Status:</strong> ${voteResponse.status} - ${voteData.message || 'Success'}</p>
+                `;
+                
+            } catch (error) {
+                console.error('Test failed:', error);
+                result.innerHTML = `<p style="color: red;">❌ Test failed: ${error.message}</p>`;
+            }
+        }
+        
+        // Auto-run test on load
+        window.onload = testComplete;
+    </script>
+</body>
+</html>
