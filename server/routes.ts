@@ -811,6 +811,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       res.json(updatedIdeaWithPosition);
     } catch (error) {
+      if (error instanceof ZodError) {
+        const validationError = fromZodError(error);
+        console.error(`[APPROVE] Validation error:`, validationError.message);
+        return res.status(400).json({ message: validationError.message });
+      }
       console.error("Error approving idea:", error);
       res.status(500).json({ message: "Failed to approve idea" });
     }
