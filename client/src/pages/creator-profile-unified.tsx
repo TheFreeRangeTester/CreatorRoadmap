@@ -253,6 +253,7 @@ export default function CreatorProfileUnified() {
         className: "bg-gradient-to-r from-green-50 to-emerald-50 border-green-200 dark:from-green-900/30 dark:to-emerald-900/30 dark:border-green-800",
       });
     } catch (error) {
+      console.error(`[FRONTEND] Vote error for idea ${ideaId}:`, error);
       toast({
         title: t("creator.voteError", "Vote failed"),
         description: t(

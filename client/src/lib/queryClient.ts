@@ -18,7 +18,7 @@ export async function apiRequest(
   const { method = 'GET', body, headers = {} } = options;
   
   // Para debugging
-  console.log(`API Request: ${method} ${url}`);
+  console.log(`[API] ${method} ${url}`);
   
   // Asegurarse que solo hay un /api al principio de la URL
   const apiUrl = url.startsWith('/api/') 
@@ -27,7 +27,7 @@ export async function apiRequest(
       ? `/api${url}` 
       : `/api/${url}`;
   
-  console.log(`Normalized URL: ${apiUrl}`);
+  console.log(`[API] Normalized URL: ${apiUrl}`);
   
   const res = await fetch(apiUrl, {
     method,
