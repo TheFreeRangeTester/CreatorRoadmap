@@ -126,6 +126,7 @@ The application uses a monorepo structure with shared TypeScript types between c
 - July 6, 2025. Updated premium features across all interfaces: removed "unlimited votes" and replaced with "unlimited ideas", "creator analytics", and "points store" (future functionality)
 - July 14, 2025. Completed comprehensive points system implementation: integrated points display in "Mi Actividad" section, implemented points deduction for suggestions (3 points cost), removed redundant sidebar points section, and ensured proper cache invalidation for real-time UI updates
 - July 14, 2025. Implemented complete points store system: added store management tabs in creator dashboard, created public store view accessible from profile pages, fixed apiRequest function signature across all components, and replaced share button with points store button in public profiles
+- July 27, 2025. Fixed critical voting system bug: Users now properly receive 1 point for each vote across all voting routes (main ideas, creator profiles, and public leaderboards). Previously, public leaderboard votes weren't awarding points. Statistics for "Ideas Votadas" are automatically tracked from the votes table.
 
 ## Testing Infrastructure
 
