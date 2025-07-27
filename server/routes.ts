@@ -760,19 +760,28 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   // Approve or reject a pending idea
   app.patch("/api/ideas/:id/approve", async (req: Request, res: Response) => {
+    console.log(`[APPROVE] === APPROVAL REQUEST START ===`);
+    console.log(`[APPROVE] Request params:`, req.params);
+    console.log(`[APPROVE] Request body:`, req.body);
+    console.log(`[APPROVE] User authenticated:`, req.isAuthenticated());
+    
     try {
       if (!req.isAuthenticated()) {
+        console.log(`[APPROVE] DENIED: Not authenticated`);
         return res.status(401).json({ message: "Authentication required to approve ideas" });
       }
 
+      const id = Number(req.params.id);
+      console.log(`[APPROVE] Processing idea ID: ${id}`);
+      console.log(`[APPROVE] ID from params: ${req.params.id}`);
+      console.log(`[APPROVE] Parsed ID: ${id}, isNaN: ${isNaN(id)}`);
+      
       // Verificar que el usuario tenga rol de creador
       console.log(`[APPROVE] User ${req.user.id} (${req.user.username}) with role ${req.user.userRole} attempting to approve idea ${id}`);
       if (req.user.userRole !== 'creator') {
         console.log(`[APPROVE] DENIED: User ${req.user.username} is not a creator`);
         return res.status(403).json({ message: "Only creators can approve ideas" });
       }
-
-      const id = Number(req.params.id);
       if (isNaN(id)) {
         return res.status(400).json({ message: "Invalid idea ID" });
       }

@@ -127,10 +127,30 @@ export function IdeasTabView({ mode = "published" }: IdeasTabViewProps) {
       refetchPending();
       queryClient.invalidateQueries({ queryKey: ["/api/ideas"] });
     },
-    onError: (error: Error) => {
+    onError: (error: any) => {
+      console.error(`[FRONTEND] Approval error:`, error);
+      console.error(`[FRONTEND] Error details:`, {
+        message: error.message,
+        stack: error.stack,
+        responseText: error.responseText,
+        status: error.status
+      });
+      
+      let errorMessage = '';
+      try {
+        if (error.responseText) {
+          const errorData = JSON.parse(error.responseText);
+          errorMessage = errorData.message || '';
+        } else if (error.message) {
+          errorMessage = error.message;
+        }
+      } catch (e) {
+        errorMessage = t("ideas.approveErrorDesc");
+      }
+      
       toast({
         title: t("ideas.approveError"),
-        description: error.message || t("ideas.approveErrorDesc"),
+        description: errorMessage || t("ideas.approveErrorDesc"),
         variant: "destructive",
       });
     },
