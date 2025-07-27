@@ -127,6 +127,7 @@ The application uses a monorepo structure with shared TypeScript types between c
 - July 14, 2025. Completed comprehensive points system implementation: integrated points display in "Mi Actividad" section, implemented points deduction for suggestions (3 points cost), removed redundant sidebar points section, and ensured proper cache invalidation for real-time UI updates
 - July 14, 2025. Implemented complete points store system: added store management tabs in creator dashboard, created public store view accessible from profile pages, fixed apiRequest function signature across all components, and replaced share button with points store button in public profiles
 - July 27, 2025. Fixed critical voting system bug: Users now properly receive 1 point for each vote across all voting routes (main ideas, creator profiles, and public leaderboards). Previously, public leaderboard votes weren't awarding points. Statistics for "Ideas Votadas" are automatically tracked from the votes table.
+- July 27, 2025. Complete voting and suggestion system implementation: Fixed all apiRequest calls to use correct format ({ method: "POST" }), corrected suggestion schema validation to make description optional, implemented real-time UI updates without page reloads, and added comprehensive logging for debugging. System now fully functional: users earn points by voting (1 point per vote), can spend points on suggestions (3 points cost), receive rewards for approved suggestions (2 points), and all statistics update instantly.
 
 ## Testing Infrastructure
 

@@ -102,10 +102,14 @@ export function IdeasTabView({ mode = "published" }: IdeasTabViewProps) {
   const approveMutation = useMutation({
     mutationFn: async (ideaId: number) => {
       setProcessingIdea(ideaId);
+      console.log(`[FRONTEND] Approving idea ${ideaId}`);
       const response = await apiRequest(
-        "PATCH",
-        `/api/ideas/${ideaId}/approve`
+        `/api/ideas/${ideaId}/approve`,
+        {
+          method: "PATCH"
+        }
       );
+      console.log(`[FRONTEND] Idea ${ideaId} approved successfully`);
       return await response.json();
     },
     onSuccess: () => {
@@ -135,7 +139,11 @@ export function IdeasTabView({ mode = "published" }: IdeasTabViewProps) {
   const rejectMutation = useMutation({
     mutationFn: async (ideaId: number) => {
       setProcessingIdea(ideaId);
-      await apiRequest("DELETE", `/api/ideas/${ideaId}`);
+      console.log(`[FRONTEND] Rejecting idea ${ideaId}`);
+      await apiRequest(`/api/ideas/${ideaId}`, {
+        method: "DELETE"
+      });
+      console.log(`[FRONTEND] Idea ${ideaId} rejected successfully`);
     },
     onSuccess: () => {
       toast({

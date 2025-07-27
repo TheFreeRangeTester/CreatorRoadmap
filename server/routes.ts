@@ -792,7 +792,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
 
       // Approve the idea
+      console.log(`[APPROVE] Approving idea ${id} for creator ${req.user.id}`);
       const approvedIdea = await storage.approveIdea(id);
+      console.log(`[APPROVE] Idea ${id} approved successfully`);
 
       // Award 2 points to the suggester for approved idea
       if (idea.suggestedBy) {
