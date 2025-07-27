@@ -40,7 +40,10 @@ export default function PublicLinksManager() {
         ? { expiresAt: expiresAt.toISOString() }
         : {};
         
-      const res = await apiRequest("POST", "/api/public-links", payload);
+      const res = await apiRequest("/api/public-links", { 
+        method: "POST", 
+        body: JSON.stringify(payload) 
+      });
       return await res.json();
     },
     onSuccess: () => {
@@ -63,7 +66,10 @@ export default function PublicLinksManager() {
 
   const toggleMutation = useMutation({
     mutationFn: async ({ id, isActive }: { id: number; isActive: boolean }) => {
-      const res = await apiRequest("PATCH", `/api/public-links/${id}`, { isActive });
+      const res = await apiRequest(`/api/public-links/${id}`, { 
+        method: "PATCH", 
+        body: JSON.stringify({ isActive }) 
+      });
       return await res.json();
     },
     onSuccess: () => {
@@ -80,7 +86,7 @@ export default function PublicLinksManager() {
 
   const deleteMutation = useMutation({
     mutationFn: async (id: number) => {
-      await apiRequest("DELETE", `/api/public-links/${id}`);
+      await apiRequest(`/api/public-links/${id}`, { method: "DELETE" });
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/public-links"] });

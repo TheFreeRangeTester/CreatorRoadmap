@@ -82,7 +82,10 @@ export default function ProfileEditor() {
 
   const updateProfileMutation = useMutation({
     mutationFn: async (data: UpdateProfile) => {
-      const response = await apiRequest("PATCH", "/api/user/profile", data);
+      const response = await apiRequest("/api/user/profile", { 
+        method: "PATCH", 
+        body: JSON.stringify(data) 
+      });
       return await response.json();
     },
     onSuccess: () => {
