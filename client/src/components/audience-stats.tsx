@@ -40,9 +40,13 @@ export default function AudienceStats({ isVisible }: AudienceStatsProps) {
     refetchOnWindowFocus: false,
   });
 
-  // Log data when it changes
-  console.log("[AUDIENCE-STATS] Current stats:", stats);
-  console.log("[POINTS-DATA] Current points:", pointsData);
+  // Log data when it changes (only log when data actually exists to avoid spam)
+  if (stats) {
+    console.log("[AUDIENCE-STATS] Current stats:", stats);
+  }
+  if (pointsData) {
+    console.log("[POINTS-DATA] Current points:", pointsData);
+  }
 
   if (!isVisible || !user) {
     return null;
