@@ -763,11 +763,15 @@ export async function registerRoutes(app: Express): Promise<Server> {
     console.log(`[APPROVE] === APPROVAL REQUEST START ===`);
     console.log(`[APPROVE] Request params:`, req.params);
     console.log(`[APPROVE] Request body:`, req.body);
+    console.log(`[APPROVE] Session ID:`, req.sessionID);
+    console.log(`[APPROVE] Session data:`, req.session);
+    console.log(`[APPROVE] Cookies:`, req.headers.cookie);
     console.log(`[APPROVE] User authenticated:`, req.isAuthenticated());
+    console.log(`[APPROVE] User from session:`, req.user);
     
     try {
       if (!req.isAuthenticated()) {
-        console.log(`[APPROVE] DENIED: Not authenticated`);
+        console.log(`[APPROVE] DENIED: Not authenticated - session missing or invalid`);
         return res.status(401).json({ message: "Authentication required to approve ideas" });
       }
 
