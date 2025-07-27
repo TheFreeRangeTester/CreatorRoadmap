@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { Loader2, CheckCircle, XCircle, User, Clock } from "lucide-react";
 import { useAuth } from "@/hooks/use-auth";
@@ -82,7 +82,17 @@ export function IdeasTabView({ mode = "published" }: IdeasTabViewProps) {
       }
     },
     onSuccess: () => {
+      // Invalidate ideas to update vote counts and positions
       queryClient.invalidateQueries({ queryKey: ["/api/ideas"] });
+      // Invalidate user data to update points immediately
+      queryClient.invalidateQueries({ queryKey: ["/api/user"] });
+      // Invalidate user points specifically  
+      queryClient.invalidateQueries({ queryKey: ["/api/user/points"] });
+      queryClient.invalidateQueries({ queryKey: ["userPoints"] });
+      // Invalidate audience stats to update vote count
+      queryClient.invalidateQueries({ queryKey: ["/api/user/audience-stats"] });
+      // Invalidate point transactions to show new vote reward
+      queryClient.invalidateQueries({ queryKey: ["pointTransactions"] });
     },
     onError: (error) => {
       toast({
@@ -157,6 +167,12 @@ export function IdeasTabView({ mode = "published" }: IdeasTabViewProps) {
       // Refresh pending and approved ideas lists
       refetchPending();
       queryClient.invalidateQueries({ queryKey: ["/api/ideas"] });
+      
+      // Invalidate all points-related queries (user who suggested gets 2 points reward)
+      queryClient.invalidateQueries({ queryKey: ["/api/user/points"] });
+      queryClient.invalidateQueries({ queryKey: ["userPoints"] });
+      queryClient.invalidateQueries({ queryKey: ["pointTransactions"] });
+      queryClient.invalidateQueries({ queryKey: ["/api/user/audience-stats"] });
     },
     onError: (error: any) => {
       console.error(`[FRONTEND] Approval error:`, error);

@@ -87,9 +87,13 @@ export default function SuggestIdeaModal({
     onSuccess: async () => {
       form.reset();
       
-      // Invalidate points cache to refresh the UI
+      // Invalidate all points-related queries for immediate UI updates
       queryClient.invalidateQueries({ queryKey: ["/api/user/points"] });
       queryClient.invalidateQueries({ queryKey: ["userPoints"] });
+      queryClient.invalidateQueries({ queryKey: ["pointTransactions"] });
+      queryClient.invalidateQueries({ queryKey: ["/api/user"] });
+      queryClient.invalidateQueries({ queryKey: ["/api/user/audience-stats"] });
+      queryClient.invalidateQueries({ queryKey: ["/api/pending-ideas"] });
       
       toast({
         title: t('creator.suggestionSuccess'),

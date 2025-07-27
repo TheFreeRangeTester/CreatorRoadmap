@@ -82,7 +82,17 @@ export default function HomePage() {
       }
     },
     onSuccess: () => {
+      // Invalidate ideas to update vote counts and positions
       queryClient.invalidateQueries({ queryKey: ["/api/ideas"] });
+      // Invalidate user data to update points immediately
+      queryClient.invalidateQueries({ queryKey: ["/api/user"] });
+      // Invalidate user points specifically
+      queryClient.invalidateQueries({ queryKey: ["/api/user/points"] });
+      queryClient.invalidateQueries({ queryKey: ["userPoints"] });
+      // Invalidate audience stats to update vote count
+      queryClient.invalidateQueries({ queryKey: ["/api/user/audience-stats"] });
+      // Invalidate point transactions to show new vote reward
+      queryClient.invalidateQueries({ queryKey: ["pointTransactions"] });
     },
     onError: (error) => {
       toast({

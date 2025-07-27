@@ -73,9 +73,13 @@ export function PointsSuggestionForm({ creatorId, creatorUsername, onSuccess }: 
           description: t('suggestionForm.success'),
         });
         
-        // Invalidate and refetch points
+        // Invalidate all points-related queries for immediate UI updates
         queryClient.invalidateQueries({ queryKey: ['userPoints'] });
+        queryClient.invalidateQueries({ queryKey: ['/api/user/points'] });
         queryClient.invalidateQueries({ queryKey: ['pointTransactions'] });
+        queryClient.invalidateQueries({ queryKey: ['/api/user'] });
+        queryClient.invalidateQueries({ queryKey: ['/api/user/audience-stats'] });
+        queryClient.invalidateQueries({ queryKey: ['/api/pending-ideas'] });
         
         // Reset form and hide it
         form.reset();
