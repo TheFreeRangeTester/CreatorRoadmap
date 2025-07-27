@@ -132,7 +132,7 @@ export class DatabaseStorage implements IStorage {
     // Nueva idea sugerida con 0 votos, estado pendiente y usuario que la sugiere
     const ideaToInsert = {
       title: suggestion.title,
-      description: suggestion.description,
+      description: suggestion.description || "", // Usar cadena vacía si no se proporciona descripción
       votes: 0,
       creatorId: suggestion.creatorId,  // ID del creador a quien se le sugiere
       createdAt: now,

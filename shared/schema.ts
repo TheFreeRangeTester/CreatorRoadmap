@@ -167,21 +167,15 @@ export const userResponseSchema = z.object({
 });
 
 // Idea schemas
-export const insertIdeaSchema = createInsertSchema(ideas).pick({
-  title: true,
-  description: true,
-}).extend({
+export const insertIdeaSchema = z.object({
   title: z.string().min(1, { message: "Title is required" }).max(100, { message: "Title must be 100 characters or less" }),
-  description: z.string().max(280, { message: "Description must be 280 characters or less" }),
+  description: z.string().max(280, { message: "Description must be 280 characters or less" }).optional().default(""),
 });
 
 // Schema específico para sugerir ideas a un creador
-export const suggestIdeaSchema = createInsertSchema(ideas).pick({
-  title: true,
-  description: true,
-}).extend({
+export const suggestIdeaSchema = z.object({
   title: z.string().min(1, { message: "Title is required" }).max(100, { message: "Title must be 100 characters or less" }),
-  description: z.string().max(280, { message: "Description must be 280 characters or less" }),
+  description: z.string().max(280, { message: "Description must be 280 characters or less" }).optional().default(""),
   creatorId: z.number(), // ID del creador a quien se sugiere la idea
 });
 
