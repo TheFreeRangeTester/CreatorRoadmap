@@ -168,9 +168,18 @@ export class MemStorage implements IStorage {
       threadsUrl: null,
       websiteUrl: null,
       profileBackground: "gradient-1",
-      email: insertUser.email || null,
-      // No longer using Google ID
-      // No longer using Google authentication
+      email: insertUser.email,
+      // Subscription fields
+      subscriptionStatus: 'free',
+      hasUsedTrial: false,
+      trialStartDate: null,
+      trialEndDate: null,
+      stripeCustomerId: null,
+      stripeSubscriptionId: null,
+      subscriptionPlan: null,
+      subscriptionStartDate: null,
+      subscriptionEndDate: null,
+      subscriptionCanceledAt: null
     };
     this.users.set(id, user);
     return user;
@@ -663,6 +672,7 @@ export class MemStorage implements IStorage {
       id,
       creatorId,
       ...item,
+      maxQuantity: item.maxQuantity ?? null,
       currentQuantity: 0,
       isActive: true,
       createdAt: now,
@@ -720,6 +730,7 @@ export class MemStorage implements IStorage {
       
       return {
         ...redemption,
+        status: redemption.status as 'pending' | 'completed',
         userUsername: user?.username || 'Unknown',
         userEmail: user?.email || 'Unknown',
         storeItemTitle: storeItem?.title || 'Unknown',
@@ -767,6 +778,7 @@ export class MemStorage implements IStorage {
     
     return {
       ...storeRedemption,
+      status: storeRedemption.status as 'pending' | 'completed',
       userUsername: user.username,
       userEmail: user.email,
       storeItemTitle: storeItem.title,
@@ -792,6 +804,7 @@ export class MemStorage implements IStorage {
     
     return {
       ...updatedRedemption,
+      status: updatedRedemption.status as 'pending' | 'completed',
       userUsername: user?.username || 'Unknown',
       userEmail: user?.email || 'Unknown',
       storeItemTitle: storeItem?.title || 'Unknown',

@@ -225,7 +225,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Obtener todas las ideas con posiciones
       const allIdeas = await storage.getIdeasWithPositions();
 
-      let ideas = [];
+      let ideas: typeof allIdeas = [];
 
       // Si el usuario está autenticado, filtramos según su rol
       if (req.isAuthenticated()) {
@@ -663,7 +663,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         }
 
         // Deduct 3 points for the suggestion
-        await storage.updateUserPoints(req.user!.id, 3, 'spent', 'idea_suggestion', null);
+        await storage.updateUserPoints(req.user!.id, 3, 'spent', 'idea_suggestion', undefined);
         console.log("✅ 3 puntos descontados del usuario");
 
         // Store the suggested idea with pending status
