@@ -107,14 +107,31 @@ export function IdeasTabView({ mode = "published" }: IdeasTabViewProps) {
     mutationFn: async (ideaId: number) => {
       setProcessingIdea(ideaId);
       console.log(`[FRONTEND] Approving idea ${ideaId}`);
-      const response = await apiRequest(
-        `/api/ideas/${ideaId}/approve`,
-        {
-          method: "PATCH"
+      
+      try {
+        const response = await apiRequest(
+          `/api/ideas/${ideaId}/approve`,
+          {
+            method: "PATCH"
+          }
+        );
+        console.log(`[FRONTEND] Response received:`, response);
+        console.log(`[FRONTEND] Response status:`, response.status);
+        console.log(`[FRONTEND] Response ok:`, response.ok);
+        
+        if (!response.ok) {
+          const errorText = await response.text();
+          console.error(`[FRONTEND] Error response:`, errorText);
+          throw new Error(`HTTP ${response.status}: ${errorText}`);
         }
-      );
-      console.log(`[FRONTEND] Idea ${ideaId} approved successfully`);
-      return await response.json();
+        
+        const result = await response.json();
+        console.log(`[FRONTEND] Idea ${ideaId} approved successfully, result:`, result);
+        return result;
+      } catch (error) {
+        console.error(`[FRONTEND] Approval failed:`, error);
+        throw error;
+      }
     },
     onSuccess: () => {
       toast({
