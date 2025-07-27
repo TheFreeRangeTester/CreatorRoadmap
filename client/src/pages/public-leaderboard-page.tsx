@@ -96,7 +96,11 @@ export default function PublicLeaderboardPage() {
       setIsVoting((prev) => ({ ...prev, [ideaId]: true }));
 
       const endpoint = `/api/public/${token}/ideas/${ideaId}/vote`;
-      const response = await apiRequest("POST", endpoint);
+      console.log(`[FRONTEND] Attempting to vote for idea ${ideaId} on public leaderboard`);
+      const response = await apiRequest(endpoint, {
+        method: "POST"
+      });
+      console.log(`[FRONTEND] Public vote request successful`, response);
 
       // Optimistically update voted ideas
       setVotedIdeas(prev => {

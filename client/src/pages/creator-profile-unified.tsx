@@ -215,10 +215,14 @@ export default function CreatorProfileUnified() {
     setIsVoting((prev) => ({ ...prev, [ideaId]: true }));
 
     try {
-      await apiRequest(
-        "POST",
-        `/api/creators/${username}/ideas/${ideaId}/vote`
+      console.log(`[FRONTEND] Attempting to vote for idea ${ideaId} by ${username}`);
+      const response = await apiRequest(
+        `/api/creators/${username}/ideas/${ideaId}/vote`,
+        {
+          method: "POST"
+        }
       );
+      console.log(`[FRONTEND] Vote request successful`, response);
 
       // Update voted ideas
       const newVotedIdeas = new Set(votedIdeas);
