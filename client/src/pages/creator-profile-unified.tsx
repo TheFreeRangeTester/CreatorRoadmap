@@ -451,7 +451,7 @@ export default function CreatorProfileUnified() {
                           headers: {
                             "X-Requested-With": "XMLHttpRequest",
                           },
-                          credentials: "same-origin",
+                          credentials: "include",
                         });
 
                         // Stay on the same public profile after logout
@@ -501,7 +501,7 @@ export default function CreatorProfileUnified() {
                         headers: {
                           "X-Requested-With": "XMLHttpRequest",
                         },
-                        credentials: "same-origin",
+                        credentials: "include",
                       });
                       window.location.reload();
                     } catch (error) {

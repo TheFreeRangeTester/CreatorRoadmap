@@ -84,7 +84,7 @@ export default function IdeaForm({ isOpen, idea, onClose }: IdeaFormProps) {
           "X-Requested-With": "XMLHttpRequest",
         },
         body: JSON.stringify(values),
-        credentials: "same-origin",
+        credentials: "include",
       });
 
       if (!res.ok) {
@@ -128,7 +128,7 @@ export default function IdeaForm({ isOpen, idea, onClose }: IdeaFormProps) {
           "X-Requested-With": "XMLHttpRequest",
         },
         body: JSON.stringify(values),
-        credentials: "same-origin",
+        credentials: "include",
       });
 
       if (!res.ok) {

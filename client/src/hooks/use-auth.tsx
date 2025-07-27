@@ -165,7 +165,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           headers: {
             "X-Requested-With": "XMLHttpRequest"
           },
-          credentials: "same-origin"
+          credentials: "include"
         }).then(() => {
           // Clear user from cache smoothly
           queryClient.setQueryData(["/api/user"], null);
@@ -255,7 +255,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         headers: {
           "X-Requested-With": "XMLHttpRequest"
         },
-        credentials: "same-origin"
+        credentials: "include"
       });
       
       if (!res.ok) {
@@ -295,7 +295,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           "X-Requested-With": "XMLHttpRequest"
         },
         body: JSON.stringify({ userRole: "creator" }),
-        credentials: "same-origin"
+        credentials: "include"
       });
       
       if (!res.ok) {
