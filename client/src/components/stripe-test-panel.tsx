@@ -45,6 +45,7 @@ export default function StripeTestPanel({ isVisible = true }: StripeTestPanelPro
       const response = await fetch('/api/stripe/test/simulate-payment', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
+        credentials: "include",
         body: JSON.stringify(data)
       });
       
@@ -95,7 +96,8 @@ export default function StripeTestPanel({ isVisible = true }: StripeTestPanelPro
     mutationFn: async () => {
       const response = await fetch('/api/stripe/test/simulate-cancellation', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' }
+        headers: { 'Content-Type': 'application/json' },
+        credentials: "include",
       });
       
       if (!response.ok) {

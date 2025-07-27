@@ -124,6 +124,7 @@ export default function AuthPage() {
         fetch(`/api${redirect}/ideas/${ideaId}/vote`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
+        credentials: "include",
         })
           .then((res) => {
             if (res.ok) {

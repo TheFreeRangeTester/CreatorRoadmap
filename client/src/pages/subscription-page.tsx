@@ -64,6 +64,7 @@ export default function SubscriptionPage() {
       const response = await fetch("/api/stripe/create-checkout-session", {
         method: "POST",
         headers: {
+        credentials: "include",
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
@@ -94,6 +95,7 @@ export default function SubscriptionPage() {
       const response = await fetch("/api/subscription/start-trial", {
         method: "POST",
         headers: {
+        credentials: "include",
           "Content-Type": "application/json",
         },
       });
@@ -121,6 +123,7 @@ export default function SubscriptionPage() {
       const response = await fetch("/api/stripe/cancel-subscription", {
         method: "POST",
         headers: {
+        credentials: "include",
           "Content-Type": "application/json",
         },
       });

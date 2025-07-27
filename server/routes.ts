@@ -423,10 +423,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   // Vote for an idea
   app.post("/api/ideas/:id/vote", async (req: Request, res: Response) => {
-    console.log(`[OLD-VOTE] POST /api/ideas/${req.params.id}/vote`);
-    console.log(`[OLD-VOTE] Session:`, req.session);
-    console.log(`[OLD-VOTE] Authenticated:`, req.isAuthenticated());
-    console.log(`[OLD-VOTE] User:`, req.user);
+    console.log(`[VOTE-DEBUG] POST /api/ideas/${req.params.id}/vote`);
+    console.log(`[VOTE-DEBUG] Headers:`, req.headers);
+    console.log(`[VOTE-DEBUG] Cookies:`, req.headers.cookie);
+    console.log(`[VOTE-DEBUG] Session ID:`, req.sessionID);
+    console.log(`[VOTE-DEBUG] Session:`, req.session);
+    console.log(`[VOTE-DEBUG] Authenticated:`, req.isAuthenticated());
+    console.log(`[VOTE-DEBUG] User:`, req.user);
     
     try {
       // Require authentication to vote

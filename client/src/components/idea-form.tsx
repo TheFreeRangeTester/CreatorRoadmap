@@ -80,6 +80,7 @@ export default function IdeaForm({ isOpen, idea, onClose }: IdeaFormProps) {
       const res = await fetch("/api/ideas", {
         method: "POST",
         headers: {
+        credentials: "include",
           "Content-Type": "application/json",
           "X-Requested-With": "XMLHttpRequest",
         },
@@ -124,6 +125,7 @@ export default function IdeaForm({ isOpen, idea, onClose }: IdeaFormProps) {
       const res = await fetch(`/api/ideas/${idea?.id}`, {
         method: "PUT",
         headers: {
+        credentials: "include",
           "Content-Type": "application/json",
           "X-Requested-With": "XMLHttpRequest",
         },

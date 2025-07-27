@@ -168,6 +168,7 @@ export default function CSVImportModal({
         const response = await fetch('/api/ideas', {
           method: 'POST',
           headers: {
+        credentials: "include",
             'Content-Type': 'application/json',
             'X-CSV-Import': 'true',
           },

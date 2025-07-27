@@ -106,6 +106,7 @@ export function NewSuggestionModal({
       const response = await fetch(`/api/creators/${username}/suggest`, {
         method: 'POST',
         headers: {
+        credentials: "include",
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({

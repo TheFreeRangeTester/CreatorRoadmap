@@ -63,6 +63,7 @@ export function PointsSuggestionForm({ creatorId, creatorUsername, onSuccess }: 
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data),
+        credentials: 'include',
       });
       
       if (!response.ok) {

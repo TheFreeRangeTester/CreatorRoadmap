@@ -449,6 +449,7 @@ export default function CreatorProfileUnified() {
                         await fetch("/api/logout", {
                           method: "POST",
                           headers: {
+        credentials: "include",
                             "X-Requested-With": "XMLHttpRequest",
                           },
                           credentials: "include",
@@ -499,6 +500,7 @@ export default function CreatorProfileUnified() {
                       await fetch("/api/logout", {
                         method: "POST",
                         headers: {
+        credentials: "include",
                           "X-Requested-With": "XMLHttpRequest",
                         },
                         credentials: "include",

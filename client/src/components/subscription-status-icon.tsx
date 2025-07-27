@@ -34,6 +34,7 @@ export default function SubscriptionStatusIcon() {
       const response = await fetch("/api/subscription/start-trial", {
         method: "POST",
         headers: {
+        credentials: "include",
           "Content-Type": "application/json",
         },
       });
@@ -66,6 +67,7 @@ export default function SubscriptionStatusIcon() {
       const response = await fetch("/api/stripe/cancel-subscription", {
         method: "POST",
         headers: {
+        credentials: "include",
           "Content-Type": "application/json",
         },
       });
