@@ -89,8 +89,7 @@ export default function SuggestIdeaModal({
       
       // Invalidate all points-related queries for immediate UI updates
       queryClient.invalidateQueries({ queryKey: ["/api/user/points"] });
-      queryClient.invalidateQueries({ queryKey: ["userPoints"] });
-      queryClient.invalidateQueries({ queryKey: ["pointTransactions"] });
+      queryClient.invalidateQueries({ queryKey: ["/api/user/point-transactions"] });
       queryClient.invalidateQueries({ queryKey: ["/api/user"] });
       queryClient.invalidateQueries({ queryKey: ["/api/user/audience-stats"] });
       queryClient.invalidateQueries({ queryKey: ["/api/pending-ideas"] });

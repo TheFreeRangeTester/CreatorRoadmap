@@ -88,11 +88,10 @@ export default function HomePage() {
       queryClient.invalidateQueries({ queryKey: ["/api/user"] });
       // Invalidate user points specifically
       queryClient.invalidateQueries({ queryKey: ["/api/user/points"] });
-      queryClient.invalidateQueries({ queryKey: ["userPoints"] });
       // Invalidate audience stats to update vote count
       queryClient.invalidateQueries({ queryKey: ["/api/user/audience-stats"] });
       // Invalidate point transactions to show new vote reward
-      queryClient.invalidateQueries({ queryKey: ["pointTransactions"] });
+      queryClient.invalidateQueries({ queryKey: ["/api/user/point-transactions"] });
     },
     onError: (error) => {
       toast({

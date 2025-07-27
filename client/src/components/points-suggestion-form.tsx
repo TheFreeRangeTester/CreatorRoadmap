@@ -38,8 +38,14 @@ export function PointsSuggestionForm({ creatorId, creatorUsername, onSuccess }: 
   const [showForm, setShowForm] = useState(false);
 
   const { data: pointsData, isLoading: pointsLoading } = useQuery<UserPointsResponse>({
-    queryKey: ['userPoints'],
-    queryFn: () => fetch('/api/user/points').then(res => res.json()),
+    queryKey: ['/api/user/points'],
+    queryFn: async () => {
+      const res = await fetch('/api/user/points', { credentials: 'include' });
+      if (!res.ok) {
+        throw new Error('Failed to fetch points');
+      }
+      return res.json();
+    },
   });
 
   const form = useForm<SuggestionFormValues>({
@@ -74,9 +80,8 @@ export function PointsSuggestionForm({ creatorId, creatorUsername, onSuccess }: 
         });
         
         // Invalidate all points-related queries for immediate UI updates
-        queryClient.invalidateQueries({ queryKey: ['userPoints'] });
         queryClient.invalidateQueries({ queryKey: ['/api/user/points'] });
-        queryClient.invalidateQueries({ queryKey: ['pointTransactions'] });
+        queryClient.invalidateQueries({ queryKey: ['/api/user/point-transactions'] });
         queryClient.invalidateQueries({ queryKey: ['/api/user'] });
         queryClient.invalidateQueries({ queryKey: ['/api/user/audience-stats'] });
         queryClient.invalidateQueries({ queryKey: ['/api/pending-ideas'] });

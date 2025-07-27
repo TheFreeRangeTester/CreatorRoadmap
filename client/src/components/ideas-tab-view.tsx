@@ -88,11 +88,10 @@ export function IdeasTabView({ mode = "published" }: IdeasTabViewProps) {
       queryClient.invalidateQueries({ queryKey: ["/api/user"] });
       // Invalidate user points specifically  
       queryClient.invalidateQueries({ queryKey: ["/api/user/points"] });
-      queryClient.invalidateQueries({ queryKey: ["userPoints"] });
       // Invalidate audience stats to update vote count
       queryClient.invalidateQueries({ queryKey: ["/api/user/audience-stats"] });
       // Invalidate point transactions to show new vote reward
-      queryClient.invalidateQueries({ queryKey: ["pointTransactions"] });
+      queryClient.invalidateQueries({ queryKey: ["/api/user/point-transactions"] });
     },
     onError: (error) => {
       toast({
@@ -170,8 +169,7 @@ export function IdeasTabView({ mode = "published" }: IdeasTabViewProps) {
       
       // Invalidate all points-related queries (user who suggested gets 2 points reward)
       queryClient.invalidateQueries({ queryKey: ["/api/user/points"] });
-      queryClient.invalidateQueries({ queryKey: ["userPoints"] });
-      queryClient.invalidateQueries({ queryKey: ["pointTransactions"] });
+      queryClient.invalidateQueries({ queryKey: ["/api/user/point-transactions"] });
       queryClient.invalidateQueries({ queryKey: ["/api/user/audience-stats"] });
     },
     onError: (error: any) => {
