@@ -766,7 +766,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
 
       // Verificar que el usuario tenga rol de creador
+      console.log(`[APPROVE] User ${req.user.id} (${req.user.username}) with role ${req.user.userRole} attempting to approve idea ${id}`);
       if (req.user.userRole !== 'creator') {
+        console.log(`[APPROVE] DENIED: User ${req.user.username} is not a creator`);
         return res.status(403).json({ message: "Only creators can approve ideas" });
       }
 
@@ -782,7 +784,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
 
       // Check if the user is the creator of the idea (the one who can approve it)
+      console.log(`[APPROVE] Idea ${id} belongs to creator ${idea.creatorId}, current user is ${req.user!.id}`);
       if (idea.creatorId !== req.user!.id) {
+        console.log(`[APPROVE] DENIED: User ${req.user!.id} cannot approve idea belonging to creator ${idea.creatorId}`);
         return res.status(403).json({ message: "You can only approve ideas suggested to you" });
       }
 
