@@ -72,7 +72,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         const res = await fetch("/api/user", {
           method: "GET",
           headers: {
-        credentials: "include",
             "Content-Type": "application/json",
             "X-Requested-With": "XMLHttpRequest"
           },
@@ -114,7 +113,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       const res = await fetch("/api/auth/login", {
         method: "POST",
         headers: {
-        credentials: "include",
           "Content-Type": "application/json",
           "X-Requested-With": "XMLHttpRequest"
         },

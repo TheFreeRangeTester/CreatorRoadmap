@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Login</title>
+</head>
+<body>
+    <h1>Test Login & Points System</h1>
+    
+    <div id="status">Not authenticated</div>
+    
+    <div>
+        <h2>Login</h2>
+        <input type="text" id="username" placeholder="Username" value="TestUser2">
+        <input type="password" id="password" placeholder="Password" value="123456">
+        <button onclick="login()">Login</button>
+    </div>
+    
+    <div>
+        <h2>User Points</h2>
+        <button onclick="getPoints()">Get Points</button>
+        <div id="points-display"></div>
+    </div>
+    
+    <div>
+        <h2>Vote on Idea</h2>
+        <input type="number" id="ideaId" placeholder="Idea ID" value="107">
+        <button onclick="vote()">Vote</button>
+    </div>
+    
+    <script>
+        async function login() {
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            
+            try {
+                const response = await fetch('/api/auth/login', {
+                    method: 'POST',
+                    credentials: 'include',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-Requested-With': 'XMLHttpRequest'
+                    },
+                    body: JSON.stringify({ username, password })
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    document.getElementById('status').innerHTML = `Authenticated as: ${data.username}`;
+                    console.log('Login successful:', data);
+                } else {
+                    document.getElementById('status').innerHTML = `Login failed: ${data.message}`;
+                    console.error('Login failed:', data);
+                }
+            } catch (error) {
+                console.error('Login error:', error);
+                document.getElementById('status').innerHTML = `Login error: ${error.message}`;
+            }
+        }
+        
+        async function getPoints() {
+            try {
+                const response = await fetch('/api/user/points', {
+                    method: 'GET',
+                    credentials: 'include',
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest'
+                    }
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    document.getElementById('points-display').innerHTML = `
+                        <strong>Points:</strong> ${data.totalPoints}<br>
+                        <strong>Earned:</strong> ${data.pointsEarned}<br>
+                        <strong>Spent:</strong> ${data.pointsSpent}
+                    `;
+                } else {
+                    document.getElementById('points-display').innerHTML = `Error: ${data.message}`;
+                }
+            } catch (error) {
+                console.error('Points error:', error);
+                document.getElementById('points-display').innerHTML = `Error: ${error.message}`;
+            }
+        }
+        
+        async function vote() {
+            const ideaId = document.getElementById('ideaId').value;
+            
+            try {
+                const response = await fetch(`/api/ideas/${ideaId}/vote`, {
+                    method: 'POST',
+                    credentials: 'include',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-Requested-With': 'XMLHttpRequest'
+                    }
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    console.log('Vote successful:', data);
+                    alert('Vote successful! Points should be updated.');
+                    getPoints(); // Refresh points
+                } else {
+                    console.error('Vote failed:', data);
+                    alert(`Vote failed: ${data.message}`);
+                }
+            } catch (error) {
+                console.error('Vote error:', error);
+                alert(`Vote error: ${error.message}`);
+            }
+        }
+        
+        // Check authentication status on load
+        async function checkAuth() {
+            try {
+                const response = await fetch('/api/user', {
+                    method: 'GET',
+                    credentials: 'include',
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest'
+                    }
+                });
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    document.getElementById('status').innerHTML = `Already authenticated as: ${data.username}`;
+                }
+            } catch (error) {
+                console.log('Not authenticated');
+            }
+        }
+        
+        window.onload = checkAuth;
+    </script>
+</body>
+</html>

@@ -69,7 +69,7 @@ export default function HomePage() {
       // Add ideaId to the set of ideas being voted on
       setVotingIdeaIds((prev) => new Set(prev).add(ideaId));
       try {
-        await apiRequest("POST", `/api/ideas/${ideaId}/vote`);
+        await apiRequest(`/api/ideas/${ideaId}/vote`, { method: "POST" });
       } finally {
         // Remove ideaId from the set when done (success or error)
         setTimeout(() => {
@@ -105,7 +105,7 @@ export default function HomePage() {
   // Delete mutation
   const deleteMutation = useMutation({
     mutationFn: async (ideaId: number) => {
-      await apiRequest("DELETE", `/api/ideas/${ideaId}`);
+      await apiRequest(`/api/ideas/${ideaId}`, { method: "DELETE" });
     },
     onSuccess: () => {
       setIsDeleteModalOpen(false);
