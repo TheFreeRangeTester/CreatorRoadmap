@@ -10,24 +10,10 @@ export function PointsDisplay() {
 
   const { data: pointsData, isLoading: pointsLoading } = useQuery<UserPointsResponse>({
     queryKey: ['/api/user/points'],
-    queryFn: async () => {
-      const res = await fetch('/api/user/points', { credentials: 'include' });
-      if (!res.ok) {
-        throw new Error('Failed to fetch points');
-      }
-      return res.json();
-    },
   });
 
   const { data: transactionsData } = useQuery<PointTransactionResponse[]>({
     queryKey: ['/api/user/point-transactions'],
-    queryFn: async () => {
-      const res = await fetch('/api/user/point-transactions?limit=10', { credentials: 'include' });
-      if (!res.ok) {
-        throw new Error('Failed to fetch transactions');
-      }
-      return res.json();
-    },
   });
 
   if (pointsLoading) {
