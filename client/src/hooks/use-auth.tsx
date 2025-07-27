@@ -163,7 +163,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         fetch("/api/logout", {
           method: "POST",
           headers: {
-        credentials: "include",
             "X-Requested-With": "XMLHttpRequest"
           },
           credentials: "include"
@@ -215,7 +214,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       const res = await fetch("/api/auth/register", {
         method: "POST",
         headers: {
-        credentials: "include",
           "Content-Type": "application/json",
           "X-Requested-With": "XMLHttpRequest"
         },
