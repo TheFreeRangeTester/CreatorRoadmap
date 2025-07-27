@@ -835,61 +835,76 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Vote on a creator's idea
   app.post("/api/creators/:username/ideas/:ideaId/vote", async (req: Request, res: Response) => {
     try {
+      console.log(`[VOTE] POST /api/creators/${req.params.username}/ideas/${req.params.ideaId}/vote`);
+      
       // Require authentication to vote
       if (!req.isAuthenticated()) {
+        console.log("[VOTE] Authentication failed");
         return res.status(401).json({ message: "Authentication required to vote" });
       }
 
       const { username, ideaId: ideaIdString } = req.params;
       const ideaId = Number(ideaIdString);
       const checkOnly = req.query.check_only === 'true';
+      const userId = req.user!.id;
+
+      console.log(`[VOTE] User ${userId} (${req.user!.username}) voting for idea ${ideaId} by ${username}`);
 
       if (isNaN(ideaId)) {
+        console.log("[VOTE] Invalid idea ID");
         return res.status(400).json({ message: "Invalid idea ID" });
       }
 
       // Find the creator by username
       const creator = await storage.getUserByUsername(username);
       if (!creator) {
+        console.log(`[VOTE] Creator ${username} not found`);
         return res.status(404).json({ message: "Creator not found" });
       }
 
       // Check if the idea exists and belongs to this creator
       const idea = await storage.getIdea(ideaId);
       if (!idea) {
+        console.log(`[VOTE] Idea ${ideaId} not found`);
         return res.status(404).json({ message: "Idea not found" });
       }
 
       if (idea.creatorId !== creator.id) {
+        console.log(`[VOTE] Idea ${ideaId} doesn't belong to creator ${username}`);
         return res.status(403).json({ message: "This idea does not belong to the specified creator" });
       }
-
-      const userId = req.user!.id;
 
       // Check if this user has already voted for this idea
       const existingVote = await storage.getVoteByUserOrSession(ideaId, userId);
       if (existingVote) {
+        console.log(`[VOTE] User ${userId} already voted for idea ${ideaId}`);
         return res.status(400).json({ message: "You have already voted for this idea" });
       }
 
       // If this is only a check, don't create the vote
       if (checkOnly) {
+        console.log(`[VOTE] Check only request for user ${userId} on idea ${ideaId}`);
         return res.status(200).json({ message: "You have not voted for this idea yet" });
       }
 
+      console.log(`[VOTE] Creating vote for user ${userId} on idea ${ideaId}`);
+      
       // Create the vote
       await storage.createVote({ ideaId }, userId);
+      console.log(`[VOTE] Vote created successfully`);
 
       // Award 1 point for voting
       await storage.updateUserPoints(userId, 1, 'earned', 'vote_given', ideaId);
+      console.log(`[VOTE] 1 point awarded to user ${userId}`);
 
       // Get the updated idea with its new position
       const ideasWithPositions = await storage.getIdeasWithPositions();
       const updatedIdea = ideasWithPositions.find(i => i.id === ideaId);
 
+      console.log(`[VOTE] Vote process completed successfully for idea ${ideaId}`);
       res.status(201).json(updatedIdea);
     } catch (error) {
-      console.error("Error voting for idea:", error);
+      console.error("[VOTE] Error voting for idea:", error);
       res.status(500).json({ message: "Failed to register vote" });
     }
   });

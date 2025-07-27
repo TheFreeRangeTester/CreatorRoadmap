@@ -16,7 +16,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "@/hooks/use-toast";
 import { useAuth } from "@/hooks/use-auth";
-import { apiRequest } from "@/lib/queryClient";
+import { apiRequest, queryClient } from "@/lib/queryClient";
 import { IdeaResponse, PublicLinkResponse } from "@shared/schema";
 import { cn } from "@/lib/utils";
 import { ThemeToggle } from "@/components/theme-toggle";
@@ -108,6 +108,10 @@ export default function PublicLeaderboardPage() {
       // Show success animation
       setSuccessVote(ideaId);
       setTimeout(() => setSuccessVote(null), 3000);
+
+      // Invalidate cache for points and stats to update in real-time
+      await queryClient.invalidateQueries({ queryKey: ['/api/user/points'] });
+      await queryClient.invalidateQueries({ queryKey: ['/api/user/audience-stats'] });
 
       // Refetch data to update UI with new positions
       const refreshedData = await refetch();

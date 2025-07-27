@@ -6,7 +6,7 @@ import { useTranslation } from "react-i18next";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/hooks/use-auth";
 import { IdeaResponse } from "@shared/schema";
-import { apiRequest } from "@/lib/queryClient";
+import { apiRequest, queryClient } from "@/lib/queryClient";
 import {
   Share2,
   ThumbsUp,
@@ -234,6 +234,10 @@ export default function CreatorProfileUnified() {
       setSuccessVote(ideaId);
       setTimeout(() => setSuccessVote(null), 3000);
 
+      // Invalidate cache for points and stats to update in real-time
+      await queryClient.invalidateQueries({ queryKey: ['/api/user/points'] });
+      await queryClient.invalidateQueries({ queryKey: ['/api/user/audience-stats'] });
+      
       // Refetch para obtener las posiciones actualizadas
       const refreshedData = await refetch();
       
