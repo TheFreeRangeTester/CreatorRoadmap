@@ -1,24 +1,11 @@
 import { useState, useEffect } from "react";
-import { useQuery } from "@tanstack/react-query";
 import { motion } from "framer-motion";
 import { useTranslation } from "react-i18next";
 import { ThumbsUp, Send, CheckCircle, BarChart3, Star } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { useAuth } from "@/hooks/use-auth";
-
-interface AudienceStatsData {
-  votesGiven: number;
-  ideasSuggested: number;
-  ideasApproved: number;
-}
-
-interface UserPointsData {
-  userId: number;
-  totalPoints: number;
-  pointsEarned: number;
-  pointsSpent: number;
-}
+import { useReactiveStats } from "@/hooks/use-reactive-stats";
 
 interface AudienceStatsProps {
   isVisible: boolean;
@@ -27,18 +14,7 @@ interface AudienceStatsProps {
 export default function AudienceStats({ isVisible }: AudienceStatsProps) {
   const { t } = useTranslation();
   const { user } = useAuth();
-
-  const { data: stats, isLoading } = useQuery<AudienceStatsData>({
-    queryKey: ["/api/user/audience-stats"],
-    enabled: !!user && isVisible,
-    refetchOnWindowFocus: false,
-  });
-
-  const { data: pointsData } = useQuery<UserPointsData>({
-    queryKey: ["/api/user/points"],
-    enabled: !!user && isVisible,
-    refetchOnWindowFocus: false,
-  });
+  const { points: pointsData, stats, isLoading } = useReactiveStats();
 
   // Log data when it changes (only log when data actually exists to avoid spam)
   if (stats) {

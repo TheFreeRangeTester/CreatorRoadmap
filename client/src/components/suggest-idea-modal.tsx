@@ -3,6 +3,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/hooks/use-auth";
+import { useReactiveStats } from "@/hooks/use-reactive-stats";
 import { apiRequest } from "@/lib/queryClient";
 import { suggestIdeaSchema } from "@shared/schema";
 import { Loader2, X, LogIn } from "lucide-react";
@@ -49,6 +50,7 @@ export default function SuggestIdeaModal({
   const { t } = useTranslation();
   const { user } = useAuth();
   const queryClient = useQueryClient();
+  const { spendPoints } = useReactiveStats();
   const [formError, setFormError] = useState<string | null>(null);
   
   // Form validation setup with react-hook-form and zod
@@ -85,12 +87,15 @@ export default function SuggestIdeaModal({
       return response.json();
     },
     onSuccess: async () => {
+      console.log("[SUGGESTION] Suggestion successful, spending 3 points");
+      
+      // Update reactive stats immediately for instant UI update
+      spendPoints(3, 'suggestion');
+      
       form.reset();
       
-      // Invalidate all points-related queries for immediate UI updates
+      // Also invalidate cache for server sync
       queryClient.invalidateQueries({ queryKey: ["/api/user/points"] });
-      queryClient.invalidateQueries({ queryKey: ["/api/user/point-transactions"] });
-      queryClient.invalidateQueries({ queryKey: ["/api/user"] });
       queryClient.invalidateQueries({ queryKey: ["/api/user/audience-stats"] });
       queryClient.invalidateQueries({ queryKey: ["/api/pending-ideas"] });
       

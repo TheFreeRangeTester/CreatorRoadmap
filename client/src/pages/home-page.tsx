@@ -11,6 +11,7 @@ import {
 } from "lucide-react";
 import { useAuth } from "@/hooks/use-auth";
 import { useToast } from "@/hooks/use-toast";
+import { useReactiveStats } from "@/hooks/use-reactive-stats";
 import { queryClient, apiRequest } from "@/lib/queryClient";
 import IdeaCard from "@/components/idea-card";
 import IdeaForm from "@/components/idea-form";
@@ -39,6 +40,7 @@ export default function HomePage() {
   const { user, logoutMutation } = useAuth();
   const { toast } = useToast();
   const { t } = useTranslation();
+  const { addVote } = useReactiveStats();
   const [isIdeaFormOpen, setIsIdeaFormOpen] = useState(false);
   const [currentIdea, setCurrentIdea] = useState<IdeaResponse | null>(null);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
@@ -82,25 +84,19 @@ export default function HomePage() {
       }
     },
     onSuccess: async () => {
-      console.log("[CACHE] Starting cache invalidation after vote success");
+      console.log("[VOTE] Vote successful, updating reactive stats");
       
+      // Update reactive stats immediately for instant UI update
+      addVote();
+      
+      // Also invalidate cache for server sync
       try {
-        // Invalidate all caches in parallel for better performance
         await Promise.all([
           queryClient.invalidateQueries({ queryKey: ["/api/ideas"] }),
-          queryClient.invalidateQueries({ queryKey: ["/api/user"] }),
           queryClient.invalidateQueries({ queryKey: ["/api/user/points"] }),
-          queryClient.invalidateQueries({ queryKey: ["/api/user/audience-stats"] }),
-          queryClient.invalidateQueries({ queryKey: ["/api/user/point-transactions"] })
+          queryClient.invalidateQueries({ queryKey: ["/api/user/audience-stats"] })
         ]);
-        
-        console.log("[CACHE] All cache invalidations completed successfully");
-        
-        // Force a refetch to ensure data is updated
-        await queryClient.refetchQueries({ queryKey: ["/api/user/audience-stats"] });
-        await queryClient.refetchQueries({ queryKey: ["/api/user/points"] });
-        
-        console.log("[CACHE] Force refetch completed");
+        console.log("[CACHE] Cache invalidation completed");
       } catch (error) {
         console.error("[CACHE] Error during cache invalidation:", error);
       }
