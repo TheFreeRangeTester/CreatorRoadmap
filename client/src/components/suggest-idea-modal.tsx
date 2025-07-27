@@ -62,10 +62,25 @@ export default function SuggestIdeaModal({
   
   const suggestMutation = useMutation({
     mutationFn: async (data: FormData) => {
+      // Obtener el creatorId del usuario
+      const creatorResponse = await apiRequest(`/api/creators/${username}`);
+      const creatorData = await creatorResponse.json();
+      
+      const suggestionData = {
+        ...data,
+        creatorId: creatorData.creator.id
+      };
+      
+      console.log(`[FRONTEND] Sending suggestion:`, suggestionData);
       const response = await apiRequest(
-        "POST", 
-        `/api/creators/${username}/suggest`, 
-        data
+        `/api/suggestions/submit`, 
+        {
+          method: "POST",
+          body: JSON.stringify(suggestionData),
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        }
       );
       return response.json();
     },

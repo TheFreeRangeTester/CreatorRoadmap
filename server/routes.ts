@@ -186,7 +186,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
 
       // Validate suggestion data (expecting creatorId in the body)
+      console.log(`[SUGGESTION] Received suggestion data:`, req.body);
       const validatedData = suggestIdeaSchema.parse(req.body);
+      console.log(`[SUGGESTION] Validated data:`, validatedData);
 
       // Deduct points for suggestion
       await storage.updateUserPoints(userId, SUGGESTION_COST, 'spent', 'suggestion_submitted');
@@ -206,6 +208,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       if (error instanceof ZodError) {
         const validationError = fromZodError(error);
+        console.error(`[SUGGESTION] Validation error:`, validationError.message);
         return res.status(400).json({ message: validationError.message });
       }
       console.error("Error submitting suggestion:", error);
