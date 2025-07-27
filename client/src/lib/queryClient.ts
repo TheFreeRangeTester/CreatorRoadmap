@@ -39,7 +39,7 @@ export async function apiRequest(
     },
     body,
     // Esto es crucial - asegura que las cookies de sesión se envían con cada solicitud
-    credentials: "same-origin",
+    credentials: "include",
   });
 
   await throwIfResNotOk(res);
@@ -57,8 +57,8 @@ export const getQueryFn: <T>(options: {
         // Añadir encabezado para indicar que es una solicitud AJAX
         "X-Requested-With": "XMLHttpRequest"
       },
-      // Usar same-origin para consistencia con apiRequest
-      credentials: "same-origin",
+      // Usar include para asegurar que las cookies se envían
+      credentials: "include",
     });
 
     if (unauthorizedBehavior === "returnNull" && res.status === 401) {

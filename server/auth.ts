@@ -99,6 +99,7 @@ export function setupAuth(app: Express) {
 
       const user = await storage.createUser({
         username: validatedData.username,
+        email: validatedData.email,
         password: hashedPassword,
         userRole: validatedData.userRole || 'audience', // Utilizamos el rol proporcionado o 'audience' por defecto
       });
