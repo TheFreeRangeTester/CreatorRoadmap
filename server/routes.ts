@@ -718,8 +718,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   // Get pending ideas for the authenticated creator
   app.get("/api/pending-ideas", async (req: Request, res: Response) => {
+    console.log(`[PENDING] === PENDING IDEAS REQUEST START ===`);
+    console.log(`[PENDING] User authenticated:`, req.isAuthenticated());
+    console.log(`[PENDING] User:`, req.user);
+    
     try {
       if (!req.isAuthenticated()) {
+        console.log(`[PENDING] DENIED: Not authenticated`);
         return res.status(401).json({ message: "Authentication required to view pending ideas" });
       }
 

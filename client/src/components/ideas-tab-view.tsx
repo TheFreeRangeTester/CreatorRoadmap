@@ -44,6 +44,20 @@ export function IdeasTabView({ mode = "published" }: IdeasTabViewProps) {
     enabled: mode === "suggested" && !!user,
   });
 
+  // Debug logging for pending ideas
+  useEffect(() => {
+    if (mode === "suggested") {
+      console.log(`[DEBUG] Pending ideas query:`, {
+        data: pendingIdeas,
+        isLoading: isLoadingPending,
+        isError: isErrorPending,
+        userRole: user?.userRole,
+        userId: user?.id,
+        username: user?.username
+      });
+    }
+  }, [pendingIdeas, isLoadingPending, isErrorPending, mode, user]);
+
   // State to track which ideas are being voted on
   const [votingIdeaIds, setVotingIdeaIds] = useState<Set<number>>(new Set());
 
