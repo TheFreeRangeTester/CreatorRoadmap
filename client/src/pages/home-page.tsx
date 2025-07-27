@@ -81,17 +81,29 @@ export default function HomePage() {
         }, 500); // Small delay for better UX
       }
     },
-    onSuccess: () => {
-      // Invalidate ideas to update vote counts and positions
-      queryClient.invalidateQueries({ queryKey: ["/api/ideas"] });
-      // Invalidate user data to update points immediately
-      queryClient.invalidateQueries({ queryKey: ["/api/user"] });
-      // Invalidate user points specifically
-      queryClient.invalidateQueries({ queryKey: ["/api/user/points"] });
-      // Invalidate audience stats to update vote count
-      queryClient.invalidateQueries({ queryKey: ["/api/user/audience-stats"] });
-      // Invalidate point transactions to show new vote reward
-      queryClient.invalidateQueries({ queryKey: ["/api/user/point-transactions"] });
+    onSuccess: async () => {
+      console.log("[CACHE] Starting cache invalidation after vote success");
+      
+      try {
+        // Invalidate all caches in parallel for better performance
+        await Promise.all([
+          queryClient.invalidateQueries({ queryKey: ["/api/ideas"] }),
+          queryClient.invalidateQueries({ queryKey: ["/api/user"] }),
+          queryClient.invalidateQueries({ queryKey: ["/api/user/points"] }),
+          queryClient.invalidateQueries({ queryKey: ["/api/user/audience-stats"] }),
+          queryClient.invalidateQueries({ queryKey: ["/api/user/point-transactions"] })
+        ]);
+        
+        console.log("[CACHE] All cache invalidations completed successfully");
+        
+        // Force a refetch to ensure data is updated
+        await queryClient.refetchQueries({ queryKey: ["/api/user/audience-stats"] });
+        await queryClient.refetchQueries({ queryKey: ["/api/user/points"] });
+        
+        console.log("[CACHE] Force refetch completed");
+      } catch (error) {
+        console.error("[CACHE] Error during cache invalidation:", error);
+      }
     },
     onError: (error) => {
       toast({
