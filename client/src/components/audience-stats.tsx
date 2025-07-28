@@ -120,19 +120,7 @@ export default function AudienceStats({ isVisible }: AudienceStatsProps) {
               ))}
             </div>
           )}
-          
-          {!isLoading && stats && (
-            <div className="mt-6 p-4 bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-900/20 dark:to-purple-900/20 rounded-lg border border-blue-200 dark:border-blue-800">
-              <div className="flex items-center gap-2 mb-2">
-                <Badge variant="secondary" className="bg-blue-100 text-blue-800 dark:bg-blue-900/50 dark:text-blue-200">
-                  {t("audienceStats.engaged", "Engaged Participant")}
-                </Badge>
-              </div>
-              <p className="text-sm text-gray-700 dark:text-gray-300">
-                {t("audienceStats.engagementMessage", "Thank you for being an active member of the Fanlist community! Your votes and suggestions help creators make better content.")}
-              </p>
-            </div>
-          )}
+
         </CardContent>
       </Card>
     </motion.div>
