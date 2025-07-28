@@ -264,7 +264,8 @@
     "recentVotesToday": "+{{count}} today",
     "voteRegistered": "Vote registered!",
     "voteHelpedTopIdea": "Your vote helped this idea in the top {{rank}}!",
-    "voteCountsPosition": "Your vote counts. This idea is in position #{{rank}}"
+    "voteCountsPosition": "Your vote counts. This idea is in position #{{rank}}",
+    "status": "Status"
   },
   "creator": {
     "voteSuccess": "Vote registered!",

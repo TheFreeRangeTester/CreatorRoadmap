@@ -264,7 +264,8 @@
     "recentVotesToday": "+{{count}} hoy",
     "voteRegistered": "¡Voto registrado!",
     "voteHelpedTopIdea": "¡Tu voto ayudó a esta idea en el top {{rank}}!",
-    "voteCountsPosition": "Tu voto cuenta. Esta idea está en la posición #{{rank}}"
+    "voteCountsPosition": "Tu voto cuenta. Esta idea está en la posición #{{rank}}",
+    "status": "Estado"
   },
   "creator": {
     "voteSuccess": "¡Voto registrado!",

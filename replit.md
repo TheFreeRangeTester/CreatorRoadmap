@@ -136,6 +136,7 @@ The application uses a monorepo structure with shared TypeScript types between c
 - July 28, 2025. Enhanced store redemption management system: Implemented filtering by status (pending/completed/all) with default to pending view for cleaner UX. Added user information display (username/email) in redemption requests for creator visibility. Backend now supports ?status parameter for filtering redemptions, improving workflow efficiency.
 - July 28, 2025. Improved user experience messaging: Updated error messages for self-voting and self-suggesting with humorous analogies (liking own selfie, texting yourself) to make the interface more engaging and memorable for users in both English and Spanish.
 - July 28, 2025. Streamlined creator dashboard: Removed "My Achievements" sections from both creator settings page and profile page as they served no practical purpose, simplifying the interface and focusing on essential configuration options only. Dashboard now shows only profile editor and leaderboard preferences for cleaner UX.
+- July 28, 2025. Fixed translation issue in points store: Added missing "common.status" translation key to both English ("Status") and Spanish ("Estado") language files. The store management component now properly displays translated status labels instead of the raw translation key.
 
 ## Testing Infrastructure
 
