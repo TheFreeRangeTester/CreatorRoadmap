@@ -276,9 +276,9 @@
     "voteHeaderTitle": "Vota por Ideas de Contenido",
     "defaultProfileDescription": "Ingeniero QA y creador de contenido enfocado en testing de software, automatización y mejores prácticas de control de calidad.",
     "cantVoteOwn": "No podés votar tus propias ideas",
-    "cantVoteOwnDesc": "No podés votar tus propias ideas 😅",
+    "cantVoteOwnDesc": "Eso sería como darte 'Me gusta' a tu propio selfie... muy narcisista 😅",
     "cantSuggestOwn": "No podés sugerir a tu propio perfil",
-    "cantSuggestOwnDesc": "No podés sugerir ideas a tu propio perfil 😅"
+    "cantSuggestOwnDesc": "¿Sugerirte ideas a vos mismo? Eso es como mandarte mensajes en WhatsApp 😅"
   },
   "roles": {
     "audience": "Miembro de la audiencia"

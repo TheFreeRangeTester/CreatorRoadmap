@@ -276,9 +276,9 @@
     "voteHeaderTitle": "Vote for Content Ideas",
     "defaultProfileDescription": "QA Engineer and content creator focused on software testing, automation, and quality control best practices.",
     "cantVoteOwn": "Can't vote on own ideas",
-    "cantVoteOwnDesc": "You can't vote on your own ideas 😅",
+    "cantVoteOwnDesc": "That would be like liking your own selfie... a bit narcissistic 😅",
     "cantSuggestOwn": "Can't suggest to yourself",
-    "cantSuggestOwnDesc": "You can't suggest ideas to your own profile 😅"
+    "cantSuggestOwnDesc": "Suggesting ideas to yourself? That's like texting yourself on WhatsApp 😅"
   },
   "roles": {
     "audience": "Audience member"
