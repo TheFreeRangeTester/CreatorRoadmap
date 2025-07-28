@@ -72,7 +72,7 @@ export interface IStorage {
   deleteStoreItem(id: number): Promise<void>;
   
   // Store redemption operations
-  getStoreRedemptions(creatorId: number, limit?: number, offset?: number): Promise<{ redemptions: StoreRedemptionResponse[]; total: number; }>;
+  getStoreRedemptions(creatorId: number, limit?: number, offset?: number, status?: 'pending' | 'completed'): Promise<{ redemptions: StoreRedemptionResponse[]; total: number; }>;
   createStoreRedemption(redemption: InsertStoreRedemption, userId: number): Promise<StoreRedemptionResponse>;
   updateRedemptionStatus(id: number, status: 'pending' | 'completed'): Promise<StoreRedemptionResponse | undefined>;
   
@@ -715,10 +715,16 @@ export class MemStorage implements IStorage {
     });
   }
 
-  async getStoreRedemptions(creatorId: number, limit: number = 10, offset: number = 0): Promise<{ redemptions: StoreRedemptionResponse[]; total: number; }> {
-    const allRedemptions = Array.from(this.storeRedemptions.values())
-      .filter(redemption => redemption.creatorId === creatorId)
-      .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
+  async getStoreRedemptions(creatorId: number, limit: number = 10, offset: number = 0, status?: 'pending' | 'completed'): Promise<{ redemptions: StoreRedemptionResponse[]; total: number; }> {
+    let allRedemptions = Array.from(this.storeRedemptions.values())
+      .filter(redemption => redemption.creatorId === creatorId);
+    
+    // Apply status filter if provided
+    if (status) {
+      allRedemptions = allRedemptions.filter(redemption => redemption.status === status);
+    }
+    
+    allRedemptions = allRedemptions.sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
     
     const total = allRedemptions.length;
     const redemptions = allRedemptions.slice(offset, offset + limit);

@@ -238,6 +238,7 @@
     "copyDesc": "Link copied to clipboard: {{url}}",
     "copyError": "Copy failed",
     "copyErrorDesc": "Could not copy to clipboard",
+    "actions": "Actions",
     "copyManualDesc": "Please copy manually: {{url}}",
     "copyExecCommandError": "Could not copy using execCommand",
     "alreadyVoted": "Already voted",

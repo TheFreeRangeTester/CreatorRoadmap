@@ -1801,9 +1801,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       const page = parseInt(req.query.page as string) || 1;
       const limit = 10;
+      const status = req.query.status as 'pending' | 'completed' | undefined;
       const offset = (page - 1) * limit;
 
-      const result = await storage.getStoreRedemptions(userId, limit, offset);
+      const result = await storage.getStoreRedemptions(userId, limit, offset, status);
       
       res.json({
         redemptions: result.redemptions,

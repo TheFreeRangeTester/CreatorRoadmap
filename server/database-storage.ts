@@ -656,12 +656,18 @@ export class DatabaseStorage implements IStorage {
     });
   }
 
-  async getStoreRedemptions(creatorId: number, limit: number = 10, offset: number = 0): Promise<{ redemptions: StoreRedemptionResponse[]; total: number; }> {
+  async getStoreRedemptions(creatorId: number, limit: number = 10, offset: number = 0, status?: 'pending' | 'completed'): Promise<{ redemptions: StoreRedemptionResponse[]; total: number; }> {
+    // Build where conditions
+    const whereConditions = [eq(storeRedemptions.creatorId, creatorId)];
+    if (status) {
+      whereConditions.push(eq(storeRedemptions.status, status));
+    }
+    
     // Get total count
     const [totalResult] = await db
       .select({ count: sql<number>`count(*)` })
       .from(storeRedemptions)
-      .where(eq(storeRedemptions.creatorId, creatorId));
+      .where(and(...whereConditions));
     
     const total = totalResult.count;
     
@@ -684,7 +690,7 @@ export class DatabaseStorage implements IStorage {
       .from(storeRedemptions)
       .innerJoin(users, eq(storeRedemptions.userId, users.id))
       .innerJoin(storeItems, eq(storeRedemptions.storeItemId, storeItems.id))
-      .where(eq(storeRedemptions.creatorId, creatorId))
+      .where(and(...whereConditions))
       .orderBy(desc(storeRedemptions.createdAt))
       .limit(limit)
       .offset(offset);

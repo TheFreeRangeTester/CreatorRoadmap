@@ -238,6 +238,7 @@
     "copyDesc": "Enlace copiado al portapapeles: {{url}}",
     "copyError": "Error al copiar",
     "copyErrorDesc": "No se pudo copiar al portapapeles",
+    "actions": "Acciones",
     "copyManualDesc": "Por favor copia manualmente: {{url}}",
     "copyExecCommandError": "No se pudo copiar usando execCommand",
     "alreadyVoted": "Ya votaste",

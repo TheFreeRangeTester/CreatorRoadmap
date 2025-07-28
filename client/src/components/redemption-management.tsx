@@ -27,11 +27,16 @@ export function RedemptionManagement() {
   const { toast } = useToast();
   const queryClient = useQueryClient();
   const [currentPage, setCurrentPage] = useState(1);
+  const [statusFilter, setStatusFilter] = useState<'all' | 'pending' | 'completed'>('pending');
 
   const { data, isLoading } = useQuery<RedemptionData>({
-    queryKey: ['/api/store/redemptions', currentPage],
+    queryKey: ['/api/store/redemptions', currentPage, statusFilter],
     queryFn: async () => {
-      const response = await apiRequest(`/api/store/redemptions?page=${currentPage}`);
+      const params = new URLSearchParams({ page: currentPage.toString() });
+      if (statusFilter !== 'all') {
+        params.set('status', statusFilter);
+      }
+      const response = await apiRequest(`/api/store/redemptions?${params}`);
       return response.json();
     },
   });
@@ -92,11 +97,26 @@ export function RedemptionManagement() {
           </h2>
           <p className="text-muted-foreground mt-1">{t('redemptions.description')}</p>
         </div>
-        <div className="flex items-center gap-2">
-          <Users className="h-4 w-4 text-muted-foreground" />
-          <span className="text-sm text-muted-foreground">
-            {pagination?.total || 0} {t('redemptions.allRedemptions')}
-          </span>
+        <div className="flex items-center gap-4">
+          <Select value={statusFilter} onValueChange={(value: 'all' | 'pending' | 'completed') => {
+            setStatusFilter(value);
+            setCurrentPage(1);
+          }}>
+            <SelectTrigger className="w-[180px]">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="pending">{t('redemptions.pendingRedemptions')}</SelectItem>
+              <SelectItem value="completed">{t('redemptions.completedRedemptions')}</SelectItem>
+              <SelectItem value="all">{t('redemptions.allRedemptions')}</SelectItem>
+            </SelectContent>
+          </Select>
+          <div className="flex items-center gap-2">
+            <Users className="h-4 w-4 text-muted-foreground" />
+            <span className="text-sm text-muted-foreground">
+              {pagination?.total || 0} {t('redemptions.allRedemptions')}
+            </span>
+          </div>
         </div>
       </div>
 
@@ -139,7 +159,7 @@ export function RedemptionManagement() {
                           <div className="flex items-center gap-2">
                             <User className="h-4 w-4 text-muted-foreground" />
                             <div>
-                              <div className="font-medium">{redemption.userName}</div>
+                              <div className="font-medium">{redemption.userUsername}</div>
                               <div className="text-sm text-muted-foreground flex items-center gap-1">
                                 <Mail className="h-3 w-3" />
                                 {redemption.userEmail}
@@ -149,9 +169,9 @@ export function RedemptionManagement() {
                         </TableCell>
                         <TableCell>
                           <div>
-                            <div className="font-medium">{redemption.itemTitle}</div>
+                            <div className="font-medium">{redemption.storeItemTitle}</div>
                             <div className="text-sm text-muted-foreground">
-                              {redemption.itemDescription}
+                              {redemption.storeItemDescription}
                             </div>
                           </div>
                         </TableCell>
