@@ -10,6 +10,12 @@ interface UserPointsData {
 }
 
 interface AudienceStatsData {
+  votesGiven: number | string;
+  ideasSuggested: number | string;
+  ideasApproved: number | string;
+}
+
+interface NormalizedStatsData {
   votesGiven: number;
   ideasSuggested: number;
   ideasApproved: number;
@@ -17,10 +23,10 @@ interface AudienceStatsData {
 
 interface ReactiveStats {
   points: UserPointsData | null;
-  stats: AudienceStatsData | null;
+  stats: NormalizedStatsData | null;
   isLoading: boolean;
   updatePoints: (newPoints: Partial<UserPointsData>) => void;
-  updateStats: (newStats: Partial<AudienceStatsData>) => void;
+  updateStats: (newStats: Partial<NormalizedStatsData>) => void;
   addVote: () => void;
   spendPoints: (amount: number, type: 'suggestion' | 'store') => void;
 }
@@ -31,7 +37,7 @@ export function useReactiveStats(): ReactiveStats {
   
   // Local reactive state
   const [localPoints, setLocalPoints] = useState<UserPointsData | null>(null);
-  const [localStats, setLocalStats] = useState<AudienceStatsData | null>(null);
+  const [localStats, setLocalStats] = useState<NormalizedStatsData | null>(null);
   
   // Query for points data
   const { data: pointsData, isLoading: pointsLoading } = useQuery<UserPointsData>({
@@ -49,16 +55,24 @@ export function useReactiveStats(): ReactiveStats {
   
   // Update local state when server data changes
   useEffect(() => {
-    if (pointsData && !localPoints) {
+    if (pointsData) {
+      console.log('[REACTIVE-STATS] Syncing points from server:', pointsData);
       setLocalPoints(pointsData);
     }
-  }, [pointsData, localPoints]);
+  }, [pointsData]);
   
   useEffect(() => {
-    if (statsData && !localStats) {
-      setLocalStats(statsData);
+    if (statsData) {
+      console.log('[REACTIVE-STATS] Syncing stats from server:', statsData);
+      // Convert string values to numbers if needed
+      const normalizedStats = {
+        votesGiven: typeof statsData.votesGiven === 'string' ? parseInt(statsData.votesGiven) : statsData.votesGiven,
+        ideasSuggested: typeof statsData.ideasSuggested === 'string' ? parseInt(statsData.ideasSuggested) : statsData.ideasSuggested,
+        ideasApproved: typeof statsData.ideasApproved === 'string' ? parseInt(statsData.ideasApproved) : statsData.ideasApproved,
+      };
+      setLocalStats(normalizedStats);
     }
-  }, [statsData, localStats]);
+  }, [statsData]);
   
   // Function to update points optimistically
   const updatePoints = useCallback((newPoints: Partial<UserPointsData>) => {
@@ -66,7 +80,7 @@ export function useReactiveStats(): ReactiveStats {
   }, []);
   
   // Function to update stats optimistically
-  const updateStats = useCallback((newStats: Partial<AudienceStatsData>) => {
+  const updateStats = useCallback((newStats: Partial<NormalizedStatsData>) => {
     setLocalStats(current => current ? { ...current, ...newStats } : null);
   }, []);
   
@@ -139,7 +153,7 @@ export function useReactiveStats(): ReactiveStats {
   
   return {
     points: localPoints || pointsData || null,
-    stats: localStats || statsData || null,
+    stats: localStats,
     isLoading: pointsLoading || statsLoading,
     updatePoints,
     updateStats,
