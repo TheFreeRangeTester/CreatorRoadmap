@@ -141,16 +141,18 @@ export default function IdeaCard({
       transition: { duration: 0.3 },
     },
     hover: {
-      y: -5,
+      y: -3,
+      scale: 1.01,
       boxShadow:
-        "0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)",
+        "0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1)",
       transition: {
         type: "spring",
-        stiffness: 400,
-        damping: 10,
+        stiffness: 300,
+        damping: 20,
+        duration: 0.2,
       },
     },
-    tap: { scale: 0.98 },
+    tap: { scale: 0.99 },
   };
 
   const positionBadgeVariants = {
@@ -229,22 +231,22 @@ export default function IdeaCard({
       <Card
         className={`idea-card overflow-hidden dark:bg-gray-800 dark:border-gray-700 ${getGradientClass(
           idea.id
-        )}`}
+        )} h-full flex flex-col`}
       >
-        <CardContent className="p-4 sm:p-6">
+        <CardContent className="p-4 sm:p-6 flex flex-col h-full min-h-[200px]">
           <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start mb-3 sm:mb-4 space-y-2 sm:space-y-0">
-            <h3 className="text-base sm:text-lg font-semibold text-neutral-800 dark:text-white leading-tight pr-2">
+            <h3 className="text-base sm:text-lg font-semibold text-neutral-800 dark:text-white leading-tight pr-2 line-clamp-2">
               {idea.title}
             </h3>
             <motion.span
               variants={positionBadgeVariants}
-              className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-semibold self-start ${position.className}`}
+              className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-semibold self-start flex-shrink-0 ${position.className}`}
             >
               {position.icon}
               {position.text}
             </motion.span>
           </div>
-          <p className="text-neutral-600 dark:text-neutral-300 text-sm leading-relaxed mb-3 sm:mb-4">
+          <p className="text-neutral-600 dark:text-neutral-300 text-sm leading-relaxed mb-3 sm:mb-4 line-clamp-3 flex-grow">
             {idea.description}
           </p>
 
@@ -257,7 +259,7 @@ export default function IdeaCard({
             </div>
           )}
 
-          <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center space-y-3 sm:space-y-0">
+          <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center space-y-3 sm:space-y-0 mt-auto">
             <div className="flex items-center">
               {/* Solo mostrar el botón de voto cuando NO estamos en el dashboard del creador y no es el creador de la idea */}
               {!onEdit &&
@@ -268,7 +270,7 @@ export default function IdeaCard({
                     variants={buttonVariants}
                     whileHover="hover"
                     whileTap="tap"
-                    className={`flex items-center px-3 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-1 dark:focus:ring-offset-gray-800 min-w-[80px] text-sm ${
+                    className={`flex items-center px-3 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-1 dark:focus:ring-offset-gray-800 min-w-[80px] text-sm transition-all duration-200 ${
                       hasVoted
                         ? "bg-neutral-100 dark:bg-gray-700 text-neutral-400 dark:text-neutral-500 cursor-not-allowed"
                         : "bg-primary-50 dark:bg-primary-900/50 text-primary dark:text-primary-300 hover:bg-primary-100 dark:hover:bg-primary-800/70"
@@ -295,7 +297,7 @@ export default function IdeaCard({
                     variants={buttonVariants}
                     whileHover="hover"
                     whileTap="tap"
-                    className="flex items-center px-3 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-1 dark:focus:ring-offset-gray-800 min-w-[80px] text-sm bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 hover:bg-blue-100 dark:hover:bg-blue-800/50 border border-blue-200 dark:border-blue-700"
+                    className="flex items-center px-3 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-1 dark:focus:ring-offset-gray-800 min-w-[80px] text-sm bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 hover:bg-blue-100 dark:hover:bg-blue-800/50 border border-blue-200 dark:border-blue-700 transition-all duration-200"
                     onClick={() => {
                       // Store the current page for redirect after login
                       localStorage.setItem(
@@ -314,7 +316,7 @@ export default function IdeaCard({
               <motion.span
                 className={`${
                   !onEdit && !onDelete ? "ml-2" : ""
-                } text-sm font-semibold ${
+                } text-sm font-semibold transition-colors duration-200 ${
                   isVoteAnimating
                     ? "text-primary dark:text-primary-400"
                     : "text-neutral-700 dark:text-neutral-300"
@@ -348,7 +350,7 @@ export default function IdeaCard({
                     whileHover={{ scale: 1.1, rotate: 5 }}
                     whileTap={{ scale: 0.9 }}
                     onClick={() => onEdit(idea)}
-                    className="p-2 text-neutral-400 hover:text-neutral-500 dark:text-neutral-400 dark:hover:text-neutral-300 rounded-md hover:bg-neutral-100 dark:hover:bg-gray-700"
+                    className="p-2 text-neutral-400 hover:text-neutral-500 dark:text-neutral-400 dark:hover:text-neutral-300 rounded-md hover:bg-neutral-100 dark:hover:bg-gray-700 transition-all duration-200"
                     aria-label="Edit idea"
                   >
                     <Pencil className="w-4 h-4 sm:w-5 sm:h-5" />
@@ -359,7 +361,7 @@ export default function IdeaCard({
                     whileHover={{ scale: 1.1, rotate: 5 }}
                     whileTap={{ scale: 0.9 }}
                     onClick={() => onDelete(idea.id)}
-                    className="p-2 text-neutral-400 hover:text-red-500 dark:text-neutral-400 dark:hover:text-red-400 rounded-md hover:bg-neutral-100 dark:hover:bg-gray-700"
+                    className="p-2 text-neutral-400 hover:text-red-500 dark:text-neutral-400 dark:hover:text-red-400 rounded-md hover:bg-neutral-100 dark:hover:bg-gray-700 transition-all duration-200"
                     aria-label="Delete idea"
                   >
                     <Trash2 className="w-4 h-4 sm:w-5 sm:h-5" />

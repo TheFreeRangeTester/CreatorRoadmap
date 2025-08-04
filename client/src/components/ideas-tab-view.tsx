@@ -302,7 +302,7 @@ export function IdeasTabView({ mode = "published" }: IdeasTabViewProps) {
   if (mode === "published") {
     return (
       <>
-        <div className="grid gap-6 grid-cols-1 md:grid-cols-2">
+        <div className="grid gap-6 grid-cols-1 md:grid-cols-2 auto-rows-fr">
           {displayedIdeas.map((idea) => (
             <IdeaCard
               key={idea.id}
@@ -334,25 +334,25 @@ export function IdeasTabView({ mode = "published" }: IdeasTabViewProps) {
   // Render suggested ideas
   return (
     <>
-      <div className="grid gap-6 grid-cols-1 md:grid-cols-2">
+      <div className="grid gap-6 grid-cols-1 md:grid-cols-2 auto-rows-fr">
         {displayedIdeas.map((idea) => (
           <div
             key={idea.id}
-            className="border border-gray-200 dark:border-gray-700 rounded-xl p-4 bg-white dark:bg-gray-800 shadow-sm hover:shadow-md transition-shadow"
+            className="border border-gray-200 dark:border-gray-700 rounded-xl p-4 bg-white dark:bg-gray-800 shadow-sm hover:shadow-md transition-all duration-200 h-full flex flex-col min-h-[200px]"
           >
             <div className="mb-2 flex justify-between items-start">
-              <h3 className="font-medium text-lg dark:text-white">
+              <h3 className="font-medium text-lg dark:text-white line-clamp-2 pr-2 flex-grow">
                 {idea.title}
               </h3>
               <Badge
                 variant="outline"
-                className="bg-amber-100 text-amber-700 border-amber-200 dark:bg-amber-900/30 dark:text-amber-300 dark:border-amber-800"
+                className="bg-amber-100 text-amber-700 border-amber-200 dark:bg-amber-900/30 dark:text-amber-300 dark:border-amber-800 flex-shrink-0"
               >
                 <Clock className="h-3 w-3 mr-1" /> {t("ideas.pending")}
               </Badge>
             </div>
 
-            <p className="text-gray-600 dark:text-gray-300 mb-3">
+            <p className="text-gray-600 dark:text-gray-300 mb-3 line-clamp-3 flex-grow">
               {idea.description}
             </p>
 
@@ -364,11 +364,11 @@ export function IdeasTabView({ mode = "published" }: IdeasTabViewProps) {
               </div>
             )}
 
-            <div className="flex justify-end gap-2 mt-3">
+            <div className="flex justify-end gap-2 mt-auto">
               <Button
                 variant="outline"
                 size="sm"
-                className="border-red-200 text-red-600 hover:text-red-700 hover:bg-red-50 dark:border-red-900 dark:text-red-400 dark:hover:bg-red-900/30"
+                className="border-red-200 text-red-600 hover:text-red-700 hover:bg-red-50 dark:border-red-900 dark:text-red-400 dark:hover:bg-red-900/30 transition-all duration-200"
                 onClick={() => handleReject(idea.id)}
                 disabled={processingIdea === idea.id}
               >
@@ -382,7 +382,7 @@ export function IdeasTabView({ mode = "published" }: IdeasTabViewProps) {
               <Button
                 variant="outline"
                 size="sm"
-                className="border-green-200 text-green-600 hover:text-green-700 hover:bg-green-50 dark:border-green-900 dark:text-green-400 dark:hover:bg-green-900/30"
+                className="border-green-200 text-green-600 hover:text-green-700 hover:bg-green-50 dark:border-green-900 dark:text-green-400 dark:hover:bg-green-900/30 transition-all duration-200"
                 onClick={() => handleApprove(idea.id)}
                 disabled={processingIdea === idea.id}
               >
