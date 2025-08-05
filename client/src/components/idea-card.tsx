@@ -236,9 +236,9 @@ export default function IdeaCard({
           idea.id
         )} h-full flex flex-col`}
       >
-        <CardContent className="p-4 sm:p-6 flex flex-col h-full min-h-[200px]">
-          <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start mb-3 sm:mb-4 space-y-2 sm:space-y-0">
-            <h3 className="text-base sm:text-lg font-semibold text-neutral-800 dark:text-white leading-tight pr-2 line-clamp-2">
+        <CardContent className="p-4 sm:p-5 flex flex-col h-full min-h-[180px]">
+          <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start mb-2 sm:mb-3 space-y-2 sm:space-y-0">
+            <h3 className="text-sm sm:text-base font-heading font-semibold text-neutral-800 dark:text-white leading-tight pr-2 line-clamp-2 contained-text">
               {idea.title}
             </h3>
             <motion.span
@@ -249,7 +249,7 @@ export default function IdeaCard({
               {position.text}
             </motion.span>
           </div>
-          <p className="text-neutral-600 dark:text-neutral-300 text-sm leading-relaxed mb-3 sm:mb-4 line-clamp-3 flex-grow">
+          <p className="text-neutral-600 dark:text-neutral-300 text-xs sm:text-sm leading-relaxed mb-2 sm:mb-3 line-clamp-3 flex-grow contained-text">
             {idea.description}
           </p>
 
@@ -273,7 +273,7 @@ export default function IdeaCard({
                     variants={buttonVariants}
                     whileHover="hover"
                     whileTap="tap"
-                    className={`glass-card flex items-center px-4 py-2.5 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/50 focus:ring-offset-1 dark:focus:ring-offset-gray-800 min-w-[90px] text-sm font-medium transition-all duration-300 ${
+                    className={`glass-card flex items-center px-3 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/50 focus:ring-offset-1 dark:focus:ring-offset-gray-800 min-w-[80px] text-xs sm:text-sm font-medium transition-all duration-300 ${
                       hasVoted
                         ? "opacity-60 cursor-not-allowed"
                         : "hover:scale-105 active:scale-95"
@@ -305,7 +305,7 @@ export default function IdeaCard({
                     variants={buttonVariants}
                     whileHover="hover"
                     whileTap="tap"
-                    className="glass-card flex items-center px-4 py-2.5 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:ring-offset-1 dark:focus:ring-offset-gray-800 min-w-[120px] text-sm font-medium hover:scale-105 active:scale-95 transition-all duration-300"
+                    className="glass-card flex items-center px-3 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:ring-offset-1 dark:focus:ring-offset-gray-800 min-w-[100px] text-xs sm:text-sm font-medium hover:scale-105 active:scale-95 transition-all duration-300"
                     onClick={() => {
                       // Store the current page for redirect after login
                       localStorage.setItem(

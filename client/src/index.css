@@ -70,15 +70,15 @@
   }
 
   h1 {
-    @apply text-4xl md:text-5xl lg:text-6xl leading-tight;
+    @apply text-3xl md:text-4xl lg:text-5xl leading-tight;
   }
 
   h2 {
-    @apply text-3xl md:text-4xl leading-tight;
+    @apply text-2xl md:text-3xl lg:text-4xl leading-tight;
   }
 
   h3 {
-    @apply text-2xl md:text-3xl leading-snug;
+    @apply text-xl md:text-2xl leading-snug;
   }
 
   button {
@@ -143,15 +143,23 @@
 
   /* Enhanced glassmorphism effect */
   .glass-card {
-    background: rgba(255, 255, 255, 0.1);
+    background: rgba(255, 255, 255, 0.15);
     backdrop-filter: blur(20px);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.25);
   }
 
   .dark .glass-card {
-    background: rgba(17, 24, 39, 0.2);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: rgba(17, 24, 39, 0.25);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.4);
+  }
+
+  /* Ensure text stays within containers */
+  .contained-text {
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    hyphens: auto;
   }
 
   /* Consistent text truncation */
