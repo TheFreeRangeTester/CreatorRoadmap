@@ -143,24 +143,24 @@ export function PublicStore({ creatorUsername, isAuthenticated }: PublicStorePro
           const isOutOfStock = item.maxQuantity !== null && item.currentQuantity >= item.maxQuantity;
 
           return (
-            <Card key={item.id} className={`relative ${!isAvailable ? 'opacity-60' : ''}`}>
-              <CardHeader className="pb-3">
+            <Card key={item.id} className={`relative rounded-3xl glass-card ${!isAvailable ? 'opacity-60' : ''}`}>
+              <CardHeader className="pb-2 px-4 pt-4">
                 <div className="flex items-start justify-between">
-                  <CardTitle className="text-lg">{item.title}</CardTitle>
+                  <CardTitle className="text-base sm:text-lg leading-tight line-clamp-2 contained-text pr-2">{item.title}</CardTitle>
                   <Badge variant="secondary" className="flex items-center gap-1">
                     <Star className="h-3 w-3" />
                     {item.pointsCost}
                   </Badge>
                 </div>
               </CardHeader>
-              <CardContent>
-                <p className="text-sm text-muted-foreground mb-4">
+              <CardContent className="px-4 pb-4">
+                <p className="text-xs sm:text-sm text-muted-foreground mb-3 line-clamp-3 contained-text leading-relaxed">
                   {item.description}
                 </p>
                 
                 {item.maxQuantity !== null && (
-                  <div className="flex items-center justify-between text-sm mb-4">
-                    <span className="text-muted-foreground">{t('store.itemsLeft')}:</span>
+                  <div className="flex items-center justify-between text-xs sm:text-sm mb-3">
+                    <span className="text-muted-foreground contained-text">{t('store.itemsLeft')}:</span>
                     <span className="font-medium text-orange-600">
                       {item.maxQuantity - item.currentQuantity}
                     </span>

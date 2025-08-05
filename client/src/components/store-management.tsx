@@ -118,10 +118,10 @@ export function StoreManagement() {
       ) : (
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
           {storeItems.map((item) => (
-            <Card key={item.id} className="relative">
-              <CardHeader className="pb-3">
+            <Card key={item.id} className="relative rounded-3xl glass-card">
+              <CardHeader className="pb-2 px-4 pt-4">
                 <div className="flex items-start justify-between">
-                  <CardTitle className="text-lg">{item.title}</CardTitle>
+                  <CardTitle className="text-base sm:text-lg leading-tight line-clamp-2 contained-text pr-2">{item.title}</CardTitle>
                   <div className="flex items-center gap-1">
                     <Button
                       variant="ghost"
@@ -161,18 +161,18 @@ export function StoreManagement() {
                   </div>
                 </div>
               </CardHeader>
-              <CardContent>
-                <p className="text-sm text-muted-foreground mb-3">
+              <CardContent className="px-4 pb-4">
+                <p className="text-xs sm:text-sm text-muted-foreground mb-3 line-clamp-3 contained-text leading-relaxed">
                   {item.description}
                 </p>
                 <div className="space-y-2">
                   <div className="flex items-center justify-between">
-                    <span className="text-sm font-medium">{t('store.pointsCost')}</span>
-                    <Badge variant="secondary">{item.pointsCost} pts</Badge>
+                    <span className="text-xs sm:text-sm font-medium contained-text">{t('store.pointsCost')}</span>
+                    <Badge variant="secondary" className="text-xs">{item.pointsCost} pts</Badge>
                   </div>
                   <div className="flex items-center justify-between">
-                    <span className="text-sm font-medium">{t('store.currentQuantity')}</span>
-                    <span className="text-sm">
+                    <span className="text-xs sm:text-sm font-medium contained-text">{t('store.currentQuantity')}</span>
+                    <span className="text-xs sm:text-sm">
                       {item.currentQuantity}
                       {item.maxQuantity !== null && ` / ${item.maxQuantity}`}
                     </span>

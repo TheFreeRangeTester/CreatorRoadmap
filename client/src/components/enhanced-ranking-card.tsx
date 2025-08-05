@@ -249,7 +249,7 @@ export default function EnhancedRankingCard({
           {/* Contenido principal */}
           <div className="flex-1 p-4 md:p-6">
             <div className="flex justify-between items-start mb-2">
-              <h3 className="text-lg md:text-xl font-bold dark:text-white line-clamp-2 pr-2">
+              <h3 className="text-base md:text-lg font-heading font-bold dark:text-white line-clamp-2 pr-2 contained-text leading-tight">
                 {idea.title}
               </h3>
               
@@ -275,7 +275,7 @@ export default function EnhancedRankingCard({
               </div>
             </div>
             
-            <p className="text-sm md:text-base text-gray-600 dark:text-gray-300 line-clamp-2 mb-4 leading-relaxed">
+            <p className="text-xs md:text-sm text-gray-600 dark:text-gray-300 line-clamp-2 mb-3 leading-relaxed contained-text">
               {idea.description}
             </p>
 
