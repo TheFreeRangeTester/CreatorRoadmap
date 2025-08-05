@@ -213,105 +213,71 @@ export default function EnhancedRankingCard({
         )}
       </AnimatePresence>
 
-      <Card className={`overflow-hidden border-0 ${medalInfo.shadow} hover:${medalInfo.glow} transition-all duration-500 ${medalInfo.bgColor} rounded-xl`}>
-        <div className="flex items-stretch">
-          {/* Indicador de posición con medallas */}
-          <motion.div 
-            className={`flex flex-col items-center justify-center w-20 md:w-24 text-white font-bold relative ${medalInfo.gradient} rounded-l-xl`}
-            whileHover={{ scale: 1.05 }}
-          >
-            {/* Número de ranking */}
-            <motion.span 
-              className="text-xl md:text-2xl font-black mb-1"
-              animate={isHovered ? { scale: 1.1 } : { scale: 1 }}
-              transition={{ duration: 0.2 }}
+      <Card className={`overflow-hidden border-0 ${medalInfo.shadow} hover:${medalInfo.glow} transition-all duration-500 ${medalInfo.bgColor} rounded-3xl glass-card`}>
+        <div className="flex flex-col">
+          {/* Contenido principal centrado */}
+          <div className="flex-1 p-6 text-center">
+            {/* Indicador de posición con medallas en la parte superior */}
+            <motion.div 
+              className={`inline-flex items-center justify-center w-16 h-16 md:w-18 md:h-18 text-white font-bold relative ${medalInfo.gradient} rounded-full mb-4 mx-auto`}
+              whileHover={{ scale: 1.1 }}
             >
-              #{rank}
-            </motion.span>
-            
-            {/* Medalla para top 3 */}
-            {medalInfo.emoji && (
+              {/* Número de ranking */}
               <motion.span 
-                className="text-2xl md:text-3xl"
-                animate={isSuccessVote ? { 
-                  scale: [1, 1.3, 1], 
-                  rotate: [0, 15, -15, 0] 
-                } : {}}
-                transition={{ duration: 0.6 }}
+                className="text-lg md:text-xl font-black"
+                animate={isHovered ? { scale: 1.1 } : { scale: 1 }}
+                transition={{ duration: 0.2 }}
               >
-                {medalInfo.emoji}
+                #{rank}
               </motion.span>
-            )}
-            
-
-          </motion.div>
-
-          {/* Contenido principal */}
-          <div className="flex-1 p-4 md:p-6">
-            <div className="flex justify-between items-start mb-2">
-              <h3 className="text-base md:text-lg font-heading font-bold dark:text-white line-clamp-2 pr-2 contained-text leading-tight">
-                {idea.title}
-              </h3>
               
-              {/* Badges de información */}
-              <div className="flex flex-col gap-1 ml-2">
-                {recentVotes24h > 0 && (
-                  <Badge 
-                    variant="secondary" 
-                    className="text-xs bg-green-100 text-green-800 dark:bg-green-900/50 dark:text-green-300"
-                  >
-                    🔥 {t("common.recentVotesToday", "+{{count}} hoy", { count: recentVotes24h })}
-                  </Badge>
-                )}
-                {showVotePreview && votesToNextRank > 0 && (
-                  <motion.div
-                    initial={{ opacity: 0, scale: 0.8 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    className="text-xs bg-primary/10 text-primary px-2 py-1 rounded-full"
-                  >
-                    {votesToNextRank} {t("common.votesToNextRank", "votos para subir")}
-                  </motion.div>
-                )}
-              </div>
-            </div>
+              {/* Medalla para top 3 - positioned absolutely */}
+              {medalInfo.emoji && (
+                <motion.span 
+                  className="absolute -top-2 -right-2 text-xl md:text-2xl"
+                  animate={isSuccessVote ? { 
+                    scale: [1, 1.3, 1], 
+                    rotate: [0, 15, -15, 0] 
+                  } : {}}
+                  transition={{ duration: 0.6 }}
+                >
+                  {medalInfo.emoji}
+                </motion.span>
+              )}
+            </motion.div>
+
+            {/* Título centrado */}
+            <h3 className="text-sm md:text-base font-heading font-bold dark:text-white line-clamp-2 mb-3 contained-text leading-tight">
+              {idea.title}
+            </h3>
             
-            <p className="text-xs md:text-sm text-gray-600 dark:text-gray-300 line-clamp-2 mb-3 leading-relaxed contained-text">
+            {/* Descripción centrada */}
+            <p className="text-xs md:text-sm text-gray-600 dark:text-gray-300 line-clamp-2 mb-4 leading-relaxed contained-text">
               {idea.description}
             </p>
 
-            {/* Información de votación en móvil */}
-            <div className="flex items-center justify-between md:hidden">
-              <div className="flex items-center gap-2">
-                <ThumbsUp className="h-4 w-4 text-gray-500" />
-                <span className="text-sm font-medium dark:text-white">
-                  {idea.votes} {t("common.votes", "votos")}
-                </span>
-                {/* Flecha de tendencia al lado del contador */}
-                <div className="ml-1">
-                  {getTrendIcon()}
-                </div>
-              </div>
+            {/* Información de votación centrada */}
+            <div className="flex items-center justify-center gap-2 mb-3">
+              <ThumbsUp className="h-4 w-4 text-gray-500" />
+              <span className="text-sm font-medium dark:text-white">
+                {idea.votes} {t("common.votes", "votos")}
+              </span>
             </div>
-          </div>
 
-          {/* Sección de votos - desktop */}
-          <div className="hidden md:flex flex-col items-center justify-center px-6 border-l border-gray-100 dark:border-gray-700 min-w-[120px]">
+            {/* Botón de voto centrado */}
             {isLoggedIn ? (
               isVoted ? (
-                <motion.div className="text-center">
+                <motion.div className="mb-4">
                   <Button 
                     disabled
-                    className="rounded-full w-14 h-14 text-white bg-green-500 hover:bg-green-500 mb-2"
+                    className="rounded-full w-12 h-12 text-white bg-green-500 hover:bg-green-500"
                     aria-label={t("common.voted", "Ya votado")}
                   >
-                    <ThumbsUp className="h-6 w-6" />
+                    <ThumbsUp className="h-5 w-5" />
                   </Button>
-                  <span className="text-xs text-green-600 dark:text-green-400 font-medium">
-                    {t("common.voted", "Votado")}
-                  </span>
                 </motion.div>
               ) : (
-                <motion.div className="text-center">
+                <motion.div className="mb-4">
                   <motion.div
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
@@ -319,133 +285,83 @@ export default function EnhancedRankingCard({
                     <Button
                       onClick={handleVoteClick}
                       disabled={isVoting || isSuccessVote}
-                      className={`rounded-full w-14 h-14 text-white transition-all duration-300 ${
+                      className={`rounded-full w-12 h-12 text-white transition-all duration-300 ${
                         isSuccessVote 
                           ? "bg-green-500 hover:bg-green-500" 
                           : `${medalInfo.gradient} hover:shadow-lg`
-                      } mb-2`}
+                      }`}
                       aria-label={t("common.vote", "Votar")}
                     >
                       {isVoting ? (
-                        <Loader2 className="h-6 w-6 animate-spin" />
+                        <Loader2 className="h-5 w-5 animate-spin" />
                       ) : isSuccessVote ? (
                         <motion.div
                           animate={{ scale: [1, 1.2, 1], rotate: [0, 10, 0] }}
                           transition={{ duration: 0.6 }}
                         >
-                          <ThumbsUp className="h-6 w-6" />
+                          <ThumbsUp className="h-5 w-5" />
                         </motion.div>
                       ) : (
                         <motion.div
                           animate={isHovered ? { y: -2 } : { y: 0 }}
                           transition={{ duration: 0.2 }}
                         >
-                          <ChevronUp className="h-6 w-6" />
+                          <ChevronUp className="h-5 w-5" />
                         </motion.div>
                       )}
                     </Button>
                   </motion.div>
-                  <span className="text-xs text-gray-600 dark:text-gray-400">
-                    {isSuccessVote ? t("common.voted", "¡Votado!") : t("common.vote", "Votar")}
-                  </span>
                 </motion.div>
               )
             ) : (
-              <motion.div className="text-center">
+              <motion.div className="mb-4">
                 <motion.div
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                 >
                   <Button
-                    className={`rounded-full w-14 h-14 text-white ${medalInfo.gradient} hover:shadow-lg mb-2`}
+                    className={`rounded-full w-12 h-12 text-white ${medalInfo.gradient} hover:shadow-lg`}
                     aria-label={t("common.loginToVote", "Inicia sesión para votar")}
                     onClick={() => {
                       localStorage.setItem('redirectAfterAuth', window.location.href);
                       window.location.href = '/auth';
                     }}
                   >
-                    <ChevronUp className="h-6 w-6" />
+                    <ChevronUp className="h-5 w-5" />
                   </Button>
                 </motion.div>
-                <span className="text-xs text-gray-600 dark:text-gray-400">
-                  {t("common.loginToVote", "Inicia sesión")}
-                </span>
               </motion.div>
             )}
-            
-            {/* Contador de votos con animación y tendencia */}
-            <motion.div 
-              className="mt-2 text-center"
-              animate={isSuccessVote ? { scale: [1, 1.3, 1] } : {}}
-              transition={{ duration: 0.6 }}
-            >
-              <div className="flex items-center justify-center gap-2">
-                <div className="text-2xl font-bold dark:text-white">
-                  {idea.votes}
-                </div>
-                {/* Flecha de tendencia al lado del contador en desktop */}
-                {getTrendIcon()}
-              </div>
-              <div className="text-xs text-gray-500 dark:text-gray-400">
-                {idea.votes === 1 ? t("badges.vote", "voto") : t("common.votes", "votos")}
-              </div>
-            </motion.div>
           </div>
-        </div>
 
-        {/* Botón de votación móvil - con mejor espaciado */}
-        <div className="md:hidden p-4 pt-3 mt-2 border-t border-gray-100 dark:border-gray-700">
-          {isLoggedIn ? (
-            isVoted ? (
-              <Button 
-                disabled
-                className="w-full bg-green-500 hover:bg-green-500 text-white"
-              >
-                <ThumbsUp className="h-4 w-4 mr-2" />
-                {t("common.voted", "Ya votaste")} ({idea.votes} {t("common.votes", "votos")})
-              </Button>
-            ) : (
-              <motion.div whileTap={{ scale: 0.98 }}>
-                <Button
-                  onClick={handleVoteClick}
-                  disabled={isVoting || isSuccessVote}
-                  className={`w-full text-white transition-all duration-300 ${
-                    isSuccessVote 
-                      ? "bg-green-500 hover:bg-green-500" 
-                      : `${medalInfo.gradient} hover:shadow-lg`
-                  }`}
+          {/* Badges de información de posición en la parte inferior */}
+          <div className="border-t border-gray-100 dark:border-gray-700 px-4 py-3">
+            <div className="flex items-center justify-center gap-4 text-center">
+              {/* Badges de actividad reciente */}
+              {recentVotes24h > 0 && (
+                <Badge 
+                  variant="secondary" 
+                  className="text-xs bg-green-100 text-green-800 dark:bg-green-900/50 dark:text-green-300"
                 >
-                  {isVoting ? (
-                    <>
-                      <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                      {t("common.voting", "Votando...")}
-                    </>
-                  ) : isSuccessVote ? (
-                    <>
-                      <ThumbsUp className="h-4 w-4 mr-2 animate-bounce" />
-                      {t("common.voted", "¡Votado!")} ({idea.votes} {t("common.votes", "votos")})
-                    </>
-                  ) : (
-                    <>
-                      <ChevronUp className="h-4 w-4 mr-2" />
-                      {t("common.vote", "Votar")} ({idea.votes} {t("common.votes", "votos")})
-                    </>
-                  )}
-                </Button>
-              </motion.div>
-            )
-          ) : (
-            <Button
-              className={`w-full text-white ${medalInfo.gradient}`}
-              onClick={() => {
-                localStorage.setItem('redirectAfterAuth', window.location.href);
-                window.location.href = '/auth';
-              }}
-            >
-              <ChevronUp className="h-4 w-4 mr-2" />
-              {t("common.loginToVote", "Inicia sesión para votar")} ({idea.votes} {t("common.votes", "votos")})
-            </Button>
-          )}
+                  🔥 {t("common.recentVotesToday", "+{{count}} hoy", { count: recentVotes24h })}
+                </Badge>
+              )}
+              
+              {/* Badge de cambio de posición */}
+              {getTrendIcon()}
+              
+              {/* Votos para siguiente rango */}
+              {showVotePreview && votesToNextRank > 0 && (
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  className="text-xs bg-primary/10 text-primary px-2 py-1 rounded-full"
+                >
+                  {votesToNextRank} {t("common.votesToNextRank", "votos para subir")}
+                </motion.div>
+              )}
+            </div>
+          </div>
         </div>
       </Card>
     </motion.div>
