@@ -234,29 +234,31 @@ export default function IdeaCard({
       <Card
         className={`idea-card overflow-hidden dark:bg-gray-800 dark:border-gray-700 ${getGradientClass(
           idea.id
-        )} h-full flex flex-col`}
+        )} h-full flex flex-col rounded-3xl oval-card`}
       >
-        <CardContent className="p-4 sm:p-5 flex flex-col h-full min-h-[180px]">
-          <div className="mb-2 sm:mb-3">
-            <h3 className="text-sm sm:text-base font-heading font-semibold text-neutral-800 dark:text-white leading-tight line-clamp-2 contained-text">
+        <CardContent className="p-6 sm:p-8 flex flex-col h-full min-h-[180px] text-center">
+          <div className="mb-3 sm:mb-4">
+            <h3 className="text-xs sm:text-sm font-heading font-semibold text-neutral-800 dark:text-white leading-tight line-clamp-2 contained-text px-2">
               {idea.title}
             </h3>
           </div>
-          <p className="text-neutral-600 dark:text-neutral-300 text-xs sm:text-sm leading-relaxed mb-2 sm:mb-3 line-clamp-3 flex-grow contained-text">
+          <p className="text-neutral-600 dark:text-neutral-300 text-xs leading-relaxed mb-3 sm:mb-4 line-clamp-3 flex-grow contained-text px-2">
             {idea.description}
           </p>
 
           {/* Mostrar badge si la idea fue sugerida por otro usuario */}
           {idea.suggestedByUsername && (
-            <div className="text-xs text-gray-500 dark:text-gray-400 mb-3 inline-flex items-center gap-1 bg-gray-100 dark:bg-gray-700 px-2 py-1 rounded-full">
-              <User className="h-3 w-3" />
-              {t("ideas.suggestedBy")}:{" "}
-              <span className="font-medium">{idea.suggestedByUsername}</span>
+            <div className="text-xs text-gray-500 dark:text-gray-400 mb-3 flex justify-center">
+              <div className="inline-flex items-center gap-1 bg-gray-100 dark:bg-gray-700 px-2 py-1 rounded-full">
+                <User className="h-3 w-3" />
+                {t("ideas.suggestedBy")}:{" "}
+                <span className="font-medium">{idea.suggestedByUsername}</span>
+              </div>
             </div>
           )}
 
-          <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center space-y-3 sm:space-y-0 mt-auto">
-            <div className="flex items-center">
+          <div className="flex flex-col items-center space-y-3 mt-auto">
+            <div className="flex justify-center">
               {/* Solo mostrar el botón de voto cuando NO estamos en el dashboard del creador y no es el creador de la idea */}
               {!onEdit &&
                 !onDelete &&
@@ -350,7 +352,7 @@ export default function IdeaCard({
 
             {/* Edit and Delete actions for creators */}
             {(onEdit || onDelete) && (
-              <div className="flex space-x-2 justify-end sm:justify-start">
+              <div className="flex space-x-2 justify-center">
                 {onEdit && (
                   <motion.button
                     whileHover={{ scale: 1.1, rotate: 5 }}
