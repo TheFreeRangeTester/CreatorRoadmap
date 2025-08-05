@@ -246,6 +246,31 @@ export default function EnhancedRankingCard({
               )}
             </motion.div>
 
+            {/* Badges de información en la parte superior */}
+            <div className="flex justify-center gap-2 mb-4">
+              {recentVotes24h > 0 && (
+                <Badge 
+                  variant="secondary" 
+                  className="text-xs bg-green-100 text-green-800 dark:bg-green-900/50 dark:text-green-300"
+                >
+                  🔥 {t("common.recentVotesToday", "+{{count}} hoy", { count: recentVotes24h })}
+                </Badge>
+              )}
+              
+              {/* Badge de cambio de posición */}
+              {getTrendIcon()}
+              
+              {showVotePreview && votesToNextRank > 0 && (
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  className="text-xs bg-primary/10 text-primary px-2 py-1 rounded-full"
+                >
+                  {votesToNextRank} {t("common.votesToNextRank", "votos para subir")}
+                </motion.div>
+              )}
+            </div>
+
             {/* Título centrado */}
             <h3 className="text-sm md:text-base font-heading font-bold dark:text-white line-clamp-2 mb-3 contained-text leading-tight">
               {idea.title}
@@ -334,34 +359,7 @@ export default function EnhancedRankingCard({
             )}
           </div>
 
-          {/* Badges de información de posición en la parte inferior */}
-          <div className="border-t border-gray-100 dark:border-gray-700 px-4 py-3">
-            <div className="flex items-center justify-center gap-4 text-center">
-              {/* Badges de actividad reciente */}
-              {recentVotes24h > 0 && (
-                <Badge 
-                  variant="secondary" 
-                  className="text-xs bg-green-100 text-green-800 dark:bg-green-900/50 dark:text-green-300"
-                >
-                  🔥 {t("common.recentVotesToday", "+{{count}} hoy", { count: recentVotes24h })}
-                </Badge>
-              )}
-              
-              {/* Badge de cambio de posición */}
-              {getTrendIcon()}
-              
-              {/* Votos para siguiente rango */}
-              {showVotePreview && votesToNextRank > 0 && (
-                <motion.div
-                  initial={{ opacity: 0, scale: 0.8 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  className="text-xs bg-primary/10 text-primary px-2 py-1 rounded-full"
-                >
-                  {votesToNextRank} {t("common.votesToNextRank", "votos para subir")}
-                </motion.div>
-              )}
-            </div>
-          </div>
+
         </div>
       </Card>
     </motion.div>

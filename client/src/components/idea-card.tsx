@@ -237,17 +237,10 @@ export default function IdeaCard({
         )} h-full flex flex-col`}
       >
         <CardContent className="p-4 sm:p-5 flex flex-col h-full min-h-[180px]">
-          <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start mb-2 sm:mb-3 space-y-2 sm:space-y-0">
-            <h3 className="text-sm sm:text-base font-heading font-semibold text-neutral-800 dark:text-white leading-tight pr-2 line-clamp-2 contained-text">
+          <div className="mb-2 sm:mb-3">
+            <h3 className="text-sm sm:text-base font-heading font-semibold text-neutral-800 dark:text-white leading-tight line-clamp-2 contained-text">
               {idea.title}
             </h3>
-            <motion.span
-              variants={positionBadgeVariants}
-              className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-semibold self-start flex-shrink-0 ${position.className}`}
-            >
-              {position.icon}
-              {position.text}
-            </motion.span>
           </div>
           <p className="text-neutral-600 dark:text-neutral-300 text-xs sm:text-sm leading-relaxed mb-2 sm:mb-3 line-clamp-3 flex-grow contained-text">
             {idea.description}
@@ -382,6 +375,19 @@ export default function IdeaCard({
                 )}
               </div>
             )}
+          </div>
+          
+          {/* Badge de posición en la parte inferior */}
+          <div className="pt-3 border-t border-gray-100 dark:border-gray-700 mt-auto">
+            <div className="flex justify-center">
+              <motion.span
+                variants={positionBadgeVariants}
+                className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-semibold ${position.className}`}
+              >
+                {position.icon}
+                {position.text}
+              </motion.span>
+            </div>
           </div>
         </CardContent>
       </Card>
