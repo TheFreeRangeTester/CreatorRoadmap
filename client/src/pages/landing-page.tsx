@@ -225,14 +225,14 @@ export default function LandingPage() {
                   >
                     <Button
                       size="lg"
-                      className="font-medium text-base bg-gradient-to-r from-purple-600 via-indigo-600 to-blue-600 hover:from-purple-700 hover:via-indigo-700 hover:to-blue-700 text-white px-8 py-3 shadow-lg hover:shadow-xl transition-all duration-300"
+                      className="modern-button font-heading font-semibold text-base bg-gradient-to-r from-purple-600 via-indigo-600 to-blue-600 hover:from-purple-700 hover:via-indigo-700 hover:to-blue-700 text-white px-10 py-4 shadow-2xl hover:shadow-purple-500/25 transition-all duration-500 rounded-xl"
                       onClick={() => {
                         localStorage.setItem("attemptingCreatorLogin", "true");
                       }}
                     >
-                      <Sparkles className="h-4 w-4 mr-2" />
+                      <Sparkles className="h-5 w-5 mr-3" />
                       {t("landing.cta.startFree")}
-                      <ArrowRight className="h-4 w-4 ml-2" />
+                      <ArrowRight className="h-5 w-5 ml-3" />
                     </Button>
                   </motion.div>
                 </Link>
@@ -244,7 +244,7 @@ export default function LandingPage() {
                     onClick={() => setIsDemoOpen(true)}
                     size="lg"
                     variant="outline"
-                    className="font-medium text-base px-8 py-3 border-2 border-purple-300 hover:border-purple-500 hover:bg-purple-50 dark:border-purple-600 dark:hover:border-purple-400 dark:hover:bg-purple-950/30 transition-all duration-300"
+                    className="glass-card font-heading font-semibold text-base px-10 py-4 border border-purple-200/50 hover:border-purple-400/60 backdrop-blur-xl hover:scale-105 active:scale-95 transition-all duration-300 rounded-xl"
                   >
                     {t("landing.cta.seeDemo")}
                   </Button>

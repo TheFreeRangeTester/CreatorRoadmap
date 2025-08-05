@@ -10,11 +10,14 @@ import {
   ThumbsUp,
   Loader2,
   User,
+  Heart,
+  TrendingUp,
 } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { IdeaResponse } from "@shared/schema";
 import { useTranslation } from "react-i18next";
 import { useAuth } from "@/hooks/use-auth";
+import { ModernIcon, IconBadge } from "@/components/modern-icon";
 
 interface IdeaCardProps {
   idea: IdeaResponse;
@@ -270,25 +273,30 @@ export default function IdeaCard({
                     variants={buttonVariants}
                     whileHover="hover"
                     whileTap="tap"
-                    className={`flex items-center px-3 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-1 dark:focus:ring-offset-gray-800 min-w-[80px] text-sm transition-all duration-200 ${
+                    className={`glass-card flex items-center px-4 py-2.5 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/50 focus:ring-offset-1 dark:focus:ring-offset-gray-800 min-w-[90px] text-sm font-medium transition-all duration-300 ${
                       hasVoted
-                        ? "bg-neutral-100 dark:bg-gray-700 text-neutral-400 dark:text-neutral-500 cursor-not-allowed"
-                        : "bg-primary-50 dark:bg-primary-900/50 text-primary dark:text-primary-300 hover:bg-primary-100 dark:hover:bg-primary-800/70"
+                        ? "opacity-60 cursor-not-allowed"
+                        : "hover:scale-105 active:scale-95"
                     }`}
                     onClick={handleVote}
                     disabled={hasVoted || isVoting}
                   >
                     {isVoting ? (
                       <span className="flex items-center justify-center">
-                        <Loader2 className="w-4 h-4 mr-1 animate-spin" />
-                        <span>{t("common.voting")}</span>
+                        <Loader2 className="w-4 h-4 mr-2 animate-spin text-primary" />
+                        <span className="text-primary">{t("common.voting")}</span>
                       </span>
                     ) : (
                       <>
-                        <motion.div variants={iconVariants}>
-                          <ThumbsUp className="w-4 h-4 mr-1" />
-                        </motion.div>
-                        {hasVoted ? t("common.voted") : t("common.vote")}
+                        <IconBadge
+                          icon={hasVoted ? Heart : ThumbsUp}
+                          size="sm"
+                          gradient={hasVoted ? "from-gray-400 to-gray-500" : "from-primary to-primary/80"}
+                          className="mr-2"
+                        />
+                        <span className={hasVoted ? "text-gray-500" : "text-primary font-semibold"}>
+                          {hasVoted ? t("common.voted") : t("common.vote")}
+                        </span>
                       </>
                     )}
                   </motion.button>
@@ -297,7 +305,7 @@ export default function IdeaCard({
                     variants={buttonVariants}
                     whileHover="hover"
                     whileTap="tap"
-                    className="flex items-center px-3 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-1 dark:focus:ring-offset-gray-800 min-w-[80px] text-sm bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 hover:bg-blue-100 dark:hover:bg-blue-800/50 border border-blue-200 dark:border-blue-700 transition-all duration-200"
+                    className="glass-card flex items-center px-4 py-2.5 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:ring-offset-1 dark:focus:ring-offset-gray-800 min-w-[120px] text-sm font-medium hover:scale-105 active:scale-95 transition-all duration-300"
                     onClick={() => {
                       // Store the current page for redirect after login
                       localStorage.setItem(
@@ -307,10 +315,15 @@ export default function IdeaCard({
                       window.location.href = "/auth";
                     }}
                   >
-                    <motion.div variants={iconVariants}>
-                      <ThumbsUp className="w-4 h-4 mr-1" />
-                    </motion.div>
-                    {t("common.loginToVote")}
+                    <IconBadge
+                      icon={TrendingUp}
+                      size="sm"
+                      gradient="from-blue-500 to-blue-600"
+                      className="mr-2"
+                    />
+                    <span className="text-blue-600 dark:text-blue-400 font-semibold">
+                      {t("common.loginToVote")}
+                    </span>
                   </motion.button>
                 ))}
               <motion.span
