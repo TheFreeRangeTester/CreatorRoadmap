@@ -217,9 +217,9 @@ export default function SuggestIdeaModal({
               <Label htmlFor="title" className="text-sm font-medium text-neutral-700 dark:text-neutral-300">{t('suggestIdea.titleLabel')}</Label>
               <Input
                 id="title"
-                placeholder={t('suggestIdea.titlePlaceholder')}
+                placeholder="Ej: Tutorial sobre edición de videos"
                 {...form.register("title")}
-                className="w-full text-center rounded-2xl glass-input"
+                className="w-full rounded-2xl glass-input"
               />
               {form.formState.errors.title && (
                 <p className="text-sm text-red-500 mt-1">
@@ -232,9 +232,9 @@ export default function SuggestIdeaModal({
               <Label htmlFor="description" className="text-sm font-medium text-neutral-700 dark:text-neutral-300">{t('suggestIdea.descriptionLabel')}</Label>
               <Textarea
                 id="description"
-                placeholder={t('suggestIdea.descriptionPlaceholder')}
+                placeholder="Sería genial que compartas tips sobre qué software usar, workflow de edición..."
                 {...form.register("description")}
-                className="min-h-[100px] text-center rounded-2xl glass-input"
+                className="min-h-[100px] rounded-2xl glass-input"
               />
               {form.formState.errors.description && (
                 <p className="text-sm text-red-500 mt-1">
