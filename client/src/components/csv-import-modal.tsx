@@ -229,13 +229,13 @@ export default function CSVImportModal({
 
   return (
     <Dialog open={open} onOpenChange={handleClose}>
-      <DialogContent className="max-w-4xl max-h-[90vh] overflow-hidden">
-        <DialogHeader>
-          <DialogTitle className="flex items-center gap-2">
+      <DialogContent className="max-w-4xl max-h-[90vh] overflow-hidden rounded-3xl glass-card text-center p-6 sm:p-8">
+        <DialogHeader className="text-center">
+          <DialogTitle className="font-heading text-lg sm:text-xl mb-2 flex items-center justify-center gap-2">
             <Upload className="h-5 w-5" />
             {t("csvImport.title", "Import Ideas from CSV")}
           </DialogTitle>
-          <DialogDescription>
+          <DialogDescription className="text-sm text-neutral-600 dark:text-neutral-300 px-4">
             {t("csvImport.description", "Upload a CSV file to import multiple ideas at once")}
           </DialogDescription>
         </DialogHeader>

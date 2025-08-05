@@ -199,4 +199,30 @@
     -webkit-box-orient: vertical;
     overflow: hidden;
   }
+
+  /* Glass input styling for forms */
+  .glass-input {
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 4px 16px 0 rgba(31, 38, 135, 0.2);
+    transition: all 0.3s ease;
+  }
+
+  .glass-input:focus {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(139, 92, 246, 0.3);
+    box-shadow: 0 6px 20px 0 rgba(139, 92, 246, 0.3);
+  }
+
+  .dark .glass-input {
+    background: rgba(17, 24, 39, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+  }
+
+  .dark .glass-input:focus {
+    background: rgba(17, 24, 39, 0.2);
+    border: 1px solid rgba(139, 92, 246, 0.4);
+  }
 }

@@ -177,14 +177,14 @@ export default function IdeaForm({ isOpen, idea, onClose }: IdeaFormProps) {
 
   return (
     <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
-      <DialogContent className="sm:max-w-[500px]">
-        <DialogHeader>
-          <DialogTitle>
+      <DialogContent className="sm:max-w-[500px] rounded-3xl glass-card text-center p-6 sm:p-8">
+        <DialogHeader className="text-center">
+          <DialogTitle className="font-heading text-lg sm:text-xl mb-2">
             {isEditing
               ? t("ideaForm.editTitle", "Edit idea")
               : t("ideaForm.addTitle", "Add new idea")}
           </DialogTitle>
-          <DialogDescription>
+          <DialogDescription className="text-sm text-neutral-600 dark:text-neutral-300 px-4">
             {isEditing
               ? t("ideaForm.editDescription", "Make changes to your idea.")
               : t(
@@ -198,13 +198,15 @@ export default function IdeaForm({ isOpen, idea, onClose }: IdeaFormProps) {
         {!isEditing && <IdeaLimitNotice />}
 
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6 px-2">
             <FormField
               control={form.control}
               name="title"
               render={({ field }) => (
-                <FormItem>
-                  <FormLabel>{t("ideaForm.title", "Title")}</FormLabel>
+                <FormItem className="text-center">
+                  <FormLabel className="text-sm font-medium text-neutral-700 dark:text-neutral-300">
+                    {t("ideaForm.title", "Title")}
+                  </FormLabel>
                   <FormControl>
                     <Input
                       placeholder={t(
@@ -213,6 +215,7 @@ export default function IdeaForm({ isOpen, idea, onClose }: IdeaFormProps) {
                       )}
                       maxLength={100}
                       disabled={isLimitReached}
+                      className="text-center rounded-2xl glass-input"
                       {...field}
                     />
                   </FormControl>
@@ -225,8 +228,8 @@ export default function IdeaForm({ isOpen, idea, onClose }: IdeaFormProps) {
               control={form.control}
               name="description"
               render={({ field }) => (
-                <FormItem>
-                  <FormLabel>
+                <FormItem className="text-center">
+                  <FormLabel className="text-sm font-medium text-neutral-700 dark:text-neutral-300">
                     {t("ideaForm.description", "Description")}
                   </FormLabel>
                   <FormControl>
@@ -236,12 +239,12 @@ export default function IdeaForm({ isOpen, idea, onClose }: IdeaFormProps) {
                         "Describe your idea in 280 characters or less"
                       )}
                       maxLength={280}
-                      className="resize-none h-24"
+                      className="resize-none h-24 text-center rounded-2xl glass-input"
                       disabled={isLimitReached}
                       {...field}
                     />
                   </FormControl>
-                  <div className="mt-1 text-xs text-neutral-500 text-right">
+                  <div className="mt-2 text-xs text-neutral-500">
                     {charCount}/280 {t("ideaForm.characters", "characters")}
                   </div>
                   <FormMessage />
@@ -249,7 +252,7 @@ export default function IdeaForm({ isOpen, idea, onClose }: IdeaFormProps) {
               )}
             />
 
-            <div className="flex justify-end space-x-3 pt-2">
+            <div className="flex justify-center space-x-3 pt-4">
               <Button type="button" variant="outline" onClick={onClose}>
                 {t("common.cancel", "Cancel")}
               </Button>
