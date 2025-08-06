@@ -238,4 +238,12 @@
     background: rgba(17, 24, 39, 0.2);
     border: 1px solid rgba(139, 92, 246, 0.4);
   }
+
+  /* Text truncation utilities */
+  .line-clamp-3 {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
 }
