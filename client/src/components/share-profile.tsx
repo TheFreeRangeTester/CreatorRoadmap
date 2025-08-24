@@ -78,23 +78,25 @@ export default function ShareProfile() {
 
   return (
     <div className="space-y-6">
-      <Card className="border-primary/20 dark:border-primary/10 bg-white dark:bg-gray-900">
-        <CardHeader className="pb-2 px-6 pt-6">
-          <div className="flex flex-col sm:flex-row sm:items-center gap-2 mb-3">
-            <CardTitle className="text-2xl font-bold truncate min-w-0 flex-1">
-              {t("dashboard.yourPublicProfile", "Tu Perfil Público")}
-            </CardTitle>
-            <div className="flex items-center gap-2 flex-shrink-0">
-              <SharingTipsTooltip />
-              <Badge
-                variant="secondary"
-                className="bg-blue-50 text-blue-700 dark:bg-blue-900/20 dark:text-blue-300 whitespace-nowrap"
-              >
-                {t("dashboard.publicView", "Enlace público")}
-              </Badge>
+      <Card className="border-primary/20 dark:border-primary/10 bg-white dark:bg-gray-900 w-full max-w-none overflow-hidden">
+        <CardHeader className="pb-4 px-4 sm:px-6 pt-6">
+          <div className="w-full space-y-3">
+            <div className="flex flex-col sm:flex-row sm:items-start gap-3">
+              <CardTitle className="text-xl sm:text-2xl font-bold break-words leading-tight flex-1 min-w-0">
+                {t("dashboard.yourPublicProfile", "Tu Perfil Público")}
+              </CardTitle>
+              <div className="flex items-center gap-2 flex-shrink-0 sm:self-start">
+                <SharingTipsTooltip />
+                <Badge
+                  variant="secondary"
+                  className="bg-blue-50 text-blue-700 dark:bg-blue-900/20 dark:text-blue-300 text-xs px-2 py-1"
+                >
+                  {t("dashboard.publicView", "Enlace público")}
+                </Badge>
+              </div>
             </div>
           </div>
-          <CardDescription className="text-sm leading-relaxed">
+          <CardDescription className="text-sm leading-relaxed break-words mt-2">
             {t(
               "dashboard.shareProfileDesc",
               "Este enlace dirige a tus seguidores a la versión pública de tu perfil, donde pueden ver y votar por tus ideas de contenido."

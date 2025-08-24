@@ -162,15 +162,15 @@ export default function ProfileEditor() {
   if (!user) return null;
 
   return (
-    <Card className="shadow-md border-t-4 border-t-primary rounded-lg overflow-hidden bg-white dark:bg-gray-900">
-      <CardHeader className="bg-gradient-to-r from-primary-50 to-blue-50 dark:from-primary-950/30 dark:to-blue-950/20 space-y-1 pb-6 px-6 pt-6">
-        <div className="flex items-center justify-between w-full">
-          <CardTitle className="text-xl font-semibold flex items-center gap-3 min-w-0 flex-1">
-            <Settings className="h-5 w-5 text-primary flex-shrink-0" />
-            <span className="truncate">{t("profile.editProfile")}</span>
+    <Card className="shadow-md border-t-4 border-t-primary rounded-lg bg-white dark:bg-gray-900 w-full max-w-none">
+      <CardHeader className="bg-gradient-to-r from-primary-50 to-blue-50 dark:from-primary-950/30 dark:to-blue-950/20 space-y-3 pb-6 px-4 sm:px-6 pt-6">
+        <div className="w-full overflow-hidden">
+          <CardTitle className="text-lg sm:text-xl font-semibold flex items-center gap-2 break-words leading-relaxed">
+            <Settings className="h-4 w-4 sm:h-5 sm:w-5 text-primary flex-shrink-0" />
+            <span className="break-words">{t("profile.editProfile")}</span>
           </CardTitle>
         </div>
-        <CardDescription className="text-sm mt-2">
+        <CardDescription className="text-sm leading-relaxed break-words">
           {t("profile.editProfileDesc")}
         </CardDescription>
       </CardHeader>
@@ -463,31 +463,31 @@ export default function ProfileEditor() {
             </div>
           </div>
 
-          <div className="mt-8 flex justify-end space-x-3 px-1">
+          <div className="mt-8 flex flex-col sm:flex-row justify-end gap-3 px-2">
             <Button
               type="button"
               variant="outline"
               size="sm"
               onClick={resetForm}
               disabled={!isFormDirty || updateProfileMutation.isPending}
-              className="px-4 py-2 flex items-center gap-2"
+              className="w-full sm:w-auto px-4 py-2 flex items-center justify-center gap-2 min-w-[120px]"
             >
               <RefreshCw className="h-3.5 w-3.5 flex-shrink-0" />
-              <span className="whitespace-nowrap">{t("common.reset")}</span>
+              <span>{t("common.reset")}</span>
             </Button>
             <Button
               type="submit"
               size="lg"
               disabled={!isFormDirty || updateProfileMutation.isPending}
-              className="px-6 py-2 bg-gradient-to-r from-primary to-blue-600 hover:from-primary-600 hover:to-blue-700 flex items-center gap-2"
+              className="w-full sm:w-auto px-6 py-2 bg-gradient-to-r from-primary to-blue-600 hover:from-primary-600 hover:to-blue-700 flex items-center justify-center gap-2 min-w-[140px]"
             >
               {updateProfileMutation.isPending ? (
                 <>
                   <Loader2 className="h-4 w-4 flex-shrink-0 animate-spin" />
-                  <span className="whitespace-nowrap">{t("common.saving")}</span>
+                  <span>{t("common.saving")}</span>
                 </>
               ) : (
-                <span className="whitespace-nowrap">{t("common.save")}</span>
+                <span>{t("common.save")}</span>
               )}
             </Button>
           </div>
