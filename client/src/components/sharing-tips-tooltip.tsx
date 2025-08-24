@@ -71,7 +71,7 @@ export function SharingTipsTooltip() {
         <TooltipContent
           side="bottom"
           align="start"
-          className="w-80 max-w-sm p-4 text-left"
+          className="w-96 max-w-lg p-4 text-left"
           sideOffset={8}
         >
           <div className="space-y-3">

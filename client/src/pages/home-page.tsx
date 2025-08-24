@@ -189,9 +189,9 @@ export default function HomePage() {
             </motion.div>
 
             {/* Desktop menu */}
-            <div className="hidden md:flex items-center gap-6">
+            <div className="hidden md:flex items-center gap-2 md:gap-4 lg:gap-6 xl:gap-8">
               {user ? (
-                <div className="flex items-center gap-4">
+                <div className="flex items-center gap-2 md:gap-3 lg:gap-4">
                   <Link href="/profile">
                     <motion.div
                       whileHover={{ scale: 1.05 }}
