@@ -147,7 +147,7 @@ export function StoreItemForm({ isOpen, onClose, onSuccess, initialData }: Store
     <Dialog open={isOpen} onOpenChange={handleClose}>
       <DialogContent className="sm:max-w-[500px] rounded-3xl glass-card text-center p-4 sm:p-6 lg:p-8 w-full max-w-none overflow-hidden">
         <DialogHeader className="text-center">
-          <DialogTitle className="font-heading text-base sm:text-lg lg:text-xl mb-2 break-words">
+          <DialogTitle className="font-heading text-base sm:text-lg lg:text-xl mb-2 break-words text-center leading-tight max-w-full overflow-hidden">
             {isEditing ? t('store.editItem') : t('store.createItem')}
           </DialogTitle>
         </DialogHeader>
