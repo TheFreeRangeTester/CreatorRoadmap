@@ -75,7 +75,7 @@ export function SharingTipsTooltip() {
           sideOffset={12}
         >
           <div className="space-y-3">
-            <h4 className="font-medium text-sm text-gray-900 dark:text-white border-b border-gray-200 dark:border-gray-600 pb-2">
+            <h4 className="font-medium text-sm text-gray-900 dark:text-white border-b border-gray-200 dark:border-gray-600 pb-2 text-center">
               {t("dashboard.sharingTips")}
             </h4>
             <ul className="space-y-3">
