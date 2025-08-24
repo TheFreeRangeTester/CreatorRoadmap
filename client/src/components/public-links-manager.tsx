@@ -238,17 +238,17 @@ export default function PublicLinksManager() {
       ) : (
         <div className="grid gap-4">
           {links?.map((link) => (
-            <Card key={link.id} className={cn(!link.isActive && "opacity-70")}>
-              <CardHeader className="pb-2">
-                <div className="flex justify-between items-start">
-                  <div>
-                    <CardTitle className="text-base">Public Leaderboard Link</CardTitle>
-                    <CardDescription className="mt-1">
+            <Card key={link.id} className={cn(!link.isActive && "opacity-70", "w-full max-w-none overflow-hidden")}>
+              <CardHeader className="pb-2 px-4 sm:px-6">
+                <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-3">
+                  <div className="min-w-0 flex-1">
+                    <CardTitle className="text-base break-words">Public Leaderboard Link</CardTitle>
+                    <CardDescription className="mt-1 break-words">
                       Created: {format(new Date(link.createdAt), "PPP")}
                     </CardDescription>
                   </div>
-                  <div className="flex items-center gap-1">
-                    <span className="text-sm text-muted-foreground mr-1">
+                  <div className="flex items-center gap-2 flex-shrink-0 self-start">
+                    <span className="text-sm text-muted-foreground whitespace-nowrap">
                       {link.isActive ? "Active" : "Inactive"}
                     </span>
                     <Switch

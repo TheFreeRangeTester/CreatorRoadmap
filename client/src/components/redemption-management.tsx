@@ -132,11 +132,11 @@ export function RedemptionManagement() {
         </Card>
       ) : (
         <>
-          <Card>
-            <CardHeader className="pb-4">
-              <CardTitle className="flex items-center gap-2 text-lg font-heading leading-tight">
+          <Card className="w-full max-w-none overflow-hidden">
+            <CardHeader className="pb-4 px-4 sm:px-6">
+              <CardTitle className="flex items-center gap-2 text-base sm:text-lg font-heading leading-tight break-words">
                 <Package className="h-5 w-5 flex-shrink-0" />
-                <span className="truncate">{t('redemptions.allRedemptions')}</span>
+                <span className="break-words">{t('redemptions.allRedemptions')}</span>
               </CardTitle>
             </CardHeader>
             <CardContent>

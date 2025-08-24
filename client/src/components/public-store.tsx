@@ -118,20 +118,20 @@ export function PublicStore({ creatorUsername, isAuthenticated }: PublicStorePro
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <h2 className="text-2xl font-bold flex items-center gap-2">
-            <Gift className="h-6 w-6" />
-            {t('store.browseStore')}
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+        <div className="min-w-0 flex-1">
+          <h2 className="text-xl sm:text-2xl font-bold flex items-center gap-2 break-words">
+            <Gift className="h-5 w-5 sm:h-6 sm:w-6 flex-shrink-0" />
+            <span className="break-words">{t('store.browseStore')}</span>
           </h2>
-          <p className="text-muted-foreground mt-1">
+          <p className="text-muted-foreground mt-1 break-words">
             {t('store.description')}
           </p>
         </div>
         {isAuthenticated && userPoints && (
-          <div className="flex items-center gap-2">
-            <Star className="h-4 w-4 text-yellow-500" />
-            <span className="font-medium">{userPoints.totalPoints} {t('points.title')}</span>
+          <div className="flex items-center gap-2 flex-shrink-0 bg-yellow-50 dark:bg-yellow-900/20 px-3 py-2 rounded-lg">
+            <Star className="h-4 w-4 text-yellow-500 flex-shrink-0" />
+            <span className="font-medium whitespace-nowrap">{userPoints.totalPoints} {t('points.title')}</span>
           </div>
         )}
       </div>
@@ -143,11 +143,11 @@ export function PublicStore({ creatorUsername, isAuthenticated }: PublicStorePro
           const isOutOfStock = item.maxQuantity !== null && item.currentQuantity >= item.maxQuantity;
 
           return (
-            <Card key={item.id} className={`relative rounded-3xl glass-card ${!isAvailable ? 'opacity-60' : ''}`}>
+            <Card key={item.id} className={`relative rounded-3xl glass-card w-full max-w-none overflow-hidden ${!isAvailable ? 'opacity-60' : ''}`}>
               <CardHeader className="pb-2 px-4 pt-4">
-                <div className="flex items-start justify-between">
-                  <CardTitle className="text-base sm:text-lg leading-tight line-clamp-2 contained-text pr-2">{item.title}</CardTitle>
-                  <Badge variant="secondary" className="flex items-center gap-1">
+                <div className="flex items-start gap-3">
+                  <CardTitle className="text-base sm:text-lg leading-tight line-clamp-2 contained-text flex-1 min-w-0 break-words">{item.title}</CardTitle>
+                  <Badge variant="secondary" className="flex items-center gap-1 flex-shrink-0 whitespace-nowrap">
                     <Star className="h-3 w-3" />
                     {item.pointsCost}
                   </Badge>

@@ -250,13 +250,15 @@ export default function SubscriptionPage() {
         >
           {/* Header */}
           <motion.div variants={fadeIn} className="text-center mb-12">
-            <div className="flex items-center justify-center gap-2 mb-4">
-              <h1 className="text-4xl font-bold dark:text-white">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-center gap-3 mb-4">
+              <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold dark:text-white break-words text-center">
                 {t("subscription.title")}
               </h1>
-              {getStatusBadge()}
+              <div className="flex justify-center">
+                {getStatusBadge()}
+              </div>
             </div>
-            <p className="text-lg text-gray-600 dark:text-gray-300">
+            <p className="text-base sm:text-lg text-gray-600 dark:text-gray-300 break-words text-center">
               {t("subscription.subtitle")}
             </p>
           </motion.div>
@@ -264,11 +266,11 @@ export default function SubscriptionPage() {
           {/* Current Status Card */}
           {user && (
             <motion.div variants={fadeIn} className="mb-8">
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <CreditCard className="w-5 h-5" />
-                    {t("subscription.currentStatus")}
+              <Card className="w-full max-w-none overflow-hidden">
+                <CardHeader className="px-4 sm:px-6">
+                  <CardTitle className="flex items-center gap-2 break-words">
+                    <CreditCard className="w-5 h-5 flex-shrink-0" />
+                    <span className="break-words">{t("subscription.currentStatus")}</span>
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
