@@ -80,18 +80,12 @@ export default function ShareProfile() {
     <div className="space-y-6">
       <Card className="border-primary/20 dark:border-primary/10 bg-white dark:bg-gray-900">
         <CardHeader className="pb-2 px-6 pt-6">
-          <div className="flex flex-col sm:flex-row sm:items-center gap-2 mb-3">
-            <CardTitle className="text-2xl font-bold min-w-0 flex-1 text-center break-words leading-tight max-w-full overflow-hidden">
+          <div className="flex flex-col items-center gap-2 mb-3">
+            <CardTitle className="text-2xl font-bold text-center break-words leading-tight max-w-full overflow-hidden">
               {t("dashboard.yourPublicProfile", "Tu Perfil Público")}
             </CardTitle>
-            <div className="flex items-center gap-2 flex-shrink-0">
+            <div className="flex items-center gap-2">
               <SharingTipsTooltip />
-              <Badge
-                variant="secondary"
-                className="bg-blue-50 text-blue-700 dark:bg-blue-900/20 dark:text-blue-300 whitespace-nowrap"
-              >
-                {t("dashboard.publicView", "Enlace público")}
-              </Badge>
             </div>
           </div>
           <CardDescription className="text-sm leading-relaxed">

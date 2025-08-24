@@ -53,7 +53,7 @@ function App() {
   return (
     <>
       {/* Selector de idioma y tema en la esquina superior derecha */}
-      <div className="hidden md:flex fixed top-4 right-4 z-50 items-center space-x-2">
+      <div className="hidden md:flex fixed top-4 right-4 z-50 items-center space-x-4">
         <LanguageToggle />
         <ThemeToggle />
       </div>
