@@ -66,17 +66,17 @@ export default function AudienceStats({ isVisible }: AudienceStatsProps) {
       transition={{ duration: 0.3 }}
       className="w-full max-w-4xl mx-auto px-4 py-6"
     >
-      <Card className="bg-white dark:bg-gray-800 shadow-lg">
-        <CardHeader className="pb-4">
+      <Card className="bg-white dark:bg-gray-800 shadow-lg w-full max-w-none overflow-hidden">
+        <CardHeader className="pb-4 px-4 sm:px-6">
           <div className="flex items-center gap-3">
-            <div className="p-2 rounded-lg bg-gradient-to-r from-purple-500/10 to-pink-500/10">
+            <div className="p-2 rounded-lg bg-gradient-to-r from-purple-500/10 to-pink-500/10 flex-shrink-0">
               <BarChart3 className="h-6 w-6 text-purple-600 dark:text-purple-400" />
             </div>
-            <div>
-              <CardTitle className="text-xl font-bold">
+            <div className="min-w-0 flex-1">
+              <CardTitle className="text-lg sm:text-xl font-bold break-words">
                 {t("audienceStats.title", "Your Activity")}
               </CardTitle>
-              <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
+              <p className="text-sm text-gray-600 dark:text-gray-400 mt-1 break-words">
                 {t("audienceStats.subtitle", "Your participation stats across all creators")}
               </p>
             </div>

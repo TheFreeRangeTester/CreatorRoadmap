@@ -11,7 +11,7 @@ export function Logo({ className = "", showText = true }: LogoProps) {
     <Link href="/" className={`flex items-center ${className}`}>
       <img src={logoPng} alt="Logo" className="h-8 w-8 object-contain" />
       {showText && (
-        <h1 className="ml-2 text-xl font-bold text-neutral-800 dark:text-white">
+        <h1 className="ml-2 sm:ml-3 text-lg sm:text-xl font-heading font-bold text-neutral-800 dark:text-white tracking-tight">
           Fanlist
         </h1>
       )}

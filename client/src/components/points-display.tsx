@@ -39,11 +39,11 @@ export function PointsDisplay() {
   }
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle className="flex items-center gap-2">
-          <Coins className="w-5 h-5 text-yellow-500" />
-          {t('points.title')}
+    <Card className="w-full max-w-none overflow-hidden">
+      <CardHeader className="px-4 sm:px-6">
+        <CardTitle className="flex items-center gap-2 break-words">
+          <Coins className="w-5 h-5 text-yellow-500 flex-shrink-0" />
+          <span className="break-words">{t('points.title')}</span>
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">

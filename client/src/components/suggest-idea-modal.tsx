@@ -155,12 +155,12 @@ export default function SuggestIdeaModal({
       }
       onOpenChange(newOpen);
     }}>
-      <DialogContent className="sm:max-w-md">
-        <DialogHeader>
-          <DialogTitle className="text-xl font-semibold">
+      <DialogContent className="sm:max-w-md rounded-3xl glass-card text-center p-6 sm:p-8">
+        <DialogHeader className="text-center">
+          <DialogTitle className="font-heading text-lg sm:text-xl mb-2">
             {t('suggestIdea.title', { username })}
           </DialogTitle>
-          <DialogDescription>
+          <DialogDescription className="text-sm text-neutral-600 dark:text-neutral-300 px-4">
             {t('suggestIdea.description', { defaultValue: "What would you like the creator to publish next?" })}
           </DialogDescription>
         </DialogHeader>
@@ -205,21 +205,21 @@ export default function SuggestIdeaModal({
             </div>
           </div>
         ) : (
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 py-2">
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6 py-2 px-2">
             {/* General form error message */}
             {formError && (
-              <div className="p-3 rounded-md bg-red-50 border border-red-200 text-red-800 dark:bg-red-900/30 dark:border-red-800 dark:text-red-200">
+              <div className="p-3 rounded-2xl bg-red-50 border border-red-200 text-red-800 dark:bg-red-900/30 dark:border-red-800 dark:text-red-200 text-center">
                 <p className="text-sm font-medium">{formError}</p>
               </div>
             )}
 
-            <div className="space-y-2">
-              <Label htmlFor="title">{t('suggestIdea.titleLabel')}</Label>
+            <div className="space-y-3 text-center">
+              <Label htmlFor="title" className="text-sm font-medium text-neutral-700 dark:text-neutral-300">{t('suggestIdea.titleLabel')}</Label>
               <Input
                 id="title"
-                placeholder={t('suggestIdea.titlePlaceholder')}
+                placeholder="Ej: Tutorial sobre edición de videos"
                 {...form.register("title")}
-                className="w-full"
+                className="w-full rounded-2xl glass-input"
               />
               {form.formState.errors.title && (
                 <p className="text-sm text-red-500 mt-1">
@@ -228,13 +228,13 @@ export default function SuggestIdeaModal({
               )}
             </div>
             
-            <div className="space-y-2">
-              <Label htmlFor="description">{t('suggestIdea.descriptionLabel')}</Label>
+            <div className="space-y-3 text-center">
+              <Label htmlFor="description" className="text-sm font-medium text-neutral-700 dark:text-neutral-300">{t('suggestIdea.descriptionLabel')}</Label>
               <Textarea
                 id="description"
-                placeholder={t('suggestIdea.descriptionPlaceholder')}
+                placeholder="Sería genial que compartas tips sobre qué software usar, workflow de edición..."
                 {...form.register("description")}
-                className="min-h-[100px]"
+                className="min-h-[100px] rounded-2xl glass-input"
               />
               {form.formState.errors.description && (
                 <p className="text-sm text-red-500 mt-1">

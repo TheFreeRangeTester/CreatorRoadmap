@@ -72,21 +72,21 @@ export function StoreManagement() {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <h2 className="text-2xl font-bold flex items-center gap-2">
-            <Store className="h-6 w-6" />
-            {t('store.title')}
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+        <div className="min-w-0 flex-1">
+          <h2 className="text-xl sm:text-2xl font-bold flex items-center gap-2 break-words">
+            <Store className="h-5 w-5 sm:h-6 sm:w-6 flex-shrink-0" />
+            <span className="break-words">{t('store.title')}</span>
           </h2>
-          <p className="text-muted-foreground mt-1">{t('store.description')}</p>
+          <p className="text-muted-foreground mt-1 break-words">{t('store.description')}</p>
         </div>
         <Button
           onClick={() => setIsCreateModalOpen(true)}
           disabled={storeItems.length >= 5}
-          className="flex items-center gap-2"
+          className="w-full sm:w-auto flex items-center justify-center gap-2 min-w-[160px]"
         >
-          <PlusCircle className="h-4 w-4" />
-          {t('store.createItem')}
+          <PlusCircle className="h-4 w-4 flex-shrink-0" />
+          <span className="whitespace-nowrap">{t('store.createItem')}</span>
         </Button>
       </div>
 
@@ -118,15 +118,16 @@ export function StoreManagement() {
       ) : (
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
           {storeItems.map((item) => (
-            <Card key={item.id} className="relative">
-              <CardHeader className="pb-3">
-                <div className="flex items-start justify-between">
-                  <CardTitle className="text-lg">{item.title}</CardTitle>
-                  <div className="flex items-center gap-1">
+            <Card key={item.id} className="relative rounded-3xl glass-card w-full max-w-none overflow-hidden">
+              <CardHeader className="pb-2 px-4 pt-4">
+                <div className="flex items-start gap-3">
+                  <CardTitle className="text-base sm:text-lg leading-tight line-clamp-2 contained-text flex-1 min-w-0 break-words">{item.title}</CardTitle>
+                  <div className="flex items-center gap-1 flex-shrink-0">
                     <Button
                       variant="ghost"
                       size="sm"
                       onClick={() => setEditingItem(item)}
+                      className="p-2"
                     >
                       <Edit className="h-4 w-4" />
                     </Button>
@@ -161,18 +162,18 @@ export function StoreManagement() {
                   </div>
                 </div>
               </CardHeader>
-              <CardContent>
-                <p className="text-sm text-muted-foreground mb-3">
+              <CardContent className="px-4 pb-4">
+                <p className="text-xs sm:text-sm text-muted-foreground mb-3 line-clamp-3 contained-text leading-relaxed">
                   {item.description}
                 </p>
                 <div className="space-y-2">
                   <div className="flex items-center justify-between">
-                    <span className="text-sm font-medium">{t('store.pointsCost')}</span>
-                    <Badge variant="secondary">{item.pointsCost} pts</Badge>
+                    <span className="text-xs sm:text-sm font-medium contained-text">{t('store.pointsCost')}</span>
+                    <Badge variant="secondary" className="text-xs">{item.pointsCost} pts</Badge>
                   </div>
                   <div className="flex items-center justify-between">
-                    <span className="text-sm font-medium">{t('store.currentQuantity')}</span>
-                    <span className="text-sm">
+                    <span className="text-xs sm:text-sm font-medium contained-text">{t('store.currentQuantity')}</span>
+                    <span className="text-xs sm:text-sm">
                       {item.currentQuantity}
                       {item.maxQuantity !== null && ` / ${item.maxQuantity}`}
                     </span>

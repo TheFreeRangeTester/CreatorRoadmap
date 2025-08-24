@@ -132,11 +132,11 @@ export function RedemptionManagement() {
         </Card>
       ) : (
         <>
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Package className="h-5 w-5" />
-                {t('redemptions.allRedemptions')}
+          <Card className="w-full max-w-none overflow-hidden">
+            <CardHeader className="pb-4 px-4 sm:px-6">
+              <CardTitle className="flex items-center gap-2 text-base sm:text-lg font-heading leading-tight break-words">
+                <Package className="h-5 w-5 flex-shrink-0" />
+                <span className="break-words">{t('redemptions.allRedemptions')}</span>
               </CardTitle>
             </CardHeader>
             <CardContent>
@@ -144,12 +144,12 @@ export function RedemptionManagement() {
                 <Table>
                   <TableHeader>
                     <TableRow>
-                      <TableHead>{t('redemptions.userName')}</TableHead>
-                      <TableHead>{t('redemptions.item')}</TableHead>
-                      <TableHead>{t('redemptions.pointsSpent')}</TableHead>
-                      <TableHead>{t('redemptions.date')}</TableHead>
-                      <TableHead>{t('redemptions.status')}</TableHead>
-                      <TableHead className="w-[100px]">{t('common.actions')}</TableHead>
+                      <TableHead className="w-[200px]">{t('redemptions.userName')}</TableHead>
+                      <TableHead className="w-[300px]">{t('redemptions.item')}</TableHead>
+                      <TableHead className="w-[120px] text-center">{t('redemptions.pointsSpent')}</TableHead>
+                      <TableHead className="w-[140px] text-center">{t('redemptions.date')}</TableHead>
+                      <TableHead className="w-[120px] text-center">{t('redemptions.status')}</TableHead>
+                      <TableHead className="w-[140px] text-center">{t('common.actions')}</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
@@ -167,35 +167,36 @@ export function RedemptionManagement() {
                             </div>
                           </div>
                         </TableCell>
-                        <TableCell>
+                        <TableCell className="max-w-[300px]">
                           <div>
-                            <div className="font-medium">{redemption.storeItemTitle}</div>
-                            <div className="text-sm text-muted-foreground">
+                            <div className="font-medium text-sm leading-tight mb-1">{redemption.storeItemTitle}</div>
+                            <div className="text-xs text-muted-foreground line-clamp-3 leading-relaxed">
                               {redemption.storeItemDescription}
                             </div>
                           </div>
                         </TableCell>
-                        <TableCell>
-                          <Badge variant="secondary">
+                        <TableCell className="text-center">
+                          <Badge variant="secondary" className="text-xs">
                             {redemption.pointsSpent} pts
                           </Badge>
                         </TableCell>
-                        <TableCell>
-                          <div className="flex items-center gap-1 text-sm">
+                        <TableCell className="text-center">
+                          <div className="flex items-center justify-center gap-1 text-xs">
                             <Calendar className="h-3 w-3" />
                             {format(new Date(redemption.createdAt), 'MMM d, yyyy')}
                           </div>
                         </TableCell>
-                        <TableCell>
+                        <TableCell className="text-center">
                           <Badge
                             variant={redemption.status === 'completed' ? 'default' : 'secondary'}
+                            className="text-xs"
                           >
                             {redemption.status === 'completed'
                               ? t('redemptions.completed')
                               : t('redemptions.pending')}
                           </Badge>
                         </TableCell>
-                        <TableCell>
+                        <TableCell className="text-center">
                           <Select
                             value={redemption.status}
                             onValueChange={(value: 'pending' | 'completed') =>
@@ -203,14 +204,14 @@ export function RedemptionManagement() {
                             }
                             disabled={updateStatusMutation.isPending}
                           >
-                            <SelectTrigger className="w-full">
+                            <SelectTrigger className="w-[130px] h-8 text-xs">
                               <SelectValue />
                             </SelectTrigger>
                             <SelectContent>
-                              <SelectItem value="pending">
+                              <SelectItem value="pending" className="text-xs">
                                 {t('redemptions.pending')}
                               </SelectItem>
-                              <SelectItem value="completed">
+                              <SelectItem value="completed" className="text-xs">
                                 {t('redemptions.completed')}
                               </SelectItem>
                             </SelectContent>

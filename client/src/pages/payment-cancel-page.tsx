@@ -17,8 +17,8 @@ export default function PaymentCancelPage() {
         transition={{ duration: 0.5 }}
         className="w-full max-w-md"
       >
-        <Card className="text-center border-gray-200 shadow-xl">
-          <CardHeader className="pb-4">
+        <Card className="text-center border-gray-200 shadow-xl w-full max-w-none overflow-hidden">
+          <CardHeader className="pb-4 px-4 sm:px-6">
             <motion.div
               initial={{ scale: 0 }}
               animate={{ scale: 1 }}
@@ -30,7 +30,7 @@ export default function PaymentCancelPage() {
               </div>
             </motion.div>
             
-            <CardTitle className="text-2xl font-bold text-gray-800 dark:text-gray-200">
+            <CardTitle className="text-xl sm:text-2xl font-bold text-gray-800 dark:text-gray-200 break-words text-center leading-tight max-w-full overflow-hidden">
               Pago Cancelado
             </CardTitle>
             

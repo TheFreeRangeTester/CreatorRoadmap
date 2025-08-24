@@ -34,6 +34,7 @@ export function StoreItemForm({ isOpen, onClose, onSuccess, initialData }: Store
   const { t } = useTranslation();
   const { toast } = useToast();
   const [hasMaxQuantity, setHasMaxQuantity] = useState(false);
+  const [isActive, setIsActive] = useState(true);
   const isEditing = !!initialData;
   
   const form = useForm<z.infer<typeof createFormSchema>>({
@@ -43,7 +44,6 @@ export function StoreItemForm({ isOpen, onClose, onSuccess, initialData }: Store
       description: '',
       pointsCost: 10,
       maxQuantity: undefined,
-      isActive: true,
     },
   });
 
@@ -54,18 +54,18 @@ export function StoreItemForm({ isOpen, onClose, onSuccess, initialData }: Store
         description: initialData.description,
         pointsCost: initialData.pointsCost,
         maxQuantity: initialData.maxQuantity ?? undefined,
-        isActive: initialData.isActive,
       });
       setHasMaxQuantity(initialData.maxQuantity !== null);
+      setIsActive(initialData.isActive);
     } else {
       form.reset({
         title: '',
         description: '',
         pointsCost: 10,
         maxQuantity: undefined,
-        isActive: true,
       });
       setHasMaxQuantity(false);
+      setIsActive(true);
     }
   }, [initialData, form]);
 
@@ -74,6 +74,7 @@ export function StoreItemForm({ isOpen, onClose, onSuccess, initialData }: Store
       const payload = {
         ...data,
         maxQuantity: hasMaxQuantity ? data.maxQuantity : null,
+        isActive: isActive,
       };
       const response = await apiRequest('/api/store/items', {
         method: 'POST',
@@ -103,6 +104,7 @@ export function StoreItemForm({ isOpen, onClose, onSuccess, initialData }: Store
       const payload = {
         ...data,
         maxQuantity: hasMaxQuantity ? data.maxQuantity : null,
+        isActive: isActive,
       };
       const response = await apiRequest(`/api/store/items/${initialData!.id}`, {
         method: 'PUT',
@@ -143,25 +145,26 @@ export function StoreItemForm({ isOpen, onClose, onSuccess, initialData }: Store
 
   return (
     <Dialog open={isOpen} onOpenChange={handleClose}>
-      <DialogContent className="sm:max-w-[500px]">
-        <DialogHeader>
-          <DialogTitle>
+      <DialogContent className="sm:max-w-[500px] rounded-3xl glass-card text-center p-4 sm:p-6 lg:p-8 w-full max-w-none overflow-hidden">
+        <DialogHeader className="text-center">
+          <DialogTitle className="font-heading text-base sm:text-lg lg:text-xl mb-2 break-words text-center leading-tight max-w-full overflow-hidden">
             {isEditing ? t('store.editItem') : t('store.createItem')}
           </DialogTitle>
         </DialogHeader>
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6 px-2">
             <FormField
               control={form.control}
               name="title"
               render={({ field }) => (
-                <FormItem>
-                  <FormLabel>{t('store.itemTitle')}</FormLabel>
+                <FormItem className="text-center">
+                  <FormLabel className="text-sm font-medium text-neutral-700 dark:text-neutral-300">{t('store.itemTitle')}</FormLabel>
                   <FormControl>
                     <Input
                       {...field}
-                      placeholder={t('store.itemTitle')}
+                      placeholder="Ej: Vale por una consulta personalizada"
                       maxLength={100}
+                      className="glass-input rounded-2xl"
                     />
                   </FormControl>
                   <FormMessage />
@@ -173,14 +176,15 @@ export function StoreItemForm({ isOpen, onClose, onSuccess, initialData }: Store
               control={form.control}
               name="description"
               render={({ field }) => (
-                <FormItem>
-                  <FormLabel>{t('store.itemDescription')}</FormLabel>
+                <FormItem className="text-center">
+                  <FormLabel className="text-sm font-medium text-neutral-700 dark:text-neutral-300">{t('store.itemDescription')}</FormLabel>
                   <FormControl>
                     <Textarea
                       {...field}
-                      placeholder={t('store.itemDescription')}
+                      placeholder="Describe qué incluye este artículo y cómo se entregará"
                       rows={3}
                       maxLength={500}
+                      className="glass-input rounded-2xl resize-none"
                     />
                   </FormControl>
                   <FormMessage />
@@ -192,15 +196,17 @@ export function StoreItemForm({ isOpen, onClose, onSuccess, initialData }: Store
               control={form.control}
               name="pointsCost"
               render={({ field }) => (
-                <FormItem>
-                  <FormLabel>{t('store.pointsCost')}</FormLabel>
+                <FormItem className="text-center">
+                  <FormLabel className="text-sm font-medium text-neutral-700 dark:text-neutral-300">{t('store.pointsCost')}</FormLabel>
                   <FormControl>
                     <Input
                       {...field}
                       type="number"
                       min="1"
                       max="1000"
+                      placeholder="10"
                       onChange={(e) => field.onChange(parseInt(e.target.value) || 0)}
+                      className="glass-input rounded-2xl"
                     />
                   </FormControl>
                   <FormMessage />
@@ -209,12 +215,12 @@ export function StoreItemForm({ isOpen, onClose, onSuccess, initialData }: Store
             />
 
             <div className="space-y-4">
-              <div className="flex items-center space-x-2">
+              <div className="flex items-center justify-center space-x-2">
                 <Switch
                   checked={hasMaxQuantity}
                   onCheckedChange={setHasMaxQuantity}
                 />
-                <label className="text-sm font-medium">
+                <label className="text-sm font-medium text-neutral-700 dark:text-neutral-300">
                   {t('store.maxQuantity')}
                 </label>
               </div>
@@ -224,20 +230,18 @@ export function StoreItemForm({ isOpen, onClose, onSuccess, initialData }: Store
                   control={form.control}
                   name="maxQuantity"
                   render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>{t('store.maxQuantity')}</FormLabel>
+                    <FormItem className="text-center">
                       <FormControl>
                         <Input
                           {...field}
                           type="number"
+                          placeholder="5"
                           min="1"
-                          max="1000"
+                          max="100"
                           onChange={(e) => field.onChange(parseInt(e.target.value) || 0)}
+                          className="glass-input rounded-2xl"
                         />
                       </FormControl>
-                      <FormDescription>
-                        {t('store.unlimited')}
-                      </FormDescription>
                       <FormMessage />
                     </FormItem>
                   )}
@@ -245,37 +249,34 @@ export function StoreItemForm({ isOpen, onClose, onSuccess, initialData }: Store
               )}
             </div>
 
-            <FormField
-              control={form.control}
-              name="isActive"
-              render={({ field }) => (
-                <FormItem className="flex flex-row items-center justify-between rounded-lg border p-3 shadow-sm">
-                  <div className="space-y-0.5">
-                    <FormLabel>{t('store.isActive')}</FormLabel>
-                    <FormDescription>
-                      {t('store.available')}
-                    </FormDescription>
-                  </div>
-                  <FormControl>
-                    <Switch
-                      checked={field.value}
-                      onCheckedChange={field.onChange}
-                    />
-                  </FormControl>
-                </FormItem>
-              )}
-            />
+            <div className="flex items-center justify-center space-x-3 rounded-2xl glass-card border p-4 shadow-sm">
+              <div className="space-y-0.5 text-center">
+                <label className="text-sm font-medium text-neutral-700 dark:text-neutral-300">{t('store.isActive')}</label>
+                <p className="text-xs text-neutral-600 dark:text-neutral-400">
+                  {t('store.available')}
+                </p>
+              </div>
+              <Switch
+                checked={isActive}
+                onCheckedChange={setIsActive}
+              />
+            </div>
 
-            <div className="flex justify-end space-x-2 pt-4">
+            <div className="flex justify-center space-x-3 pt-4">
               <Button
                 type="button"
                 variant="outline"
                 onClick={handleClose}
                 disabled={mutation.isPending}
+                className="rounded-2xl"
               >
                 {t('store.cancel')}
               </Button>
-              <Button type="submit" disabled={mutation.isPending}>
+              <Button 
+                type="submit" 
+                disabled={mutation.isPending}
+                className="rounded-2xl modern-button"
+              >
                 {mutation.isPending
                   ? isEditing
                     ? t('store.updating')

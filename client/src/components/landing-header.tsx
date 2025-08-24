@@ -33,12 +33,12 @@ export function LandingHeader({ className = "" }: LandingHeaderProps) {
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           <Logo />
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-6">
             {/* Show different content based on authentication state */}
             {user ? (
               <>
                 {/* Desktop authenticated state */}
-                <div className="hidden md:flex gap-2 items-center">
+                <div className="hidden md:flex gap-3 items-center">
                   <div className="flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300">
                     <User className="h-4 w-4" />
                     <span>{user.username}</span>
@@ -87,7 +87,7 @@ export function LandingHeader({ className = "" }: LandingHeaderProps) {
             )}
             
             {/* Desktop toggles */}
-            <div className="hidden md:flex items-center gap-2">
+            <div className="hidden md:flex items-center gap-3">
               <LanguageToggle />
               <ThemeToggle />
             </div>

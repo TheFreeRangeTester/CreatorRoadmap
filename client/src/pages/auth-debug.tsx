@@ -106,7 +106,7 @@ export default function AuthDebug() {
       { 
         username, 
         password, 
-        email: email || undefined,
+        email: email.trim() || undefined,
         userRole 
       },
       {
@@ -155,9 +155,9 @@ export default function AuthDebug() {
       
       <div className="space-y-6">
         {/* Información del usuario actual */}
-        <Card>
-          <CardHeader>
-            <CardTitle>Estado de Autenticación</CardTitle>
+        <Card className="overflow-hidden">
+          <CardHeader className="px-4 sm:px-6">
+            <CardTitle className="break-words leading-tight max-w-full overflow-hidden text-center">Estado de Autenticación</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="space-y-4">

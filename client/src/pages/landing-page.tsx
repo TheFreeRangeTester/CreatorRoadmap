@@ -225,14 +225,14 @@ export default function LandingPage() {
                   >
                     <Button
                       size="lg"
-                      className="font-medium text-base bg-gradient-to-r from-purple-600 via-indigo-600 to-blue-600 hover:from-purple-700 hover:via-indigo-700 hover:to-blue-700 text-white px-8 py-3 shadow-lg hover:shadow-xl transition-all duration-300"
+                      className="modern-button font-heading font-semibold text-sm sm:text-base bg-gradient-to-r from-purple-600 via-indigo-600 to-blue-600 hover:from-purple-700 hover:via-indigo-700 hover:to-blue-700 text-white px-6 sm:px-10 py-3 sm:py-4 shadow-2xl hover:shadow-purple-500/25 transition-all duration-500 rounded-xl"
                       onClick={() => {
                         localStorage.setItem("attemptingCreatorLogin", "true");
                       }}
                     >
-                      <Sparkles className="h-4 w-4 mr-2" />
+                      <Sparkles className="h-4 w-4 sm:h-5 sm:w-5 mr-2 sm:mr-3" />
                       {t("landing.cta.startFree")}
-                      <ArrowRight className="h-4 w-4 ml-2" />
+                      <ArrowRight className="h-4 w-4 sm:h-5 sm:w-5 ml-2 sm:ml-3" />
                     </Button>
                   </motion.div>
                 </Link>
@@ -244,7 +244,7 @@ export default function LandingPage() {
                     onClick={() => setIsDemoOpen(true)}
                     size="lg"
                     variant="outline"
-                    className="font-medium text-base px-8 py-3 border-2 border-purple-300 hover:border-purple-500 hover:bg-purple-50 dark:border-purple-600 dark:hover:border-purple-400 dark:hover:bg-purple-950/30 transition-all duration-300"
+                    className="glass-card font-heading font-semibold text-sm sm:text-base px-6 sm:px-10 py-3 sm:py-4 border border-purple-200/50 hover:border-purple-400/60 backdrop-blur-xl hover:scale-105 active:scale-95 transition-all duration-300 rounded-xl"
                   >
                     {t("landing.cta.seeDemo")}
                   </Button>
@@ -338,7 +338,7 @@ export default function LandingPage() {
                 key={step}
                 variants={fadeIn}
                 whileHover={{ y: -5, scale: 1.02 }}
-                className={`text-center p-6 rounded-2xl bg-gradient-to-br ${bgGradient} ${darkBg} backdrop-blur-sm border border-white/20 dark:border-gray-700/30 shadow-lg hover:shadow-xl transition-all duration-300`}
+                className={`text-center p-4 sm:p-6 rounded-2xl bg-gradient-to-br ${bgGradient} ${darkBg} backdrop-blur-sm border border-white/20 dark:border-gray-700/30 shadow-lg hover:shadow-xl transition-all duration-300`}
               >
                 <motion.div
                   className={`w-16 h-16 bg-gradient-to-br ${gradient} text-white rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg`}
@@ -346,10 +346,10 @@ export default function LandingPage() {
                 >
                   <Icon className="h-8 w-8" />
                 </motion.div>
-                <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">
+                <h3 className="text-lg sm:text-xl font-heading font-semibold text-gray-900 dark:text-white mb-3 sm:mb-4">
                   {t(`landing.howItWorks.step${step}.title`)}
                 </h3>
-                <p className="text-gray-600 dark:text-gray-300">
+                <p className="text-sm sm:text-base text-gray-600 dark:text-gray-300 leading-relaxed">
                   {t(`landing.howItWorks.step${step}.description`)}
                 </p>
               </motion.div>
@@ -415,7 +415,7 @@ export default function LandingPage() {
                 key={benefit}
                 variants={fadeIn}
                 whileHover={{ y: -5, scale: 1.02 }}
-                className={`bg-gradient-to-br ${bgGradient} ${darkBg} p-6 rounded-2xl shadow-lg border border-white/20 dark:border-gray-700/30 backdrop-blur-sm hover:shadow-xl transition-all duration-300`}
+                className={`bg-gradient-to-br ${bgGradient} ${darkBg} p-4 sm:p-6 rounded-2xl shadow-lg border border-white/20 dark:border-gray-700/30 backdrop-blur-sm hover:shadow-xl transition-all duration-300`}
               >
                 <div className="flex items-start gap-4">
                   <motion.div
