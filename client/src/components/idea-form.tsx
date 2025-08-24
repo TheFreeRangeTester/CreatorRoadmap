@@ -179,7 +179,7 @@ export default function IdeaForm({ isOpen, idea, onClose }: IdeaFormProps) {
     <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
       <DialogContent className="sm:max-w-[500px] rounded-3xl glass-card text-center p-4 sm:p-6 lg:p-8 w-full max-w-none overflow-hidden">
         <DialogHeader className="text-center">
-          <DialogTitle className="font-heading text-base sm:text-lg lg:text-xl mb-2 break-words leading-tight max-w-full overflow-hidden">
+          <DialogTitle className="font-heading text-base sm:text-lg lg:text-xl mb-2 break-words leading-tight max-w-full overflow-hidden text-center">
             {isEditing
               ? t("ideaForm.editTitle", "Edit idea")
               : t("ideaForm.addTitle", "Add new idea")}

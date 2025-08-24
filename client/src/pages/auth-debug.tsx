@@ -157,7 +157,7 @@ export default function AuthDebug() {
         {/* Información del usuario actual */}
         <Card className="overflow-hidden">
           <CardHeader className="px-4 sm:px-6">
-            <CardTitle className="break-words leading-tight max-w-full overflow-hidden">Estado de Autenticación</CardTitle>
+            <CardTitle className="break-words leading-tight max-w-full overflow-hidden text-center">Estado de Autenticación</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="space-y-4">

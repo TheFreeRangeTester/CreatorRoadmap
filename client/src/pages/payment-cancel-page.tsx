@@ -30,7 +30,7 @@ export default function PaymentCancelPage() {
               </div>
             </motion.div>
             
-            <CardTitle className="text-xl sm:text-2xl font-bold text-gray-800 dark:text-gray-200 break-words">
+            <CardTitle className="text-xl sm:text-2xl font-bold text-gray-800 dark:text-gray-200 break-words text-center leading-tight max-w-full overflow-hidden">
               Pago Cancelado
             </CardTitle>
             

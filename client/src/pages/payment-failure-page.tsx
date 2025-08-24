@@ -30,7 +30,7 @@ export default function PaymentFailurePage() {
               </div>
             </motion.div>
             
-            <CardTitle className="text-xl sm:text-2xl font-bold text-red-800 dark:text-red-400 break-words">
+            <CardTitle className="text-xl sm:text-2xl font-bold text-red-800 dark:text-red-400 break-words text-center leading-tight max-w-full overflow-hidden">
               Pago Fallido
             </CardTitle>
             

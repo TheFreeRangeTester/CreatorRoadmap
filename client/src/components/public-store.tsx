@@ -146,7 +146,7 @@ export function PublicStore({ creatorUsername, isAuthenticated }: PublicStorePro
             <Card key={item.id} className={`relative rounded-3xl glass-card w-full max-w-none overflow-hidden ${!isAvailable ? 'opacity-60' : ''}`}>
               <CardHeader className="pb-2 px-4 pt-4">
                 <div className="flex items-start gap-3">
-                  <CardTitle className="text-base sm:text-lg leading-tight line-clamp-2 contained-text flex-1 min-w-0 break-words">{item.title}</CardTitle>
+                  <CardTitle className="text-base sm:text-lg leading-tight line-clamp-2 contained-text flex-1 min-w-0 break-words text-center overflow-hidden">{item.title}</CardTitle>
                   <Badge variant="secondary" className="flex items-center gap-1 flex-shrink-0 whitespace-nowrap">
                     <Star className="h-3 w-3" />
                     {item.pointsCost}

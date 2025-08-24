@@ -165,7 +165,7 @@ export default function ProfileEditor() {
     <Card className="shadow-md border-t-4 border-t-primary rounded-lg bg-white dark:bg-gray-900 w-full max-w-none">
       <CardHeader className="bg-gradient-to-r from-primary-50 to-blue-50 dark:from-primary-950/30 dark:to-blue-950/20 space-y-3 pb-6 px-4 sm:px-6 pt-6">
         <div className="w-full overflow-hidden">
-          <CardTitle className="text-lg sm:text-xl font-semibold flex items-center gap-2 break-words leading-relaxed">
+          <CardTitle className="text-lg sm:text-xl font-semibold flex items-center justify-center gap-2 break-words leading-relaxed text-center">
             <Settings className="h-4 w-4 sm:h-5 sm:w-5 text-primary flex-shrink-0" />
             <span className="break-words">{t("profile.editProfile")}</span>
           </CardTitle>

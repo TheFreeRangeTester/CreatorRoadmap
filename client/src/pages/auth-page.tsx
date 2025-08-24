@@ -231,7 +231,7 @@ export default function AuthPage() {
                 <TabsContent value="login">
                   <Card className="overflow-hidden">
                     <CardHeader className="px-4 sm:px-6 pt-6 pb-4 space-y-2">
-                      <CardTitle className="text-lg sm:text-xl font-semibold break-words leading-tight max-w-full overflow-hidden">{t("auth.loginTitle")}</CardTitle>
+                      <CardTitle className="text-lg sm:text-xl font-semibold break-words leading-tight max-w-full overflow-hidden text-center">{t("auth.loginTitle")}</CardTitle>
                       <CardDescription className="text-sm leading-relaxed break-words">
                         {loginOnly
                           ? t(
@@ -311,7 +311,7 @@ export default function AuthPage() {
                   <TabsContent value="register">
                     <Card className="overflow-hidden">
                       <CardHeader className="px-4 sm:px-6 pt-6 pb-4 space-y-2">
-                        <CardTitle className="text-lg sm:text-xl font-semibold break-words leading-tight max-w-full overflow-hidden">
+                        <CardTitle className="text-lg sm:text-xl font-semibold break-words leading-tight max-w-full overflow-hidden text-center">
                           {isPublicProfile
                             ? t("auth.registerAudienceTitle")
                             : t("auth.registerCreatorTitle")}

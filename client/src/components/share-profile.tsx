@@ -81,7 +81,7 @@ export default function ShareProfile() {
       <Card className="border-primary/20 dark:border-primary/10 bg-white dark:bg-gray-900">
         <CardHeader className="pb-2 px-6 pt-6">
           <div className="flex flex-col sm:flex-row sm:items-center gap-2 mb-3">
-            <CardTitle className="text-2xl font-bold min-w-0 flex-1">
+            <CardTitle className="text-2xl font-bold min-w-0 flex-1 text-center break-words leading-tight max-w-full overflow-hidden">
               {t("dashboard.yourPublicProfile", "Tu Perfil Público")}
             </CardTitle>
             <div className="flex items-center gap-2 flex-shrink-0">
