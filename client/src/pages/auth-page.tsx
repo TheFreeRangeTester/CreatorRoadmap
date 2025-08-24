@@ -202,13 +202,13 @@ export default function AuthPage() {
       </header>
 
       <main className="flex-1 flex items-center justify-center p-6">
-        <div className="mx-auto grid w-full max-w-[1200px] gap-6 md:grid-cols-2 lg:gap-12">
-          <div className="flex flex-col justify-center space-y-4">
-            <div className="space-y-2 text-center md:text-left">
-              <h1 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl">
-                {t("auth.hero.title")}
+        <div className="mx-auto grid w-full max-w-[1200px] gap-6 md:grid-cols-2 lg:gap-12 px-4">
+          <div className="flex flex-col justify-center space-y-4 min-w-0">
+            <div className="space-y-3 text-center md:text-left">
+              <h1 className="text-2xl font-bold tracking-tighter sm:text-3xl md:text-4xl lg:text-5xl leading-tight break-words">
+                <span className="block">{t("auth.hero.title")}</span>
               </h1>
-              <p className="mx-auto max-w-[600px] md:mx-0 text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
+              <p className="mx-auto max-w-[600px] md:mx-0 text-muted-foreground text-base sm:text-lg md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed break-words">
                 {t("auth.hero.subtitle")}
               </p>
             </div>
@@ -230,9 +230,9 @@ export default function AuthPage() {
 
                 <TabsContent value="login">
                   <Card>
-                    <CardHeader>
-                      <CardTitle>{t("auth.loginTitle")}</CardTitle>
-                      <CardDescription>
+                    <CardHeader className="px-6 pt-6 pb-4 space-y-2">
+                      <CardTitle className="text-xl font-semibold break-words">{t("auth.loginTitle")}</CardTitle>
+                      <CardDescription className="text-sm leading-relaxed break-words">
                         {loginOnly
                           ? t(
                               "auth.loginSubtitlePublic",
@@ -310,13 +310,13 @@ export default function AuthPage() {
                 {!loginOnly && (
                   <TabsContent value="register">
                     <Card>
-                      <CardHeader>
-                        <CardTitle>
+                      <CardHeader className="px-6 pt-6 pb-4 space-y-2">
+                        <CardTitle className="text-xl font-semibold break-words">
                           {isPublicProfile
                             ? t("auth.registerAudienceTitle")
                             : t("auth.registerCreatorTitle")}
                         </CardTitle>
-                        <CardDescription>
+                        <CardDescription className="text-sm leading-relaxed break-words">
                           {isPublicProfile
                             ? t("auth.registerAudienceSubtitle")
                             : t("auth.registerCreatorSubtitle")}

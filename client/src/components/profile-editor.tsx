@@ -163,14 +163,14 @@ export default function ProfileEditor() {
 
   return (
     <Card className="shadow-md border-t-4 border-t-primary rounded-lg overflow-hidden bg-white dark:bg-gray-900">
-      <CardHeader className="bg-gradient-to-r from-primary-50 to-blue-50 dark:from-primary-950/30 dark:to-blue-950/20 space-y-1 pb-6">
-        <div className="flex items-center justify-between">
-          <CardTitle className="text-xl font-semibold flex items-center gap-2">
-            <Settings className="h-5 w-5 text-primary" />
-            {t("profile.editProfile")}
+      <CardHeader className="bg-gradient-to-r from-primary-50 to-blue-50 dark:from-primary-950/30 dark:to-blue-950/20 space-y-1 pb-6 px-6 pt-6">
+        <div className="flex items-center justify-between w-full">
+          <CardTitle className="text-xl font-semibold flex items-center gap-3 min-w-0 flex-1">
+            <Settings className="h-5 w-5 text-primary flex-shrink-0" />
+            <span className="truncate">{t("profile.editProfile")}</span>
           </CardTitle>
         </div>
-        <CardDescription className="text-sm">
+        <CardDescription className="text-sm mt-2">
           {t("profile.editProfileDesc")}
         </CardDescription>
       </CardHeader>
@@ -463,31 +463,31 @@ export default function ProfileEditor() {
             </div>
           </div>
 
-          <div className="mt-8 flex justify-end space-x-3">
+          <div className="mt-8 flex justify-end space-x-3 px-1">
             <Button
               type="button"
               variant="outline"
               size="sm"
               onClick={resetForm}
               disabled={!isFormDirty || updateProfileMutation.isPending}
-              className="px-4"
+              className="px-4 py-2 flex items-center gap-2"
             >
-              <RefreshCw className="h-3.5 w-3.5 mr-2" />
-              {t("common.reset")}
+              <RefreshCw className="h-3.5 w-3.5 flex-shrink-0" />
+              <span className="whitespace-nowrap">{t("common.reset")}</span>
             </Button>
             <Button
               type="submit"
               size="lg"
               disabled={!isFormDirty || updateProfileMutation.isPending}
-              className="px-6 bg-gradient-to-r from-primary to-blue-600 hover:from-primary-600 hover:to-blue-700"
+              className="px-6 py-2 bg-gradient-to-r from-primary to-blue-600 hover:from-primary-600 hover:to-blue-700 flex items-center gap-2"
             >
               {updateProfileMutation.isPending ? (
                 <>
-                  <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                  {t("common.saving")}
+                  <Loader2 className="h-4 w-4 flex-shrink-0 animate-spin" />
+                  <span className="whitespace-nowrap">{t("common.saving")}</span>
                 </>
               ) : (
-                t("common.save")
+                <span className="whitespace-nowrap">{t("common.save")}</span>
               )}
             </Button>
           </div>
