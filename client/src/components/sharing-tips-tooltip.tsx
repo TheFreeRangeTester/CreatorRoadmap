@@ -71,18 +71,18 @@ export function SharingTipsTooltip() {
         <TooltipContent
           side="bottom"
           align="start"
-          className="w-64 p-4"
-          sideOffset={5}
+          className="w-80 max-w-sm p-4 text-left"
+          sideOffset={8}
         >
-          <div className="space-y-2">
-            <h4 className="font-medium text-sm text-gray-900 dark:text-white">
+          <div className="space-y-3">
+            <h4 className="font-medium text-sm text-gray-900 dark:text-white border-b border-gray-200 dark:border-gray-600 pb-2">
               {t("dashboard.sharingTips")}
             </h4>
-            <ul className="space-y-2">
+            <ul className="space-y-3">
               {tips.map((tip, index) => (
-                <li key={index} className="flex items-start gap-2">
-                  <span className="text-primary text-sm">•</span>
-                  <span className="text-sm text-gray-600 dark:text-gray-300">
+                <li key={index} className="flex items-start gap-3">
+                  <span className="text-primary text-sm font-bold mt-0.5 flex-shrink-0">•</span>
+                  <span className="text-sm text-gray-600 dark:text-gray-300 leading-relaxed">
                     {tip}
                   </span>
                 </li>
