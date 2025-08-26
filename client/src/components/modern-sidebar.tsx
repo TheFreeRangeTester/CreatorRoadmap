@@ -157,15 +157,10 @@ export function ModernSidebar({
           <Button
             onClick={onSuggestClick}
             disabled={!userPoints || userPoints < 3}
-            className="w-full bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white shadow-lg border-0 rounded-xl h-12"
+            className="w-full bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white shadow-lg border-0 rounded-xl h-11"
           >
             <UserPlus className="h-4 w-4 mr-2" />
-            <div className="flex flex-col items-start">
-              <span className="text-sm font-medium">{t("suggest.idea", "Sugerir Idea")}</span>
-              <span className="text-xs opacity-80">
-                {userPoints ? `${userPoints} pts` : "0 pts"}
-              </span>
-            </div>
+            <span className="text-sm font-medium">{t("suggest.idea", "Sugerir Idea")}</span>
           </Button>
         </motion.div>
       )}
