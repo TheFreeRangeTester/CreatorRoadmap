@@ -5,8 +5,8 @@ import { cn } from "@/lib/utils";
 import { useTranslation } from "react-i18next";
 
 interface ModernSidebarProps {
-  activeSection: "profile" | "store" | "activity" | "ideas";
-  onSectionChange: (section: "profile" | "store" | "activity" | "ideas") => void;
+  activeSection: "store" | "activity" | "ideas";
+  onSectionChange: (section: "store" | "activity" | "ideas") => void;
   className?: string;
 }
 
@@ -15,12 +15,6 @@ export function ModernSidebar({ activeSection, onSectionChange, className }: Mod
   const [isExpanded, setIsExpanded] = useState(true);
 
   const menuItems = [
-    {
-      id: "profile" as const,
-      icon: User,
-      label: t("profile.title", "Perfil"),
-      description: t("profile.description", "Información del creador")
-    },
     {
       id: "ideas" as const,
       icon: Grid3x3,

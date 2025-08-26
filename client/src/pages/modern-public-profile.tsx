@@ -379,11 +379,10 @@ export default function ModernPublicProfile() {
 
   const renderContent = () => {
     switch (activeSection) {
-      case "profile": return renderProfileSection();
       case "ideas": return renderIdeasSection();
       case "store": return renderStoreSection();
       case "activity": return renderActivitySection();
-      default: return renderProfileSection();
+      default: return renderIdeasSection();
     }
   };
 

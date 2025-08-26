@@ -4,8 +4,8 @@ import { cn } from "@/lib/utils";
 import { useTranslation } from "react-i18next";
 
 interface MobileBottomNavProps {
-  activeSection: "profile" | "store" | "activity" | "ideas";
-  onSectionChange: (section: "profile" | "store" | "activity" | "ideas") => void;
+  activeSection: "store" | "activity" | "ideas";
+  onSectionChange: (section: "store" | "activity" | "ideas") => void;
   className?: string;
 }
 
@@ -13,11 +13,6 @@ export function MobileBottomNav({ activeSection, onSectionChange, className }: M
   const { t } = useTranslation();
 
   const navItems = [
-    {
-      id: "profile" as const,
-      icon: User,
-      label: t("profile.short", "Perfil")
-    },
     {
       id: "ideas" as const,
       icon: Grid3x3,
