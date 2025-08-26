@@ -408,27 +408,7 @@ export default function ModernPublicProfile() {
               </h1>
             </div>
 
-            <div className="flex items-center gap-2">
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => {
-                  navigator.share?.({
-                    title: `Perfil de ${creator.username}`,
-                    url: window.location.href,
-                  }) || navigator.clipboard.writeText(window.location.href);
-                  toast({
-                    title: t("share.success", "Enlace copiado"),
-                    description: t("share.successDesc", "El enlace se ha copiado al portapapeles"),
-                  });
-                }}
-              >
-                <Share2 className="h-4 w-4 mr-2" />
-                {t("common.share", "Compartir")}
-              </Button>
-              <LanguageToggle />
-              <ThemeToggle />
-            </div>
+            
           </div>
         </div>
       </header>
