@@ -372,24 +372,6 @@ export default function ModernPublicProfile() {
               )}
             </div>
 
-            {/* Action Button */}
-            {!isOwnProfile && user && (
-              <motion.div
-                initial={{ opacity: 0, x: 20 }}
-                animate={{ opacity: 1, x: 0 }}
-                className="flex-shrink-0"
-              >
-                <Button
-                  onClick={() => setSuggestDialogOpen(true)}
-                  disabled={!userPoints || userPoints.totalPoints < 3}
-                  size="sm"
-                  className="bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white shadow-lg"
-                >
-                  <UserPlus className="h-4 w-4 mr-2" />
-                  {t("suggest.idea", "Sugerir Idea")}
-                </Button>
-              </motion.div>
-            )}
           </div>
         </div>
       </div>
@@ -492,6 +474,10 @@ export default function ModernPublicProfile() {
           <ModernSidebar
             activeSection={activeSection}
             onSectionChange={setActiveSection}
+            isAuthenticated={!!user}
+            isOwnProfile={isOwnProfile}
+            userPoints={userPoints?.totalPoints}
+            onSuggestClick={() => setSuggestDialogOpen(true)}
           />
         </div>
 

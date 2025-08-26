@@ -1,16 +1,29 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { User, Store, Activity, Grid3x3, ChevronRight } from "lucide-react";
+import { User, Store, Activity, Grid3x3, ChevronRight, UserPlus } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useTranslation } from "react-i18next";
+import { Button } from "@/components/ui/button";
 
 interface ModernSidebarProps {
   activeSection: "store" | "activity" | "ideas";
   onSectionChange: (section: "store" | "activity" | "ideas") => void;
   className?: string;
+  isAuthenticated?: boolean;
+  isOwnProfile?: boolean;
+  userPoints?: number;
+  onSuggestClick?: () => void;
 }
 
-export function ModernSidebar({ activeSection, onSectionChange, className }: ModernSidebarProps) {
+export function ModernSidebar({ 
+  activeSection, 
+  onSectionChange, 
+  className,
+  isAuthenticated,
+  isOwnProfile,
+  userPoints,
+  onSuggestClick
+}: ModernSidebarProps) {
   const { t } = useTranslation();
   const [isExpanded, setIsExpanded] = useState(true);
 
@@ -134,7 +147,29 @@ export function ModernSidebar({ activeSection, onSectionChange, className }: Mod
         })}
       </nav>
 
-      
+      {/* Suggest Idea Button */}
+      {isAuthenticated && !isOwnProfile && isExpanded && (
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="px-2 pb-4"
+        >
+          <Button
+            onClick={onSuggestClick}
+            disabled={!userPoints || userPoints < 3}
+            className="w-full bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white shadow-lg border-0 rounded-xl h-12"
+          >
+            <UserPlus className="h-4 w-4 mr-2" />
+            <div className="flex flex-col items-start">
+              <span className="text-sm font-medium">{t("suggest.idea", "Sugerir Idea")}</span>
+              <span className="text-xs opacity-80">
+                {userPoints ? `${userPoints} pts` : "0 pts"}
+              </span>
+            </div>
+          </Button>
+        </motion.div>
+      )}
+
     </motion.div>
   );
 }
