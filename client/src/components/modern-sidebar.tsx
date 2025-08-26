@@ -134,20 +134,7 @@ export function ModernSidebar({ activeSection, onSectionChange, className }: Mod
         })}
       </nav>
 
-      {/* Footer */}
-      {isExpanded && (
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          className="absolute bottom-4 left-4 right-4"
-        >
-          <div className="p-3 bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-900/20 dark:to-purple-900/20 rounded-xl border border-blue-200/50 dark:border-blue-700/50">
-            <div className="text-xs text-gray-600 dark:text-gray-400 text-center">
-              {t("sidebar.footer", "Perfil público moderno")}
-            </div>
-          </div>
-        </motion.div>
-      )}
+      
     </motion.div>
   );
 }
