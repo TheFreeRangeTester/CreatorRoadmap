@@ -155,7 +155,7 @@ export default function ModernPublicProfile() {
       
       // Update localStorage
       const userKey = `votedIdeas_${user.id}`;
-      const votedArray = Array.from(votedIdeas);
+      const votedArray = [...votedIdeas];
       const updatedVotedIdeas = votedArray.concat([ideaId]);
       localStorage.setItem(userKey, JSON.stringify(updatedVotedIdeas));
 
@@ -321,8 +321,80 @@ export default function ModernPublicProfile() {
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      className="space-y-4"
+      className="space-y-6"
     >
+      {/* Creator Profile Info */}
+      <div className="bg-white/90 dark:bg-gray-900/90 backdrop-blur-xl rounded-3xl border border-gray-200/50 dark:border-gray-700/50 overflow-hidden shadow-xl shadow-gray-200/50 dark:shadow-gray-800/50">
+        <div className="p-6">
+          <div className="flex flex-col sm:flex-row sm:items-center gap-4">
+            {/* Avatar */}
+            <motion.div
+              whileHover={{ scale: 1.05 }}
+              className="flex-shrink-0"
+            >
+              <Avatar className="w-16 h-16 border-4 border-white shadow-lg">
+                <AvatarImage src={creator.logoUrl || ""} alt={creator.username} />
+                <AvatarFallback className="text-xl font-bold bg-gradient-to-br from-blue-500 to-purple-500 text-white">
+                  {creator.username.charAt(0).toUpperCase()}
+                </AvatarFallback>
+              </Avatar>
+            </motion.div>
+
+            {/* Info */}
+            <div className="flex-1 min-w-0">
+              <h1 className="text-2xl font-bold bg-gradient-to-r from-gray-900 to-gray-600 dark:from-white dark:to-gray-300 bg-clip-text text-transparent mb-2">
+                {creator.username}
+              </h1>
+              {creator.profileDescription && (
+                <p className="text-gray-600 dark:text-gray-400 text-sm leading-relaxed mb-3">
+                  {creator.profileDescription}
+                </p>
+              )}
+
+              {/* Social Links */}
+              {socialLinks.length > 0 && (
+                <div className="flex flex-wrap gap-2">
+                  {socialLinks.map((link) => (
+                    <motion.a
+                      key={link.platform}
+                      href={formatSocialUrl(link.url!, link.platform)}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center gap-1.5 px-2.5 py-1 bg-gray-100 dark:bg-gray-800 rounded-lg text-xs text-gray-600 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                    >
+                      {getSocialIcon(link.platform)}
+                      <span className="capitalize">{link.platform}</span>
+                    </motion.a>
+                  ))}
+                </div>
+              )}
+            </div>
+
+            {/* Action Button */}
+            {!isOwnProfile && user && (
+              <motion.div
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 1, x: 0 }}
+                className="flex-shrink-0"
+              >
+                <Button
+                  onClick={() => setSuggestDialogOpen(true)}
+                  disabled={!userPoints || userPoints.totalPoints < 3}
+                  size="sm"
+                  className="bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white shadow-lg"
+                >
+                  <UserPlus className="h-4 w-4 mr-2" />
+                  {t("suggest.idea", "Sugerir Idea")}
+                </Button>
+              </motion.div>
+            )}
+          </div>
+        </div>
+      </div>
+
+      {/* Ideas Section Header */}
       <div className="flex items-center justify-between">
         <h2 className="text-2xl font-bold bg-gradient-to-r from-gray-900 to-gray-600 dark:from-white dark:to-gray-300 bg-clip-text text-transparent">
           {t("ideas.title", "Ideas de Contenido")}
@@ -332,6 +404,7 @@ export default function ModernPublicProfile() {
         </Badge>
       </div>
 
+      {/* Ideas Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
         {ideas.map((idea, index) => (
           <CompactIdeaCard
