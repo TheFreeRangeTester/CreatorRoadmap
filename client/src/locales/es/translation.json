@@ -234,6 +234,7 @@
     "cancel": "Cancelar",
     "suggest": "Sugerir",
     "greeting": "👋🏻 Hola",
+    "hello": "Hola",
     "copySuccess": "¡Enlace copiado!",
     "copyDesc": "Enlace copiado al portapapeles: {{url}}",
     "copyError": "Error al copiar",

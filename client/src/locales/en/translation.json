@@ -234,6 +234,7 @@
     "cancel": "Cancel",
     "suggest": "Suggest",
     "greeting": "👋🏻 Hi",
+    "hello": "Hello",
     "copySuccess": "Link copied!",
     "copyDesc": "Link copied to clipboard: {{url}}",
     "copyError": "Copy failed",

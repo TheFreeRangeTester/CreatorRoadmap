@@ -323,8 +323,8 @@ export default function ModernPublicProfile() {
       animate={{ opacity: 1, y: 0 }}
       className="space-y-6"
     >
-      {/* Creator Profile Info */}
-      <div className="bg-white/90 dark:bg-gray-900/90 backdrop-blur-xl rounded-3xl border border-gray-200/50 dark:border-gray-700/50 overflow-hidden shadow-xl shadow-gray-200/50 dark:shadow-gray-800/50">
+      {/* Creator Profile Info - Sticky */}
+      <div className="sticky top-20 z-20 bg-white/90 dark:bg-gray-900/90 backdrop-blur-xl rounded-3xl border border-gray-200/50 dark:border-gray-700/50 overflow-hidden shadow-xl shadow-gray-200/50 dark:shadow-gray-800/50">
         <div className="p-6">
           <div className="flex flex-col sm:flex-row sm:items-center gap-4">
             {/* Avatar */}
@@ -448,18 +448,11 @@ export default function ModernPublicProfile() {
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             <div className="flex items-center gap-4">
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => navigate("/dashboard")}
-                className="hover:bg-gray-100 dark:hover:bg-gray-800"
-              >
-                <ArrowLeft className="h-4 w-4 mr-2" />
-                {t("common.back", "Volver")}
-              </Button>
-              <h1 className="text-lg font-semibold text-gray-900 dark:text-white">
-                {creator.username}
-              </h1>
+              {user && (
+                <div className="text-sm text-gray-600 dark:text-gray-400">
+                  {t("common.hello", "Hola")}, <span className="font-semibold text-gray-900 dark:text-white">{user.username}</span>
+                </div>
+              )}
             </div>
 
             
