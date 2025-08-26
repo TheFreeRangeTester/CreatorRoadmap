@@ -11,6 +11,7 @@ import { ThemeToggle } from "./components/theme-toggle";
 import { LanguageToggle } from "./components/language-toggle";
 // Importación directa sin usar alias @
 import CreatorProfileUnified from "./pages/creator-profile-unified";
+import ModernPublicProfile from "@/pages/modern-public-profile";
 
 // Páginas de producto
 import FeaturesPage from "@/pages/features-page";
@@ -108,9 +109,9 @@ function App() {
         <Route path="/payment/cancel" component={PaymentCancelPage} />
         <Route path="/payment/failure" component={PaymentFailurePage} />
 
-        {/* Rutas unificadas del creador - ambas apuntan a la misma página */}
-        <Route path="/creators/:username" component={CreatorProfileUnified} />
-        <Route path="/:username" component={CreatorProfileUnified} />
+        {/* Rutas unificadas del creador */}
+        <Route path="/creators/:username" component={ModernPublicProfile} />
+        <Route path="/:username" component={ModernPublicProfile} />
         <Route component={NotFound} />
       </Switch>
     </>
