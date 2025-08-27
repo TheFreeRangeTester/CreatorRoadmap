@@ -655,6 +655,43 @@ export default function CreatorProfileUnified() {
                     : t("audienceStats.show", "My Activity")}
                 </Button>
               )}
+
+              {/* Login/Register buttons for non-authenticated users on mobile */}
+              {!user && (
+                <div className="md:hidden flex flex-col gap-2 w-full">
+                  <Button
+                    onClick={() => {
+                      localStorage.setItem("redirectAfterAuth", `/${username}`);
+                      navigate("/auth");
+                    }}
+                    variant="outline"
+                    size="sm"
+                    className={cn(
+                      isCustomBackground
+                        ? "border-gray-300 text-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:text-gray-300 dark:hover:bg-gray-800"
+                        : "border-white text-white hover:bg-white hover:text-blue-600"
+                    )}
+                  >
+                    <User className="w-4 h-4 mr-2" />
+                    {t("common.login", "Iniciar sesión")}
+                  </Button>
+                  <Button
+                    onClick={() => {
+                      localStorage.setItem("redirectAfterAuth", `/${username}`);
+                      navigate("/auth?register=true");
+                    }}
+                    size="sm"
+                    className={cn(
+                      isCustomBackground
+                        ? "bg-blue-600 text-white hover:bg-blue-700"
+                        : "bg-white text-blue-600 hover:bg-white/90"
+                    )}
+                  >
+                    <UserPlus className="w-4 h-4 mr-2" />
+                    {t("common.register", "Crear cuenta")}
+                  </Button>
+                </div>
+              )}
             </div>
           </div>
         </div>
