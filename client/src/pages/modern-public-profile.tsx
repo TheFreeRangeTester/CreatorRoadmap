@@ -329,8 +329,8 @@ export default function ModernPublicProfile() {
       animate={{ opacity: 1, y: 0 }}
       className="space-y-6"
     >
-      {/* Creator Profile Info - Sticky */}
-      <div className="sticky top-20 z-20 bg-white/90 dark:bg-gray-900/90 backdrop-blur-xl rounded-3xl border border-gray-200/50 dark:border-gray-700/50 overflow-hidden shadow-xl shadow-gray-200/50 dark:shadow-gray-800/50">
+      {/* Creator Profile Info */}
+      <div className="bg-white/90 dark:bg-gray-900/90 backdrop-blur-xl rounded-3xl border border-gray-200/50 dark:border-gray-700/50 overflow-hidden shadow-xl shadow-gray-200/50 dark:shadow-gray-800/50">
         <div className="p-6">
           <div className="flex flex-col sm:flex-row sm:items-center gap-4">
             {/* Avatar */}
@@ -452,7 +452,7 @@ export default function ModernPublicProfile() {
       
 
       {/* Main Layout */}
-      <div className="pt-16 flex">
+      <div className="flex">
         {/* Desktop Sidebar */}
         <div className="hidden lg:block">
           <ModernSidebar
