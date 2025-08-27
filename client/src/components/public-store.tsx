@@ -146,7 +146,7 @@ export function PublicStore({ creatorUsername, isAuthenticated }: PublicStorePro
           const isOutOfStock = item.maxQuantity !== null && item.currentQuantity >= item.maxQuantity;
 
           return (
-            <Card key={item.id} className={`relative rounded-3xl glass-card w-full max-w-none overflow-hidden ${!isAvailable ? 'opacity-60' : ''}`}>
+            <Card key={item.id} className={`relative rounded-3xl glass-card w-full max-w-none overflow-hidden flex flex-col h-full ${!isAvailable ? 'opacity-60' : ''}`}>
               <CardHeader className="pb-2 px-4 pt-4">
                 <div className="flex items-start gap-3">
                   <CardTitle className="text-base sm:text-lg leading-tight line-clamp-2 contained-text flex-1 min-w-0 break-words text-center overflow-hidden">{item.title}</CardTitle>
@@ -156,43 +156,47 @@ export function PublicStore({ creatorUsername, isAuthenticated }: PublicStorePro
                   </Badge>
                 </div>
               </CardHeader>
-              <CardContent className="px-4 pb-4">
-                <p className="text-xs sm:text-sm text-muted-foreground mb-3 line-clamp-3 contained-text leading-relaxed">
-                  {item.description}
-                </p>
-                
-                {item.maxQuantity !== null && (
-                  <div className="flex items-center justify-between text-xs sm:text-sm mb-3">
-                    <span className="text-muted-foreground contained-text">{t('store.itemsLeft')}:</span>
-                    <span className="font-medium text-orange-600">
-                      {item.maxQuantity - item.currentQuantity}
-                    </span>
-                  </div>
-                )}
-                
-                {isOutOfStock && (
-                  <div className="mb-4">
-                    <Badge variant="destructive" className="w-full justify-center">
-                      {t('store.outOfStock')}
-                    </Badge>
-                  </div>
-                )}
-
-                <Button
-                  onClick={() => handleRedeem(item)}
-                  disabled={!isAvailable || !canAfford || isOutOfStock}
-                  className="w-full"
-                  variant={canAfford ? "default" : "outline"}
-                >
-                  <ShoppingCart className="h-4 w-4 mr-2" />
-                  {t('store.redeemButton', { points: item.pointsCost })}
-                </Button>
-
-                {isAuthenticated && !canAfford && (
-                  <p className="text-sm text-red-600 mt-2 text-center">
-                    {t('store.insufficientPoints')}
+              <CardContent className="px-4 pb-4 flex flex-col flex-1">
+                <div className="flex-1">
+                  <p className="text-xs sm:text-sm text-muted-foreground mb-3 line-clamp-3 contained-text leading-relaxed">
+                    {item.description}
                   </p>
-                )}
+                  
+                  {item.maxQuantity !== null && (
+                    <div className="flex items-center justify-between text-xs sm:text-sm mb-3">
+                      <span className="text-muted-foreground contained-text">{t('store.itemsLeft')}:</span>
+                      <span className="font-medium text-orange-600">
+                        {item.maxQuantity - item.currentQuantity}
+                      </span>
+                    </div>
+                  )}
+                  
+                  {isOutOfStock && (
+                    <div className="mb-4">
+                      <Badge variant="destructive" className="w-full justify-center">
+                        {t('store.outOfStock')}
+                      </Badge>
+                    </div>
+                  )}
+                </div>
+
+                <div className="mt-auto">
+                  <Button
+                    onClick={() => handleRedeem(item)}
+                    disabled={!isAvailable || !canAfford || isOutOfStock}
+                    className="w-full"
+                    variant={canAfford ? "default" : "outline"}
+                  >
+                    <ShoppingCart className="h-4 w-4 mr-2" />
+                    {t('store.redeemButton', { points: item.pointsCost })}
+                  </Button>
+
+                  {isAuthenticated && !canAfford && (
+                    <p className="text-sm text-red-600 mt-2 text-center">
+                      {t('store.insufficientPoints')}
+                    </p>
+                  )}
+                </div>
               </CardContent>
             </Card>
           );
