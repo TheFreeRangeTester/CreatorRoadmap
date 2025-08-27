@@ -233,6 +233,7 @@
     "register": "Registrarse",
     "cancel": "Cancelar",
     "suggest": "Sugerir",
+    "idea": "Sugerir Idea",
     "greeting": "👋🏻 Hola",
     "hello": "Hola",
     "copySuccess": "¡Enlace copiado!",
@@ -319,6 +320,8 @@
     "ideaSentDesc": "El creador la revisará pronto. ¡Gracias por tu contribución!"
   },
   "ideas": {
+    "title": "Ideas",
+    "description": "Votar por contenido",
     "noSuggestedIdeas": "Aún no hay ideas sugeridas",
     "addIdea": "Agregar Nueva Idea",
     "deleteTitle": "Eliminar idea",
@@ -460,6 +463,7 @@
     "subscriptionCancelledDesc": "Tu suscripción ha sido cancelada exitosamente",
     "cancelError": "Hubo un error al cancelar tu suscripción",
     "navigation": {
+      "title": "Navegación",
       "backToDashboard": "Volver al Dashboard"
     },
     "badges": {
@@ -597,6 +601,10 @@
     "show": "Mi Actividad",
     "hide": "Ocultar Mis Estadísticas"
   },
+  "activity": {
+    "title": "Actividad",
+    "description": "Mis estadísticas"
+  },
   "ideaLimit": {
     "title": "Límite de ideas alcanzado",
     "description": "Tienes {{count}} ideas creadas. El límite para usuarios gratuitos es de {{limit}} ideas. ¡Actualiza a premium para crear ideas ilimitadas!",
@@ -647,8 +655,10 @@
     "invalidInput": "Campos inválidos"
   },
   "store": {
-    "title": "Tienda de Puntos",
-    "description": "Crea recompensas que tu audiencia puede canjear con puntos",
+    "title": "Tienda",
+    "description": "Canjear puntos",
+    "browseStore": "Tienda de Puntos",
+    "storeDescription": "Crea recompensas que tu audiencia puede canjear con puntos",
     "noItems": "No hay artículos en la tienda",
     "createFirst": "Crea tu primer artículo de la tienda",
     "createItem": "Crear Artículo",

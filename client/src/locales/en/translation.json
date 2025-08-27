@@ -233,6 +233,7 @@
     "register": "Register",
     "cancel": "Cancel",
     "suggest": "Suggest",
+    "idea": "Suggest Idea",
     "greeting": "👋🏻 Hi",
     "hello": "Hello",
     "copySuccess": "Link copied!",
@@ -319,6 +320,8 @@
     "ideaSentDesc": "The creator will review it soon. Thank you for your contribution!"
   },
   "ideas": {
+    "title": "Ideas",
+    "description": "Vote for content",
     "noSuggestedIdeas": "No suggested ideas yet",
     "addIdea": "Add New Idea",
     "deleteTitle": "Delete idea",
@@ -459,6 +462,7 @@
     "subscriptionCancelledDesc": "Your subscription has been cancelled successfully",
     "cancelError": "There was an error cancelling your subscription",
     "navigation": {
+      "title": "Navigation",
       "backToDashboard": "Back to Dashboard"
     },
     "badges": {
@@ -641,9 +645,15 @@
     "show": "My Activity",
     "hide": "Hide My Stats"
   },
+  "activity": {
+    "title": "Activity",
+    "description": "My statistics"
+  },
   "store": {
-    "title": "Points Store",
-    "description": "Create rewards that your audience can redeem with points",
+    "title": "Store",
+    "description": "Redeem points",
+    "browseStore": "Points Store",
+    "storeDescription": "Create rewards that your audience can redeem with points",
     "noItems": "No items in store",
     "createFirst": "Create your first store item",
     "createItem": "Create Item",
