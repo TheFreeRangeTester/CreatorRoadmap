@@ -30,6 +30,7 @@ import { CompactIdeaCard } from "@/components/compact-idea-card";
 import SuggestIdeaModal from "@/components/suggest-idea-modal";
 import AudienceStats from "@/components/audience-stats";
 import { PublicStore } from "@/components/public-store";
+import { UserIndicator } from "@/components/user-indicator";
 import { FaTiktok } from "react-icons/fa";
 import { FaThreads } from "react-icons/fa6";
 
@@ -449,10 +450,26 @@ export default function ModernPublicProfile() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50 to-indigo-100 dark:from-gray-900 dark:via-blue-900/20 dark:to-indigo-900/30">
+      {/* Desktop User Indicator */}
+      <div className="hidden lg:block fixed top-4 right-4 z-50">
+        <UserIndicator user={user} variant="desktop" />
+      </div>
+
+      {/* Mobile Header */}
+      <div className="lg:hidden fixed top-0 left-0 right-0 z-40 bg-white/90 dark:bg-gray-900/90 backdrop-blur-xl border-b border-gray-200/50 dark:border-gray-700/50">
+        <div className="flex items-center justify-between h-16 px-4">
+          <div className="flex items-center gap-3">
+            <h1 className="text-lg font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+              Fanlist
+            </h1>
+          </div>
+          <UserIndicator user={user} variant="mobile" />
+        </div>
+      </div>
       
 
       {/* Main Layout */}
-      <div className="flex">
+      <div className="flex lg:pt-0 pt-16">
         {/* Desktop Sidebar */}
         <div className="hidden lg:block">
           <ModernSidebar
