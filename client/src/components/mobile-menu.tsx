@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X, LogOut, RefreshCcw, LogIn, User } from "lucide-react";
-import { Link } from "wouter";
+import { Link, useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
 import { useTranslation } from "react-i18next";
 import { useAuth } from "@/hooks/use-auth";
@@ -28,6 +28,7 @@ export const MobileMenu = ({
   const [isOpen, setIsOpen] = useState(false);
   const { t } = useTranslation();
   const { user } = useAuth();
+  const [location] = useLocation();
 
   const toggleMenu = () => {
     setIsOpen(!isOpen);
@@ -174,7 +175,7 @@ export const MobileMenu = ({
                     </div>
                   ) : (
                     <div className="w-full flex flex-col items-center space-y-4">
-                      <Link href="/auth?direct=true" className="w-full">
+                      <Link href={`/auth?direct=true&returnTo=${encodeURIComponent(location)}`} className="w-full">
                         <Button
                           variant="outline"
                           className="w-full justify-center gap-3 h-14 text-base font-medium border-2 border-gray-300 dark:border-gray-600 hover:border-blue-500 dark:hover:border-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/20"
@@ -187,7 +188,7 @@ export const MobileMenu = ({
                           {t("landing.cta.login")}
                         </Button>
                       </Link>
-                      <Link href="/auth?direct=true&register=true" className="w-full">
+                      <Link href={`/auth?direct=true&register=true&returnTo=${encodeURIComponent(location)}`} className="w-full">
                         <Button
                           className="w-full justify-center gap-3 h-14 text-base font-medium bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white border-0 shadow-lg"
                           onClick={toggleMenu}
