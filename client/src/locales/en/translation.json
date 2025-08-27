@@ -267,7 +267,10 @@
     "voteRegistered": "Vote registered!",
     "voteHelpedTopIdea": "Your vote helped this idea in the top {{rank}}!",
     "voteCountsPosition": "Your vote counts. This idea is in position #{{rank}}",
-    "status": "Status"
+    "status": "Status",
+    "theme": "Theme",
+    "language": "Language",
+    "settings": "Settings"
   },
   "creator": {
     "voteSuccess": "Vote registered!",
@@ -553,6 +556,8 @@
     "subscribe": "Subscribe"
   },
   "profile": {
+    "joinTitle": "Join the community!",
+    "joinDescription": "Vote for the best ideas, suggest content and earn points",
     "editProfile": "Edit Profile",
     "editProfileDesc": "Customize your profile information and appearance",
     "logoUrl": "Profile Picture URL",

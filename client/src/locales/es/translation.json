@@ -267,7 +267,10 @@
     "voteRegistered": "¡Voto registrado!",
     "voteHelpedTopIdea": "¡Tu voto ayudó a esta idea en el top {{rank}}!",
     "voteCountsPosition": "Tu voto cuenta. Esta idea está en la posición #{{rank}}",
-    "status": "Estado"
+    "status": "Estado",
+    "theme": "Tema",
+    "language": "Idioma",
+    "settings": "Configuración"
   },
   "creator": {
     "voteSuccess": "¡Voto registrado!",
@@ -558,6 +561,8 @@
     "subscribe": "Suscribirse"
   },
   "profile": {
+    "joinTitle": "¡Únete a la comunidad!",
+    "joinDescription": "Vota por las mejores ideas, sugiere contenido y gana puntos",
     "editProfile": "Editar Perfil",
     "editProfileDesc": "Personaliza la información y apariencia de tu perfil",
     "logoUrl": "URL de Foto de Perfil",

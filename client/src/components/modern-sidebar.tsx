@@ -4,6 +4,8 @@ import { User, Store, Activity, Grid3x3, ChevronRight, UserPlus } from "lucide-r
 import { cn } from "@/lib/utils";
 import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
+import { ThemeToggle } from "@/components/theme-toggle";
+import { LanguageToggle } from "@/components/language-toggle";
 
 interface ModernSidebarProps {
   activeSection: "store" | "activity" | "ideas";
@@ -164,6 +166,74 @@ export function ModernSidebar({
           </Button>
         </motion.div>
       )}
+
+      {/* Login/Register Section - Solo para usuarios no autenticados */}
+      {!isAuthenticated && (
+        <div className="px-2 pb-4 border-t border-gray-200/50 dark:border-gray-700/50 pt-4 mt-4">
+          {isExpanded ? (
+            <div className="space-y-2">
+              <Button
+                onClick={() => {
+                  window.location.href = "/auth";
+                }}
+                className="w-full bg-gradient-to-r from-blue-500 to-purple-500 text-white hover:from-blue-600 hover:to-purple-600 shadow-lg border-0 rounded-xl h-11"
+              >
+                <User className="h-4 w-4 mr-2" />
+                <span className="text-sm font-medium">{t("common.login", "Iniciar sesión")}</span>
+              </Button>
+              <Button
+                onClick={() => {
+                  window.location.href = "/auth?register=true";
+                }}
+                variant="outline"
+                className="w-full border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-xl h-11"
+              >
+                <UserPlus className="h-4 w-4 mr-2" />
+                <span className="text-sm font-medium">{t("common.register", "Crear cuenta")}</span>
+              </Button>
+            </div>
+          ) : (
+            <div className="space-y-2">
+              <Button
+                onClick={() => {
+                  window.location.href = "/auth";
+                }}
+                size="icon"
+                className="w-full bg-gradient-to-r from-blue-500 to-purple-500 text-white hover:from-blue-600 hover:to-purple-600 shadow-lg border-0 rounded-lg h-10"
+                title={t("common.login", "Iniciar sesión")}
+              >
+                <User className="h-4 w-4" />
+              </Button>
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* Settings Section */}
+      <div className="mt-auto px-2 pb-4 border-t border-gray-200/50 dark:border-gray-700/50 pt-4">
+        {isExpanded ? (
+          <div className="space-y-3">
+            <h4 className="text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wider">
+              {t("common.settings", "Configuración")}
+            </h4>
+            <div className="space-y-2">
+              <div className="flex items-center justify-between">
+                <span className="text-sm text-gray-700 dark:text-gray-300">{t("common.theme", "Tema")}</span>
+                <ThemeToggle />
+              </div>
+              <div className="flex items-center justify-between">
+                <span className="text-sm text-gray-700 dark:text-gray-300">{t("common.language", "Idioma")}</span>
+                <LanguageToggle />
+              </div>
+            </div>
+          </div>
+        ) : (
+          <div className="space-y-2">
+            <ThemeToggle />
+            <LanguageToggle />
+          </div>
+        )}
+      </div>
 
     </motion.div>
   );
