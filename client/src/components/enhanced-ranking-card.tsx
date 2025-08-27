@@ -62,28 +62,31 @@ export default function EnhancedRankingCard({
         return {
           emoji: "🏆",
           gradient: "bg-gradient-to-r from-yellow-400 via-amber-500 to-yellow-600",
-          shadow: "shadow-yellow-500/50",
-          glow: "shadow-2xl shadow-yellow-400/30",
+          shadow: isTopThree ? "shadow-2xl shadow-yellow-500/70" : "shadow-yellow-500/50",
+          glow: isTopThree ? "shadow-2xl shadow-yellow-400/60 ring-4 ring-yellow-400/30" : "shadow-2xl shadow-yellow-400/30",
           textColor: "text-yellow-900",
           bgColor: "bg-yellow-50 dark:bg-yellow-900/20",
+          border: isTopThree ? "border-4 border-yellow-400/60" : "",
         };
       case 2:
         return {
           emoji: "🥈",
           gradient: "bg-gradient-to-r from-gray-300 via-gray-400 to-gray-500",
-          shadow: "shadow-gray-400/50",
-          glow: "shadow-2xl shadow-gray-400/30",
+          shadow: isTopThree ? "shadow-2xl shadow-gray-500/70" : "shadow-gray-400/50",
+          glow: isTopThree ? "shadow-2xl shadow-gray-400/60 ring-4 ring-gray-400/30" : "shadow-2xl shadow-gray-400/30",
           textColor: "text-gray-800",
           bgColor: "bg-gray-50 dark:bg-gray-800/20",
+          border: isTopThree ? "border-4 border-gray-400/60" : "",
         };
       case 3:
         return {
           emoji: "🥉",
           gradient: "bg-gradient-to-r from-amber-600 via-orange-500 to-amber-700",
-          shadow: "shadow-orange-500/50",
-          glow: "shadow-2xl shadow-orange-400/30",
+          shadow: isTopThree ? "shadow-2xl shadow-orange-500/70" : "shadow-orange-500/50",
+          glow: isTopThree ? "shadow-2xl shadow-orange-400/60 ring-4 ring-orange-400/30" : "shadow-2xl shadow-orange-400/30",
           textColor: "text-orange-900",
           bgColor: "bg-orange-50 dark:bg-orange-900/20",
+          border: isTopThree ? "border-4 border-orange-400/60" : "",
         };
       default:
         return {
@@ -93,6 +96,7 @@ export default function EnhancedRankingCard({
           glow: "shadow-lg shadow-blue-400/20",
           textColor: "text-blue-900",
           bgColor: "bg-blue-50 dark:bg-blue-900/20",
+          border: "",
         };
     }
   };
@@ -165,7 +169,11 @@ export default function EnhancedRankingCard({
         delay: rank * 0.05,
         ease: [0.25, 0.1, 0.25, 1.0],
       }}
-      whileHover={{ scale: 1.02, y: -2 }}
+      whileHover={{ 
+        scale: isTopThree ? 1.05 : 1.02, 
+        y: isTopThree ? -4 : -2,
+        rotateY: isTopThree ? 2 : 0 
+      }}
       className="will-change-transform relative"
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
@@ -215,18 +223,31 @@ export default function EnhancedRankingCard({
         )}
       </AnimatePresence>
 
-      <Card className={`overflow-hidden border-0 ${medalInfo.shadow} hover:${medalInfo.glow} transition-all duration-500 ${medalInfo.bgColor} rounded-3xl glass-card ${
-        isTopThree ? 'transform-gpu' : ''
-      }`}>
+      <Card className={`overflow-hidden ${medalInfo.border || 'border-0'} ${medalInfo.shadow} hover:${medalInfo.glow} transition-all duration-500 ${medalInfo.bgColor} rounded-3xl glass-card ${
+        isTopThree ? 'transform-gpu relative animate-pulse-subtle' : ''
+      } ${isTopThree ? 'before:absolute before:inset-0 before:rounded-3xl before:p-1 before:bg-gradient-to-r before:from-white/20 before:via-transparent before:to-white/20 before:-z-10' : ''}`}>
         <div className="flex flex-col">
           {/* Contenido principal centrado */}
-          <div className="flex-1 p-6 text-center">
+          <div className={`flex-1 ${isTopThree ? 'p-8' : 'p-6'} text-center`}>
             {/* Indicador de posición con medallas en la parte superior */}
             <motion.div 
               className={`inline-flex items-center justify-center ${
                 isTopThree ? 'w-20 h-20 md:w-24 md:h-24' : 'w-16 h-16 md:w-18 md:h-18'
-              } text-white font-bold relative ${medalInfo.gradient} rounded-full mb-4 mx-auto`}
-              whileHover={{ scale: 1.1 }}
+              } text-white font-bold relative ${medalInfo.gradient} rounded-full mb-4 mx-auto ${
+                isTopThree ? 'ring-2 ring-white/30 ring-offset-2 ring-offset-transparent' : ''
+              }`}
+              whileHover={{ 
+                scale: isTopThree ? 1.15 : 1.1,
+                rotate: isTopThree ? [0, -5, 5, 0] : 0,
+                transition: { duration: 0.3 }
+              }}
+              animate={isTopThree && isHovered ? {
+                boxShadow: [
+                  "0 0 20px rgba(255, 255, 255, 0.3)",
+                  "0 0 40px rgba(255, 255, 255, 0.5)",
+                  "0 0 20px rgba(255, 255, 255, 0.3)"
+                ]
+              } : {}}
             >
               {/* Número de ranking */}
               <motion.span 
