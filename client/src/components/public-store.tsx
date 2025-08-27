@@ -127,6 +127,9 @@ export function PublicStore({ creatorUsername, isAuthenticated }: PublicStorePro
           <p className="text-muted-foreground mt-1 break-words">
             {t('store.description')}
           </p>
+          <p className="text-xs text-muted-foreground/80 mt-2 break-words">
+            {t('store.earnPointsInfo', 'Gana puntos votando por ideas de creadores')}
+          </p>
         </div>
         {isAuthenticated && userPoints && (
           <div className="flex items-center gap-2 flex-shrink-0 bg-yellow-50 dark:bg-yellow-900/20 px-3 py-2 rounded-lg">

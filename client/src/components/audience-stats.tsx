@@ -70,6 +70,9 @@ export default function AudienceStats({ isVisible }: AudienceStatsProps) {
           <p className="text-muted-foreground mt-1 break-words">
             {t("audienceStats.subtitle", "Your participation stats across all creators")}
           </p>
+          <p className="text-xs text-muted-foreground/80 mt-2 break-words">
+            {t("audienceStats.pointsInfo", "Gana puntos votando • Úsalos para sugerir ideas y canjear en tiendas")}
+          </p>
         </div>
       </div>
 

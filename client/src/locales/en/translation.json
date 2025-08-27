@@ -628,6 +628,19 @@
     "unauthorized": "You need to login",
     "invalidInput": "Invalid fields"
   },
+  "audienceStats": {
+    "title": "Your Activity",
+    "subtitle": "Your participation stats across all creators",
+    "pointsInfo": "Earn points by voting • Use them to suggest ideas and redeem in stores",
+    "votesGiven": "Votes Given",
+    "votesGivenDesc": "Ideas you've voted for",
+    "ideasSuggested": "Ideas Suggested",
+    "ideasSuggestedDesc": "Ideas you've suggested",
+    "ideasApproved": "Ideas Approved",
+    "ideasApprovedDesc": "Your ideas that were approved",
+    "show": "My Activity",
+    "hide": "Hide My Stats"
+  },
   "store": {
     "title": "Points Store",
     "description": "Create rewards that your audience can redeem with points",
@@ -667,7 +680,8 @@
     "itemsLeft": "Amount left",
     "left": "",
     "emptyStore": "This store is empty",
-    "noActiveItems": "No active items in this store"
+    "noActiveItems": "No active items in this store",
+    "earnPointsInfo": "Earn points by voting for creators' ideas"
   },
   "redemptions": {
     "title": "Redemptions",
