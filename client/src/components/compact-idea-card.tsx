@@ -124,7 +124,7 @@ export function CompactIdeaCard({
         transition={{ duration: 0.2 }}
       />
 
-      <div className="relative p-4">
+      <div className="relative p-4 flex flex-col h-full">
         {/* Header with rank and trend */}
         <div className="flex items-center justify-between mb-3">
           {/* Rank badge */}
@@ -157,8 +157,8 @@ export function CompactIdeaCard({
           </Badge>
         </div>
 
-        {/* Content */}
-        <div className="mb-3">
+        {/* Content - flex-grow to take available space */}
+        <div className="flex-grow mb-3">
           <h3 className="font-semibold text-gray-900 dark:text-white text-sm line-clamp-2 mb-1 leading-tight">
             {idea.title}
           </h3>
@@ -169,12 +169,13 @@ export function CompactIdeaCard({
           )}
         </div>
 
-        {/* Vote button */}
+        {/* Vote button - always at bottom */}
         {isLoggedIn && onVote && (
           <motion.div
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1 }}
+            className="mt-auto"
           >
             <Button
               size="sm"
