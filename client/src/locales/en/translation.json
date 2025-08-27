@@ -233,7 +233,9 @@
     "register": "Register",
     "cancel": "Cancel",
     "suggest": "Suggest",
+    "idea": "Suggest Idea",
     "greeting": "👋🏻 Hi",
+    "hello": "Hello",
     "copySuccess": "Link copied!",
     "copyDesc": "Link copied to clipboard: {{url}}",
     "copyError": "Copy failed",
@@ -265,7 +267,10 @@
     "voteRegistered": "Vote registered!",
     "voteHelpedTopIdea": "Your vote helped this idea in the top {{rank}}!",
     "voteCountsPosition": "Your vote counts. This idea is in position #{{rank}}",
-    "status": "Status"
+    "status": "Status",
+    "theme": "Theme",
+    "language": "Language",
+    "settings": "Settings"
   },
   "creator": {
     "voteSuccess": "Vote registered!",
@@ -318,6 +323,10 @@
     "ideaSentDesc": "The creator will review it soon. Thank you for your contribution!"
   },
   "ideas": {
+    "short": "Ideas",
+    "total": "ideas",
+    "title": "Ideas",
+    "description": "Vote for content",
     "noSuggestedIdeas": "No suggested ideas yet",
     "addIdea": "Add New Idea",
     "deleteTitle": "Delete idea",
@@ -363,7 +372,9 @@
     "suggested": "Suggested",
     "suggestions": "Suggested",
     "store": "Points Store",
-    "redemptions": "Redemptions"
+    "redemptions": "Redemptions",
+    "topIdeas": "Top Ideas",
+    "moreIdeas": "More Ideas"
   },
   "ideaForm": {
     "addTitle": "Add new idea",
@@ -458,6 +469,8 @@
     "subscriptionCancelledDesc": "Your subscription has been cancelled successfully",
     "cancelError": "There was an error cancelling your subscription",
     "navigation": {
+    "explore": "Explore",
+      "title": "Navigation",
       "backToDashboard": "Back to Dashboard"
     },
     "badges": {
@@ -546,6 +559,8 @@
     "subscribe": "Subscribe"
   },
   "profile": {
+    "joinTitle": "Join the community!",
+    "joinDescription": "Vote for the best ideas, suggest content and earn points",
     "editProfile": "Edit Profile",
     "editProfileDesc": "Customize your profile information and appearance",
     "logoUrl": "Profile Picture URL",
@@ -627,9 +642,30 @@
     "unauthorized": "You need to login",
     "invalidInput": "Invalid fields"
   },
+  "audienceStats": {
+    "title": "Your Activity",
+    "subtitle": "Your participation stats with this creator",
+    "pointsInfo": "Earn points by voting on this profile • Use them to suggest ideas to this creator and redeem in their store",
+    "votesGiven": "Votes Given",
+    "votesGivenDesc": "Ideas you've voted for",
+    "ideasSuggested": "Ideas Suggested",
+    "ideasSuggestedDesc": "Ideas you've suggested",
+    "ideasApproved": "Ideas Approved",
+    "ideasApprovedDesc": "Your ideas that were approved",
+    "show": "My Activity",
+    "hide": "Hide My Stats"
+  },
+  "activity": {
+    "short": "Activity",
+    "title": "Activity",
+    "description": "My statistics"
+  },
   "store": {
-    "title": "Points Store",
-    "description": "Create rewards that your audience can redeem with points",
+    "short": "Store",
+    "title": "Store",
+    "description": "Redeem points",
+    "browseStore": "Points Store",
+    "storeDescription": "Create rewards that your audience can redeem with points",
     "noItems": "No items in store",
     "createFirst": "Create your first store item",
     "createItem": "Create Item",
@@ -666,7 +702,8 @@
     "itemsLeft": "Amount left",
     "left": "",
     "emptyStore": "This store is empty",
-    "noActiveItems": "No active items in this store"
+    "noActiveItems": "No active items in this store",
+    "earnPointsInfo": "Earn points by voting for this creator's ideas"
   },
   "redemptions": {
     "title": "Redemptions",

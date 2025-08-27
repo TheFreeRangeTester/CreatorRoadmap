@@ -30,7 +30,7 @@ export class DatabaseStorage implements IStorage {
   }
 
   async getUserByUsername(username: string): Promise<User | undefined> {
-    const [user] = await db.select().from(users).where(eq(users.username, username));
+    const [user] = await db.select().from(users).where(eq(sql`LOWER(${users.username})`, username.toLowerCase()));
     return user;
   }
 
@@ -495,15 +495,18 @@ export class DatabaseStorage implements IStorage {
   }
 
   // Points operations
-  async getUserPoints(userId: number): Promise<UserPointsResponse> {
+  async getUserPoints(userId: number, creatorId: number): Promise<UserPointsResponse> {
     const [userPointsRecord] = await db
       .select()
       .from(userPoints)
-      .where(eq(userPoints.userId, userId));
+      .where(and(
+        eq(userPoints.userId, userId),
+        eq(userPoints.creatorId, creatorId)
+      ));
     
     if (!userPointsRecord) {
       // Create initial points record if it doesn't exist
-      return await this.createUserPoints(userId);
+      return await this.createUserPoints(userId, creatorId);
     }
     
     return {
@@ -514,11 +517,12 @@ export class DatabaseStorage implements IStorage {
     };
   }
 
-  async createUserPoints(userId: number): Promise<UserPointsResponse> {
+  async createUserPoints(userId: number, creatorId: number): Promise<UserPointsResponse> {
     const [newUserPoints] = await db
       .insert(userPoints)
       .values({ 
         userId,
+        creatorId,
         totalPoints: 0,
         pointsEarned: 0,
         pointsSpent: 0
@@ -533,9 +537,9 @@ export class DatabaseStorage implements IStorage {
     };
   }
 
-  async updateUserPoints(userId: number, pointsChange: number, type: 'earned' | 'spent', reason: string, relatedId?: number): Promise<UserPointsResponse> {
+  async updateUserPoints(userId: number, creatorId: number, pointsChange: number, type: 'earned' | 'spent', reason: string, relatedId?: number): Promise<UserPointsResponse> {
     // Get current points or create if doesn't exist
-    let currentPoints = await this.getUserPoints(userId);
+    let currentPoints = await this.getUserPoints(userId, creatorId);
     
     const updateData: any = { updatedAt: new Date() };
     
@@ -553,13 +557,17 @@ export class DatabaseStorage implements IStorage {
       await tx
         .update(userPoints)
         .set(updateData)
-        .where(eq(userPoints.userId, userId));
+        .where(and(
+          eq(userPoints.userId, userId),
+          eq(userPoints.creatorId, creatorId)
+        ));
       
       // Record transaction
       await tx
         .insert(pointTransactions)
         .values({
           userId,
+          creatorId,
           type,
           amount: pointsChange,
           reason,
@@ -568,20 +576,24 @@ export class DatabaseStorage implements IStorage {
     });
     
     // Return updated points
-    return await this.getUserPoints(userId);
+    return await this.getUserPoints(userId, creatorId);
   }
 
-  async getUserPointTransactions(userId: number, limit: number = 50): Promise<PointTransactionResponse[]> {
+  async getUserPointTransactions(userId: number, creatorId: number, limit: number = 50): Promise<PointTransactionResponse[]> {
     const transactions = await db
       .select()
       .from(pointTransactions)
-      .where(eq(pointTransactions.userId, userId))
+      .where(and(
+        eq(pointTransactions.userId, userId),
+        eq(pointTransactions.creatorId, creatorId)
+      ))
       .orderBy(desc(pointTransactions.createdAt))
       .limit(limit);
     
     return transactions.map(t => ({
       id: t.id,
       userId: t.userId,
+      creatorId: t.creatorId,
       type: t.type as 'earned' | 'spent',
       amount: t.amount,
       reason: t.reason,

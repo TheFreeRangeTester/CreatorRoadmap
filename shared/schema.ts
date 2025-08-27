@@ -72,10 +72,11 @@ export const publicLinks = pgTable("public_links", {
   expiresAt: timestamp("expires_at"), // Optional expiration date
 });
 
-// Table for user points
+// Table for user points (per creator)
 export const userPoints = pgTable("user_points", {
   id: serial("id").primaryKey(),
-  userId: integer("user_id").notNull().references(() => users.id).unique(),
+  userId: integer("user_id").notNull().references(() => users.id),
+  creatorId: integer("creator_id").notNull().references(() => users.id),
   totalPoints: integer("total_points").notNull().default(0),
   pointsEarned: integer("points_earned").notNull().default(0), // Total points ever earned
   pointsSpent: integer("points_spent").notNull().default(0), // Total points ever spent
@@ -87,6 +88,7 @@ export const userPoints = pgTable("user_points", {
 export const pointTransactions = pgTable("point_transactions", {
   id: serial("id").primaryKey(),
   userId: integer("user_id").notNull().references(() => users.id),
+  creatorId: integer("creator_id").notNull().references(() => users.id),
   type: text("type").notNull(), // 'earned' or 'spent'
   amount: integer("amount").notNull(),
   reason: text("reason").notNull(), // 'vote_given', 'idea_approved', 'suggestion_submitted'
@@ -322,6 +324,7 @@ export const insertPointTransactionSchema = createInsertSchema(pointTransactions
 export const pointTransactionResponseSchema = z.object({
   id: z.number(),
   userId: z.number(),
+  creatorId: z.number(),
   type: z.enum(['earned', 'spent']),
   amount: z.number(),
   reason: z.string(),

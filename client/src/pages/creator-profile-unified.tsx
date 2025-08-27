@@ -50,6 +50,7 @@ import { gsap } from "gsap";
 import IdeaCard from "@/components/idea-card";
 import EnhancedRankingCard from "@/components/enhanced-ranking-card";
 import { PublicStore } from "@/components/public-store";
+import { ModernSidebar } from "@/components/modern-sidebar";
 
 interface CreatorPublicPageResponse {
   ideas: IdeaResponse[];
@@ -78,6 +79,7 @@ export default function CreatorProfileUnified() {
   const [suggestDialogOpen, setSuggestDialogOpen] = useState(false);
   const [showAudienceStats, setShowAudienceStats] = useState(false);
   const [showStore, setShowStore] = useState(false);
+  const [activeSection, setActiveSection] = useState<"ideas" | "store" | "activity">("ideas");
   const { toast } = useToast();
   const { user } = useAuth();
   const { t } = useTranslation();
@@ -331,7 +333,7 @@ export default function CreatorProfileUnified() {
   };
 
   const getSocialIcon = (platform: string, url: string) => {
-    const iconProps = { className: "w-5 h-5" };
+    const iconProps = { className: "w-4 h-4 md:w-5 md:h-5" };
 
     switch (platform) {
       case "twitter":
@@ -368,7 +370,7 @@ export default function CreatorProfileUnified() {
     if (socialLinks.length === 0) return null;
 
     return (
-      <div className="flex flex-wrap gap-3 justify-center mb-6">
+      <div className="flex flex-wrap gap-2 md:gap-3 justify-center mb-4 md:mb-6">
         {socialLinks.map(({ platform, url, label }) => {
           if (!url) return null;
 
@@ -404,7 +406,7 @@ export default function CreatorProfileUnified() {
               target="_blank"
               rel="noopener noreferrer"
               className={cn(
-                "p-3 rounded-full transition-all duration-200 hover:scale-110",
+                "p-2 md:p-3 rounded-full transition-all duration-200 hover:scale-110",
                 isCustomBackground
                   ? "bg-gray-200 hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300"
                   : "bg-white/10 hover:bg-white/20 text-white"
@@ -427,99 +429,74 @@ export default function CreatorProfileUnified() {
 
   return (
     <div className={cn("min-h-screen", backgroundClass)} style={patternStyle}>
-      {/* Header */}
-      <header className="fixed top-0 left-0 right-0 z-50 p-4 bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800">
+      {/* Desktop Sidebar - Solo en desktop */}
+      <div className="hidden md:block">
+        <ModernSidebar
+          activeSection={activeSection}
+          onSectionChange={(section) => {
+            setActiveSection(section);
+            if (section === "store") {
+              setShowStore(true);
+              setShowAudienceStats(false);
+            } else if (section === "activity") {
+              setShowAudienceStats(true);
+              setShowStore(false);
+            } else {
+              setShowStore(false);
+              setShowAudienceStats(false);
+            }
+          }}
+          isAuthenticated={!!user}
+          isOwnProfile={isOwnProfile}
+          userPoints={userPoints?.totalPoints || 0}
+          onSuggestClick={() => setSuggestDialogOpen(true)}
+        />
+      </div>
+
+      {/* Mobile Header - Solo en móvil */}
+      <header className="md:hidden fixed top-0 left-0 right-0 z-50 p-4 bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800">
         <div className="container mx-auto">
           <div className="flex justify-between items-center">
-            {/* Left section - User Info (Desktop) or Logo/Title (Mobile) */}
+            {/* Logo/Title */}
             <div className="flex items-center gap-4">
-              {/* User info and Logout (Desktop only) */}
-              {user && (
-                <div className="hidden md:flex items-center gap-4">
-                  <div className="flex items-center gap-2 text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-800 px-3 py-1.5 rounded-full">
-                    <User className="w-4 h-4" />
-                    <span className="text-sm font-medium">{user.username}</span>
-                  </div>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={async () => {
-                      try {
-                        // Call logout API
-                        await fetch("/api/logout", {
-                          method: "POST",
-                          headers: {
-        credentials: "include",
-                            "X-Requested-With": "XMLHttpRequest",
-                          },
-                          credentials: "include",
-                        });
-
-                        // Stay on the same public profile after logout
-                        window.location.reload();
-                      } catch (error) {
-                        console.error("Logout error:", error);
-                        // Even if logout fails, reload to refresh the page
-                        window.location.reload();
-                      }
-                    }}
-                    className="text-red-600 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300 border-gray-300 dark:border-gray-700"
-                  >
-                    {t("common.logout", "Cerrar sesión")}
-                  </Button>
-                </div>
-              )}
-
-              {/* Logo/Title (Mobile only) */}
-              <div className="md:hidden">
-                <h1 className="text-xl font-bold text-gray-900 dark:text-white">
-                  {t("dashboard.appName", "Fanlist")}
-                </h1>
-              </div>
+              <h1 className="text-xl font-bold text-gray-900 dark:text-white">
+                {t("dashboard.appName", "Fanlist")}
+              </h1>
             </div>
 
-            {/* Right section - Toggles (Desktop) and Mobile Menu (Mobile) */}
-            <div className="flex items-center gap-4">
-              {/* Toggles (Desktop only) */}
-              <div className="hidden md:flex items-center gap-2">
-                <ThemeToggle />
-                <LanguageToggle />
-              </div>
-
-              {/* Mobile Menu (Mobile only) */}
-              <div className="md:hidden">
-                <MobileMenu
-                  isCreatorProfile={true}
-                  username={username}
-                  transparent={false} // Mobile menu background
-                  onRefresh={async () => {
-                    await refetch();
-                  }}
-                  onLogout={async () => {
-                    try {
-                      await fetch("/api/logout", {
-                        method: "POST",
-                        headers: {
+            {/* Mobile Menu */}
+            <div>
+              <MobileMenu
+                isCreatorProfile={true}
+                username={username}
+                transparent={false}
+                onRefresh={async () => {
+                  await refetch();
+                }}
+                onLogout={async () => {
+                  try {
+                    await fetch("/api/logout", {
+                      method: "POST",
+                      headers: {
         credentials: "include",
-                          "X-Requested-With": "XMLHttpRequest",
-                        },
-                        credentials: "include",
-                      });
-                      window.location.reload();
-                    } catch (error) {
-                      console.error("Mobile logout error:", error);
-                      window.location.reload();
-                    }
-                  }}
-                />
-              </div>
+                        "X-Requested-With": "XMLHttpRequest",
+                      },
+                      credentials: "include",
+                    });
+                    window.location.reload();
+                  } catch (error) {
+                    console.error("Mobile logout error:", error);
+                    window.location.reload();
+                  }
+                }}
+              />
             </div>
           </div>
         </div>
       </header>
 
-      {/* Add padding to account for fixed header */}
-      <div className="pt-20">
+      {/* Add padding to account for fixed header only on mobile and sidebar on desktop */}
+      <div className="md:pt-0 pt-20 md:pl-64">
         {/* Creator Profile Section */}
         <div
           className={cn(
@@ -530,7 +507,7 @@ export default function CreatorProfileUnified() {
           <div className="container mx-auto px-4">
             <Avatar
               className={cn(
-                "w-24 h-24 mx-auto mb-6 ring-4",
+                "w-16 h-16 md:w-24 md:h-24 mx-auto mb-4 md:mb-6 ring-2 md:ring-4",
                 isCustomBackground
                   ? "ring-gray-300 dark:ring-gray-600"
                   : "ring-white/20"
@@ -542,7 +519,7 @@ export default function CreatorProfileUnified() {
               />
               <AvatarFallback
                 className={cn(
-                  "text-2xl font-bold",
+                  "text-lg md:text-2xl font-bold",
                   isCustomBackground
                     ? "bg-gray-200 dark:bg-gray-700"
                     : "bg-white/20"
@@ -552,12 +529,12 @@ export default function CreatorProfileUnified() {
               </AvatarFallback>
             </Avatar>
 
-            <h1 className="text-4xl font-bold mb-4">{creator.username}</h1>
+            <h1 className="text-2xl md:text-4xl font-bold mb-2 md:mb-4">{creator.username}</h1>
 
             {creator.profileDescription && (
               <p
                 className={cn(
-                  "text-xl mb-6 max-w-2xl mx-auto",
+                  "text-base md:text-xl mb-4 md:mb-6 max-w-2xl mx-auto px-4 md:px-0",
                   isCustomBackground
                     ? "text-gray-700 dark:text-gray-300"
                     : "text-white/90"
@@ -569,7 +546,7 @@ export default function CreatorProfileUnified() {
 
             {renderSocialLinks()}
 
-            <div className="flex flex-col sm:flex-row gap-4 justify-center mt-8">
+            <div className="flex flex-col sm:flex-row gap-3 md:gap-4 justify-center mt-6 md:mt-8 px-4 md:px-0">
               <Button
                 onClick={() => {
                   if (isOwnProfile) {
@@ -655,9 +632,107 @@ export default function CreatorProfileUnified() {
                     : t("audienceStats.show", "My Activity")}
                 </Button>
               )}
+
+              {/* Login/Register buttons for non-authenticated users on mobile */}
+              {!user && (
+                <div className="md:hidden flex flex-col gap-2 w-full">
+                  <Button
+                    onClick={() => {
+                      localStorage.setItem("redirectAfterAuth", `/${username}`);
+                      navigate("/auth");
+                    }}
+                    variant="outline"
+                    size="sm"
+                    className={cn(
+                      isCustomBackground
+                        ? "border-gray-300 text-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:text-gray-300 dark:hover:bg-gray-800"
+                        : "border-white text-white hover:bg-white hover:text-blue-600"
+                    )}
+                  >
+                    <User className="w-4 h-4 mr-2" />
+                    {t("common.login", "Iniciar sesión")}
+                  </Button>
+                  <Button
+                    onClick={() => {
+                      localStorage.setItem("redirectAfterAuth", `/${username}`);
+                      navigate("/auth?register=true");
+                    }}
+                    size="sm"
+                    className={cn(
+                      isCustomBackground
+                        ? "bg-blue-600 text-white hover:bg-blue-700"
+                        : "bg-white text-blue-600 hover:bg-white/90"
+                    )}
+                  >
+                    <UserPlus className="w-4 h-4 mr-2" />
+                    {t("common.register", "Crear cuenta")}
+                  </Button>
+                </div>
+              )}
             </div>
           </div>
         </div>
+
+        {/* Login/Register Call-to-Action - para usuarios no autenticados */}
+        {!user && (
+          <div className="relative z-20 mx-auto max-w-4xl px-4 md:px-6 my-8">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              className={cn(
+                "rounded-2xl p-6 md:p-8 text-center shadow-lg",
+                isCustomBackground
+                  ? "bg-white/90 dark:bg-gray-900/90 border border-gray-200/50 dark:border-gray-700/50"
+                  : "bg-white/20 backdrop-blur-md border border-white/30"
+              )}
+            >
+              <h2 className={cn(
+                "text-xl md:text-2xl font-bold mb-3",
+                isCustomBackground 
+                  ? "text-gray-900 dark:text-white" 
+                  : "text-white"
+              )}>
+                {t("profile.joinTitle", "¡Únete a la comunidad!")}
+              </h2>
+              <p className={cn(
+                "text-base md:text-lg mb-6",
+                isCustomBackground
+                  ? "text-gray-600 dark:text-gray-300"
+                  : "text-white/90"
+              )}>
+                {t("profile.joinDescription", "Vota por las mejores ideas, sugiere contenido y gana puntos")}
+              </p>
+              <div className="flex flex-col sm:flex-row gap-3 justify-center max-w-md mx-auto">
+                <Button
+                  onClick={() => {
+                    localStorage.setItem("redirectAfterAuth", `/${username}`);
+                    window.location.href = "/auth";
+                  }}
+                  className="flex-1 bg-gradient-to-r from-blue-500 to-purple-500 text-white hover:from-blue-600 hover:to-purple-600 shadow-lg border-0 rounded-xl h-12"
+                >
+                  <User className="h-4 w-4 mr-2" />
+                  <span className="font-medium">{t("common.login", "Iniciar sesión")}</span>
+                </Button>
+                <Button
+                  onClick={() => {
+                    localStorage.setItem("redirectAfterAuth", `/${username}`);
+                    window.location.href = "/auth?register=true";
+                  }}
+                  variant="outline"
+                  className={cn(
+                    "flex-1 rounded-xl h-12",
+                    isCustomBackground
+                      ? "border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800"
+                      : "border-white text-white hover:bg-white hover:text-blue-600"
+                  )}
+                >
+                  <UserPlus className="h-4 w-4 mr-2" />
+                  <span className="font-medium">{t("common.register", "Crear cuenta")}</span>
+                </Button>
+              </div>
+            </motion.div>
+          </div>
+        )}
 
         {/* Audience Stats Section - Only show when toggled */}
         {showAudienceStats && (
@@ -697,43 +772,113 @@ export default function CreatorProfileUnified() {
                   </p>
                 </div>
               ) : (
-                <div ref={ideasContainerRef} className="space-y-4">
-                  {ideas.map((idea, index) => {
-                    const rank = index + 1;
-                    
-                    // Función para calcular votos necesarios para subir de posición
-                    const getVotesToNextRank = (currentRank: number, currentVotes: number) => {
-                      if (currentRank <= 1) return 0;
-                      const ideaAbove = ideas[currentRank - 2]; // -2 porque el array es 0-indexed y queremos la idea anterior
-                      if (ideaAbove) {
-                        return Math.max(0, ideaAbove.votes - currentVotes + 1);
-                      }
-                      return 0;
-                    };
+                <div ref={ideasContainerRef}>
+                  {/* Top 3 Section - Featured */}
+                  {ideas.length >= 1 && (
+                    <div className="mb-12">
+                      <div className="flex items-center justify-center mb-8">
+                        <div className="flex items-center gap-3">
+                          <div className="h-px bg-gradient-to-r from-transparent via-yellow-400 to-transparent flex-1 w-12"></div>
+                          <div className="flex items-center gap-2 bg-gradient-to-r from-yellow-400 via-amber-500 to-yellow-600 text-yellow-900 px-4 py-2 rounded-full text-sm font-semibold shadow-lg">
+                            <span className="text-lg">🏆</span>
+                            <span>{t("dashboard.topIdeas", "Top Ideas")}</span>
+                          </div>
+                          <div className="h-px bg-gradient-to-r from-transparent via-yellow-400 to-transparent flex-1 w-12"></div>
+                        </div>
+                      </div>
+                      
+                      {/* Top 3 Grid - Responsive layout */}
+                      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8 mb-8">
+                        {ideas.slice(0, 3).map((idea, index) => {
+                          const rank = index + 1;
+                          
+                          const getVotesToNextRank = (currentRank: number, currentVotes: number) => {
+                            if (currentRank <= 1) return 0;
+                            const ideaAbove = ideas[currentRank - 2];
+                            if (ideaAbove) {
+                              return Math.max(0, ideaAbove.votes - currentVotes + 1);
+                            }
+                            return 0;
+                          };
 
-                    // Simular votos recientes (esto normalmente vendría del backend)
-                    const getRecentVotes24h = (ideaId: number) => {
-                      return Math.floor(Math.random() * 3); // Simulación simple
-                    };
+                          const getRecentVotes24h = (ideaId: number) => {
+                            return Math.floor(Math.random() * 3);
+                          };
 
-                    const votesToNext = getVotesToNextRank(rank, idea.votes);
-                    const recentVotes = getRecentVotes24h(idea.id);
+                          const votesToNext = getVotesToNextRank(rank, idea.votes);
+                          const recentVotes = getRecentVotes24h(idea.id);
 
-                    return (
-                      <EnhancedRankingCard
-                        key={idea.id}
-                        rank={rank}
-                        idea={idea}
-                        isVoting={isVoting[idea.id]}
-                        isVoted={votedIdeas.has(idea.id)}
-                        isSuccessVote={successVote === idea.id}
-                        onVote={handleVote}
-                        isLoggedIn={!!user}
-                        votesToNextRank={votesToNext}
-                        recentVotes24h={recentVotes}
-                      />
-                    );
-                  })}
+                          return (
+                            <div key={idea.id} className={cn(
+                              "transform transition-all duration-300",
+                              rank === 1 && "lg:scale-110 lg:z-10"
+                            )}>
+                              <EnhancedRankingCard
+                                rank={rank}
+                                idea={idea}
+                                isVoting={isVoting[idea.id]}
+                                isVoted={votedIdeas.has(idea.id)}
+                                isSuccessVote={successVote === idea.id}
+                                onVote={handleVote}
+                                isLoggedIn={!!user}
+                                votesToNextRank={votesToNext}
+                                recentVotes24h={recentVotes}
+                                isTopThree
+                              />
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Rest of Ideas - Regular list */}
+                  {ideas.length > 3 && (
+                    <div className="space-y-4">
+                      <div className="text-center mb-6">
+                        <h3 className="text-xl font-semibold text-gray-700 dark:text-gray-300 mb-2">
+                          {t("dashboard.moreIdeas", "More Ideas")}
+                        </h3>
+                        <div className="h-px bg-gradient-to-r from-transparent via-gray-300 dark:via-gray-600 to-transparent"></div>
+                      </div>
+                      
+                      {ideas.slice(3).map((idea, index) => {
+                        const rank = index + 4; // +4 porque empezamos desde la 4ta posición
+                        
+                        const getVotesToNextRank = (currentRank: number, currentVotes: number) => {
+                          if (currentRank <= 1) return 0;
+                          const ideaAbove = ideas[currentRank - 2];
+                          if (ideaAbove) {
+                            return Math.max(0, ideaAbove.votes - currentVotes + 1);
+                          }
+                          return 0;
+                        };
+
+                        const getRecentVotes24h = (ideaId: number) => {
+                          return Math.floor(Math.random() * 3);
+                        };
+
+                        const votesToNext = getVotesToNextRank(rank, idea.votes);
+                        const recentVotes = getRecentVotes24h(idea.id);
+
+                        return (
+                          <EnhancedRankingCard
+                            key={idea.id}
+                            rank={rank}
+                            idea={idea}
+                            isVoting={isVoting[idea.id]}
+                            isVoted={votedIdeas.has(idea.id)}
+                            isSuccessVote={successVote === idea.id}
+                            onVote={handleVote}
+                            isLoggedIn={!!user}
+                            votesToNextRank={votesToNext}
+                            recentVotes24h={recentVotes}
+                            isTopThree={false}
+                          />
+                        );
+                      })}
+                    </div>
+                  )}
                 </div>
               )}
             </div>

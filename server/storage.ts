@@ -58,11 +58,11 @@ export interface IStorage {
   // Idea quota operations
   getUserIdeaQuota(userId: number): Promise<{ count: number; limit: number; hasReachedLimit: boolean; }>;
   
-  // Points operations
-  getUserPoints(userId: number): Promise<UserPointsResponse>;
-  createUserPoints(userId: number): Promise<UserPointsResponse>;
-  updateUserPoints(userId: number, pointsChange: number, type: 'earned' | 'spent', reason: string, relatedId?: number): Promise<UserPointsResponse>;
-  getUserPointTransactions(userId: number, limit?: number): Promise<PointTransactionResponse[]>;
+  // Points operations (per creator)
+  getUserPoints(userId: number, creatorId: number): Promise<UserPointsResponse>;
+  createUserPoints(userId: number, creatorId: number): Promise<UserPointsResponse>;
+  updateUserPoints(userId: number, creatorId: number, pointsChange: number, type: 'earned' | 'spent', reason: string, relatedId?: number): Promise<UserPointsResponse>;
+  getUserPointTransactions(userId: number, creatorId: number, limit?: number): Promise<PointTransactionResponse[]>;
   
   // Store operations
   getStoreItems(creatorId: number): Promise<StoreItemResponse[]>;
@@ -144,7 +144,7 @@ export class MemStorage implements IStorage {
 
   async getUserByUsername(username: string): Promise<User | undefined> {
     return Array.from(this.users.values()).find(
-      (user) => user.username === username,
+      (user) => user.username.toLowerCase() === username.toLowerCase(),
     );
   }
 
@@ -586,27 +586,29 @@ export class MemStorage implements IStorage {
   }
 
   // Points operations
-  async getUserPoints(userId: number): Promise<UserPointsResponse> {
-    let userPoints = this.userPointsMap.get(userId);
+  async getUserPoints(userId: number, creatorId: number): Promise<UserPointsResponse> {
+    const key = `${userId}-${creatorId}`;
+    let userPoints = this.userPointsMap.get(key);
     if (!userPoints) {
-      userPoints = await this.createUserPoints(userId);
+      userPoints = await this.createUserPoints(userId, creatorId);
     }
     return userPoints;
   }
 
-  async createUserPoints(userId: number): Promise<UserPointsResponse> {
+  async createUserPoints(userId: number, creatorId: number): Promise<UserPointsResponse> {
     const userPoints: UserPointsResponse = {
       userId,
       totalPoints: 0,
       pointsEarned: 0,
       pointsSpent: 0,
     };
-    this.userPointsMap.set(userId, userPoints);
+    const key = `${userId}-${creatorId}`;
+    this.userPointsMap.set(key, userPoints);
     return userPoints;
   }
 
-  async updateUserPoints(userId: number, pointsChange: number, type: 'earned' | 'spent', reason: string, relatedId?: number): Promise<UserPointsResponse> {
-    let currentPoints = await this.getUserPoints(userId);
+  async updateUserPoints(userId: number, creatorId: number, pointsChange: number, type: 'earned' | 'spent', reason: string, relatedId?: number): Promise<UserPointsResponse> {
+    let currentPoints = await this.getUserPoints(userId, creatorId);
     
     // Update points
     const updatedPoints: UserPointsResponse = {
@@ -623,12 +625,14 @@ export class MemStorage implements IStorage {
     };
     
     // Save updated points
-    this.userPointsMap.set(userId, updatedPoints);
+    const key = `${userId}-${creatorId}`;
+    this.userPointsMap.set(key, updatedPoints);
     
     // Record transaction
     const transaction: PointTransactionResponse = {
       id: this.currentPointTransactionId++,
       userId,
+      creatorId,
       type,
       amount: pointsChange,
       reason,
@@ -640,9 +644,9 @@ export class MemStorage implements IStorage {
     return updatedPoints;
   }
 
-  async getUserPointTransactions(userId: number, limit: number = 50): Promise<PointTransactionResponse[]> {
+  async getUserPointTransactions(userId: number, creatorId: number, limit: number = 50): Promise<PointTransactionResponse[]> {
     const transactions = Array.from(this.pointTransactionsMap.values())
-      .filter(t => t.userId === userId)
+      .filter(t => t.userId === userId && t.creatorId === creatorId)
       .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime())
       .slice(0, limit);
     

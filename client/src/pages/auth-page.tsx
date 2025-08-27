@@ -102,6 +102,7 @@ export default function AuthPage() {
       // Check if audience user tried to access creator area
       const searchParams = new URLSearchParams(window.location.search);
       const isDirect = searchParams.get("direct") === "true";
+      const returnTo = searchParams.get("returnTo");
       const attemptingCreatorLogin =
         localStorage.getItem("attemptingCreatorLogin") === "true";
 
@@ -113,7 +114,7 @@ export default function AuthPage() {
         // but if we reach here, clear flags and redirect
         localStorage.removeItem("attemptingCreatorLogin");
         localStorage.setItem("audienceTriedCreatorAccess", "true");
-        navigate("/");
+        navigate(returnTo ? decodeURIComponent(returnTo) : "/");
         return;
       }
 
@@ -139,7 +140,13 @@ export default function AuthPage() {
           });
       } else {
         // Standard redirect
-        navigate(getRedirectDestination());
+        const searchParams = new URLSearchParams(window.location.search);
+        const returnTo = searchParams.get("returnTo");
+        if (returnTo) {
+          navigate(decodeURIComponent(returnTo));
+        } else {
+          navigate(getRedirectDestination());
+        }
       }
     }
   }, [user, voteIntent]);
@@ -160,6 +167,13 @@ export default function AuthPage() {
 
   // Determine redirect destination
   function getRedirectDestination() {
+    // Check URL parameters for returnTo
+    const searchParams = new URLSearchParams(window.location.search);
+    const returnTo = searchParams.get("returnTo");
+    if (returnTo) {
+      return decodeURIComponent(returnTo);
+    }
+    
     // Check for stored redirect in local storage
     const redirectTo = localStorage.getItem("redirectAfterAuth");
     if (redirectTo) {
@@ -168,7 +182,6 @@ export default function AuthPage() {
     }
 
     // Check URL parameters for referring creator
-    const searchParams = new URLSearchParams(window.location.search);
     const referrer = searchParams.get("referrer");
     if (referrer && referrer.startsWith("/")) {
       return referrer;

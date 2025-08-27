@@ -84,9 +84,14 @@ export default function SuggestIdeaModal({
           }
         }
       );
-      return response.json();
+      
+      // Return both response and creatorId for onSuccess
+      return { 
+        result: await response.json(), 
+        creatorId: creatorData.creator.id 
+      };
     },
-    onSuccess: async () => {
+    onSuccess: async (data) => {
       console.log("[SUGGESTION] Suggestion successful, spending 3 points");
       
       // Update reactive stats immediately for instant UI update
@@ -94,8 +99,8 @@ export default function SuggestIdeaModal({
       
       form.reset();
       
-      // Also invalidate cache for server sync
-      queryClient.invalidateQueries({ queryKey: ["/api/user/points"] });
+      // Invalidate cache for the specific creator
+      queryClient.invalidateQueries({ queryKey: [`/api/user/points/${data.creatorId}`] });
       queryClient.invalidateQueries({ queryKey: ["/api/user/audience-stats"] });
       queryClient.invalidateQueries({ queryKey: ["/api/pending-ideas"] });
       

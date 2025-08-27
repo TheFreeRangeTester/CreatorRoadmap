@@ -233,7 +233,9 @@
     "register": "Registrarse",
     "cancel": "Cancelar",
     "suggest": "Sugerir",
+    "idea": "Sugerir Idea",
     "greeting": "👋🏻 Hola",
+    "hello": "Hola",
     "copySuccess": "¡Enlace copiado!",
     "copyDesc": "Enlace copiado al portapapeles: {{url}}",
     "copyError": "Error al copiar",
@@ -265,7 +267,10 @@
     "voteRegistered": "¡Voto registrado!",
     "voteHelpedTopIdea": "¡Tu voto ayudó a esta idea en el top {{rank}}!",
     "voteCountsPosition": "Tu voto cuenta. Esta idea está en la posición #{{rank}}",
-    "status": "Estado"
+    "status": "Estado",
+    "theme": "Tema",
+    "language": "Idioma",
+    "settings": "Configuración"
   },
   "creator": {
     "voteSuccess": "¡Voto registrado!",
@@ -318,6 +323,10 @@
     "ideaSentDesc": "El creador la revisará pronto. ¡Gracias por tu contribución!"
   },
   "ideas": {
+    "short": "Ideas",
+    "total": "ideas",
+    "title": "Ideas",
+    "description": "Votar por contenido",
     "noSuggestedIdeas": "Aún no hay ideas sugeridas",
     "addIdea": "Agregar Nueva Idea",
     "deleteTitle": "Eliminar idea",
@@ -363,7 +372,9 @@
     "suggested": "Sugeridas",
     "suggestions": "Sugeridas",
     "store": "Tienda de Puntos",
-    "redemptions": "Canjes"
+    "redemptions": "Canjes",
+    "topIdeas": "Top Ideas",
+    "moreIdeas": "Más Ideas"
   },
   "ideaForm": {
     "addTitle": "Agregar nueva idea",
@@ -459,6 +470,8 @@
     "subscriptionCancelledDesc": "Tu suscripción ha sido cancelada exitosamente",
     "cancelError": "Hubo un error al cancelar tu suscripción",
     "navigation": {
+    "explore": "Explorar",
+      "title": "Navegación",
       "backToDashboard": "Volver al Dashboard"
     },
     "badges": {
@@ -551,6 +564,8 @@
     "subscribe": "Suscribirse"
   },
   "profile": {
+    "joinTitle": "¡Únete a la comunidad!",
+    "joinDescription": "Vota por las mejores ideas, sugiere contenido y gana puntos",
     "editProfile": "Editar Perfil",
     "editProfileDesc": "Personaliza la información y apariencia de tu perfil",
     "logoUrl": "URL de Foto de Perfil",
@@ -585,7 +600,8 @@
   },
   "audienceStats": {
     "title": "Tu Actividad",
-    "subtitle": "Tus estadísticas de participación en todos los creadores",
+    "subtitle": "Tus estadísticas de participación con este creador",
+    "pointsInfo": "Gana puntos votando en este perfil • Úsalos para sugerir ideas a este creador y canjear en su tienda",
     "votesGiven": "Votos Dados",
     "votesGivenDesc": "Ideas por las que has votado",
     "ideasSuggested": "Ideas Sugeridas",
@@ -594,6 +610,11 @@
     "ideasApprovedDesc": "Tus ideas que fueron aprobadas",
     "show": "Mi Actividad",
     "hide": "Ocultar Mis Estadísticas"
+  },
+  "activity": {
+    "short": "Actividad",
+    "title": "Actividad",
+    "description": "Mis estadísticas"
   },
   "ideaLimit": {
     "title": "Límite de ideas alcanzado",
@@ -645,8 +666,11 @@
     "invalidInput": "Campos inválidos"
   },
   "store": {
-    "title": "Tienda de Puntos",
-    "description": "Crea recompensas que tu audiencia puede canjear con puntos",
+    "short": "Tienda",
+    "title": "Tienda",
+    "description": "Canjear puntos",
+    "browseStore": "Tienda de Puntos",
+    "storeDescription": "Crea recompensas que tu audiencia puede canjear con puntos",
     "noItems": "No hay artículos en la tienda",
     "createFirst": "Crea tu primer artículo de la tienda",
     "createItem": "Crear Artículo",
@@ -683,7 +707,8 @@
     "itemsLeft": "Cantidad disponible",
     "left": "",
     "emptyStore": "Esta tienda está vacía",
-    "noActiveItems": "No hay artículos activos en esta tienda"
+    "noActiveItems": "No hay artículos activos en esta tienda",
+    "earnPointsInfo": "Gana puntos votando por ideas de este creador"
   },
   "redemptions": {
     "title": "Canjes",
