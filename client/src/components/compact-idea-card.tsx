@@ -60,6 +60,34 @@ export function CompactIdeaCard({
     }
   };
 
+  // Get top 3 special styling
+  const getTopThreeStyling = () => {
+    switch (rank) {
+      case 1:
+        return {
+          container: "border-2 border-yellow-400/60 shadow-lg shadow-yellow-400/20 scale-105",
+          gradient: "from-yellow-400/10 to-amber-500/10"
+        };
+      case 2:
+        return {
+          container: "border-2 border-gray-400/60 shadow-lg shadow-gray-400/20 scale-[1.03]",
+          gradient: "from-gray-300/10 to-gray-400/10"
+        };
+      case 3:
+        return {
+          container: "border-2 border-orange-500/60 shadow-lg shadow-orange-500/20 scale-[1.02]",
+          gradient: "from-amber-600/10 to-orange-500/10"
+        };
+      default:
+        return {
+          container: "",
+          gradient: "from-blue-500/5 to-purple-500/5"
+        };
+    }
+  };
+
+  const topThreeStyle = getTopThreeStyling();
+
   const getRankEmoji = () => {
     switch (rank) {
       case 1: return "🏆";
@@ -72,8 +100,10 @@ export function CompactIdeaCard({
   return (
     <motion.div
       className={cn(
-        "group relative bg-white dark:bg-gray-900 rounded-2xl border border-gray-200/50 dark:border-gray-700/50 overflow-hidden transition-all duration-200",
-        "hover:shadow-lg hover:shadow-gray-200/50 dark:hover:shadow-gray-800/50 hover:border-gray-300/50 dark:hover:border-gray-600/50",
+        "group relative bg-white dark:bg-gray-900 rounded-2xl overflow-hidden transition-all duration-300",
+        rank <= 3 
+          ? topThreeStyle.container
+          : "border border-gray-200/50 dark:border-gray-700/50 hover:shadow-lg hover:shadow-gray-200/50 dark:hover:shadow-gray-800/50 hover:border-gray-300/50 dark:hover:border-gray-600/50",
         className
       )}
       onHoverStart={() => setIsHovered(true)}
@@ -83,7 +113,13 @@ export function CompactIdeaCard({
     >
       {/* Background gradient on hover */}
       <motion.div
-        className="absolute inset-0 bg-gradient-to-r from-blue-500/5 to-purple-500/5 opacity-0"
+        className={cn(
+          "absolute inset-0 bg-gradient-to-r opacity-0",
+          rank === 1 ? "from-yellow-400/10 to-amber-500/10" :
+          rank === 2 ? "from-gray-300/10 to-gray-400/10" :
+          rank === 3 ? "from-amber-600/10 to-orange-500/10" :
+          "from-blue-500/5 to-purple-500/5"
+        )}
         animate={{ opacity: isHovered ? 1 : 0 }}
         transition={{ duration: 0.2 }}
       />
@@ -170,16 +206,18 @@ export function CompactIdeaCard({
         )}
       </div>
 
-      {/* Hover border effect */}
-      <motion.div
-        className="absolute inset-0 rounded-2xl border-2 border-transparent"
-        animate={{
-          borderColor: isHovered 
-            ? "rgba(59, 130, 246, 0.3)" 
-            : "transparent"
-        }}
-        transition={{ duration: 0.2 }}
-      />
+      {/* Hover border effect - only for non-top 3 */}
+      {rank > 3 && (
+        <motion.div
+          className="absolute inset-0 rounded-2xl border-2 border-transparent"
+          animate={{
+            borderColor: isHovered 
+              ? "rgba(59, 130, 246, 0.3)" 
+              : "transparent"
+          }}
+          transition={{ duration: 0.2 }}
+        />
+      )}
     </motion.div>
   );
 }
