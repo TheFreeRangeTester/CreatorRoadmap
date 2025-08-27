@@ -331,7 +331,7 @@ export default function CreatorProfileUnified() {
   };
 
   const getSocialIcon = (platform: string, url: string) => {
-    const iconProps = { className: "w-5 h-5" };
+    const iconProps = { className: "w-4 h-4 md:w-5 md:h-5" };
 
     switch (platform) {
       case "twitter":
@@ -368,7 +368,7 @@ export default function CreatorProfileUnified() {
     if (socialLinks.length === 0) return null;
 
     return (
-      <div className="flex flex-wrap gap-3 justify-center mb-6">
+      <div className="flex flex-wrap gap-2 md:gap-3 justify-center mb-4 md:mb-6">
         {socialLinks.map(({ platform, url, label }) => {
           if (!url) return null;
 
@@ -404,7 +404,7 @@ export default function CreatorProfileUnified() {
               target="_blank"
               rel="noopener noreferrer"
               className={cn(
-                "p-3 rounded-full transition-all duration-200 hover:scale-110",
+                "p-2 md:p-3 rounded-full transition-all duration-200 hover:scale-110",
                 isCustomBackground
                   ? "bg-gray-200 hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300"
                   : "bg-white/10 hover:bg-white/20 text-white"
@@ -530,7 +530,7 @@ export default function CreatorProfileUnified() {
           <div className="container mx-auto px-4">
             <Avatar
               className={cn(
-                "w-24 h-24 mx-auto mb-6 ring-4",
+                "w-16 h-16 md:w-24 md:h-24 mx-auto mb-4 md:mb-6 ring-2 md:ring-4",
                 isCustomBackground
                   ? "ring-gray-300 dark:ring-gray-600"
                   : "ring-white/20"
@@ -542,7 +542,7 @@ export default function CreatorProfileUnified() {
               />
               <AvatarFallback
                 className={cn(
-                  "text-2xl font-bold",
+                  "text-lg md:text-2xl font-bold",
                   isCustomBackground
                     ? "bg-gray-200 dark:bg-gray-700"
                     : "bg-white/20"
@@ -552,12 +552,12 @@ export default function CreatorProfileUnified() {
               </AvatarFallback>
             </Avatar>
 
-            <h1 className="text-4xl font-bold mb-4">{creator.username}</h1>
+            <h1 className="text-2xl md:text-4xl font-bold mb-2 md:mb-4">{creator.username}</h1>
 
             {creator.profileDescription && (
               <p
                 className={cn(
-                  "text-xl mb-6 max-w-2xl mx-auto",
+                  "text-base md:text-xl mb-4 md:mb-6 max-w-2xl mx-auto px-4 md:px-0",
                   isCustomBackground
                     ? "text-gray-700 dark:text-gray-300"
                     : "text-white/90"
@@ -569,7 +569,7 @@ export default function CreatorProfileUnified() {
 
             {renderSocialLinks()}
 
-            <div className="flex flex-col sm:flex-row gap-4 justify-center mt-8">
+            <div className="flex flex-col sm:flex-row gap-3 md:gap-4 justify-center mt-6 md:mt-8 px-4 md:px-0">
               <Button
                 onClick={() => {
                   if (isOwnProfile) {
