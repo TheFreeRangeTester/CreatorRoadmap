@@ -27,6 +27,7 @@ interface EnhancedRankingCardProps {
   isLoggedIn?: boolean;
   votesToNextRank?: number;
   recentVotes24h?: number;
+  isTopThree?: boolean;
 }
 
 export default function EnhancedRankingCard({
@@ -39,6 +40,7 @@ export default function EnhancedRankingCard({
   isLoggedIn = false,
   votesToNextRank = 0,
   recentVotes24h = 0,
+  isTopThree = false,
 }: EnhancedRankingCardProps) {
   const { t } = useTranslation();
   const [isHovered, setIsHovered] = useState(false);
@@ -213,18 +215,22 @@ export default function EnhancedRankingCard({
         )}
       </AnimatePresence>
 
-      <Card className={`overflow-hidden border-0 ${medalInfo.shadow} hover:${medalInfo.glow} transition-all duration-500 ${medalInfo.bgColor} rounded-3xl glass-card`}>
+      <Card className={`overflow-hidden border-0 ${medalInfo.shadow} hover:${medalInfo.glow} transition-all duration-500 ${medalInfo.bgColor} rounded-3xl glass-card ${
+        isTopThree ? 'transform-gpu' : ''
+      }`}>
         <div className="flex flex-col">
           {/* Contenido principal centrado */}
           <div className="flex-1 p-6 text-center">
             {/* Indicador de posición con medallas en la parte superior */}
             <motion.div 
-              className={`inline-flex items-center justify-center w-16 h-16 md:w-18 md:h-18 text-white font-bold relative ${medalInfo.gradient} rounded-full mb-4 mx-auto`}
+              className={`inline-flex items-center justify-center ${
+                isTopThree ? 'w-20 h-20 md:w-24 md:h-24' : 'w-16 h-16 md:w-18 md:h-18'
+              } text-white font-bold relative ${medalInfo.gradient} rounded-full mb-4 mx-auto`}
               whileHover={{ scale: 1.1 }}
             >
               {/* Número de ranking */}
               <motion.span 
-                className="text-lg md:text-xl font-black"
+                className={`${isTopThree ? 'text-xl md:text-2xl' : 'text-lg md:text-xl'} font-black`}
                 animate={isHovered ? { scale: 1.1 } : { scale: 1 }}
                 transition={{ duration: 0.2 }}
               >
@@ -234,7 +240,7 @@ export default function EnhancedRankingCard({
               {/* Medalla para top 3 - positioned absolutely */}
               {medalInfo.emoji && (
                 <motion.span 
-                  className="absolute -top-2 -right-2 text-xl md:text-2xl"
+                  className={`absolute -top-2 -right-2 ${isTopThree ? 'text-2xl md:text-3xl' : 'text-xl md:text-2xl'}`}
                   animate={isSuccessVote ? { 
                     scale: [1, 1.3, 1], 
                     rotate: [0, 15, -15, 0] 
@@ -272,12 +278,16 @@ export default function EnhancedRankingCard({
             </div>
 
             {/* Título centrado */}
-            <h3 className="text-sm md:text-base font-heading font-bold dark:text-white line-clamp-2 mb-3 contained-text leading-tight">
+            <h3 className={`${
+              isTopThree ? 'text-base md:text-lg' : 'text-sm md:text-base'
+            } font-heading font-bold dark:text-white line-clamp-2 mb-3 contained-text leading-tight`}>
               {idea.title}
             </h3>
             
             {/* Descripción centrada */}
-            <p className="text-xs md:text-sm text-gray-600 dark:text-gray-300 line-clamp-2 mb-4 leading-relaxed contained-text">
+            <p className={`${
+              isTopThree ? 'text-sm md:text-base' : 'text-xs md:text-sm'
+            } text-gray-600 dark:text-gray-300 line-clamp-2 mb-4 leading-relaxed contained-text`}>
               {idea.description}
             </p>
 

@@ -697,43 +697,113 @@ export default function CreatorProfileUnified() {
                   </p>
                 </div>
               ) : (
-                <div ref={ideasContainerRef} className="space-y-4">
-                  {ideas.map((idea, index) => {
-                    const rank = index + 1;
-                    
-                    // Función para calcular votos necesarios para subir de posición
-                    const getVotesToNextRank = (currentRank: number, currentVotes: number) => {
-                      if (currentRank <= 1) return 0;
-                      const ideaAbove = ideas[currentRank - 2]; // -2 porque el array es 0-indexed y queremos la idea anterior
-                      if (ideaAbove) {
-                        return Math.max(0, ideaAbove.votes - currentVotes + 1);
-                      }
-                      return 0;
-                    };
+                <div ref={ideasContainerRef}>
+                  {/* Top 3 Section - Featured */}
+                  {ideas.length >= 1 && (
+                    <div className="mb-12">
+                      <div className="flex items-center justify-center mb-8">
+                        <div className="flex items-center gap-3">
+                          <div className="h-px bg-gradient-to-r from-transparent via-yellow-400 to-transparent flex-1 w-12"></div>
+                          <div className="flex items-center gap-2 bg-gradient-to-r from-yellow-400 via-amber-500 to-yellow-600 text-yellow-900 px-4 py-2 rounded-full text-sm font-semibold shadow-lg">
+                            <span className="text-lg">🏆</span>
+                            <span>{t("dashboard.topIdeas", "Top Ideas")}</span>
+                          </div>
+                          <div className="h-px bg-gradient-to-r from-transparent via-yellow-400 to-transparent flex-1 w-12"></div>
+                        </div>
+                      </div>
+                      
+                      {/* Top 3 Grid - Responsive layout */}
+                      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8 mb-8">
+                        {ideas.slice(0, 3).map((idea, index) => {
+                          const rank = index + 1;
+                          
+                          const getVotesToNextRank = (currentRank: number, currentVotes: number) => {
+                            if (currentRank <= 1) return 0;
+                            const ideaAbove = ideas[currentRank - 2];
+                            if (ideaAbove) {
+                              return Math.max(0, ideaAbove.votes - currentVotes + 1);
+                            }
+                            return 0;
+                          };
 
-                    // Simular votos recientes (esto normalmente vendría del backend)
-                    const getRecentVotes24h = (ideaId: number) => {
-                      return Math.floor(Math.random() * 3); // Simulación simple
-                    };
+                          const getRecentVotes24h = (ideaId: number) => {
+                            return Math.floor(Math.random() * 3);
+                          };
 
-                    const votesToNext = getVotesToNextRank(rank, idea.votes);
-                    const recentVotes = getRecentVotes24h(idea.id);
+                          const votesToNext = getVotesToNextRank(rank, idea.votes);
+                          const recentVotes = getRecentVotes24h(idea.id);
 
-                    return (
-                      <EnhancedRankingCard
-                        key={idea.id}
-                        rank={rank}
-                        idea={idea}
-                        isVoting={isVoting[idea.id]}
-                        isVoted={votedIdeas.has(idea.id)}
-                        isSuccessVote={successVote === idea.id}
-                        onVote={handleVote}
-                        isLoggedIn={!!user}
-                        votesToNextRank={votesToNext}
-                        recentVotes24h={recentVotes}
-                      />
-                    );
-                  })}
+                          return (
+                            <div key={idea.id} className={cn(
+                              "transform transition-all duration-300",
+                              rank === 1 && "lg:scale-110 lg:z-10"
+                            )}>
+                              <EnhancedRankingCard
+                                rank={rank}
+                                idea={idea}
+                                isVoting={isVoting[idea.id]}
+                                isVoted={votedIdeas.has(idea.id)}
+                                isSuccessVote={successVote === idea.id}
+                                onVote={handleVote}
+                                isLoggedIn={!!user}
+                                votesToNextRank={votesToNext}
+                                recentVotes24h={recentVotes}
+                                isTopThree
+                              />
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Rest of Ideas - Regular list */}
+                  {ideas.length > 3 && (
+                    <div className="space-y-4">
+                      <div className="text-center mb-6">
+                        <h3 className="text-xl font-semibold text-gray-700 dark:text-gray-300 mb-2">
+                          {t("dashboard.moreIdeas", "More Ideas")}
+                        </h3>
+                        <div className="h-px bg-gradient-to-r from-transparent via-gray-300 dark:via-gray-600 to-transparent"></div>
+                      </div>
+                      
+                      {ideas.slice(3).map((idea, index) => {
+                        const rank = index + 4; // +4 porque empezamos desde la 4ta posición
+                        
+                        const getVotesToNextRank = (currentRank: number, currentVotes: number) => {
+                          if (currentRank <= 1) return 0;
+                          const ideaAbove = ideas[currentRank - 2];
+                          if (ideaAbove) {
+                            return Math.max(0, ideaAbove.votes - currentVotes + 1);
+                          }
+                          return 0;
+                        };
+
+                        const getRecentVotes24h = (ideaId: number) => {
+                          return Math.floor(Math.random() * 3);
+                        };
+
+                        const votesToNext = getVotesToNextRank(rank, idea.votes);
+                        const recentVotes = getRecentVotes24h(idea.id);
+
+                        return (
+                          <EnhancedRankingCard
+                            key={idea.id}
+                            rank={rank}
+                            idea={idea}
+                            isVoting={isVoting[idea.id]}
+                            isVoted={votedIdeas.has(idea.id)}
+                            isSuccessVote={successVote === idea.id}
+                            onVote={handleVote}
+                            isLoggedIn={!!user}
+                            votesToNextRank={votesToNext}
+                            recentVotes24h={recentVotes}
+                            isTopThree={false}
+                          />
+                        );
+                      })}
+                    </div>
+                  )}
                 </div>
               )}
             </div>

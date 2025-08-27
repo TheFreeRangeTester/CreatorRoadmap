@@ -367,7 +367,9 @@
     "suggested": "Sugeridas",
     "suggestions": "Sugeridas",
     "store": "Tienda de Puntos",
-    "redemptions": "Canjes"
+    "redemptions": "Canjes",
+    "topIdeas": "Top Ideas",
+    "moreIdeas": "Más Ideas"
   },
   "ideaForm": {
     "addTitle": "Agregar nueva idea",

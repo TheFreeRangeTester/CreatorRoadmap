@@ -367,7 +367,9 @@
     "suggested": "Suggested",
     "suggestions": "Suggested",
     "store": "Points Store",
-    "redemptions": "Redemptions"
+    "redemptions": "Redemptions",
+    "topIdeas": "Top Ideas",
+    "moreIdeas": "More Ideas"
   },
   "ideaForm": {
     "addTitle": "Add new idea",
