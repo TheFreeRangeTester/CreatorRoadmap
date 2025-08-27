@@ -631,7 +631,7 @@
   "audienceStats": {
     "title": "Your Activity",
     "subtitle": "Your participation stats across all creators",
-    "pointsInfo": "Earn points by voting • Use them to suggest ideas and redeem in stores",
+    "pointsInfo": "Earn points by voting on this profile • Use them to suggest ideas to this creator and redeem in their store",
     "votesGiven": "Votes Given",
     "votesGivenDesc": "Ideas you've voted for",
     "ideasSuggested": "Ideas Suggested",
@@ -681,7 +681,7 @@
     "left": "",
     "emptyStore": "This store is empty",
     "noActiveItems": "No active items in this store",
-    "earnPointsInfo": "Earn points by voting for creators' ideas"
+    "earnPointsInfo": "Earn points by voting for this creator's ideas"
   },
   "redemptions": {
     "title": "Redemptions",

@@ -587,7 +587,7 @@
   "audienceStats": {
     "title": "Tu Actividad",
     "subtitle": "Tus estadísticas de participación en todos los creadores",
-    "pointsInfo": "Gana puntos votando • Úsalos para sugerir ideas y canjear en tiendas",
+    "pointsInfo": "Gana puntos votando en este perfil • Úsalos para sugerir ideas a este creador y canjear en su tienda",
     "votesGiven": "Votos Dados",
     "votesGivenDesc": "Ideas por las que has votado",
     "ideasSuggested": "Ideas Sugeridas",
@@ -686,7 +686,7 @@
     "left": "",
     "emptyStore": "Esta tienda está vacía",
     "noActiveItems": "No hay artículos activos en esta tienda",
-    "earnPointsInfo": "Gana puntos votando por ideas de creadores"
+    "earnPointsInfo": "Gana puntos votando por ideas de este creador"
   },
   "redemptions": {
     "title": "Canjes",

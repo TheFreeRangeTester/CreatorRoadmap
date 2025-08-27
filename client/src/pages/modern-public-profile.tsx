@@ -71,10 +71,10 @@ export default function ModernPublicProfile() {
   // Check if current user is the profile owner
   const isOwnProfile = user?.username === username;
 
-  // Query user points to control suggestion button
+  // Query user points for this specific creator
   const { data: userPoints } = useQuery<{ totalPoints: number }>({
-    queryKey: ["/api/user/points"],
-    enabled: !!user && !isOwnProfile,
+    queryKey: [`/api/user/points/${data?.creator?.id}`],
+    enabled: !!user && !isOwnProfile && !!data?.creator?.id,
     refetchOnWindowFocus: false,
   });
 
@@ -164,6 +164,12 @@ export default function ModernPublicProfile() {
         description: t("vote.successDesc", "Tu voto ha sido contabilizado."),
       });
 
+      // Invalidate points for this specific creator
+      if (data?.creator?.id) {
+        queryClient.invalidateQueries({ queryKey: [`/api/user/points/${data.creator.id}`] });
+      }
+      queryClient.invalidateQueries({ queryKey: ["/api/user/audience-stats"] });
+      
       await refetch();
     } catch (error) {
       console.error("Error voting:", error);

@@ -141,8 +141,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const SUGGESTION_COST = 3;
       const userId = req.user.id;
 
-      // Check if user has enough points
-      const userPoints = await storage.getUserPoints(userId);
+      // Validate suggestion data (expecting creatorId in the body)
+      console.log(`[SUGGESTION] Received suggestion data:`, req.body);
+      const validatedData = suggestIdeaSchema.parse(req.body);
+      console.log(`[SUGGESTION] Validated data:`, validatedData);
+      const creatorId = validatedData.creatorId;
+
+      // Check if user has enough points for this creator
+      const userPoints = await storage.getUserPoints(userId, creatorId);
       if (userPoints.totalPoints < SUGGESTION_COST) {
         return res.status(403).json({ 
           message: "Not enough points",
@@ -151,19 +157,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
         });
       }
 
-      // Validate suggestion data (expecting creatorId in the body)
-      console.log(`[SUGGESTION] Received suggestion data:`, req.body);
-      const validatedData = suggestIdeaSchema.parse(req.body);
-      console.log(`[SUGGESTION] Validated data:`, validatedData);
-
       // Deduct points for suggestion
-      await storage.updateUserPoints(userId, SUGGESTION_COST, 'spent', 'suggestion_submitted');
+      await storage.updateUserPoints(userId, creatorId, SUGGESTION_COST, 'spent', 'suggestion_submitted');
 
       // Create the suggestion
       const idea = await storage.suggestIdea(validatedData, userId);
 
       // Get updated points
-      const updatedPoints = await storage.getUserPoints(userId);
+      const updatedPoints = await storage.getUserPoints(userId, creatorId);
 
       res.status(201).json({
         success: true,
@@ -183,15 +184,20 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Points API routes
-  // Get user points
-  app.get("/api/user/points", async (req: Request, res: Response) => {
+  // Get user points for a specific creator
+  app.get("/api/user/points/:creatorId", async (req: Request, res: Response) => {
     try {
       if (!req.isAuthenticated()) {
         return res.status(401).json({ message: "Authentication required" });
       }
 
       const userId = req.user.id;
-      const points = await storage.getUserPoints(userId);
+      const creatorId = parseInt(req.params.creatorId);
+      if (isNaN(creatorId)) {
+        return res.status(400).json({ message: "Invalid creator ID" });
+      }
+      
+      const points = await storage.getUserPoints(userId, creatorId);
 
       res.json(points);
     } catch (error) {
@@ -200,7 +206,49 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Get user point transactions/history
+  // Legacy route for creator's own points (for backward compatibility)
+  app.get("/api/user/points", async (req: Request, res: Response) => {
+    try {
+      if (!req.isAuthenticated()) {
+        return res.status(401).json({ message: "Authentication required" });
+      }
+
+      const userId = req.user.id;
+      // For creators accessing their own dashboard, use their own ID as creatorId
+      const creatorId = userId;
+      
+      const points = await storage.getUserPoints(userId, creatorId);
+
+      res.json(points);
+    } catch (error) {
+      console.error("Error fetching user points:", error);
+      res.status(500).json({ message: "Failed to fetch user points" });
+    }
+  });
+
+  // Get user point transactions/history for a specific creator
+  app.get("/api/user/point-transactions/:creatorId", async (req: Request, res: Response) => {
+    try {
+      if (!req.isAuthenticated()) {
+        return res.status(401).json({ message: "Authentication required" });
+      }
+
+      const userId = req.user.id;
+      const creatorId = parseInt(req.params.creatorId);
+      if (isNaN(creatorId)) {
+        return res.status(400).json({ message: "Invalid creator ID" });
+      }
+      const limit = parseInt(req.query.limit as string) || 50;
+      const transactions = await storage.getUserPointTransactions(userId, creatorId, limit);
+
+      res.json(transactions);
+    } catch (error) {
+      console.error("Error fetching point transactions:", error);
+      res.status(500).json({ message: "Failed to fetch point transactions" });
+    }
+  });
+
+  // Legacy route for creator's own point transactions (for backward compatibility)
   app.get("/api/user/point-transactions", async (req: Request, res: Response) => {
     try {
       if (!req.isAuthenticated()) {
@@ -208,8 +256,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
 
       const userId = req.user.id;
+      // For creators accessing their own dashboard, use their own ID as creatorId
+      const creatorId = userId;
       const limit = parseInt(req.query.limit as string) || 50;
-      const transactions = await storage.getUserPointTransactions(userId, limit);
+      const transactions = await storage.getUserPointTransactions(userId, creatorId, limit);
 
       res.json(transactions);
     } catch (error) {
@@ -468,8 +518,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
       await storage.createVote({ ideaId }, userId);
       console.log(`[OLD-VOTE] Vote created successfully`);
 
-      // Award 1 point for voting
-      await storage.updateUserPoints(userId, 1, 'earned', 'vote_given', ideaId);
+      // Award 1 point for voting (to this creator's profile)
+      const creatorId = idea.creatorId;
+      await storage.updateUserPoints(userId, creatorId, 1, 'earned', 'vote_given', ideaId);
       console.log(`[OLD-VOTE] 1 point awarded to user ${userId}`);
 
       // Get the updated idea with its new position
@@ -655,15 +706,16 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
         console.log("✅ Datos validados:", validatedData);
 
-        // Check if user has enough points
-        const userPoints = await storage.getUserPoints(req.user!.id);
+        // Check if user has enough points for this creator
+        const creatorId = creator.id;
+        const userPoints = await storage.getUserPoints(req.user!.id, creatorId);
         if (userPoints.totalPoints < 3) {
           console.log("❌ ERROR: Usuario no tiene suficientes puntos:", userPoints.totalPoints);
           return res.status(400).json({ message: "Insufficient points. You need 3 points to suggest an idea." });
         }
 
         // Deduct 3 points for the suggestion
-        await storage.updateUserPoints(req.user!.id, 3, 'spent', 'idea_suggestion', undefined);
+        await storage.updateUserPoints(req.user!.id, creatorId, 3, 'spent', 'idea_suggestion', undefined);
         console.log("✅ 3 puntos descontados del usuario");
 
         // Store the suggested idea with pending status
@@ -805,7 +857,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       // Award 2 points to the suggester for approved idea
       if (idea.suggestedBy) {
-        await storage.updateUserPoints(idea.suggestedBy, 2, 'earned', 'idea_approved', id);
+        const creatorId = idea.creatorId;
+        await storage.updateUserPoints(idea.suggestedBy, creatorId, 2, 'earned', 'idea_approved', id);
       }
 
       // Get the approved idea with updated position 
@@ -893,8 +946,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
       await storage.createVote({ ideaId }, userId);
       console.log(`[MAIN-VOTE] Vote created successfully`);
 
-      // Award 1 point for voting
-      await storage.updateUserPoints(userId, 1, 'earned', 'vote_given', ideaId);
+      // Award 1 point for voting (to this creator's profile)
+      const creatorId = idea.creatorId;
+      await storage.updateUserPoints(userId, creatorId, 1, 'earned', 'vote_given', ideaId);
       console.log(`[MAIN-VOTE] 1 point awarded to user ${userId}`);
 
       // Get the updated idea with its new position
@@ -973,8 +1027,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
       await storage.createVote({ ideaId }, userId);
       console.log(`[VOTE] Vote created successfully`);
 
-      // Award 1 point for voting
-      await storage.updateUserPoints(userId, 1, 'earned', 'vote_given', ideaId);
+      // Award 1 point for voting (to this creator's profile)
+      const creatorId = idea.creatorId;
+      await storage.updateUserPoints(userId, creatorId, 1, 'earned', 'vote_given', ideaId);
       console.log(`[VOTE] 1 point awarded to user ${userId}`);
 
       // Get the updated idea with its new position
@@ -1086,8 +1141,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Create the vote
       await storage.createVote({ ideaId }, userId);
 
-      // Award 1 point for voting
-      await storage.updateUserPoints(userId, 1, 'earned', 'vote_given', ideaId);
+      // Award 1 point for voting (to this creator's profile)
+      const creatorId = idea.creatorId;
+      await storage.updateUserPoints(userId, creatorId, 1, 'earned', 'vote_given', ideaId);
 
       // Get the updated idea with its new position
       const ideasWithPositions = await storage.getIdeasWithPositions();
@@ -1912,8 +1968,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(400).json({ message: "This item is no longer available" });
       }
 
-      // Check if user has enough points
-      const userPoints = await storage.getUserPoints(userId);
+      // Check if user has enough points for this creator
+      const creatorId = creator.id;
+      const userPoints = await storage.getUserPoints(userId, creatorId);
       if (userPoints.totalPoints < item.pointsCost) {
         return res.status(400).json({ 
           message: `Insufficient points. You need ${item.pointsCost} points but only have ${userPoints.totalPoints}` 
@@ -1924,7 +1981,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const redemption = await storage.createStoreRedemption({ storeItemId: itemIdNum }, userId);
       
       // Deduct points from user
-      await storage.updateUserPoints(userId, item.pointsCost, 'spent', 'store_redemption', itemIdNum);
+      await storage.updateUserPoints(userId, creatorId, item.pointsCost, 'spent', 'store_redemption', itemIdNum);
 
       res.status(201).json(redemption);
     } catch (error) {
