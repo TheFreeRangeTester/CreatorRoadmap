@@ -60,69 +60,66 @@ export default function AudienceStats({ isVisible }: AudienceStatsProps) {
   ];
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.3 }}
-      className="w-full max-w-4xl mx-auto px-4 py-6"
-    >
-      <Card className="bg-white dark:bg-gray-800 shadow-lg w-full max-w-none overflow-hidden">
-        <CardHeader className="pb-4 px-4 sm:px-6">
-          <div className="flex items-center gap-3">
-            <div className="p-2 rounded-lg bg-gradient-to-r from-purple-500/10 to-pink-500/10 flex-shrink-0">
-              <BarChart3 className="h-6 w-6 text-purple-600 dark:text-purple-400" />
-            </div>
-            <div className="min-w-0 flex-1">
-              <CardTitle className="text-lg sm:text-xl font-bold break-words">
-                {t("audienceStats.title", "Your Activity")}
-              </CardTitle>
-              <p className="text-sm text-gray-600 dark:text-gray-400 mt-1 break-words">
-                {t("audienceStats.subtitle", "Your participation stats across all creators")}
-              </p>
-            </div>
-          </div>
-        </CardHeader>
-        <CardContent>
-          {isLoading ? (
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              {[1, 2, 3].map((i) => (
-                <div key={i} className="p-4 rounded-lg bg-gray-100 dark:bg-gray-700 animate-pulse">
-                  <div className="h-4 bg-gray-200 dark:bg-gray-600 rounded mb-2"></div>
-                  <div className="h-8 bg-gray-200 dark:bg-gray-600 rounded"></div>
-                </div>
-              ))}
-            </div>
-          ) : (
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              {statsItems.map((item, index) => (
-                <motion.div
-                  key={item.label}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.3, delay: index * 0.1 }}
-                  className={`p-4 rounded-lg ${item.color} border border-gray-200 dark:border-gray-700`}
-                >
-                  <div className="flex items-center gap-3 mb-2">
-                    {item.icon}
-                    <span className="font-medium text-gray-900 dark:text-gray-100">
-                      {item.label}
-                    </span>
+    <div className="space-y-6">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+        <div className="min-w-0 flex-1">
+          <h2 className="text-xl sm:text-2xl font-bold flex items-center gap-2 break-words">
+            <BarChart3 className="h-5 w-5 sm:h-6 sm:w-6 flex-shrink-0" />
+            <span className="break-words">{t("audienceStats.title", "Your Activity")}</span>
+          </h2>
+          <p className="text-muted-foreground mt-1 break-words">
+            {t("audienceStats.subtitle", "Your participation stats across all creators")}
+          </p>
+        </div>
+      </div>
+
+      {isLoading ? (
+        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+          {[1, 2, 3, 4].map((i) => (
+            <Card key={i} className="relative rounded-3xl glass-card w-full max-w-none overflow-hidden animate-pulse">
+              <CardHeader className="pb-2 px-4 pt-4">
+                <div className="h-4 bg-gray-200 dark:bg-gray-600 rounded mb-2"></div>
+              </CardHeader>
+              <CardContent className="px-4 pb-4">
+                <div className="h-8 bg-gray-200 dark:bg-gray-600 rounded mb-2"></div>
+                <div className="h-3 bg-gray-200 dark:bg-gray-600 rounded"></div>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      ) : (
+        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+          {statsItems.map((item, index) => (
+            <motion.div
+              key={item.label}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.3, delay: index * 0.1 }}
+            >
+              <Card className="relative rounded-3xl glass-card w-full max-w-none overflow-hidden">
+                <CardHeader className="pb-2 px-4 pt-4">
+                  <div className="flex items-center gap-2 justify-center">
+                    <CardTitle className="text-base sm:text-lg leading-tight text-center flex items-center gap-2">
+                      {item.icon}
+                      <span className="break-words">{item.label}</span>
+                    </CardTitle>
                   </div>
+                </CardHeader>
+                <CardContent className="px-4 pb-4 text-center">
                   <div className="mb-2">
-                    <span className="text-3xl font-bold text-gray-900 dark:text-gray-100">
+                    <span className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-gray-100">
                       {item.value}
                     </span>
                   </div>
-                  <p className="text-sm text-gray-600 dark:text-gray-400">
+                  <p className="text-xs sm:text-sm text-muted-foreground line-clamp-2 leading-relaxed">
                     {item.description}
                   </p>
-                </motion.div>
-              ))}
-            </div>
-          )}
-
-        </CardContent>
-      </Card>
-    </motion.div>
+                </CardContent>
+              </Card>
+            </motion.div>
+          ))}
+        </div>
+      )}
+    </div>
   );
 }
