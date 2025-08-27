@@ -31,6 +31,7 @@ import SuggestIdeaModal from "@/components/suggest-idea-modal";
 import AudienceStats from "@/components/audience-stats";
 import { PublicStore } from "@/components/public-store";
 import { UserIndicator } from "@/components/user-indicator";
+import { MobileMenu } from "@/components/mobile-menu";
 import { FaTiktok } from "react-icons/fa";
 import { FaThreads } from "react-icons/fa6";
 
@@ -463,7 +464,14 @@ export default function ModernPublicProfile() {
               Fanlist
             </h1>
           </div>
-          <UserIndicator user={user} variant="mobile" />
+          <div className="flex items-center gap-2">
+            {user && <UserIndicator user={user} variant="mobile" />}
+            <MobileMenu 
+              username={user?.username}
+              isCreatorProfile={false}
+              onRefresh={() => refetch()}
+            />
+          </div>
         </div>
       </div>
       

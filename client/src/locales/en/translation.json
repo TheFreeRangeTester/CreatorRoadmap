@@ -323,6 +323,8 @@
     "ideaSentDesc": "The creator will review it soon. Thank you for your contribution!"
   },
   "ideas": {
+    "short": "Ideas",
+    "total": "ideas",
     "title": "Ideas",
     "description": "Vote for content",
     "noSuggestedIdeas": "No suggested ideas yet",
@@ -654,10 +656,12 @@
     "hide": "Hide My Stats"
   },
   "activity": {
+    "short": "Activity",
     "title": "Activity",
     "description": "My statistics"
   },
   "store": {
+    "short": "Store",
     "title": "Store",
     "description": "Redeem points",
     "browseStore": "Points Store",

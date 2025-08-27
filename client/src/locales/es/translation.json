@@ -323,6 +323,8 @@
     "ideaSentDesc": "El creador la revisará pronto. ¡Gracias por tu contribución!"
   },
   "ideas": {
+    "short": "Ideas",
+    "total": "ideas",
     "title": "Ideas",
     "description": "Votar por contenido",
     "noSuggestedIdeas": "Aún no hay ideas sugeridas",
@@ -610,6 +612,7 @@
     "hide": "Ocultar Mis Estadísticas"
   },
   "activity": {
+    "short": "Actividad",
     "title": "Actividad",
     "description": "Mis estadísticas"
   },
@@ -663,6 +666,7 @@
     "invalidInput": "Campos inválidos"
   },
   "store": {
+    "short": "Tienda",
     "title": "Tienda",
     "description": "Canjear puntos",
     "browseStore": "Tienda de Puntos",
