@@ -53,12 +53,6 @@ import PaymentFailurePage from "@/pages/payment-failure-page";
 function App() {
   return (
     <>
-      {/* Selector de idioma y tema en la esquina superior derecha */}
-      <div className="hidden md:flex fixed top-4 right-4 z-50 items-center space-x-2 md:space-x-3 lg:space-x-4">
-        <LanguageToggle />
-        <ThemeToggle />
-      </div>
-
       {/* Espacio para modales */}
 
       {/* Router principal */}
