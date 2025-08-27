@@ -468,6 +468,7 @@
     "subscriptionCancelledDesc": "Tu suscripción ha sido cancelada exitosamente",
     "cancelError": "Hubo un error al cancelar tu suscripción",
     "navigation": {
+    "explore": "Explorar",
       "title": "Navegación",
       "backToDashboard": "Volver al Dashboard"
     },

@@ -15,6 +15,7 @@ interface ModernSidebarProps {
   isOwnProfile?: boolean;
   userPoints?: number;
   onSuggestClick?: () => void;
+  user?: { username: string } | null;
 }
 
 export function ModernSidebar({ 
@@ -24,7 +25,8 @@ export function ModernSidebar({
   isAuthenticated,
   isOwnProfile,
   userPoints,
-  onSuggestClick
+  onSuggestClick,
+  user
 }: ModernSidebarProps) {
   const { t } = useTranslation();
   const [isExpanded, setIsExpanded] = useState(true);
@@ -70,7 +72,10 @@ export function ModernSidebar({
               animate={{ opacity: 1 }}
               className="text-lg font-semibold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent"
             >
-              {t("navigation.title", "Navegación")}
+              {user ? 
+                t("common.hello", "Hola") + ", " + user.username : 
+                t("navigation.explore", "Explorar")
+              }
             </motion.h2>
           )}
           <button

@@ -467,6 +467,7 @@
     "subscriptionCancelledDesc": "Your subscription has been cancelled successfully",
     "cancelError": "There was an error cancelling your subscription",
     "navigation": {
+    "explore": "Explore",
       "title": "Navigation",
       "backToDashboard": "Back to Dashboard"
     },

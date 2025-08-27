@@ -462,6 +462,7 @@ export default function ModernPublicProfile() {
             isOwnProfile={isOwnProfile}
             userPoints={userPoints?.totalPoints}
             onSuggestClick={() => setSuggestDialogOpen(true)}
+            user={user}
           />
         </div>
 
