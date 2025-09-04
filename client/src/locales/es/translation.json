@@ -349,6 +349,8 @@
     "rejectErrorDesc": "No se pudo rechazar la idea. Por favor intenta de nuevo."
   },
   "dashboard": {
+    "welcome": "Bienvenido a tu panel de ideas",
+    "topIdeas": "Top Ideas",
     "welcome": "Hola",
     "welcomeSubtitle": "Bienvenido a tu panel de ideas",
     "creatorDashboard": "Panel de Creador",
@@ -711,6 +713,7 @@
     "earnPointsInfo": "Gana puntos votando por ideas de este creador"
   },
   "redemptions": {
+    "short": "Canjes",
     "title": "Canjes",
     "description": "Gestiona las solicitudes de canje de tu audiencia",
     "noRedemptions": "No hay canjes pendientes",

@@ -349,6 +349,8 @@
     "rejectErrorDesc": "Could not reject the idea. Please try again."
   },
   "dashboard": {
+    "welcome": "Welcome to your ideas dashboard",
+    "topIdeas": "Top Ideas",
     "welcome": "Hello",
     "welcomeSubtitle": "Welcome to your ideas dashboard",
     "creatorDashboard": "Creator Dashboard",
@@ -706,6 +708,7 @@
     "earnPointsInfo": "Earn points by voting for this creator's ideas"
   },
   "redemptions": {
+    "short": "Redemptions",
     "title": "Redemptions",
     "description": "Manage redemption requests from your audience",
     "noRedemptions": "No pending redemptions",
