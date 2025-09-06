@@ -130,9 +130,6 @@ export default function IdeaListView({
           <div className={`text-2xl font-bold ${getRankingStyle(position)} min-w-[2rem] text-center`}>
             #{position}
           </div>
-          <div className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-            {t("common.position", "Pos")}
-          </div>
         </div>
 
         {/* Main Content */}
@@ -160,11 +157,11 @@ export default function IdeaListView({
                   {positionIndicator.text}
                 </Badge>
 
-                {/* Vote Count */}
-                <div className="flex items-center gap-1 text-sm text-gray-600 dark:text-gray-400">
-                  <Heart className="w-4 h-4" />
-                  <span className="font-medium">{idea.voteCount}</span>
-                  <span>{t("ideas.votes", "votos")}</span>
+                {/* Vote Count - More prominent */}
+                <div className="flex items-center gap-2 bg-gradient-to-r from-pink-50 to-purple-50 dark:from-pink-900/20 dark:to-purple-900/20 px-3 py-2 rounded-full border border-pink-200/50 dark:border-pink-800/50">
+                  <Heart className="w-4 h-4 text-pink-500" />
+                  <span className="font-bold text-lg text-gray-900 dark:text-white">{idea.voteCount}</span>
+                  <span className="text-sm text-gray-600 dark:text-gray-400">{t("ideas.votes", "votos")}</span>
                 </div>
 
                 {/* Creator indicator for audience users */}
