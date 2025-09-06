@@ -5,6 +5,7 @@ import { useAuth } from "@/hooks/use-auth";
 import { useToast } from "@/hooks/use-toast";
 import { queryClient, apiRequest } from "@/lib/queryClient";
 import IdeaCard from "@/components/idea-card";
+import IdeaListView from "@/components/idea-list-view";
 import IdeaForm from "@/components/idea-form";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -300,13 +301,17 @@ export function IdeasTabView({ mode = "published" }: IdeasTabViewProps) {
 
   // Render published ideas
   if (mode === "published") {
+    // Sort ideas by vote count (descending) - most voted first
+    const sortedIdeas = [...displayedIdeas].sort((a, b) => b.voteCount - a.voteCount);
+    
     return (
       <>
-        <div className="grid gap-6 grid-cols-1 md:grid-cols-2 auto-rows-fr">
-          {displayedIdeas.map((idea) => (
-            <IdeaCard
+        <div className="space-y-4">
+          {sortedIdeas.map((idea, index) => (
+            <IdeaListView
               key={idea.id}
               idea={idea}
+              position={index + 1} // 1-based position
               onVote={handleVote}
               onEdit={
                 user && idea.creatorId === user.id ? handleEditIdea : undefined
@@ -334,65 +339,87 @@ export function IdeasTabView({ mode = "published" }: IdeasTabViewProps) {
   // Render suggested ideas
   return (
     <>
-      <div className="grid gap-6 grid-cols-1 md:grid-cols-2 auto-rows-fr">
-        {displayedIdeas.map((idea) => (
+      <div className="space-y-4">
+        {displayedIdeas.map((idea, index) => (
           <div
             key={idea.id}
-            className="border border-gray-200 dark:border-gray-700 rounded-xl p-4 bg-white dark:bg-gray-800 shadow-sm hover:shadow-md transition-all duration-200 h-full flex flex-col min-h-[200px]"
+            className="group bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm border border-gray-200/50 dark:border-gray-700/50 rounded-2xl p-4 hover:bg-white/90 dark:hover:bg-gray-900/90 hover:shadow-lg transition-all duration-300 hover:border-gray-300/60 dark:hover:border-gray-600/60"
           >
-            <div className="mb-2 flex justify-between items-start">
-              <h3 className="font-medium text-lg dark:text-white line-clamp-2 pr-2 flex-grow">
-                {idea.title}
-              </h3>
-              <Badge
-                variant="outline"
-                className="bg-amber-100 text-amber-700 border-amber-200 dark:bg-amber-900/30 dark:text-amber-300 dark:border-amber-800 flex-shrink-0"
-              >
-                <Clock className="h-3 w-3 mr-1" /> {t("ideas.pending")}
-              </Badge>
-            </div>
-
-            <p className="text-gray-600 dark:text-gray-300 mb-3 line-clamp-3 flex-grow">
-              {idea.description}
-            </p>
-
-            {idea.suggestedByUsername && (
-              <div className="text-xs text-gray-500 dark:text-gray-400 mb-3 inline-flex items-center gap-1 bg-gray-100 dark:bg-gray-700 px-2 py-1 rounded-full">
-                <User className="h-3 w-3" />
-                {t("ideas.suggestedBy")}:{" "}
-                <span className="font-medium">{idea.suggestedByUsername}</span>
+            <div className="flex items-start gap-4">
+              {/* Position */}
+              <div className="flex-shrink-0 flex flex-col items-center">
+                <div className="text-xl font-bold text-amber-600 dark:text-amber-400 min-w-[2rem] text-center">
+                  #{index + 1}
+                </div>
+                <Badge
+                  variant="outline"
+                  className="bg-amber-100 text-amber-700 border-amber-200 dark:bg-amber-900/30 dark:text-amber-300 dark:border-amber-800 text-xs mt-1"
+                >
+                  <Clock className="h-3 w-3 mr-1" /> {t("ideas.pending", "Pendiente")}
+                </Badge>
               </div>
-            )}
 
-            <div className="flex justify-end gap-2 mt-auto">
-              <Button
-                variant="outline"
-                size="sm"
-                className="border-red-200 text-red-600 hover:text-red-700 hover:bg-red-50 dark:border-red-900 dark:text-red-400 dark:hover:bg-red-900/30 transition-all duration-200"
-                onClick={() => handleReject(idea.id)}
-                disabled={processingIdea === idea.id}
-              >
-                {processingIdea === idea.id && rejectMutation.isPending ? (
-                  <Loader2 className="h-3 w-3 mr-1 animate-spin" />
-                ) : (
-                  <XCircle className="h-3 w-3 mr-1" />
-                )}
-                {t("ideas.reject")}
-              </Button>
-              <Button
-                variant="outline"
-                size="sm"
-                className="border-green-200 text-green-600 hover:text-green-700 hover:bg-green-50 dark:border-green-900 dark:text-green-400 dark:hover:bg-green-900/30 transition-all duration-200"
-                onClick={() => handleApprove(idea.id)}
-                disabled={processingIdea === idea.id}
-              >
-                {processingIdea === idea.id && approveMutation.isPending ? (
-                  <Loader2 className="h-3 w-3 mr-1 animate-spin" />
-                ) : (
-                  <CheckCircle className="h-3 w-3 mr-1" />
-                )}
-                {t("ideas.approve")}
-              </Button>
+              {/* Content */}
+              <div className="flex-1 min-w-0">
+                <div className="flex items-start justify-between gap-3">
+                  <div className="flex-1 min-w-0">
+                    <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2 line-clamp-2">
+                      {idea.title}
+                    </h3>
+                    {idea.description && (
+                      <p className="text-sm text-gray-600 dark:text-gray-400 line-clamp-2 mb-3">
+                        {idea.description}
+                      </p>
+                    )}
+                    
+                    {/* Suggested by info */}
+                    {idea.suggestedByUsername && (
+                      <div className="flex items-center gap-2 mb-3">
+                        <Badge variant="outline" className="text-xs">
+                          <User className="w-3 h-3 mr-1" />
+                          {t("ideas.suggestedBy", "Sugerido por")}: {idea.suggestedByUsername}
+                        </Badge>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Actions */}
+                  <div className="flex-shrink-0 flex items-center gap-2">
+                    <Button
+                      onClick={() => handleReject(idea.id)}
+                      disabled={processingIdea === idea.id}
+                      variant="outline"
+                      size="sm"
+                      className="border-red-300 dark:border-red-700 text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 dark:text-red-400"
+                    >
+                      {processingIdea === idea.id && rejectMutation.isPending ? (
+                        <Loader2 className="h-4 w-4 animate-spin" />
+                      ) : (
+                        <>
+                          <XCircle className="h-4 w-4 mr-1" />
+                          {t("ideas.reject", "Rechazar")}
+                        </>
+                      )}
+                    </Button>
+                    <Button
+                      onClick={() => handleApprove(idea.id)}
+                      disabled={processingIdea === idea.id}
+                      variant="outline"
+                      size="sm"
+                      className="border-green-500 text-green-700 hover:bg-green-50 dark:border-green-400 dark:text-green-400 dark:hover:bg-green-900/20"
+                    >
+                      {processingIdea === idea.id && approveMutation.isPending ? (
+                        <Loader2 className="h-4 w-4 animate-spin" />
+                      ) : (
+                        <>
+                          <CheckCircle className="h-4 w-4 mr-1" />
+                          {t("ideas.approve", "Aprobar")}
+                        </>
+                      )}
+                    </Button>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         ))}
