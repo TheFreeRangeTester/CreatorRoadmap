@@ -302,7 +302,7 @@ export function IdeasTabView({ mode = "published" }: IdeasTabViewProps) {
   // Render published ideas
   if (mode === "published") {
     // Sort ideas by vote count (descending) - most voted first
-    const sortedIdeas = [...displayedIdeas].sort((a, b) => b.voteCount - a.voteCount);
+    const sortedIdeas = [...displayedIdeas].sort((a, b) => b.votes - a.votes);
     
     return (
       <>
