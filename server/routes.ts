@@ -147,6 +147,15 @@ export async function registerRoutes(app: Express): Promise<Server> {
       console.log(`[SUGGESTION] Validated data:`, validatedData);
       const creatorId = validatedData.creatorId;
 
+      // Prevent users from suggesting ideas to themselves
+      if (creatorId === userId) {
+        console.log(`[SUGGESTION] User ${userId} tried to suggest to themselves`);
+        return res.status(403).json({ 
+          message: "¿Sugerirte ideas a vos mismo? Eso es como mandarte mensajes en WhatsApp 😅",
+          error: "self_suggest_attempt" 
+        });
+      }
+
       // Check if user has enough points for this creator
       const userPoints = await storage.getUserPoints(userId, creatorId);
       if (userPoints.totalPoints < SUGGESTION_COST) {
