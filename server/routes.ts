@@ -151,7 +151,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       if (creatorId === userId) {
         console.log(`[SUGGESTION] User ${userId} tried to suggest to themselves`);
         return res.status(403).json({ 
-          message: "¿Sugerirte ideas a vos mismo? Eso es como mandarte mensajes en WhatsApp 😅",
+          message: "Cannot suggest ideas to yourself",
           error: "self_suggest_attempt" 
         });
       }
@@ -946,7 +946,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       if (idea.creatorId === userId) {
         console.log(`[MAIN-VOTE] User ${userId} tried to vote their own idea ${ideaId}`);
         return res.status(403).json({ 
-          message: "Eso sería como darte 'Me gusta' a tu propio selfie... muy narcisista 😅",
+          message: "Cannot vote on your own ideas",
           error: "self_vote_attempt" 
         });
       }
@@ -1030,7 +1030,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       if (idea.creatorId === userId) {
         console.log(`[VOTE] User ${userId} tried to vote their own idea ${ideaId}`);
         return res.status(403).json({ 
-          message: "Eso sería como darte 'Me gusta' a tu propio selfie... muy narcisista 😅",
+          message: "Cannot vote on your own ideas",
           error: "self_vote_attempt" 
         });
       }
@@ -1158,7 +1158,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       if (idea.creatorId === userId) {
         console.log(`[PUBLIC-VOTE] User ${userId} tried to vote their own idea ${ideaId}`);
         return res.status(403).json({ 
-          message: "Eso sería como darte 'Me gusta' a tu propio selfie... muy narcisista 😅",
+          message: "Cannot vote on your own ideas",
           error: "self_vote_attempt" 
         });
       }
