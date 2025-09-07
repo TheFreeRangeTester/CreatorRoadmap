@@ -258,16 +258,26 @@ export default function CreatorProfileUnified() {
           : t("common.voteCountsPosition", "Tu voto cuenta. Esta idea está en la posición #{{rank}}", { rank: newRank }),
         className: "bg-gradient-to-r from-green-50 to-emerald-50 border-green-200 dark:from-green-900/30 dark:to-emerald-900/30 dark:border-green-800",
       });
-    } catch (error) {
+    } catch (error: any) {
       console.error(`[FRONTEND] Vote error for idea ${ideaId}:`, error);
-      toast({
-        title: t("creator.voteError", "Vote failed"),
-        description: t(
-          "creator.voteErrorDesc",
-          "Could not register your vote. Please try again."
-        ),
-        variant: "destructive",
-      });
+      
+      // Check if this is a self-voting error
+      if (error.error === "self_vote_attempt") {
+        toast({
+          title: t("creator.cantVoteOwn"),
+          description: t("creator.cantVoteOwnDesc"),
+          variant: "destructive",
+        });
+      } else {
+        toast({
+          title: t("creator.voteError", "Vote failed"),
+          description: t(
+            "creator.voteErrorDesc",
+            "Could not register your vote. Please try again."
+          ),
+          variant: "destructive",
+        });
+      }
     } finally {
       setIsVoting((prev) => ({ ...prev, [ideaId]: false }));
     }
