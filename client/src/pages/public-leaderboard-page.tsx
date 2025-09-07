@@ -131,13 +131,23 @@ export default function PublicLeaderboardPage() {
           : t("common.voteCountsPosition", "Tu voto cuenta. Esta idea está en la posición #{{rank}}", { rank: newRank }),
         className: "bg-gradient-to-r from-green-50 to-emerald-50 border-green-200 dark:from-green-900/30 dark:to-emerald-900/30 dark:border-green-800",
       });
-    } catch (error) {
+    } catch (error: any) {
       console.error("[ERROR] Vote error details:", error);
-      toast({
-        title: t("creator.voteError"),
-        description: (error as Error).message || t("creator.voteErrorDesc"),
-        variant: "destructive",
-      });
+      
+      // Check if this is a self-voting error
+      if (error.error === "self_vote_attempt") {
+        toast({
+          title: t("creator.cantVoteOwn"),
+          description: t("creator.cantVoteOwnDesc"),
+          variant: "destructive",
+        });
+      } else {
+        toast({
+          title: t("creator.voteError"),
+          description: error.message || t("creator.voteErrorDesc"),
+          variant: "destructive",
+        });
+      }
     } finally {
       setIsVoting((prev) => ({ ...prev, [ideaId]: false }));
     }

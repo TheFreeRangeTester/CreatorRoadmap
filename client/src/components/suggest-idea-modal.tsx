@@ -116,12 +116,20 @@ export default function SuggestIdeaModal({
     onError: (error: any) => {
       console.error('Error al sugerir idea:', error);
       let errorMessage = '';
+      let errorTitle = t('creator.suggestionError', 'Error al enviar sugerencia');
       
       try {
         // Si el error tiene un responseText, intentamos parsearlo
         if (error.responseText) {
           const errorData = JSON.parse(error.responseText);
-          errorMessage = errorData.message || '';
+          
+          // Check if this is a self-suggesting error
+          if (errorData.error === "self_suggest_attempt") {
+            errorTitle = t("creator.cantSuggestOwn");
+            errorMessage = t("creator.cantSuggestOwnDesc");
+          } else {
+            errorMessage = errorData.message || '';
+          }
         } else if (error.message) {
           errorMessage = error.message;
         }
@@ -129,12 +137,17 @@ export default function SuggestIdeaModal({
         errorMessage = t('creator.suggestionErrorDesc');
       }
       
+      // Default error message if none was set
+      if (!errorMessage) {
+        errorMessage = t('creator.suggestionErrorDesc', 'Ocurrió un error al enviar tu sugerencia');
+      }
+      
       // Mostrar error en el formulario
-      setFormError(errorMessage || t('creator.suggestionErrorDesc', 'Ocurrió un error al enviar tu sugerencia'));
+      setFormError(errorMessage);
       
       toast({
-        title: t('creator.suggestionError', 'Error al enviar sugerencia'),
-        description: errorMessage || t('creator.suggestionErrorDesc', 'Ocurrió un error al enviar tu sugerencia'),
+        title: errorTitle,
+        description: errorMessage,
         variant: "destructive",
       });
     },

@@ -94,12 +94,21 @@ export function IdeasTabView({ mode = "published" }: IdeasTabViewProps) {
       // Invalidate point transactions to show new vote reward
       queryClient.invalidateQueries({ queryKey: ["/api/user/point-transactions"] });
     },
-    onError: (error) => {
-      toast({
-        title: "Voting failed",
-        description: error.message,
-        variant: "destructive",
-      });
+    onError: (error: any) => {
+      // Check if this is a self-voting error
+      if (error.error === "self_vote_attempt") {
+        toast({
+          title: t("creator.cantVoteOwn"),
+          description: t("creator.cantVoteOwnDesc"),
+          variant: "destructive",
+        });
+      } else {
+        toast({
+          title: t("creator.voteError", "Voting failed"),
+          description: error.message,
+          variant: "destructive",
+        });
+      }
     },
   });
 
