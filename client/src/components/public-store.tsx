@@ -132,7 +132,7 @@ export function PublicStore({ creatorUsername, isAuthenticated }: PublicStorePro
           </p>
         </div>
         {isAuthenticated && userPoints && (
-          <div className="flex items-center gap-2 flex-shrink-0 bg-yellow-50 dark:bg-yellow-900/20 px-3 py-2 rounded-lg">
+          <div className="flex items-center gap-2 flex-shrink-0 bg-yellow-50 dark:bg-yellow-900/20 px-3 py-2 rounded-lg relative z-[60]">
             <Star className="h-4 w-4 text-yellow-500 flex-shrink-0" />
             <span className="font-medium whitespace-nowrap">{userPoints.totalPoints} {t('points.title')}</span>
           </div>
