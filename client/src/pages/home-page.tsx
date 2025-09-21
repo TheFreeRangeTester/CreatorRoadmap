@@ -368,7 +368,7 @@ export default function HomePage() {
                 <div className="space-y-6">
                   <IdeasTabView mode="published" />
                   <div className="border-t border-gray-200/50 dark:border-gray-700/50 pt-6">
-                    <AudienceStats />
+                    <AudienceStats isVisible={true} />
                   </div>
                 </div>
               )}
@@ -378,22 +378,17 @@ export default function HomePage() {
       </div>
 
       {/* Modals */}
-      {isIdeaFormOpen && (
-        <IdeaForm
-          idea={currentIdea}
-          onClose={() => setIsIdeaFormOpen(false)}
-          onSuccess={() => {
-            setIsIdeaFormOpen(false);
-            queryClient.invalidateQueries({ queryKey: ["/api/ideas"] });
-          }}
-        />
-      )}
+      <IdeaForm
+        isOpen={isIdeaFormOpen}
+        idea={currentIdea}
+        onClose={() => setIsIdeaFormOpen(false)}
+      />
       
       <DeleteConfirmation
         isOpen={isDeleteModalOpen}
         onClose={() => setIsDeleteModalOpen(false)}
         onConfirm={handleConfirmDelete}
-        isLoading={deleteMutation.isPending}
+        isDeleting={deleteMutation.isPending}
       />
     </div>
   );
