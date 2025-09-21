@@ -61,8 +61,10 @@ export function Top3Podium({
         </motion.p>
       </div>
 
-      {/* Desktop Podium Layout (2-1-3) */}
-      <div className="hidden md:grid grid-cols-3 gap-6 max-w-4xl mx-auto items-end">
+      {/* Desktop Podium Layout (2-1-3) - More structured like a real podium */}
+      <div className="hidden md:grid grid-cols-3 gap-8 max-w-5xl mx-auto items-end relative">
+        {/* Podium base platform visual */}
+        <div className="absolute -bottom-4 left-4 right-4 h-3 bg-gradient-to-r from-gray-300 via-gray-200 to-gray-300 rounded-lg shadow-lg" />
         {/* Second Place */}
         {top3Ideas[1] && (
           <motion.div
@@ -191,10 +193,10 @@ function PodiumCard({
 
   const getRankColor = (rank: number) => {
     switch(rank) {
-      case 1: return "from-yellow-500/20 to-amber-500/20 border-yellow-500/30";
-      case 2: return "from-gray-400/20 to-slate-400/20 border-gray-400/30";
-      case 3: return "from-amber-600/20 to-orange-500/20 border-amber-600/30";
-      default: return "from-primary/20 to-blue-500/20 border-primary/30";
+      case 1: return "from-yellow-400/30 via-yellow-300/25 to-amber-400/30";
+      case 2: return "from-gray-300/30 via-slate-200/25 to-gray-400/30";
+      case 3: return "from-amber-500/30 via-orange-400/25 to-amber-600/30";
+      default: return "from-primary/20 to-blue-500/20";
     }
   };
 
@@ -234,10 +236,10 @@ function PodiumCard({
         )}
       </motion.div>
 
-      {/* Winner Glow Effect */}
+      {/* Winner Glow Effect - More rectangular like a podium platform */}
       {isWinner && (
         <motion.div
-          className="absolute -inset-1 bg-gradient-to-r from-yellow-500/30 to-amber-500/30 rounded-2xl blur-sm"
+          className="absolute -inset-1 bg-gradient-to-r from-yellow-500/30 to-amber-500/30 rounded-lg blur-sm"
           animate={{ 
             opacity: [0.3, 0.6, 0.3],
             scale: [1, 1.02, 1]
@@ -250,10 +252,23 @@ function PodiumCard({
         />
       )}
 
+      {/* Podium Base Effect - Simulates the platform base */}
+      <motion.div
+        className={cn(
+          "absolute -bottom-1 left-0 right-0 h-2 rounded-b-lg",
+          rank === 1 && "bg-gradient-to-r from-yellow-600 to-amber-600",
+          rank === 2 && "bg-gradient-to-r from-gray-500 to-slate-500",
+          rank === 3 && "bg-gradient-to-r from-amber-700 to-orange-700"
+        )}
+        initial={{ scaleX: 0 }}
+        animate={{ scaleX: 1 }}
+        transition={{ duration: 0.8, delay: 0.5 }}
+      />
+
       {/* Success Particles */}
       {showSuccess && (
         <motion.div
-          className="absolute inset-0 pointer-events-none z-20 overflow-hidden rounded-2xl"
+          className="absolute inset-0 pointer-events-none z-20 overflow-hidden rounded-lg"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
@@ -282,8 +297,12 @@ function PodiumCard({
         "relative overflow-hidden bg-gradient-to-br",
         getRankColor(rank),
         isWinner && "ring-2 ring-yellow-500/40 shadow-2xl",
-        isMobile ? "flex items-center p-4" : "p-6",
-        "backdrop-blur-sm"
+        isMobile ? "flex items-center p-4 rounded-lg" : "p-6 rounded-lg",
+        "backdrop-blur-sm border-2",
+        // Podium-like styling with different borders for each rank
+        rank === 1 && "border-yellow-400/50 shadow-yellow-400/20",
+        rank === 2 && "border-gray-400/50 shadow-gray-400/20", 
+        rank === 3 && "border-amber-600/50 shadow-amber-600/20"
       )}>
         <CardContent className={cn(
           isMobile ? "flex items-center gap-4 p-0 w-full" : "h-full flex flex-col justify-between p-0"
