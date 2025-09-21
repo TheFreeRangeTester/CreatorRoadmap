@@ -352,7 +352,7 @@
     "welcome": "Hello",
     "welcomeSubtitle": "Welcome to your ideas dashboard",
     "creatorDashboard": "Creator Dashboard",
-    "topIdeas": "Idea Management",
+    "topIdeas": "Top Ideas",
     "voteDescription": "This is what your audience is looking for 🙌🏻",
     "yourPublicProfile": "Your Public Profile",
     "publicView": "Public Link",
@@ -373,7 +373,6 @@
     "suggestions": "Suggested",
     "store": "Points Store",
     "redemptions": "Redemptions",
-    "topIdeas": "Top Ideas",
     "moreIdeas": "More Ideas"
   },
   "ideaForm": {
@@ -451,7 +450,8 @@
     "noIdeasYet": "No ideas yet",
     "noIdeasDescription": "Be the first to suggest an idea!",
     "rank": "Rank",
-    "na": "N/A"
+    "na": "N/A",
+    "voteForIdeas": "Vote for the ideas you want to see come to life"
   },
   "login": {
     "requiredToVote": "Login required to vote"
@@ -705,7 +705,19 @@
     "noActiveItems": "No active items in this store",
     "earnPointsInfo": "Earn points by voting for this creator's ideas"
   },
+  "podium": {
+    "title": "Top Ideas",
+    "subtitle": "The most voted ideas by the community"
+  },
+  "leaderboard": {
+    "otherIdeas": "Other great ideas",
+    "otherIdeasDesc": "Every vote counts to climb the ranking!"
+  },
+  "mobile": {
+    "tapToVote": "Tap to vote!"
+  },
   "redemptions": {
+    "short": "Redemptions",
     "title": "Redemptions",
     "description": "Manage redemption requests from your audience",
     "noRedemptions": "No pending redemptions",

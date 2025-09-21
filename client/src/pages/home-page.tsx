@@ -2,39 +2,33 @@ import { useState } from "react";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { motion } from "framer-motion";
 import {
-  Loader2,
-  Lightbulb,
-  User,
-  ListFilter,
-  Gift,
+  Grid3x3,
+  Store,
   Package,
+  User,
+  Menu,
+  X,
 } from "lucide-react";
 import { useAuth } from "@/hooks/use-auth";
 import { useToast } from "@/hooks/use-toast";
 import { useReactiveStats } from "@/hooks/use-reactive-stats";
 import { queryClient, apiRequest } from "@/lib/queryClient";
-import IdeaCard from "@/components/idea-card";
 import IdeaForm from "@/components/idea-form";
 import DeleteConfirmation from "@/components/delete-confirmation";
 import CreatorControls from "@/components/creator-controls";
-import { MobileMenu } from "@/components/mobile-menu";
-import LeaderboardInfo from "@/components/leaderboard-info";
-import EmptyState from "@/components/empty-state";
-import ShareProfile from "@/components/share-profile";
-import { Button } from "@/components/ui/button";
-import { Link } from "wouter";
 import { IdeaResponse } from "@shared/schema";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useTranslation } from "react-i18next";
 import { IdeasTabView } from "@/components/ideas-tab-view";
-import { LanguageToggle } from "@/components/language-toggle";
-import { ThemeToggle } from "@/components/theme-toggle";
-import { IdeaLimitNotice } from "@/components/idea-limit-notice";
-import { PointsDisplay } from "@/components/points-display";
 import { StoreManagement } from "@/components/store-management";
 import { RedemptionManagement } from "@/components/redemption-management";
-import { MobileBottomNavigation } from "@/components/mobile-bottom-navigation";
-import logoPng from "@/assets/logo.png";
+import { UserIndicator } from "@/components/user-indicator";
+import { Button } from "@/components/ui/button";
+import { ThemeToggle } from "@/components/theme-toggle";
+import { LanguageToggle } from "@/components/language-toggle";
+import { PointsDisplay } from "@/components/points-display";
+import { Link } from "wouter";
+import AudienceStats from "@/components/audience-stats";
 
 export default function HomePage() {
   const { user, logoutMutation } = useAuth();
@@ -46,6 +40,7 @@ export default function HomePage() {
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [ideaToDelete] = useState<number | null>(null);
   const [activeTab, setActiveTab] = useState("published");
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   // Fetch ideas
   const {
@@ -140,16 +135,10 @@ export default function HomePage() {
     setIsIdeaFormOpen(true);
   };
 
-
-
   const handleConfirmDelete = () => {
     if (ideaToDelete !== null) {
       deleteMutation.mutate(ideaToDelete);
     }
-  };
-
-  const handleVote = (ideaId: number) => {
-    voteMutation.mutate(ideaId);
   };
 
   const handleLogout = () => {
@@ -163,292 +152,249 @@ export default function HomePage() {
         initial={{ opacity: 0, y: -10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
-        className="bg-gradient-to-r from-white/90 via-white/85 to-white/90 dark:from-gray-900/90 dark:via-gray-900/85 dark:to-gray-900/90 backdrop-blur-xl border-b border-gray-200/50 dark:border-gray-800/50 shadow-lg sticky top-0 z-10"
+        className="bg-white/90 dark:bg-gray-900/90 backdrop-blur-xl border-b border-gray-200/50 dark:border-gray-700/50 shadow-xl shadow-gray-200/50 dark:shadow-gray-800/50 sticky top-0 z-10"
       >
-        <div className="container mx-auto px-3 sm:px-6 lg:px-8">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
-            {/* Logo and title section - responsive */}
+            {/* Logo and title */}
             <motion.div
-              className="flex items-center min-w-0 flex-1"
+              className="flex items-center gap-3"
               whileHover={{ scale: 1.02 }}
               transition={{ type: "spring", stiffness: 400, damping: 10 }}
             >
-              <div className="relative">
-                <img
-                  src={logoPng}
-                  alt="Logo"
-                  className="h-7 sm:h-10 w-auto flex-shrink-0"
-                />
-                <div className="absolute -inset-1 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full opacity-20 blur-sm animate-pulse"></div>
-              </div>
-              <div className="ml-3 min-w-0 flex-1">
-                <h1 className="text-base sm:text-2xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-600 bg-clip-text text-transparent truncate">
-                  {t("dashboard.appName", "Fanlist")}
-                </h1>
-              </div>
-            </motion.div>
-
-            {/* Desktop menu */}
-            <div className="hidden md:flex items-center gap-2 md:gap-4 lg:gap-6 xl:gap-8">
-              {user ? (
-                <div className="flex items-center gap-2 md:gap-3 lg:gap-4">
-                  <Link href="/profile">
-                    <motion.div
-                      whileHover={{ scale: 1.05 }}
-                      whileTap={{ scale: 0.95 }}
-                    >
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        className="bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 border-blue-200 dark:border-blue-800 hover:from-blue-100 hover:to-indigo-100 dark:hover:from-blue-900/30 dark:hover:to-indigo-900/30"
-                      >
-                        <User className="h-4 w-4 mr-2" />
-                        {t("common.profile", "Perfil")}
-                      </Button>
-                    </motion.div>
-                  </Link>
-                  <motion.div
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                  >
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={handleLogout}
-                      className="text-red-600 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300 border-red-200 dark:border-red-800 hover:bg-red-50 dark:hover:bg-red-900/20"
-                    >
-                      {t("common.logout")}
-                    </Button>
-                  </motion.div>
-                </div>
-              ) : (
-                <div className="flex items-center gap-3">
-                  <Link href="/auth">
-                    <Button variant="outline" size="sm">
-                      {t("common.login")}
-                    </Button>
-                  </Link>
-                  <Link href="/auth?register=true">
-                    <Button size="sm">{t("common.register")}</Button>
-                  </Link>
+              <h1 className="text-xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+                Fanlist
+              </h1>
+              {user && (
+                <div className="hidden sm:block">
+                  <p className="text-sm text-gray-600 dark:text-gray-400">
+                    {t("common.hello", "Hola")}, {user.username}
+                  </p>
                 </div>
               )}
+            </motion.div>
+
+            {/* Desktop Navigation */}
+            <div className="hidden lg:flex items-center gap-4">
+              <ThemeToggle />
+              <LanguageToggle />
+              {user?.userRole === "audience" && <PointsDisplay />}
+              <Link href="/profile">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-800"
+                >
+                  <User className="h-4 w-4 mr-2" />
+                  {t("navigation.profile", "Perfil")}
+                </Button>
+              </Link>
+              <UserIndicator user={user} variant="desktop" />
+              <Button
+                onClick={handleLogout}
+                variant="ghost"
+                size="sm"
+                className="text-red-600 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300 hover:bg-red-50 dark:hover:bg-red-900/20"
+              >
+                {t("auth.logout", "Salir")}
+              </Button>
             </div>
 
-            {/* Mobile layout - three sections */}
-            <div className="md:hidden flex items-center justify-between w-full">
-              {/* Left section - Logo and title */}
-              <div className="flex items-center min-w-0 flex-1">
-                <img
-                  src={logoPng}
-                  alt="Logo"
-                  className="h-7 w-auto flex-shrink-0"
-                />
-                <div className="ml-2 min-w-0 flex-1">
-                  <h1 className="text-base font-bold text-neutral-800 dark:text-white truncate">
-                    {t("dashboard.appName", "Fanlist")}
-                  </h1>
-                </div>
-              </div>
-
-              {/* Center section - Mobile menu */}
-              <div className="flex-1 flex justify-center">
-                <MobileMenu
-                  onLogout={handleLogout}
-                  iconColor="text-foreground"
-                />
-              </div>
-
-              {/* Right section - Toggles */}
-              <div className="flex-1 flex justify-end items-center gap-2">
-                <LanguageToggle />
-                <ThemeToggle />
-              </div>
+            {/* Mobile Menu Button */}
+            <div className="lg:hidden flex items-center gap-2">
+              {user && <UserIndicator user={user} variant="mobile" />}
+              <Button
+                onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                variant="ghost"
+                size="sm"
+                className="p-2"
+              >
+                {isMobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+              </Button>
             </div>
           </div>
+
+          {/* Mobile Menu */}
+          {isMobileMenuOpen && (
+            <motion.div
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: "auto" }}
+              exit={{ opacity: 0, height: 0 }}
+              className="lg:hidden bg-white/95 dark:bg-gray-900/95 backdrop-blur-sm border-t border-gray-200/50 dark:border-gray-700/50 py-4"
+            >
+              <div className="flex flex-col gap-3">
+                {user?.userRole === "audience" && (
+                  <div className="px-2">
+                    <PointsDisplay />
+                  </div>
+                )}
+                <div className="flex items-center justify-between px-2">
+                  <div className="flex items-center gap-3">
+                    <ThemeToggle />
+                    <LanguageToggle />
+                  </div>
+                </div>
+                <Link href="/profile">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="w-full justify-start"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                  >
+                    <User className="h-4 w-4 mr-2" />
+                    {t("navigation.profile", "Perfil")}
+                  </Button>
+                </Link>
+                <Button
+                  onClick={() => {
+                    handleLogout();
+                    setIsMobileMenuOpen(false);
+                  }}
+                  variant="ghost"
+                  size="sm"
+                  className="w-full justify-start text-red-600 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300 hover:bg-red-50 dark:hover:bg-red-900/20"
+                >
+                  {t("auth.logout", "Salir")}
+                </Button>
+              </div>
+            </motion.div>
+          )}
         </div>
       </motion.header>
 
-      <main className="container mx-auto px-3 sm:px-6 lg:px-8 py-4 sm:py-6 pb-20 md:pb-6">
-        {/* Main content for both authenticated and non-authenticated users */}
-        <div className="mt-4 sm:mt-6">
-          {user ? (
-            // Responsive layout for authenticated users
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
-              {/* Main content area (2/3 width on larger screens) */}
-              <div className="lg:col-span-2 space-y-4 sm:space-y-6">
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                  <div>
-                    <h2 className="text-2xl font-semibold text-foreground">
-                      {t("dashboard.welcome", "Hola")},{" "}
-                      <span className="text-primary">{user.username}</span>
-                    </h2>
-                    <p className="text-muted-foreground mt-1">
-                      {t(
-                        "dashboard.welcomeSubtitle",
-                        "Bienvenido a tu panel de ideas"
+      {/* Main Content */}
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6">
+        <div className="max-w-7xl mx-auto">
+          {/* Welcome Header */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="mb-8"
+          >
+            <h1 className="text-3xl sm:text-4xl font-bold bg-gradient-to-r from-gray-900 to-gray-600 dark:from-white dark:to-gray-300 bg-clip-text text-transparent mb-2">
+              {t("dashboard.welcome", "Bienvenido a tu panel de ideas")}
+            </h1>
+            <p className="text-gray-600 dark:text-gray-400 text-lg">
+              {user?.userRole === "creator" ? 
+                t("dashboard.creatorDescription", "Gestiona tus ideas y conecta con tu audiencia") :
+                t("dashboard.audienceDescription", "Participa votando y sugiriendo ideas")
+              }
+            </p>
+          </motion.div>
+
+          {/* Creator Controls */}
+          {user?.userRole === "creator" && (
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="bg-white/90 dark:bg-gray-900/90 backdrop-blur-xl rounded-3xl border border-gray-200/50 dark:border-gray-700/50 overflow-hidden shadow-xl shadow-gray-200/50 dark:shadow-gray-800/50 mb-6"
+            >
+              <CreatorControls onAddIdea={handleAddIdea} />
+            </motion.div>
+          )}
+
+          {/* Main Ideas Section */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.1 }}
+            className="bg-white/90 dark:bg-gray-900/90 backdrop-blur-xl rounded-3xl border border-gray-200/50 dark:border-gray-700/50 overflow-hidden shadow-xl shadow-gray-200/50 dark:shadow-gray-800/50"
+          >
+            <div className="p-6">
+              <h2 className="text-2xl font-bold bg-gradient-to-r from-gray-900 to-gray-600 dark:from-white dark:to-gray-300 bg-clip-text text-transparent mb-6">
+                {t("dashboard.topIdeas", "Top Ideas")}
+              </h2>
+              
+              {user?.userRole === "creator" ? (
+                <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+                  <TabsList className="grid w-full grid-cols-4 bg-gray-100/50 dark:bg-gray-800/50 backdrop-blur-sm rounded-2xl">
+                    <TabsTrigger 
+                      value="published" 
+                      className="data-[state=active]:bg-white dark:data-[state=active]:bg-gray-700 rounded-xl transition-all"
+                    >
+                      <Grid3x3 className="h-4 w-4 mr-2" />
+                      <span className="hidden sm:inline">{t("ideas.published", "Publicadas")}</span>
+                      <span className="sm:hidden">{t("ideas.published", "Pub.")}</span>
+                    </TabsTrigger>
+                    <TabsTrigger 
+                      value="suggested" 
+                      className="data-[state=active]:bg-white dark:data-[state=active]:bg-gray-700 rounded-xl transition-all relative"
+                    >
+                      <User className="h-4 w-4 mr-2" />
+                      <span className="hidden sm:inline">{t("ideas.suggested", "Sugeridas")}</span>
+                      <span className="sm:hidden">{t("ideas.suggested", "Sug.")}</span>
+                      {pendingIdeas && pendingIdeas.length > 0 && (
+                        <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+                          {pendingIdeas.length}
+                        </span>
                       )}
-                    </p>
-                  </div>
-                </div>
-
-                {/* Tabs for ideas view - Only for creators */}
-                {user.userRole === "creator" ? (
-                  <>
-                    <IdeaLimitNotice />
-                    <CreatorControls onAddIdea={handleAddIdea} />
-                    <LeaderboardInfo />
-                    <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-                      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-4 sm:mb-6 space-y-3 sm:space-y-0">
-                        <TabsList className="hidden md:grid grid-cols-2 sm:grid-cols-4 w-full sm:w-auto">
-                          <TabsTrigger
-                            value="published"
-                            className="flex items-center gap-1 text-xs sm:text-sm"
-                          >
-                            <ListFilter className="w-3 h-3 sm:w-4 sm:h-4" />
-                            <span className="hidden xs:inline">
-                              {t("dashboard.myIdeas", "Mis Ideas")}
-                            </span>
-                            <span className="xs:hidden">
-                              {t("dashboard.published", "Ideas")}
-                            </span>
-                          </TabsTrigger>
-                          <TabsTrigger
-                            value="suggested"
-                            className="flex items-center gap-1 text-xs sm:text-sm"
-                          >
-                            <Lightbulb className="w-3 h-3 sm:w-4 sm:h-4" />
-                            <span className="hidden xs:inline">
-                              {t("dashboard.suggested", "Sugeridas")}
-                            </span>
-                            <span className="xs:hidden">
-                              {t("dashboard.suggestions", "Sugeridas")}
-                            </span>
-                          </TabsTrigger>
-                          <TabsTrigger
-                            value="store"
-                            className="flex items-center gap-1 text-xs sm:text-sm"
-                          >
-                            <Gift className="w-3 h-3 sm:w-4 sm:h-4" />
-                            <span className="hidden xs:inline">
-                              {t("dashboard.store", "Tienda de Puntos")}
-                            </span>
-                            <span className="xs:hidden">
-                              {t("dashboard.store", "Tienda")}
-                            </span>
-                          </TabsTrigger>
-                          <TabsTrigger
-                            value="redemptions"
-                            className="flex items-center gap-1 text-xs sm:text-sm"
-                          >
-                            <Package className="w-3 h-3 sm:w-4 sm:h-4" />
-                            <span className="hidden xs:inline">
-                              {t("dashboard.redemptions", "Canjes")}
-                            </span>
-                            <span className="xs:hidden">
-                              {t("dashboard.redemptions", "Canjes")}
-                            </span>
-                          </TabsTrigger>
-                        </TabsList>
-                      </div>
-
-                      <TabsContent value="published" className="mt-0 space-y-4">
-                        <IdeasTabView mode="published" />
-                      </TabsContent>
-
-                      <TabsContent value="suggested" className="mt-0 space-y-4">
-                        <IdeasTabView mode="suggested" />
-                      </TabsContent>
-
-                      <TabsContent value="store" className="mt-0 space-y-4">
-                        <StoreManagement />
-                      </TabsContent>
-
-                      <TabsContent value="redemptions" className="mt-0 space-y-4">
-                        <RedemptionManagement />
-                      </TabsContent>
-                    </Tabs>
-                  </>
-                ) : (
-                  // Para usuarios no creadores, solo mostrar la lista de ideas
-                  <div className="mt-0 space-y-4">
+                    </TabsTrigger>
+                    <TabsTrigger 
+                      value="store" 
+                      className="data-[state=active]:bg-white dark:data-[state=active]:bg-gray-700 rounded-xl transition-all"
+                    >
+                      <Store className="h-4 w-4 mr-2" />
+                      <span className="hidden sm:inline">{t("store.title", "Tienda")}</span>
+                      <span className="sm:hidden">{t("store.short", "Tienda")}</span>
+                    </TabsTrigger>
+                    <TabsTrigger 
+                      value="redemptions" 
+                      className="data-[state=active]:bg-white dark:data-[state=active]:bg-gray-700 rounded-xl transition-all"
+                    >
+                      <Package className="h-4 w-4 mr-2" />
+                      <span className="hidden sm:inline">{t("redemptions.title", "Canjes")}</span>
+                      <span className="sm:hidden">{t("redemptions.short", "Canjes")}</span>
+                    </TabsTrigger>
+                  </TabsList>
+                  
+                  <TabsContent value="published" className="mt-6">
                     <IdeasTabView mode="published" />
-                  </div>
-                )}
-              </div>
-
-              {/* Sidebar for sharing (1/3 width on larger screens) */}
-              <div className="lg:col-span-1 space-y-6">
-                <ShareProfile />
-              </div>
-            </div>
-          ) : (
-            // For non-authenticated users, show full-width leaderboard
-            <div className="space-y-6">
-              <div className="text-center">
-                <h2 className="text-2xl font-semibold text-foreground">
-                  {t("dashboard.welcomeGuest", "Bienvenido a Fanlist")}
-                </h2>
-                <p className="text-muted-foreground mt-1">
-                  {t(
-                    "dashboard.welcomeGuestSubtitle",
-                    "Descubre y vota por las mejores ideas"
-                  )}
-                </p>
-              </div>
-
-              <LeaderboardInfo />
-
-              {/* Ideas listing for non-authenticated users */}
-              {isLoading ? (
-                <div className="flex justify-center py-10">
-                  <Loader2 className="h-8 w-8 animate-spin text-primary" />
-                </div>
-              ) : isError ? (
-                <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded">
-                  {t("ideas.loadError")}
-                </div>
-              ) : ideas && ideas.length > 0 ? (
-                <div className="grid gap-6 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
-                  {ideas.map((idea) => (
-                    <IdeaCard
-                      key={idea.id}
-                      idea={idea}
-                      onVote={handleVote}
-                      isVoting={votingIdeaIds.has(idea.id)}
-                    />
-                  ))}
-                </div>
+                  </TabsContent>
+                  
+                  <TabsContent value="suggested" className="mt-6">
+                    <IdeasTabView mode="suggested" />
+                  </TabsContent>
+                  
+                  <TabsContent value="store" className="mt-6">
+                    <StoreManagement />
+                  </TabsContent>
+                  
+                  <TabsContent value="redemptions" className="mt-6">
+                    <RedemptionManagement />
+                  </TabsContent>
+                </Tabs>
               ) : (
-                <EmptyState />
+                // Audience view - just show published ideas and their stats
+                <div className="space-y-6">
+                  <IdeasTabView mode="published" />
+                  <div className="border-t border-gray-200/50 dark:border-gray-700/50 pt-6">
+                    <AudienceStats />
+                  </div>
+                </div>
               )}
             </div>
-          )}
+          </motion.div>
         </div>
-      </main>
+      </div>
 
       {/* Modals */}
-      <IdeaForm
-        isOpen={isIdeaFormOpen}
-        idea={currentIdea}
-        onClose={() => setIsIdeaFormOpen(false)}
-      />
-
+      {isIdeaFormOpen && (
+        <IdeaForm
+          idea={currentIdea}
+          onClose={() => setIsIdeaFormOpen(false)}
+          onSuccess={() => {
+            setIsIdeaFormOpen(false);
+            queryClient.invalidateQueries({ queryKey: ["/api/ideas"] });
+          }}
+        />
+      )}
+      
       <DeleteConfirmation
         isOpen={isDeleteModalOpen}
         onClose={() => setIsDeleteModalOpen(false)}
         onConfirm={handleConfirmDelete}
-        isDeleting={deleteMutation.isPending}
+        isLoading={deleteMutation.isPending}
       />
-
-      {/* Mobile Bottom Navigation - Only for creators */}
-      {user?.userRole === "creator" && (
-        <MobileBottomNavigation
-          activeTab={activeTab}
-          onTabChange={setActiveTab}
-          pendingCount={pendingIdeas?.length || 0}
-        />
-      )}
     </div>
   );
 }

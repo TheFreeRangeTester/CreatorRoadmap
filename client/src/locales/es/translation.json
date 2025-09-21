@@ -263,6 +263,8 @@
     "loginRequiredDesc": "Por favor inicia sesión para votar",
     "votes": "votos",
     "votesToNextRank": "votos para subir",
+    "voted": "¡Votado!",
+    "vote": "Votar",
     "recentVotesToday": "+{{count}} hoy",
     "voteRegistered": "¡Voto registrado!",
     "voteHelpedTopIdea": "¡Tu voto ayudó a esta idea en el top {{rank}}!",
@@ -352,7 +354,7 @@
     "welcome": "Hola",
     "welcomeSubtitle": "Bienvenido a tu panel de ideas",
     "creatorDashboard": "Panel de Creador",
-    "topIdeas": "Gestión de Ideas",
+    "topIdeas": "Top Ideas",
     "voteDescription": "Esto es lo que tu audiencia está buscando 🙌🏻",
     "yourPublicProfile": "Tu Perfil Público",
     "publicView": "Enlace Público",
@@ -373,7 +375,6 @@
     "suggestions": "Sugeridas",
     "store": "Tienda de Puntos",
     "redemptions": "Canjes",
-    "topIdeas": "Top Ideas",
     "moreIdeas": "Más Ideas"
   },
   "ideaForm": {
@@ -452,7 +453,8 @@
     "noIdeasYet": "Aún no hay ideas",
     "noIdeasDescription": "¡Sé el primero en sugerir una idea!",
     "rank": "Posición",
-    "na": "N/A"
+    "na": "N/A",
+    "voteForIdeas": "Vota por las ideas que quieres ver realizadas"
   },
   "login": {
     "requiredToVote": "Inicio de sesión requerido para votar"
@@ -710,7 +712,19 @@
     "noActiveItems": "No hay artículos activos en esta tienda",
     "earnPointsInfo": "Gana puntos votando por ideas de este creador"
   },
+  "podium": {
+    "title": "Top Ideas",
+    "subtitle": "Las ideas más votadas por la comunidad"
+  },
+  "leaderboard": {
+    "otherIdeas": "Otras ideas geniales", 
+    "otherIdeasDesc": "¡Cada voto cuenta para subir en el ranking!"
+  },
+  "mobile": {
+    "tapToVote": "¡Toca para votar!"
+  },
   "redemptions": {
+    "short": "Canjes",
     "title": "Canjes",
     "description": "Gestiona las solicitudes de canje de tu audiencia",
     "noRedemptions": "No hay canjes pendientes",

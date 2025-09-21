@@ -147,6 +147,15 @@ export async function registerRoutes(app: Express): Promise<Server> {
       console.log(`[SUGGESTION] Validated data:`, validatedData);
       const creatorId = validatedData.creatorId;
 
+      // Prevent users from suggesting ideas to themselves
+      if (creatorId === userId) {
+        console.log(`[SUGGESTION] User ${userId} tried to suggest to themselves`);
+        return res.status(403).json({ 
+          message: "Cannot suggest ideas to yourself",
+          error: "self_suggest_attempt" 
+        });
+      }
+
       // Check if user has enough points for this creator
       const userPoints = await storage.getUserPoints(userId, creatorId);
       if (userPoints.totalPoints < SUGGESTION_COST) {
@@ -933,6 +942,15 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(404).json({ message: "Idea not found" });
       }
 
+      // Prevent creator from voting their own ideas
+      if (idea.creatorId === userId) {
+        console.log(`[MAIN-VOTE] User ${userId} tried to vote their own idea ${ideaId}`);
+        return res.status(403).json({ 
+          message: "Cannot vote on your own ideas",
+          error: "self_vote_attempt" 
+        });
+      }
+
       // Check if this user has already voted for this idea
       const existingVote = await storage.getVoteByUserOrSession(ideaId, userId);
       if (existingVote) {
@@ -1006,6 +1024,15 @@ export async function registerRoutes(app: Express): Promise<Server> {
       if (idea.creatorId !== creator.id) {
         console.log(`[VOTE] Idea ${ideaId} doesn't belong to creator ${username}`);
         return res.status(403).json({ message: "This idea does not belong to the specified creator" });
+      }
+
+      // Prevent creator from voting their own ideas
+      if (idea.creatorId === userId) {
+        console.log(`[VOTE] User ${userId} tried to vote their own idea ${ideaId}`);
+        return res.status(403).json({ 
+          message: "Cannot vote on your own ideas",
+          error: "self_vote_attempt" 
+        });
       }
 
       // Check if this user has already voted for this idea
@@ -1126,6 +1153,15 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
 
       const userId = req.user!.id;
+
+      // Prevent creator from voting their own ideas
+      if (idea.creatorId === userId) {
+        console.log(`[PUBLIC-VOTE] User ${userId} tried to vote their own idea ${ideaId}`);
+        return res.status(403).json({ 
+          message: "Cannot vote on your own ideas",
+          error: "self_vote_attempt" 
+        });
+      }
 
       // Check if this user has already voted for this idea
       const existingVote = await storage.getVoteByUserOrSession(ideaId, userId);

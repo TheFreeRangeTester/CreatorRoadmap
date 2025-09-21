@@ -32,6 +32,8 @@ import AudienceStats from "@/components/audience-stats";
 import { PublicStore } from "@/components/public-store";
 import { UserIndicator } from "@/components/user-indicator";
 import { MobileMenu } from "@/components/mobile-menu";
+import { Top3Podium } from "@/components/top3-podium";
+import { LeaderboardSkeleton } from "@/components/leaderboard-skeleton";
 import { FaTiktok } from "react-icons/fa";
 import { FaThreads } from "react-icons/fa6";
 
@@ -56,7 +58,7 @@ export default function ModernPublicProfile() {
   const params = useParams();
   const [, navigate] = useLocation();
   const username = params?.username;
-  const [activeSection, setActiveSection] = useState<"profile" | "store" | "activity" | "ideas">("profile");
+  const [activeSection, setActiveSection] = useState<"store" | "activity" | "ideas">("ideas");
   const [isVoting, setIsVoting] = useState<{ [key: number]: boolean }>({});
   const [votedIdeas, setVotedIdeas] = useState<Set<number>>(new Set());
   const [suggestDialogOpen, setSuggestDialogOpen] = useState(false);
@@ -153,13 +155,12 @@ export default function ModernPublicProfile() {
         method: "POST",
       });
 
-      setVotedIdeas(prev => new Set([...prev, ideaId]));
-      
-      // Update localStorage
+      // Update localStorage using the fresh state to avoid race condition
       const userKey = `votedIdeas_${user.id}`;
-      const votedArray = [...votedIdeas];
-      const updatedVotedIdeas = votedArray.concat([ideaId]);
+      const updatedVotedIdeas = Array.from(new Set([...Array.from(votedIdeas), ideaId]));
       localStorage.setItem(userKey, JSON.stringify(updatedVotedIdeas));
+      
+      setVotedIdeas(prev => new Set([...Array.from(prev), ideaId]));
 
       toast({
         title: t("vote.success", "¡Voto registrado!"),
@@ -325,7 +326,12 @@ export default function ModernPublicProfile() {
     </motion.div>
   );
 
-  const renderIdeasSection = () => (
+  const renderIdeasSection = () => {
+    if (isLoading) {
+      return <LeaderboardSkeleton />;
+    }
+
+    return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
@@ -394,30 +400,65 @@ export default function ModernPublicProfile() {
         </Badge>
       </div>
 
-      {/* Ideas Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
-        {ideas.map((idea, index) => (
-          <CompactIdeaCard
-            key={idea.id}
-            rank={index + 1}
-            idea={idea}
-            isVoting={isVoting[idea.id]}
-            isVoted={votedIdeas.has(idea.id)}
-            onVote={handleVote}
-            isLoggedIn={!!user && !isOwnProfile}
-          />
-        ))}
-      </div>
-
-      {ideas.length === 0 && (
+      {ideas.length === 0 ? (
         <div className="text-center py-12">
           <p className="text-gray-500 dark:text-gray-400">
             {t("ideas.empty", "No hay ideas disponibles")}
           </p>
         </div>
+      ) : (
+        <>
+          {/* Top 3 Podium */}
+          {ideas.length > 0 && (
+            <div className="mb-8">
+              <Top3Podium
+                ideas={ideas.slice(0, 3)}
+                onVote={handleVote}
+                user={user && !isOwnProfile ? user : null}
+                votedIdeas={votedIdeas}
+                isVoting={isVoting}
+                successVote={null}
+              />
+            </div>
+          )}
+
+          {/* Other Ideas */}
+          {ideas.length > 3 && (
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.3 }}
+              className="space-y-4"
+            >
+              <div className="text-center mb-6">
+                <h3 className="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-2">
+                  {t("leaderboard.otherIdeas", "Otras ideas geniales")}
+                </h3>
+                <p className="text-gray-600 dark:text-gray-400 text-sm">
+                  {t("leaderboard.otherIdeasDesc", "¡Cada voto cuenta para subir en el ranking!")}
+                </p>
+              </div>
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
+                {ideas.slice(3).map((idea, index) => (
+                  <CompactIdeaCard
+                    key={idea.id}
+                    rank={index + 4}
+                    idea={idea}
+                    isVoting={isVoting[idea.id]}
+                    isVoted={votedIdeas.has(idea.id)}
+                    onVote={handleVote}
+                    isLoggedIn={!!user && !isOwnProfile}
+                  />
+                ))}
+              </div>
+            </motion.div>
+          )}
+        </>
       )}
     </motion.div>
-  );
+    );
+  };
 
   const renderStoreSection = () => (
     <motion.div

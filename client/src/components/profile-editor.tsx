@@ -28,6 +28,8 @@ import {
   Settings,
   PaintBucket,
   CheckIcon,
+  Share2,
+  Copy,
 } from "lucide-react";
 import { FaTiktok } from "react-icons/fa";
 import { FaThreads } from "react-icons/fa6";
@@ -224,6 +226,51 @@ export default function ProfileEditor() {
                 className="mt-2 resize-none"
                 rows={4}
               />
+            </div>
+
+            {/* Compartir Perfil */}
+            <div className="p-4 border border-gray-100 dark:border-gray-800 rounded-lg">
+              <div className="flex items-center gap-2 mb-3">
+                <Share2 className="h-5 w-5 text-primary" />
+                <h3 className="font-medium text-lg">
+                  {t("profile.shareProfile", "Compartir Perfil")}
+                </h3>
+              </div>
+              
+              <p className="text-sm text-muted-foreground mb-3">
+                {t("profile.shareProfileDesc", "Comparte tu perfil público para que otros puedan sugerir ideas")}
+              </p>
+              
+              <div className="flex items-center gap-2 p-3 bg-gray-50 dark:bg-gray-800/50 rounded-lg border">
+                <code className="flex-1 text-sm text-gray-700 dark:text-gray-300 truncate">
+                  {window.location.origin}/{user.username.toLowerCase()}
+                </code>
+                <Button
+                  type="button"
+                  size="sm"
+                  variant="outline"
+                  onClick={() => {
+                    const url = `${window.location.origin}/${user.username.toLowerCase()}`;
+                    navigator.clipboard.writeText(url).then(() => {
+                      toast({
+                        title: t("profile.linkCopied", "¡Enlace copiado!"),
+                        description: t("profile.linkCopiedDesc", "El enlace de tu perfil se copió al portapapeles"),
+                        className: "bg-gradient-to-r from-green-50 to-emerald-50 border-green-200 dark:from-green-900/30 dark:to-emerald-900/30 dark:border-green-800",
+                      });
+                    }).catch(() => {
+                      toast({
+                        title: t("profile.copyError", "Error al copiar"),
+                        description: t("profile.copyErrorDesc", "No se pudo copiar el enlace"),
+                        variant: "destructive",
+                      });
+                    });
+                  }}
+                  className="flex-shrink-0"
+                >
+                  <Copy className="h-4 w-4 mr-1" />
+                  {t("common.copy", "Copiar")}
+                </Button>
+              </div>
             </div>
 
             {/* Fondo del perfil */}

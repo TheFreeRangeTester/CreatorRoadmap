@@ -88,26 +88,26 @@ export default function CreatorControls({ onAddIdea }: CreatorControlsProps) {
   const isProUser = user ? hasActivePremiumAccess(user) : false;
 
   return (
-    <div className="bg-white p-3 sm:p-4 rounded-lg shadow mb-4 sm:mb-6 dark:bg-neutral-800">
-      <div className="flex flex-col gap-3 sm:gap-4">
+    <div className="p-6">
+      <div className="flex flex-col gap-6">
         {/* Header row with subscription status icon */}
         <div className="flex flex-col space-y-3 sm:flex-row sm:items-center sm:justify-between sm:space-y-0">
-          <h2 className="text-base sm:text-lg font-medium text-neutral-800 dark:text-white">
-            {t("dashboard.creatorDashboard", "Creator Dashboard")}
+          <h2 className="text-2xl font-bold bg-gradient-to-r from-gray-900 to-gray-600 dark:from-white dark:to-gray-300 bg-clip-text text-transparent">
+            {t("dashboard.creatorDashboard", "Panel de Creador")}
           </h2>
           <SubscriptionStatusIcon />
         </div>
 
         {/* Action buttons */}
-        <div className="flex flex-col sm:flex-row gap-3">
+        <div className="flex flex-col sm:flex-row gap-4">
           <Button
             onClick={onAddIdea}
-            className="flex-1 sm:flex-none bg-gradient-to-r from-primary to-blue-600 hover:from-primary/90 hover:to-blue-700 text-white shadow-lg"
+            className="flex-1 sm:flex-none bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white shadow-lg transition-all duration-200"
             size="lg"
           >
             <PlusCircle className="w-5 h-5 mr-2" />
-            <span className="text-base">
-              {t("ideas.addIdea", "Add New Idea")}
+            <span className="text-base font-medium">
+              {t("ideas.addIdea", "Agregar Nueva Idea")}
             </span>
           </Button>
 
@@ -117,15 +117,17 @@ export default function CreatorControls({ onAddIdea }: CreatorControlsProps) {
                 <Button
                   onClick={handleCSVImportClick}
                   variant="outline"
-                  className={`flex-1 sm:flex-none border-primary/20 hover:bg-primary/5 hover:border-primary/40 ${
-                    !isProUser ? "opacity-75" : ""
+                  className={`flex-1 sm:flex-none border-2 transition-all duration-200 ${
+                    isProUser
+                      ? "border-green-500 text-green-700 hover:bg-green-50 dark:border-green-400 dark:text-green-400 dark:hover:bg-green-900/20"
+                      : "border-amber-500 text-amber-700 hover:bg-amber-50 dark:border-amber-400 dark:text-amber-400 dark:hover:bg-amber-900/20"
                   }`}
                   size="lg"
                 >
                   {!isProUser && <Lock className="w-4 h-4 mr-2" />}
                   <Upload className="w-5 h-5 mr-2" />
-                  <span className="text-base">
-                    {t("csvImport.button", "Import CSV")}
+                  <span className="text-base font-medium">
+                    {t("csvImport.button", "Importar CSV")}
                   </span>
                   {!isProUser && (
                     <svg className="w-4 h-4 ml-2 text-amber-500" viewBox="0 0 24 24" fill="currentColor">
@@ -139,7 +141,7 @@ export default function CreatorControls({ onAddIdea }: CreatorControlsProps) {
                   <p>
                     {t(
                       "csvImport.proRequired.tooltip",
-                      "Pro exclusive feature"
+                      "Función exclusiva Pro"
                     )}
                   </p>
                 </TooltipContent>
