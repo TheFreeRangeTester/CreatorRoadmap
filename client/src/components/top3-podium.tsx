@@ -213,6 +213,27 @@ function PodiumCard({
       }}
       className="relative"
     >
+      {/* Floating Rank Badge - Outside the card to avoid clipping */}
+      <motion.div 
+        className="absolute -top-2 -left-2 z-30 flex items-center gap-2"
+        animate={isWinner ? { 
+          rotate: [0, 5, -5, 0],
+          scale: [1, 1.1, 1]
+        } : {}}
+        transition={{ duration: 2, repeat: Infinity }}
+      >
+        {getRankIcon(rank)}
+        <Badge 
+          variant="secondary" 
+          className="font-bold text-sm bg-white dark:bg-gray-800 shadow-lg border-2 border-white dark:border-gray-700"
+        >
+          #{rank}
+        </Badge>
+        {isWinner && (
+          <Sparkles className="w-4 h-4 text-yellow-500 animate-pulse" />
+        )}
+      </motion.div>
+
       {/* Winner Glow Effect */}
       {isWinner && (
         <motion.div
@@ -267,23 +288,8 @@ function PodiumCard({
         <CardContent className={cn(
           isMobile ? "flex items-center gap-4 p-0 w-full" : "h-full flex flex-col justify-between p-0"
         )}>
-          {/* Rank Badge with Animation */}
-          <motion.div 
-            className={cn("flex items-center gap-2", isMobile ? "" : "mb-4")}
-            animate={isWinner ? { 
-              rotate: [0, 5, -5, 0],
-              scale: [1, 1.1, 1]
-            } : {}}
-            transition={{ duration: 2, repeat: Infinity }}
-          >
-            {getRankIcon(rank)}
-            <Badge variant="secondary" className="font-bold text-sm">
-              #{rank}
-            </Badge>
-            {isWinner && (
-              <Sparkles className="w-4 h-4 text-yellow-500 animate-pulse" />
-            )}
-          </motion.div>
+          {/* Additional spacing for floating badge */}
+          {!isMobile && <div className="h-4" />}
 
           {/* Idea Content */}
           <div className={cn(isMobile ? "flex-1" : "flex-1 flex flex-col justify-center")}>
