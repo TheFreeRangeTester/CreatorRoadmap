@@ -412,20 +412,6 @@ export default function ModernPublicProfile() {
           {/* Top 3 Podium */}
           {ideas.length > 0 && (
             <div className="mb-8">
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.1 }}
-                className="text-center mb-6"
-              >
-                <h3 className="text-xl font-bold bg-gradient-to-r from-yellow-600 to-orange-600 bg-clip-text text-transparent mb-2">
-                  {t("podium.title", "Top Ideas")}
-                </h3>
-                <p className="text-gray-600 dark:text-gray-400 text-sm">
-                  {t("podium.subtitle", "Las ideas más votadas por la comunidad")}
-                </p>
-              </motion.div>
-              
               <Top3Podium
                 ideas={ideas.slice(0, 3)}
                 onVote={handleVote}

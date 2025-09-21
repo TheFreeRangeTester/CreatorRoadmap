@@ -336,7 +336,7 @@ function PodiumCard({
 
       <Card className={cn(
         height,
-        "relative overflow-hidden bg-gradient-to-br",
+        "relative overflow-hidden bg-gradient-to-br rounded-none",
         getRankColor(rank),
         isWinner && "ring-2 ring-yellow-500/40 shadow-2xl",
         isMobile ? "flex items-center p-4" : "p-6",
