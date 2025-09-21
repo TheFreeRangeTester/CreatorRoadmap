@@ -63,8 +63,8 @@ export function Top3Podium({
 
       {/* Desktop Podium Layout (2-1-3) - More structured like a real podium */}
       <div className="hidden md:grid grid-cols-3 gap-8 max-w-5xl mx-auto items-end relative">
-        {/* Podium base platform visual */}
-        <div className="absolute -bottom-4 left-4 right-4 h-3 bg-gradient-to-r from-gray-300 via-gray-200 to-gray-300 rounded-lg shadow-lg" />
+        {/* Podium base platform visual - completely rectangular */}
+        <div className="absolute -bottom-4 left-4 right-4 h-3 bg-gradient-to-r from-gray-300 via-gray-200 to-gray-300 shadow-lg" />
         {/* Second Place */}
         {top3Ideas[1] && (
           <motion.div
@@ -184,9 +184,51 @@ function PodiumCard({
 
   const getRankIcon = (rank: number) => {
     switch(rank) {
-      case 1: return <Trophy className="w-6 h-6 text-yellow-500" />;
-      case 2: return <Medal className="w-6 h-6 text-gray-400" />;
-      case 3: return <Award className="w-6 h-6 text-amber-600" />;
+      case 1: return (
+        <motion.div
+          animate={{ 
+            rotate: [0, 10, -10, 0],
+            scale: [1, 1.2, 1]
+          }}
+          transition={{ 
+            duration: 2, 
+            repeat: Infinity, 
+            ease: "easeInOut" 
+          }}
+        >
+          <Trophy className="w-10 h-10 text-yellow-500 drop-shadow-lg" />
+        </motion.div>
+      );
+      case 2: return (
+        <motion.div
+          animate={{ 
+            scale: [1, 1.1, 1],
+            y: [0, -2, 0]
+          }}
+          transition={{ 
+            duration: 2.5, 
+            repeat: Infinity, 
+            ease: "easeInOut" 
+          }}
+        >
+          <Medal className="w-9 h-9 text-gray-400 drop-shadow-lg" />
+        </motion.div>
+      );
+      case 3: return (
+        <motion.div
+          animate={{ 
+            rotate: [0, -8, 8, 0],
+            scale: [1, 1.15, 1]
+          }}
+          transition={{ 
+            duration: 2.2, 
+            repeat: Infinity, 
+            ease: "easeInOut" 
+          }}
+        >
+          <Award className="w-8 h-8 text-amber-600 drop-shadow-lg" />
+        </motion.div>
+      );
       default: return null;
     }
   };
@@ -236,10 +278,10 @@ function PodiumCard({
         )}
       </motion.div>
 
-      {/* Winner Glow Effect - More rectangular like a podium platform */}
+      {/* Winner Glow Effect - Completely rectangular */}
       {isWinner && (
         <motion.div
-          className="absolute -inset-1 bg-gradient-to-r from-yellow-500/30 to-amber-500/30 rounded-lg blur-sm"
+          className="absolute -inset-1 bg-gradient-to-r from-yellow-500/30 to-amber-500/30 blur-sm"
           animate={{ 
             opacity: [0.3, 0.6, 0.3],
             scale: [1, 1.02, 1]
@@ -255,7 +297,7 @@ function PodiumCard({
       {/* Podium Base Effect - Simulates the platform base */}
       <motion.div
         className={cn(
-          "absolute -bottom-1 left-0 right-0 h-2 rounded-b-lg",
+          "absolute -bottom-1 left-0 right-0 h-2",
           rank === 1 && "bg-gradient-to-r from-yellow-600 to-amber-600",
           rank === 2 && "bg-gradient-to-r from-gray-500 to-slate-500",
           rank === 3 && "bg-gradient-to-r from-amber-700 to-orange-700"
@@ -268,7 +310,7 @@ function PodiumCard({
       {/* Success Particles */}
       {showSuccess && (
         <motion.div
-          className="absolute inset-0 pointer-events-none z-20 overflow-hidden rounded-lg"
+          className="absolute inset-0 pointer-events-none z-20 overflow-hidden"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
@@ -297,7 +339,7 @@ function PodiumCard({
         "relative overflow-hidden bg-gradient-to-br",
         getRankColor(rank),
         isWinner && "ring-2 ring-yellow-500/40 shadow-2xl",
-        isMobile ? "flex items-center p-4 rounded-lg" : "p-6 rounded-lg",
+        isMobile ? "flex items-center p-4" : "p-6",
         "backdrop-blur-sm border-2",
         // Podium-like styling with different borders for each rank
         rank === 1 && "border-yellow-400/50 shadow-yellow-400/20",
