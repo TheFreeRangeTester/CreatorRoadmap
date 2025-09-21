@@ -155,13 +155,12 @@ export default function ModernPublicProfile() {
         method: "POST",
       });
 
-      setVotedIdeas(prev => new Set([...Array.from(prev), ideaId]));
-      
-      // Update localStorage
+      // Update localStorage using the fresh state to avoid race condition
       const userKey = `votedIdeas_${user.id}`;
-      const votedArray = Array.from(votedIdeas);
-      const updatedVotedIdeas = votedArray.concat([ideaId]);
+      const updatedVotedIdeas = Array.from(new Set([...Array.from(votedIdeas), ideaId]));
       localStorage.setItem(userKey, JSON.stringify(updatedVotedIdeas));
+      
+      setVotedIdeas(prev => new Set([...Array.from(prev), ideaId]));
 
       toast({
         title: t("vote.success", "¡Voto registrado!"),
