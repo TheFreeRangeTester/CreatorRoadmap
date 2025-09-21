@@ -4,13 +4,12 @@ import { useTranslation } from 'react-i18next';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Users, Package, ChevronLeft, ChevronRight, Mail, Calendar, User } from 'lucide-react';
+import { Users, Package, ChevronLeft, ChevronRight } from 'lucide-react';
 import { apiRequest } from '@/lib/queryClient';
 import { useToast } from '@/hooks/use-toast';
-import { format } from 'date-fns';
 import type { StoreRedemptionResponse } from '@shared/schema';
+import RedemptionListItem from './redemption-list-item';
 
 interface RedemptionData {
   redemptions: StoreRedemptionResponse[];
@@ -132,98 +131,17 @@ export function RedemptionManagement() {
         </Card>
       ) : (
         <>
-          <Card className="w-full max-w-none overflow-hidden">
-            <CardHeader className="pb-4 px-4 sm:px-6">
-              <CardTitle className="flex items-center gap-2 text-base sm:text-lg font-heading leading-tight break-words">
-                <Package className="h-5 w-5 flex-shrink-0" />
-                <span className="break-words">{t('redemptions.allRedemptions')}</span>
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="overflow-x-auto">
-                <Table>
-                  <TableHeader>
-                    <TableRow>
-                      <TableHead className="w-[200px]">{t('redemptions.userName')}</TableHead>
-                      <TableHead className="w-[300px]">{t('redemptions.item')}</TableHead>
-                      <TableHead className="w-[120px] text-center">{t('redemptions.pointsSpent')}</TableHead>
-                      <TableHead className="w-[140px] text-center">{t('redemptions.date')}</TableHead>
-                      <TableHead className="w-[120px] text-center">{t('redemptions.status')}</TableHead>
-                      <TableHead className="w-[140px] text-center">{t('common.actions')}</TableHead>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {redemptions.map((redemption) => (
-                      <TableRow key={redemption.id}>
-                        <TableCell>
-                          <div className="flex items-center gap-2">
-                            <User className="h-4 w-4 text-muted-foreground" />
-                            <div>
-                              <div className="font-medium">{redemption.userUsername}</div>
-                              <div className="text-sm text-muted-foreground flex items-center gap-1">
-                                <Mail className="h-3 w-3" />
-                                {redemption.userEmail}
-                              </div>
-                            </div>
-                          </div>
-                        </TableCell>
-                        <TableCell className="max-w-[300px]">
-                          <div>
-                            <div className="font-medium text-sm leading-tight mb-1">{redemption.storeItemTitle}</div>
-                            <div className="text-xs text-muted-foreground line-clamp-3 leading-relaxed">
-                              {redemption.storeItemDescription}
-                            </div>
-                          </div>
-                        </TableCell>
-                        <TableCell className="text-center">
-                          <Badge variant="secondary" className="text-xs">
-                            {redemption.pointsSpent} pts
-                          </Badge>
-                        </TableCell>
-                        <TableCell className="text-center">
-                          <div className="flex items-center justify-center gap-1 text-xs">
-                            <Calendar className="h-3 w-3" />
-                            {format(new Date(redemption.createdAt), 'MMM d, yyyy')}
-                          </div>
-                        </TableCell>
-                        <TableCell className="text-center">
-                          <Badge
-                            variant={redemption.status === 'completed' ? 'default' : 'secondary'}
-                            className="text-xs"
-                          >
-                            {redemption.status === 'completed'
-                              ? t('redemptions.completed')
-                              : t('redemptions.pending')}
-                          </Badge>
-                        </TableCell>
-                        <TableCell className="text-center">
-                          <Select
-                            value={redemption.status}
-                            onValueChange={(value: 'pending' | 'completed') =>
-                              handleStatusChange(redemption.id, value)
-                            }
-                            disabled={updateStatusMutation.isPending}
-                          >
-                            <SelectTrigger className="w-[130px] h-8 text-xs">
-                              <SelectValue />
-                            </SelectTrigger>
-                            <SelectContent>
-                              <SelectItem value="pending" className="text-xs">
-                                {t('redemptions.pending')}
-                              </SelectItem>
-                              <SelectItem value="completed" className="text-xs">
-                                {t('redemptions.completed')}
-                              </SelectItem>
-                            </SelectContent>
-                          </Select>
-                        </TableCell>
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-              </div>
-            </CardContent>
-          </Card>
+          <div className="space-y-4">
+            {redemptions.map((redemption, index) => (
+              <RedemptionListItem
+                key={redemption.id}
+                redemption={redemption}
+                position={index + 1 + (currentPage - 1) * 10}
+                onStatusChange={handleStatusChange}
+                isUpdating={updateStatusMutation.isPending}
+              />
+            ))}
+          </div>
 
           {/* Pagination */}
           {pagination && pagination.totalPages > 1 && (
