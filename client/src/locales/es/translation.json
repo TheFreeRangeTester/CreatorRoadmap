@@ -263,6 +263,8 @@
     "loginRequiredDesc": "Por favor inicia sesión para votar",
     "votes": "votos",
     "votesToNextRank": "votos para subir",
+    "voted": "¡Votado!",
+    "vote": "Votar",
     "recentVotesToday": "+{{count}} hoy",
     "voteRegistered": "¡Voto registrado!",
     "voteHelpedTopIdea": "¡Tu voto ayudó a esta idea en el top {{rank}}!",
@@ -454,7 +456,8 @@
     "noIdeasYet": "Aún no hay ideas",
     "noIdeasDescription": "¡Sé el primero en sugerir una idea!",
     "rank": "Posición",
-    "na": "N/A"
+    "na": "N/A",
+    "voteForIdeas": "Vota por las ideas que quieres ver realizadas"
   },
   "login": {
     "requiredToVote": "Inicio de sesión requerido para votar"
@@ -711,6 +714,17 @@
     "emptyStore": "Esta tienda está vacía",
     "noActiveItems": "No hay artículos activos en esta tienda",
     "earnPointsInfo": "Gana puntos votando por ideas de este creador"
+  },
+  "podium": {
+    "title": "Top Ideas",
+    "subtitle": "Las ideas más votadas por la comunidad"
+  },
+  "leaderboard": {
+    "otherIdeas": "Otras ideas geniales", 
+    "otherIdeasDesc": "¡Cada voto cuenta para subir en el ranking!"
+  },
+  "mobile": {
+    "tapToVote": "¡Toca para votar!"
   },
   "redemptions": {
     "short": "Canjes",

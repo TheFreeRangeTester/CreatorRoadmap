@@ -24,10 +24,16 @@ import { LanguageToggle } from "@/components/language-toggle";
 import { useTranslation } from "react-i18next";
 import EnhancedRankingCard from "@/components/enhanced-ranking-card";
 import { motion, AnimatePresence } from "framer-motion";
+import { LeaderboardSkeleton } from "@/components/leaderboard-skeleton";
+import { Top3Podium } from "@/components/top3-podium";
 
 interface PublicLeaderboardResponse {
   ideas: IdeaResponse[];
   publicLink: PublicLinkResponse;
+  creator: {
+    username: string;
+    logoUrl?: string;
+  };
 }
 
 export default function PublicLeaderboardPage() {
@@ -63,11 +69,7 @@ export default function PublicLeaderboardPage() {
   }, [error, navigate]);
 
   if (isLoading || !data) {
-    return (
-      <div className="flex items-center justify-center min-h-screen">
-        <Loader2 className="h-8 w-8 animate-spin text-primary" />
-      </div>
-    );
+    return <LeaderboardSkeleton />;
   }
 
   const { ideas, publicLink } = data;
@@ -257,32 +259,130 @@ export default function PublicLeaderboardPage() {
           </p>
         </motion.div>
       ) : (
-        <motion.div 
-          className="space-y-4"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.6, delay: 0.3 }}
+        <>
+          {/* Creator Info Section */}
+          <motion.div
+            className="mb-8"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.1 }}
+          >
+            <Card className="bg-gradient-to-r from-primary/5 to-blue-500/5 dark:from-primary/10 dark:to-blue-500/10 border-primary/20">
+              <CardContent className="p-6">
+                <div className="flex items-center gap-4">
+                  {data.creator.logoUrl && (
+                    <motion.img
+                      src={data.creator.logoUrl}
+                      alt={data.creator.username}
+                      className="w-16 h-16 rounded-full object-cover ring-2 ring-primary/20"
+                      initial={{ scale: 0 }}
+                      animate={{ scale: 1 }}
+                      transition={{ duration: 0.5, delay: 0.2 }}
+                    />
+                  )}
+                  <div className="flex-1">
+                    <motion.h2 
+                      className="text-2xl font-bold mb-1"
+                      initial={{ opacity: 0, x: -20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ duration: 0.5, delay: 0.3 }}
+                    >
+                      @{data.creator.username}
+                    </motion.h2>
+                    <motion.p 
+                      className="text-muted-foreground"
+                      initial={{ opacity: 0, x: -20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ duration: 0.5, delay: 0.4 }}
+                    >
+                      {t("publicLeaderboard.voteForIdeas", "Vota por las ideas que quieres ver realizadas")}
+                    </motion.p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </motion.div>
+
+          {/* Top 3 Podium */}
+          <Top3Podium
+            ideas={ideas}
+            onVote={handleVote}
+            isVoting={isVoting}
+            votedIdeas={votedIdeas}
+            successVote={successVote}
+            user={user}
+          />
+
+          {/* Rest of Ideas (4th place onwards) */}
+          {ideas.length > 3 && (
+            <motion.div
+              className="space-y-4"
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.8 }}
+            >
+              <div className="mb-6">
+                <h3 className="text-xl font-semibold mb-2 flex items-center gap-2">
+                  <Sparkles className="w-5 h-5 text-primary" />
+                  {t("leaderboard.otherIdeas", "Otras ideas geniales")}
+                </h3>
+                <p className="text-muted-foreground">
+                  {t("leaderboard.otherIdeasDesc", "¡Cada voto cuenta para subir en el ranking!")}
+                </p>
+              </div>
+              
+              {ideas.slice(3).map((idea, index) => {
+                const rank = index + 4; // Starting from 4th place
+                const votesToNext = getVotesToNextRank(rank, idea.votes);
+                const recentVotes = getRecentVotes24h(idea.id);
+                
+                return (
+                  <motion.div
+                    key={idea.id}
+                    initial={{ opacity: 0, x: -30 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ duration: 0.4, delay: 0.9 + index * 0.1 }}
+                  >
+                    <EnhancedRankingCard
+                      rank={rank}
+                      idea={idea}
+                      isVoting={isVoting[idea.id]}
+                      isVoted={votedIdeas.has(idea.id)}
+                      isSuccessVote={successVote === idea.id}
+                      onVote={handleVote}
+                      isLoggedIn={!!user}
+                      votesToNextRank={votesToNext}
+                      recentVotes24h={recentVotes}
+                    />
+                  </motion.div>
+                );
+              })}
+            </motion.div>
+          )}
+        </>
+      )}
+
+      {/* Sticky Mobile Vote CTA */}
+      {user && (
+        <motion.div
+          className="fixed bottom-4 left-4 right-4 md:hidden z-50"
+          initial={{ y: 100, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{ duration: 0.5, delay: 1.2 }}
         >
-          {ideas.map((idea, index) => {
-            const rank = index + 1;
-            const votesToNext = getVotesToNextRank(rank, idea.votes);
-            const recentVotes = getRecentVotes24h(idea.id);
-            
-            return (
-              <EnhancedRankingCard
-                key={idea.id}
-                rank={rank}
-                idea={idea}
-                isVoting={isVoting[idea.id]}
-                isVoted={votedIdeas.has(idea.id)}
-                isSuccessVote={successVote === idea.id}
-                onVote={handleVote}
-                isLoggedIn={!!user}
-                votesToNextRank={votesToNext}
-                recentVotes24h={recentVotes}
-              />
-            );
-          })}
+          <Button
+            size="lg"
+            className="w-full bg-primary hover:bg-primary/90 text-white font-semibold py-4 rounded-2xl shadow-2xl"
+            onClick={() => {
+              const firstUnvotedIdea = ideas.find(idea => !votedIdeas.has(idea.id));
+              if (firstUnvotedIdea) {
+                handleVote(firstUnvotedIdea.id);
+              }
+            }}
+          >
+            <ThumbsUp className="w-5 h-5 mr-2" />
+            {t("mobile.tapToVote", "¡Toca para votar!")}
+          </Button>
         </motion.div>
       )}
     </div>

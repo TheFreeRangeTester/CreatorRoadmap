@@ -453,7 +453,8 @@
     "noIdeasYet": "No ideas yet",
     "noIdeasDescription": "Be the first to suggest an idea!",
     "rank": "Rank",
-    "na": "N/A"
+    "na": "N/A",
+    "voteForIdeas": "Vote for the ideas you want to see come to life"
   },
   "login": {
     "requiredToVote": "Login required to vote"
@@ -706,6 +707,17 @@
     "emptyStore": "This store is empty",
     "noActiveItems": "No active items in this store",
     "earnPointsInfo": "Earn points by voting for this creator's ideas"
+  },
+  "podium": {
+    "title": "Top Ideas",
+    "subtitle": "The most voted ideas by the community"
+  },
+  "leaderboard": {
+    "otherIdeas": "Other great ideas",
+    "otherIdeasDesc": "Every vote counts to climb the ranking!"
+  },
+  "mobile": {
+    "tapToVote": "Tap to vote!"
   },
   "redemptions": {
     "short": "Redemptions",
