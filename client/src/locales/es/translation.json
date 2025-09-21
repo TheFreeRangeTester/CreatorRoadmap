@@ -351,12 +351,10 @@
     "rejectErrorDesc": "No se pudo rechazar la idea. Por favor intenta de nuevo."
   },
   "dashboard": {
-    "welcome": "Bienvenido a tu panel de ideas",
-    "topIdeas": "Top Ideas",
     "welcome": "Hola",
     "welcomeSubtitle": "Bienvenido a tu panel de ideas",
     "creatorDashboard": "Panel de Creador",
-    "topIdeas": "Gestión de Ideas",
+    "topIdeas": "Top Ideas",
     "voteDescription": "Esto es lo que tu audiencia está buscando 🙌🏻",
     "yourPublicProfile": "Tu Perfil Público",
     "publicView": "Enlace Público",
@@ -377,7 +375,6 @@
     "suggestions": "Sugeridas",
     "store": "Tienda de Puntos",
     "redemptions": "Canjes",
-    "topIdeas": "Top Ideas",
     "moreIdeas": "Más Ideas"
   },
   "ideaForm": {
