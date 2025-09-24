@@ -232,6 +232,7 @@
     "logout": "Log out",
     "register": "Register",
     "cancel": "Cancel",
+    "copy": "Copy",
     "suggest": "Suggest",
     "idea": "Suggest Idea",
     "greeting": "👋🏻 Hi",
@@ -625,7 +626,9 @@
     "becomeCreatorDesc": "As a creator, you'll be able to manage your own idea leaderboard and receive suggestions from your audience.",
     "becomeCreatorConfirm": "Are you sure you want to become a creator? You'll be able to start managing your own idea leaderboard.",
     "becomeCreatorSuccess": "Role Updated!",
-    "becomeCreatorSuccessDesc": "Your account has been updated to creator. You'll be redirected to the dashboard."
+    "becomeCreatorSuccessDesc": "Your account has been updated to creator. You'll be redirected to the dashboard.",
+    "shareProfile": "Share Profile",
+    "shareProfileDesc": "Share your public profile so others can suggest ideas"
   },
   "ideaLimit": {
     "title": "Idea limit reached",

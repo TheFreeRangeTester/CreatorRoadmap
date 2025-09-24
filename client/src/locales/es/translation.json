@@ -232,6 +232,7 @@
     "logout": "Cerrar sesión",
     "register": "Registrarse",
     "cancel": "Cancelar",
+    "copy": "Copiar",
     "suggest": "Sugerir",
     "idea": "Sugerir Idea",
     "greeting": "👋🏻 Hola",
@@ -625,7 +626,9 @@
     "becomeCreatorDesc": "Como creador, podrás gestionar tu propio leaderboard de ideas y recibir sugerencias de tu audiencia.",
     "becomeCreatorConfirm": "¿Estás seguro de que quieres convertirte en creador? Podrás comenzar a gestionar tu propio leaderboard de ideas.",
     "becomeCreatorSuccess": "¡Rol Actualizado!",
-    "becomeCreatorSuccessDesc": "Tu cuenta ha sido actualizada a creador. Serás redirigido al dashboard."
+    "becomeCreatorSuccessDesc": "Tu cuenta ha sido actualizada a creador. Serás redirigido al dashboard.",
+    "shareProfile": "Compartir Perfil",
+    "shareProfileDesc": "Comparte tu perfil público para que otros puedan sugerir ideas"
   },
   "audienceStats": {
     "title": "Tu Actividad",
