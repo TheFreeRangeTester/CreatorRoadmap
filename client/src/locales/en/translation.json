@@ -628,7 +628,8 @@
     "becomeCreatorSuccess": "Role Updated!",
     "becomeCreatorSuccessDesc": "Your account has been updated to creator. You'll be redirected to the dashboard.",
     "shareProfile": "Share Profile",
-    "shareProfileDesc": "Share your public profile so others can suggest ideas"
+    "shareProfileDesc": "Share your public profile so others can suggest ideas",
+    "notFound": "Profile not found"
   },
   "ideaLimit": {
     "title": "Idea limit reached",
@@ -768,42 +769,6 @@
   "demo": {
     "altText": "Fanlist Demo",
     "watchDemo": "▶ Watch Demo"
-  },
-  "profile": {
-    "joinTitle": "Join the community!",
-    "joinDescription": "Vote for the best ideas, suggest content and earn points",
-    "editProfile": "Edit Profile",
-    "editProfileDesc": "Customize your profile information and appearance",
-    "logoUrl": "Profile Picture URL",
-    "logoUrlPlaceholder": "Enter the URL of your profile picture",
-    "logoUrlHelp": "Enter a URL for your profile picture (recommended size: 400x400px)",
-    "description": "Profile Description",
-    "descriptionPlaceholder": "Tell us about yourself and your content",
-    "background": "Profile Background",
-    "backgroundDesc": "Choose a background for your public profile. The pattern will automatically adapt to light/dark mode.",
-    "gradient1": "Subtle",
-    "gradient2": "Blue/Indigo",
-    "gradient3": "Green/Teal",
-    "gradient4": "Rose/Orange",
-    "pattern1": "Dots",
-    "pattern2": "Grid",
-    "socialLinks": "Social Media Links",
-    "twitterPlaceholder": "Your username (e.g. johndoe)",
-    "instagramPlaceholder": "Your username (e.g. johndoe)",
-    "youtubePlaceholder": "Your username (e.g. johndoe)",
-    "tiktokPlaceholder": "Your username (e.g. johndoe)",
-    "threadsPlaceholder": "Your username (e.g. johndoe)",
-    "websitePlaceholder": "Full URL of your website",
-    "updateSuccess": "Profile Updated",
-    "updateSuccessDesc": "Your profile has been updated successfully",
-    "updateError": "Update Failed",
-    "updateErrorDesc": "Could not update your profile. Please try again.",
-    "becomeCreator": "Want to be a creator?",
-    "becomeCreatorDesc": "As a creator, you'll be able to manage your own idea leaderboard and receive suggestions from your audience.",
-    "becomeCreatorConfirm": "Are you sure you want to become a creator? You'll be able to start managing your own idea leaderboard.",
-    "becomeCreatorSuccess": "Role Updated!",
-    "becomeCreatorSuccessDesc": "Your account has been updated to creator. You'll be redirected to the dashboard.",
-    "notFound": "Profile not found"
   },
   "suggest": {
     "idea": "Suggest Idea"
