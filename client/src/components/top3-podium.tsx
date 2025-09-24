@@ -397,7 +397,7 @@ function PodiumCard({
             
             {isMobile && (
               <div className="text-xs text-muted-foreground">
-                {idea.votes} {t("common.votes", "votos")}
+                {idea.votes} {t("common.votes")}
               </div>
             )}
           </div>

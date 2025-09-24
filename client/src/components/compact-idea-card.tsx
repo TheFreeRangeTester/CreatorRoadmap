@@ -153,7 +153,7 @@ export function CompactIdeaCard({
             variant="secondary" 
             className="bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 font-medium"
           >
-            {idea.votes} {t("common.votes", "votos")}
+            {idea.votes} {t("common.votes")}
           </Badge>
         </div>
 

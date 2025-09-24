@@ -161,7 +161,7 @@ export default function IdeaListView({
                 <div className="flex items-center gap-2 bg-gradient-to-r from-pink-50 to-purple-50 dark:from-pink-900/20 dark:to-purple-900/20 px-3 py-2 rounded-full border border-pink-200/50 dark:border-pink-800/50">
                   <Heart className="w-4 h-4 text-pink-500" />
                   <span className="font-bold text-lg text-gray-900 dark:text-white">{idea.votes}</span>
-                  <span className="text-sm text-gray-600 dark:text-gray-400">{t("ideas.votes", "votos")}</span>
+                  <span className="text-sm text-gray-600 dark:text-gray-400">{t("ideas.votes")}</span>
                 </div>
 
                 {/* Creator indicator for audience users */}

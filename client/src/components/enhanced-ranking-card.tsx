@@ -293,7 +293,7 @@ export default function EnhancedRankingCard({
                   animate={{ opacity: 1, scale: 1 }}
                   className="text-xs bg-primary/10 text-primary px-2 py-1 rounded-full"
                 >
-                  {votesToNextRank} {t("common.votesToNextRank", "votos para subir")}
+                  {votesToNextRank} {t("common.votesToNextRank")}
                 </motion.div>
               )}
             </div>
@@ -316,7 +316,7 @@ export default function EnhancedRankingCard({
             <div className="flex items-center justify-center gap-2 mb-3">
               <ThumbsUp className="h-4 w-4 text-gray-500" />
               <span className="text-sm font-medium dark:text-white">
-                {idea.votes} {t("common.votes", "votos")}
+                {idea.votes} {t("common.votes")}
               </span>
             </div>
 

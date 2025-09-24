@@ -355,7 +355,8 @@
     "created": "Idea created",
     "createFailed": "Failed to create idea",
     "updated": "Idea updated",
-    "updateFailed": "Failed to update idea"
+    "updateFailed": "Failed to update idea",
+    "votes": "votes"
   },
   "dashboard": {
     "welcome": "Hello",
