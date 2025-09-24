@@ -162,13 +162,6 @@ export default function HomePage() {
               <h1 className="text-xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
                 Fanlist
               </h1>
-              {user && (
-                <div className="hidden sm:block">
-                  <p className="text-sm text-gray-600 dark:text-gray-400">
-                    {t("common.hello")}, {user.username}
-                  </p>
-                </div>
-              )}
             </motion.div>
 
             {/* Desktop Navigation */}
