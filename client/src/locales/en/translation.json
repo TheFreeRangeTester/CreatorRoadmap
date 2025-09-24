@@ -356,6 +356,8 @@
   "dashboard": {
     "welcome": "Hello",
     "welcomeSubtitle": "Welcome to your ideas dashboard",
+    "creatorDescription": "Manage your ideas and see what your audience wants you to create next",
+    "audienceDescription": "Vote for your favorite ideas and help creators decide what to make",
     "creatorDashboard": "Creator Dashboard",
     "topIdeas": "Top Ideas",
     "voteDescription": "This is what your audience is looking for 🙌🏻",

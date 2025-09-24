@@ -193,7 +193,7 @@ export default function HomePage() {
                 size="sm"
                 className="text-red-600 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300 hover:bg-red-50 dark:hover:bg-red-900/20"
               >
-                {t("auth.logout")}
+                {t("common.logout")}
               </Button>
             </div>
 
@@ -251,7 +251,7 @@ export default function HomePage() {
                   size="sm"
                   className="w-full justify-start text-red-600 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300 hover:bg-red-50 dark:hover:bg-red-900/20"
                 >
-                  {t("auth.logout")}
+                  {t("common.logout")}
                 </Button>
               </div>
             </motion.div>

@@ -358,6 +358,8 @@
   "dashboard": {
     "welcome": "Hola",
     "welcomeSubtitle": "Bienvenido a tu panel de ideas",
+    "creatorDescription": "Administra tus ideas y ve qué quiere tu audiencia que crees a continuación",
+    "audienceDescription": "Vota por tus ideas favoritas y ayuda a los creadores a decidir qué hacer",
     "creatorDashboard": "Panel de Creador",
     "topIdeas": "Top Ideas",
     "voteDescription": "Esto es lo que tu audiencia está buscando 🙌🏻",
