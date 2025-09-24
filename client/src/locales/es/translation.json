@@ -326,7 +326,10 @@
   },
   "ideas": {
     "short": "Ideas",
-    "total": "ideas",
+    "published": "Ideas",
+    "suggested": "Sugeridas",
+    "suggestedShort": "Sug.",
+    "total": "ideas", 
     "title": "Ideas",
     "description": "Votar por contenido",
     "noSuggestedIdeas": "Aún no hay ideas sugeridas",

@@ -324,6 +324,9 @@
   },
   "ideas": {
     "short": "Ideas",
+    "published": "Ideas",
+    "suggested": "Suggested", 
+    "suggestedShort": "Sug.",
     "total": "ideas",
     "title": "Ideas",
     "description": "Vote for content",
