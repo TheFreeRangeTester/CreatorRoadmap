@@ -233,12 +233,12 @@ export default function ProfileEditor() {
               <div className="flex items-center gap-2 mb-3">
                 <Share2 className="h-5 w-5 text-primary" />
                 <h3 className="font-medium text-lg">
-                  {t("profile.shareProfile", "Compartir Perfil")}
+                  {t("profile.shareProfile")}
                 </h3>
               </div>
               
               <p className="text-sm text-muted-foreground mb-3">
-                {t("profile.shareProfileDesc", "Comparte tu perfil público para que otros puedan sugerir ideas")}
+                {t("profile.shareProfileDesc")}
               </p>
               
               <div className="flex items-center gap-2 p-3 bg-gray-50 dark:bg-gray-800/50 rounded-lg border">
