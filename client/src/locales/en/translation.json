@@ -346,7 +346,12 @@
     "approveError": "Error approving",
     "approveErrorDesc": "Could not approve the idea. Please try again.",
     "rejectError": "Error rejecting",
-    "rejectErrorDesc": "Could not reject the idea. Please try again."
+    "rejectErrorDesc": "Could not reject the idea. Please try again.",
+    "deletedSuccess": "Your idea has been deleted successfully",
+    "created": "Idea created",
+    "createFailed": "Failed to create idea",
+    "updated": "Idea updated",
+    "updateFailed": "Failed to update idea"
   },
   "dashboard": {
     "welcome": "Hello",
@@ -369,11 +374,20 @@
     "shareTip3": "Encourage your audience to vote to influence your next content",
     "myIdeas": "My Ideas",
     "published": "Ideas",
+    "short": "Pub.",
     "suggested": "Suggested",
+    "suggestedShort": "Sug.",
     "suggestions": "Suggested",
     "store": "Points Store",
-    "redemptions": "Redemptions",
     "moreIdeas": "More Ideas"
+  },
+  "store": {
+    "title": "Store",
+    "short": "Store"
+  },
+  "redemptions": {
+    "title": "Redemptions",
+    "short": "Redemptions"
   },
   "ideaForm": {
     "addTitle": "Add new idea",

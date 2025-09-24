@@ -393,17 +393,17 @@ export default function ModernPublicProfile() {
       {/* Ideas Section Header */}
       <div className="flex items-center justify-between">
         <h2 className="text-2xl font-bold bg-gradient-to-r from-gray-900 to-gray-600 dark:from-white dark:to-gray-300 bg-clip-text text-transparent">
-          {t("ideas.title", "Ideas de Contenido")}
+          {t("ideas.title")}
         </h2>
         <Badge variant="secondary" className="bg-blue-100 dark:bg-blue-900/20 text-blue-700 dark:text-blue-300">
-          {ideas.length} {t("ideas.total", "ideas")}
+          {ideas.length} {t("ideas.total")}
         </Badge>
       </div>
 
       {ideas.length === 0 ? (
         <div className="text-center py-12">
           <p className="text-gray-500 dark:text-gray-400">
-            {t("ideas.empty", "No hay ideas disponibles")}
+            {t("ideas.empty")}
           </p>
         </div>
       ) : (
@@ -432,10 +432,10 @@ export default function ModernPublicProfile() {
             >
               <div className="text-center mb-6">
                 <h3 className="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-2">
-                  {t("leaderboard.otherIdeas", "Otras ideas geniales")}
+                  {t("leaderboard.otherIdeas")}
                 </h3>
                 <p className="text-gray-600 dark:text-gray-400 text-sm">
-                  {t("leaderboard.otherIdeasDesc", "¡Cada voto cuenta para subir en el ranking!")}
+                  {t("leaderboard.otherIdeasDesc")}
                 </p>
               </div>
               

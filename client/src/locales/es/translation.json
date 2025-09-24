@@ -348,7 +348,12 @@
     "approveError": "Error al aprobar",
     "approveErrorDesc": "No se pudo aprobar la idea. Por favor intenta de nuevo.",
     "rejectError": "Error al rechazar",
-    "rejectErrorDesc": "No se pudo rechazar la idea. Por favor intenta de nuevo."
+    "rejectErrorDesc": "No se pudo rechazar la idea. Por favor intenta de nuevo.",
+    "deletedSuccess": "Tu idea ha sido eliminada exitosamente",
+    "created": "Idea creada",
+    "createFailed": "Error al crear idea",
+    "updated": "Idea actualizada",
+    "updateFailed": "Error al actualizar idea"
   },
   "dashboard": {
     "welcome": "Hola",
@@ -371,11 +376,20 @@
     "shareTip3": "Anima a tu audiencia a votar para influir en tu próximo contenido",
     "myIdeas": "Mis Ideas",
     "published": "Ideas",
+    "short": "Pub.",
     "suggested": "Sugeridas",
+    "suggestedShort": "Sug.",
     "suggestions": "Sugeridas",
     "store": "Tienda de Puntos",
-    "redemptions": "Canjes",
     "moreIdeas": "Más Ideas"
+  },
+  "store": {
+    "title": "Tienda",
+    "short": "Tienda"
+  },
+  "redemptions": {
+    "title": "Canjes",
+    "short": "Canjes"
   },
   "ideaForm": {
     "addTitle": "Agregar nueva idea",

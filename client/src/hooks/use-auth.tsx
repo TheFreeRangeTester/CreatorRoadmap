@@ -153,8 +153,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         
         // Show immediate error message without blocking
         toast({
-          title: i18n.t("auth.notCreatorAccount", "No es una cuenta de creador"),
-          description: i18n.t("auth.notCreatorAccountDesc", "No es una cuenta de creador. Por favor registrate como creador si querés usar las funciones de Fanlist para creadores."),
+          title: i18n.t("auth.notCreatorAccount"),
+          description: i18n.t("auth.notCreatorAccountDesc"),
           variant: "destructive",
           duration: 8000,
         });
@@ -184,8 +184,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       
       // Show success message for valid logins
       toast({
-        title: i18n.t("auth.loginSuccess", "Login successful"),
-        description: i18n.t("auth.welcomeBack", "Welcome back, {{username}}!", { username: userData.username }),
+        title: i18n.t("auth.loginSuccess"),
+        description: i18n.t("auth.welcomeBack", { username: userData.username }),
       });
       
       // Handle post-login redirection

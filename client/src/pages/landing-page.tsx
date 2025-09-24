@@ -134,11 +134,8 @@ export default function LandingPage() {
       localStorage.removeItem("attemptingCreatorLogin");
 
       toast({
-        title: t("auth.notCreatorAccount", "No es una cuenta de creador"),
-        description: t(
-          "auth.notCreatorAccountDesc",
-          "No es una cuenta de creador. Por favor registrate como creador si querés usar las funciones de Fanlist para creadores."
-        ),
+        title: t("auth.notCreatorAccount"),
+        description: t("auth.notCreatorAccountDesc"),
         variant: "destructive",
         duration: 8000,
       });

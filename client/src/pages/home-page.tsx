@@ -114,16 +114,13 @@ export default function HomePage() {
       setIsDeleteModalOpen(false);
       queryClient.invalidateQueries({ queryKey: ["/api/ideas"] });
       toast({
-        title: t("ideas.deleted", "Idea deleted"),
-        description: t(
-          "ideas.deletedSuccess",
-          "Your idea has been deleted successfully."
-        ),
+        title: t("ideas.deleted"),
+        description: t("ideas.deletedSuccess"),
       });
     },
     onError: (error) => {
       toast({
-        title: t("ideas.deleteError", "Delete failed"),
+        title: t("ideas.deleteError"),
         description: error.message,
         variant: "destructive",
       });
@@ -168,7 +165,7 @@ export default function HomePage() {
               {user && (
                 <div className="hidden sm:block">
                   <p className="text-sm text-gray-600 dark:text-gray-400">
-                    {t("common.hello", "Hola")}, {user.username}
+                    {t("common.hello")}, {user.username}
                   </p>
                 </div>
               )}
@@ -196,7 +193,7 @@ export default function HomePage() {
                 size="sm"
                 className="text-red-600 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300 hover:bg-red-50 dark:hover:bg-red-900/20"
               >
-                {t("auth.logout", "Salir")}
+                {t("auth.logout")}
               </Button>
             </div>
 
@@ -254,7 +251,7 @@ export default function HomePage() {
                   size="sm"
                   className="w-full justify-start text-red-600 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300 hover:bg-red-50 dark:hover:bg-red-900/20"
                 >
-                  {t("auth.logout", "Salir")}
+                  {t("auth.logout")}
                 </Button>
               </div>
             </motion.div>
@@ -272,12 +269,12 @@ export default function HomePage() {
             className="mb-8"
           >
             <h1 className="text-3xl sm:text-4xl font-bold bg-gradient-to-r from-gray-900 to-gray-600 dark:from-white dark:to-gray-300 bg-clip-text text-transparent mb-2">
-              {t("dashboard.welcome", "Bienvenido a tu panel de ideas")}
+              {t("dashboard.welcome")}
             </h1>
             <p className="text-gray-600 dark:text-gray-400 text-lg">
               {user?.userRole === "creator" ? 
-                t("dashboard.creatorDescription", "Gestiona tus ideas y conecta con tu audiencia") :
-                t("dashboard.audienceDescription", "Participa votando y sugiriendo ideas")
+                t("dashboard.creatorDescription") :
+                t("dashboard.audienceDescription")
               }
             </p>
           </motion.div>
@@ -302,7 +299,7 @@ export default function HomePage() {
           >
             <div className="p-6">
               <h2 className="text-2xl font-bold bg-gradient-to-r from-gray-900 to-gray-600 dark:from-white dark:to-gray-300 bg-clip-text text-transparent mb-6">
-                {t("dashboard.topIdeas", "Top Ideas")}
+                {t("dashboard.topIdeas")}
               </h2>
               
               {user?.userRole === "creator" ? (
@@ -313,16 +310,16 @@ export default function HomePage() {
                       className="data-[state=active]:bg-white dark:data-[state=active]:bg-gray-700 rounded-xl transition-all"
                     >
                       <Grid3x3 className="h-4 w-4 mr-2" />
-                      <span className="hidden sm:inline">{t("ideas.published", "Publicadas")}</span>
-                      <span className="sm:hidden">{t("ideas.published", "Pub.")}</span>
+                      <span className="hidden sm:inline">{t("ideas.published")}</span>
+                      <span className="sm:hidden">{t("ideas.short")}</span>
                     </TabsTrigger>
                     <TabsTrigger 
                       value="suggested" 
                       className="data-[state=active]:bg-white dark:data-[state=active]:bg-gray-700 rounded-xl transition-all relative"
                     >
                       <User className="h-4 w-4 mr-2" />
-                      <span className="hidden sm:inline">{t("ideas.suggested", "Sugeridas")}</span>
-                      <span className="sm:hidden">{t("ideas.suggested", "Sug.")}</span>
+                      <span className="hidden sm:inline">{t("ideas.suggested")}</span>
+                      <span className="sm:hidden">{t("ideas.suggestedShort")}</span>
                       {pendingIdeas && pendingIdeas.length > 0 && (
                         <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
                           {pendingIdeas.length}
@@ -334,16 +331,16 @@ export default function HomePage() {
                       className="data-[state=active]:bg-white dark:data-[state=active]:bg-gray-700 rounded-xl transition-all"
                     >
                       <Store className="h-4 w-4 mr-2" />
-                      <span className="hidden sm:inline">{t("store.title", "Tienda")}</span>
-                      <span className="sm:hidden">{t("store.short", "Tienda")}</span>
+                      <span className="hidden sm:inline">{t("store.title")}</span>
+                      <span className="sm:hidden">{t("store.short")}</span>
                     </TabsTrigger>
                     <TabsTrigger 
                       value="redemptions" 
                       className="data-[state=active]:bg-white dark:data-[state=active]:bg-gray-700 rounded-xl transition-all"
                     >
                       <Package className="h-4 w-4 mr-2" />
-                      <span className="hidden sm:inline">{t("redemptions.title", "Canjes")}</span>
-                      <span className="sm:hidden">{t("redemptions.short", "Canjes")}</span>
+                      <span className="hidden sm:inline">{t("redemptions.title")}</span>
+                      <span className="sm:hidden">{t("redemptions.short")}</span>
                     </TabsTrigger>
                   </TabsList>
                   
