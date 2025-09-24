@@ -17,8 +17,8 @@ export default function DashboardSettingsPage() {
   useEffect(() => {
     if (!isLoading && user && user.userRole !== "creator") {
       toast({
-        title: t("dashboard.accessDenied", "Access Denied"),
-        description: t("dashboard.creatorRequired", "Necesitás una cuenta de creador para acceder al dashboard."),
+        title: t("dashboard.accessDenied"),
+        description: t("dashboard.creatorRequired"),
         variant: "destructive",
       });
       setLocation("/");
@@ -65,7 +65,7 @@ export default function DashboardSettingsPage() {
               </Button>
               <div className="flex items-center gap-2 ml-2">
                 <Settings className="h-5 w-5 text-primary" />
-                <h1 className="text-lg font-semibold">{t("dashboard.settings", "Creator Settings")}</h1>
+                <h1 className="text-lg font-semibold">{t("dashboard.settings")}</h1>
               </div>
             </div>
 
@@ -85,10 +85,10 @@ export default function DashboardSettingsPage() {
         <div className="max-w-3xl mx-auto">
           <div className="mb-8 text-center">
             <h1 className="text-3xl font-bold mb-3 text-transparent bg-clip-text bg-gradient-to-r from-primary to-blue-600 dark:from-primary dark:to-blue-400">
-              {t("dashboard.creatorSettings", "Creator Settings")}
+              {t("dashboard.creatorSettings")}
             </h1>
             <p className="text-muted-foreground max-w-lg mx-auto">
-              {t("dashboard.creatorSettingsDesc", "Manage your creator profile, leaderboard preferences, and public appearance")}
+              {t("dashboard.creatorSettingsDesc")}
             </p>
           </div>
 
@@ -99,16 +99,16 @@ export default function DashboardSettingsPage() {
           <div className="mt-8 bg-white dark:bg-gray-800 rounded-xl shadow-sm border dark:border-gray-700 p-6">
             <h2 className="text-xl font-semibold mb-4 flex items-center gap-2">
               <Settings className="h-5 w-5 text-primary" />
-              {t("dashboard.leaderboardPreferences", "Leaderboard Preferences")}
+              {t("dashboard.leaderboardPreferences")}
             </h2>
             <p className="text-muted-foreground mb-4">
-              {t("dashboard.leaderboardPreferencesDesc", "Configure how your public leaderboard appears to your audience")}
+              {t("dashboard.leaderboardPreferencesDesc")}
             </p>
             
             {/* Add more creator-specific settings here */}
             <div className="bg-blue-50 dark:bg-blue-900/20 rounded-lg p-4 border border-blue-200 dark:border-blue-800">
               <p className="text-sm text-blue-700 dark:text-blue-300">
-                {t("dashboard.moreSettingsComing", "More leaderboard customization options coming soon!")}
+                {t("dashboard.moreSettingsComing")}
               </p>
             </div>
           </div>

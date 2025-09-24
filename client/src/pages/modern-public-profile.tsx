@@ -85,8 +85,8 @@ export default function ModernPublicProfile() {
   useEffect(() => {
     if (error) {
       toast({
-        title: "Error",
-        description: (error as Error).message || "Failed to load creator page",
+        title: t("common.error"),
+        description: (error as Error).message || t("errors.loadingCreatorPage"),
         variant: "destructive",
       });
       navigate("/dashboard");
@@ -163,8 +163,8 @@ export default function ModernPublicProfile() {
       setVotedIdeas(prev => new Set([...Array.from(prev), ideaId]));
 
       toast({
-        title: t("vote.success", "¡Voto registrado!"),
-        description: t("vote.successDesc", "Tu voto ha sido contabilizado."),
+        title: t("vote.success"),
+        description: t("vote.successDesc"),
       });
 
       // Invalidate points for this specific creator
@@ -177,8 +177,8 @@ export default function ModernPublicProfile() {
     } catch (error) {
       console.error("Error voting:", error);
       toast({
-        title: t("vote.error", "Error al votar"),
-        description: t("vote.errorDesc", "No se pudo registrar tu voto."),
+        title: t("vote.error"),
+        description: t("vote.errorDesc"),
         variant: "destructive",
       });
     } finally {
@@ -227,11 +227,11 @@ export default function ModernPublicProfile() {
       <div className="flex items-center justify-center min-h-screen">
         <div className="text-center">
           <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
-            {t("profile.notFound", "Perfil no encontrado")}
+            {t("profile.notFound")}
           </h1>
           <Button onClick={() => navigate("/dashboard")}>
             <ArrowLeft className="h-4 w-4 mr-2" />
-            {t("common.back", "Volver")}
+            {t("common.back")}
           </Button>
         </div>
       </div>
@@ -316,7 +316,7 @@ export default function ModernPublicProfile() {
                   className="bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white shadow-lg"
                 >
                   <UserPlus className="h-4 w-4 mr-2" />
-                  {t("suggest.idea", "Sugerir Idea")}
+                  {t("suggest.idea")}
                 </Button>
               </motion.div>
             )}

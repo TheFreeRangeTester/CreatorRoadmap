@@ -91,7 +91,7 @@ export default function IdeaForm({ isOpen, idea, onClose }: IdeaFormProps) {
       if (!res.ok) {
         const errorData = await res.text();
         console.error("Error creating idea:", errorData);
-        throw new Error(errorData || "Failed to create idea");
+        throw new Error(errorData || t("errors.createIdeaFailed"));
       }
 
       return await res.json();
@@ -136,7 +136,7 @@ export default function IdeaForm({ isOpen, idea, onClose }: IdeaFormProps) {
       if (!res.ok) {
         const errorData = await res.text();
         console.error("Error updating idea:", errorData);
-        throw new Error(errorData || "Failed to update idea");
+        throw new Error(errorData || t("errors.updateIdeaFailed"));
       }
 
       return await res.json();

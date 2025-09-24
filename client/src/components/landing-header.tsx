@@ -49,7 +49,7 @@ export function LandingHeader({ className = "" }: LandingHeaderProps) {
                         variant="outline"
                         className="bg-gradient-to-r from-blue-100 to-blue-50 dark:from-blue-800 dark:to-blue-700 hover:from-blue-200 hover:to-blue-100 dark:hover:from-blue-700 dark:hover:to-blue-600"
                       >
-                        {t("common.dashboard", "Dashboard")}
+                        {t("navigation.dashboard")}
                       </Button>
                     </Link>
                   )}
@@ -60,7 +60,7 @@ export function LandingHeader({ className = "" }: LandingHeaderProps) {
                     className="text-red-600 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300 border-red-200 dark:border-red-800 hover:bg-red-50 dark:hover:bg-red-900/20"
                   >
                     <LogOut className="h-4 w-4 mr-2" />
-                    {logoutMutation.isPending ? t("common.logging_out", "Cerrando...") : t("common.logout", "Cerrar sesión")}
+                    {logoutMutation.isPending ? t("common.saving") : t("common.logout")}
                   </Button>
                 </div>
               </>

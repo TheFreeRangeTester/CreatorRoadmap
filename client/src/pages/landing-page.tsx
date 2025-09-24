@@ -269,7 +269,7 @@ export default function LandingPage() {
                 <div className="relative aspect-video overflow-hidden">
                   <img
                     src={demoGifPath}
-                    alt="Demo de Fanlist"
+                    alt={t("demo.altText")}
                     className="w-full h-full object-cover"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
@@ -278,7 +278,7 @@ export default function LandingPage() {
                       size="lg"
                       className="bg-gradient-to-r from-white/90 to-white/80 text-gray-900 hover:from-white hover:to-white/90 backdrop-blur-sm"
                     >
-                      ▶ Ver Demo
+                      {t("demo.watchDemo")}
                     </Button>
                   </div>
                 </div>

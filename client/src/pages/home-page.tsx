@@ -98,7 +98,7 @@ export default function HomePage() {
     },
     onError: (error) => {
       toast({
-        title: "Voting failed",
+        title: t("vote.error"),
         description: error.message,
         variant: "destructive",
       });
@@ -186,7 +186,7 @@ export default function HomePage() {
                   className="border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-800"
                 >
                   <User className="h-4 w-4 mr-2" />
-                  {t("navigation.profile", "Perfil")}
+                  {t("navigation.profile")}
                 </Button>
               </Link>
               <UserIndicator user={user} variant="desktop" />
@@ -242,7 +242,7 @@ export default function HomePage() {
                     onClick={() => setIsMobileMenuOpen(false)}
                   >
                     <User className="h-4 w-4 mr-2" />
-                    {t("navigation.profile", "Perfil")}
+                    {t("navigation.profile")}
                   </Button>
                 </Link>
                 <Button

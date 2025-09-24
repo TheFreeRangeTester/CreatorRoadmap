@@ -126,7 +126,7 @@ export const MobileMenu = ({
                             size="lg"
                           >
                             <User className="h-5 w-5 mr-2" />
-                            {t("common.back", "Dashboard")}
+                            {t("navigation.dashboard")}
                           </Button>
                         </Link>
                       )}
@@ -145,7 +145,7 @@ export const MobileMenu = ({
                               size="lg"
                             >
                               <User className="h-5 w-5 mr-2" />
-                              {t("common.profile", "Settings")}
+                              {t("navigation.profile")}
                             </Button>
                           </Link>
                         )}
@@ -206,11 +206,11 @@ export const MobileMenu = ({
               <div className="border-t border-gray-200 dark:border-gray-700 bg-white/90 dark:bg-gray-900/90 p-6">
                 <div className="flex items-center justify-center gap-6">
                   <div className="flex items-center gap-2">
-                    <span className="text-sm font-medium text-gray-600 dark:text-gray-400">Idioma:</span>
+                    <span className="text-sm font-medium text-gray-600 dark:text-gray-400">{t("mobile.language")}</span>
                     <LanguageToggle />
                   </div>
                   <div className="flex items-center gap-2">
-                    <span className="text-sm font-medium text-gray-600 dark:text-gray-400">Tema:</span>
+                    <span className="text-sm font-medium text-gray-600 dark:text-gray-400">{t("mobile.theme")}</span>
                     <ThemeToggle />
                   </div>
                 </div>

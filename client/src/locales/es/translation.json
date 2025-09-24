@@ -721,7 +721,46 @@
     "otherIdeasDesc": "¡Cada voto cuenta para subir en el ranking!"
   },
   "mobile": {
-    "tapToVote": "¡Toca para votar!"
+    "tapToVote": "¡Toca para votar!",
+    "language": "Idioma:",
+    "theme": "Tema:"
+  },
+  "vote": {
+    "success": "¡Voto registrado!",
+    "successDesc": "Tu voto ha sido registrado exitosamente",
+    "error": "Error al votar",
+    "errorDesc": "No se pudo registrar tu voto. Por favor intenta de nuevo."
+  },
+  "navigation": {
+    "profile": "Perfil",
+    "dashboard": "Dashboard"
+  },
+  "demo": {
+    "altText": "Demo de Fanlist",
+    "watchDemo": "▶ Ver Demo"
+  },
+  "dashboard": {
+    "accessDenied": "Acceso Denegado",
+    "creatorRequired": "Necesitas una cuenta de creador para acceder al dashboard.",
+    "settings": "Configuración de Creador",
+    "creatorSettings": "Configuración de Creador",
+    "creatorSettingsDesc": "Gestiona tu perfil de creador, preferencias del ranking y apariencia pública",
+    "leaderboardPreferences": "Preferencias del Ranking",
+    "leaderboardPreferencesDesc": "Configura cómo aparece tu ranking público para tu audiencia",
+    "moreSettingsComing": "¡Más opciones de personalización del ranking próximamente!"
+  },
+  "suggest": {
+    "idea": "Sugerir Idea"
+  },
+  "errors": {
+    "notEnoughPoints": "No tienes suficientes puntos para enviar una sugerencia",
+    "generic": "Ocurrió un error",
+    "unauthorized": "Necesitas iniciar sesión",
+    "invalidInput": "Campos inválidos",
+    "loadingCreatorPage": "Error al cargar la página del creador",
+    "votingFailed": "Error al votar",
+    "createIdeaFailed": "Error al crear la idea",
+    "updateIdeaFailed": "Error al actualizar la idea"
   },
   "redemptions": {
     "short": "Canjes",
