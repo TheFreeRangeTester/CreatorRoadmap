@@ -209,7 +209,7 @@ export default function IdeaForm({ isOpen, idea, onClose }: IdeaFormProps) {
                   </FormLabel>
                   <FormControl>
                     <Input
-                      placeholder="Ej: Cómo crear contenido que realmente enganche"
+                      placeholder={t("ideaForm.titlePlaceholder")}
                       maxLength={100}
                       disabled={isLimitReached}
                       className="rounded-2xl glass-input"
@@ -231,7 +231,7 @@ export default function IdeaForm({ isOpen, idea, onClose }: IdeaFormProps) {
                   </FormLabel>
                   <FormControl>
                     <Textarea
-                      placeholder="Comparte estrategias, herramientas o consejos específicos que has probado..."
+                      placeholder={t("ideaForm.descriptionPlaceholder")}
                       maxLength={280}
                       className="resize-none h-24 rounded-2xl glass-input"
                       disabled={isLimitReached}

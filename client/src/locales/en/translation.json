@@ -394,7 +394,14 @@
   "ideaForm": {
     "addTitle": "Add new idea",
     "addDescription": "Share your idea with the community. Be clear and concise to get more votes!",
-    "submitIdea": "Save idea"
+    "submitIdea": "Save idea",
+    "title": "Title",
+    "description": "Description",
+    "characters": "characters",
+    "titlePlaceholder": "E.g: How to create content that truly engages",
+    "descriptionPlaceholder": "Share strategies, tools or specific tips you've tried...",
+    "editTitle": "Edit idea",
+    "editDescription": "Make changes to your idea."
   },
   "csvImport": {
     "title": "Import Ideas from CSV",
