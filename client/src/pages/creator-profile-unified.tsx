@@ -767,7 +767,7 @@ export default function CreatorProfileUnified() {
         <div className="bg-gray-50 dark:bg-gray-900 min-h-screen">
           <div className="container mx-auto px-4 py-12">
             <h2 className="text-3xl font-bold text-center mb-8 text-gray-900 dark:text-white">
-              {t("creator.voteHeaderTitle", "Vote for Content Ideas")}
+              {t("creator.voteHeaderTitle")}
             </h2>
 
             {/* Ideas list - full width */}
@@ -775,10 +775,7 @@ export default function CreatorProfileUnified() {
               {ideas.length === 0 ? (
                 <div className="text-center py-12">
                   <p className="text-gray-600 dark:text-gray-400">
-                    {t(
-                      "suggestIdea.beFirstToSuggest",
-                      "Be the first to suggest a content idea"
-                    )}
+                    {t("suggestIdea.beFirstToSuggest")}
                   </p>
                 </div>
               ) : (
@@ -791,7 +788,7 @@ export default function CreatorProfileUnified() {
                           <div className="h-px bg-gradient-to-r from-transparent via-yellow-400 to-transparent flex-1 w-12"></div>
                           <div className="flex items-center gap-2 bg-gradient-to-r from-yellow-400 via-amber-500 to-yellow-600 text-yellow-900 px-4 py-2 rounded-full text-sm font-semibold shadow-lg">
                             <span className="text-lg">🏆</span>
-                            <span>{t("dashboard.topIdeas", "Top Ideas")}</span>
+                            <span>{t("dashboard.topIdeas")}</span>
                           </div>
                           <div className="h-px bg-gradient-to-r from-transparent via-yellow-400 to-transparent flex-1 w-12"></div>
                         </div>

@@ -383,7 +383,15 @@
     "suggestedShort": "Sug.",
     "suggestions": "Sugeridas",
     "store": "Tienda de Puntos",
-    "moreIdeas": "Más Ideas"
+    "moreIdeas": "Más Ideas",
+    "accessDenied": "Acceso Denegado",
+    "creatorRequired": "Necesitas una cuenta de creador para acceder al panel.",
+    "settings": "Configuración de Creador",
+    "creatorSettings": "Configuración de Creador",
+    "creatorSettingsDesc": "Administra tu perfil de creador, preferencias del leaderboard y apariencia pública",
+    "leaderboardPreferences": "Preferencias del Leaderboard",
+    "leaderboardPreferencesDesc": "Configura cómo aparece tu leaderboard público para tu audiencia",
+    "moreSettingsComing": "¡Más opciones de personalización del leaderboard próximamente!"
   },
   "store": {
     "title": "Tienda",
@@ -754,16 +762,6 @@
   "demo": {
     "altText": "Demo de Fanlist",
     "watchDemo": "▶ Ver Demo"
-  },
-  "dashboard": {
-    "accessDenied": "Acceso Denegado",
-    "creatorRequired": "Necesitas una cuenta de creador para acceder al dashboard.",
-    "settings": "Configuración de Creador",
-    "creatorSettings": "Configuración de Creador",
-    "creatorSettingsDesc": "Gestiona tu perfil de creador, preferencias del ranking y apariencia pública",
-    "leaderboardPreferences": "Preferencias del Ranking",
-    "leaderboardPreferencesDesc": "Configura cómo aparece tu ranking público para tu audiencia",
-    "moreSettingsComing": "¡Más opciones de personalización del ranking próximamente!"
   },
   "suggest": {
     "idea": "Sugerir Idea"

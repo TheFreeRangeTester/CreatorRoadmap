@@ -386,7 +386,7 @@ export function IdeasTabView({ mode = "published" }: IdeasTabViewProps) {
                       <div className="flex items-center gap-2 mb-3">
                         <Badge variant="outline" className="text-xs">
                           <User className="w-3 h-3 mr-1" />
-                          {t("ideas.suggestedBy", "Sugerido por")}: {idea.suggestedByUsername}
+                          {t("ideas.suggestedBy")}: {idea.suggestedByUsername}
                         </Badge>
                       </div>
                     )}

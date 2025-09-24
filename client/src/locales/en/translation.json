@@ -381,7 +381,15 @@
     "suggestedShort": "Sug.",
     "suggestions": "Suggested",
     "store": "Points Store",
-    "moreIdeas": "More Ideas"
+    "moreIdeas": "More Ideas",
+    "accessDenied": "Access Denied",
+    "creatorRequired": "You need a creator account to access the dashboard.",
+    "settings": "Creator Settings",
+    "creatorSettings": "Creator Settings",
+    "creatorSettingsDesc": "Manage your creator profile, leaderboard preferences, and public appearance",
+    "leaderboardPreferences": "Leaderboard Preferences",
+    "leaderboardPreferencesDesc": "Configure how your public leaderboard appears to your audience",
+    "moreSettingsComing": "More leaderboard customization options coming soon!"
   },
   "store": {
     "title": "Store",
@@ -754,16 +762,6 @@
   "demo": {
     "altText": "Fanlist Demo",
     "watchDemo": "▶ Watch Demo"
-  },
-  "dashboard": {
-    "accessDenied": "Access Denied",
-    "creatorRequired": "You need a creator account to access the dashboard.",
-    "settings": "Creator Settings",
-    "creatorSettings": "Creator Settings",
-    "creatorSettingsDesc": "Manage your creator profile, leaderboard preferences, and public appearance",
-    "leaderboardPreferences": "Leaderboard Preferences",
-    "leaderboardPreferencesDesc": "Configure how your public leaderboard appears to your audience",
-    "moreSettingsComing": "More leaderboard customization options coming soon!"
   },
   "profile": {
     "joinTitle": "Join the community!",
