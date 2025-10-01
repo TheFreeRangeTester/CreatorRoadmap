@@ -292,7 +292,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const ideas = await storage.getIdeasByCreator(req.user.id);
       const publishedIdeas = ideas.filter(idea => idea.status === 'approved');
       const pendingIdeas = ideas.filter(idea => idea.status === 'pending');
-      const totalVotes = publishedIdeas.reduce((sum, idea) => sum + idea.voteCount, 0);
+      const totalVotes = publishedIdeas.reduce((sum, idea) => sum + idea.votes, 0);
 
       console.log(`[DASHBOARD-STATS] User ${req.user.id}: ${ideas.length} total ideas, ${publishedIdeas.length} published, ${pendingIdeas.length} pending, ${totalVotes} total votes`);
 

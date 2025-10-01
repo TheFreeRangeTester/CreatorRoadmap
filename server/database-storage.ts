@@ -98,6 +98,10 @@ export class DatabaseStorage implements IStorage {
     return idea;
   }
 
+  async getIdeasByCreator(creatorId: number): Promise<Idea[]> {
+    return db.select().from(ideas).where(eq(ideas.creatorId, creatorId)).orderBy(desc(ideas.votes));
+  }
+
   async createIdea(insertIdea: InsertIdea, creatorId: number): Promise<Idea> {
     const now = new Date();
     
