@@ -1,14 +1,7 @@
 import { useState } from "react";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { motion } from "framer-motion";
-import {
-  Grid3x3,
-  Store,
-  Package,
-  User,
-  Menu,
-  X,
-} from "lucide-react";
+import { Grid3x3, Store, Package, User, Menu, X } from "lucide-react";
 import { useAuth } from "@/hooks/use-auth";
 import { useToast } from "@/hooks/use-toast";
 import { useReactiveStats } from "@/hooks/use-reactive-stats";
@@ -29,6 +22,8 @@ import { LanguageToggle } from "@/components/language-toggle";
 import { PointsDisplay } from "@/components/points-display";
 import { Link } from "wouter";
 import AudienceStats from "@/components/audience-stats";
+import { DashboardOverview } from "@/components/dashboard-overview";
+import { MobileBottomNavigation } from "@/components/mobile-bottom-navigation";
 
 export default function HomePage() {
   const { user, logoutMutation } = useAuth();
@@ -80,16 +75,18 @@ export default function HomePage() {
     },
     onSuccess: async () => {
       console.log("[VOTE] Vote successful, updating reactive stats");
-      
+
       // Update reactive stats immediately for instant UI update
       addVote();
-      
+
       // Also invalidate cache for server sync
       try {
         await Promise.all([
           queryClient.invalidateQueries({ queryKey: ["/api/ideas"] }),
           queryClient.invalidateQueries({ queryKey: ["/api/user/points"] }),
-          queryClient.invalidateQueries({ queryKey: ["/api/user/audience-stats"] })
+          queryClient.invalidateQueries({
+            queryKey: ["/api/user/audience-stats"],
+          }),
         ]);
         console.log("[CACHE] Cache invalidation completed");
       } catch (error) {
@@ -143,13 +140,13 @@ export default function HomePage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50 to-indigo-100 dark:from-gray-900 dark:via-blue-900/20 dark:to-indigo-900/30">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
       {/* Header */}
       <motion.header
         initial={{ opacity: 0, y: -10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
-        className="bg-white/90 dark:bg-gray-900/90 backdrop-blur-xl border-b border-gray-200/50 dark:border-gray-700/50 shadow-xl shadow-gray-200/50 dark:shadow-gray-800/50 sticky top-0 z-10"
+        className="bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700 shadow-sm sticky top-0 z-10"
       >
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
@@ -199,7 +196,11 @@ export default function HomePage() {
                 size="sm"
                 className="p-2"
               >
-                {isMobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+                {isMobileMenuOpen ? (
+                  <X className="h-5 w-5" />
+                ) : (
+                  <Menu className="h-5 w-5" />
+                )}
               </Button>
             </div>
           </div>
@@ -259,17 +260,26 @@ export default function HomePage() {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="mb-8"
+            className="mb-6"
           >
-            <h1 className="text-3xl sm:text-4xl font-bold bg-gradient-to-r from-gray-900 to-gray-600 dark:from-white dark:to-gray-300 bg-clip-text text-transparent mb-2">
+            <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 dark:text-white mb-2">
               {t("dashboard.welcome")}
             </h1>
             <p className="text-gray-600 dark:text-gray-400 text-lg">
-              {user?.userRole === "creator" ? 
-                t("dashboard.creatorDescription") :
-                t("dashboard.audienceDescription")
-              }
+              {user?.userRole === "creator"
+                ? t("dashboard.creatorDescription")
+                : t("dashboard.audienceDescription")}
             </p>
+          </motion.div>
+
+          {/* Dashboard Overview */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.1 }}
+            className="mb-8"
+          >
+            <DashboardOverview />
           </motion.div>
 
           {/* Creator Controls */}
@@ -277,7 +287,7 @@ export default function HomePage() {
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              className="bg-white/90 dark:bg-gray-900/90 backdrop-blur-xl rounded-3xl border border-gray-200/50 dark:border-gray-700/50 overflow-hidden shadow-xl shadow-gray-200/50 dark:shadow-gray-800/50 mb-6"
+              className="bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-700 shadow-sm mb-6"
             >
               <CreatorControls onAddIdea={handleAddIdea} />
             </motion.div>
@@ -288,67 +298,83 @@ export default function HomePage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1 }}
-            className="bg-white/90 dark:bg-gray-900/90 backdrop-blur-xl rounded-3xl border border-gray-200/50 dark:border-gray-700/50 overflow-hidden shadow-xl shadow-gray-200/50 dark:shadow-gray-800/50"
+            className="bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-700 shadow-sm"
           >
             <div className="p-6">
-              <h2 className="text-2xl font-bold bg-gradient-to-r from-gray-900 to-gray-600 dark:from-white dark:to-gray-300 bg-clip-text text-transparent mb-6">
+              <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">
                 {t("dashboard.topIdeas")}
               </h2>
-              
+
               {user?.userRole === "creator" ? (
-                <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-                  <TabsList className="grid w-full grid-cols-4 bg-gray-100/50 dark:bg-gray-800/50 backdrop-blur-sm rounded-2xl">
-                    <TabsTrigger 
-                      value="published" 
-                      className="data-[state=active]:bg-white dark:data-[state=active]:bg-gray-700 rounded-xl transition-all"
+                <Tabs
+                  value={activeTab}
+                  onValueChange={setActiveTab}
+                  className="w-full"
+                >
+                  <TabsList className="grid w-full grid-cols-4 bg-gray-100 dark:bg-gray-800 rounded-lg">
+                    <TabsTrigger
+                      value="published"
+                      className="data-[state=active]:bg-white dark:data-[state=active]:bg-gray-700 rounded-md transition-all"
                     >
                       <Grid3x3 className="h-4 w-4 mr-2" />
-                      <span className="hidden sm:inline">{t("ideas.published")}</span>
+                      <span className="hidden sm:inline">
+                        {t("ideas.published")}
+                      </span>
                       <span className="sm:hidden">{t("ideas.short")}</span>
                     </TabsTrigger>
-                    <TabsTrigger 
-                      value="suggested" 
+                    <TabsTrigger
+                      value="suggested"
                       className="data-[state=active]:bg-white dark:data-[state=active]:bg-gray-700 rounded-xl transition-all relative"
                     >
                       <User className="h-4 w-4 mr-2" />
-                      <span className="hidden sm:inline">{t("ideas.suggested")}</span>
-                      <span className="sm:hidden">{t("ideas.suggestedShort")}</span>
+                      <span className="hidden sm:inline">
+                        {t("ideas.suggested")}
+                      </span>
+                      <span className="sm:hidden">
+                        {t("ideas.suggestedShort")}
+                      </span>
                       {pendingIdeas && pendingIdeas.length > 0 && (
                         <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
                           {pendingIdeas.length}
                         </span>
                       )}
                     </TabsTrigger>
-                    <TabsTrigger 
-                      value="store" 
-                      className="data-[state=active]:bg-white dark:data-[state=active]:bg-gray-700 rounded-xl transition-all"
+                    <TabsTrigger
+                      value="store"
+                      className="data-[state=active]:bg-white dark:data-[state=active]:bg-gray-700 rounded-md transition-all"
                     >
                       <Store className="h-4 w-4 mr-2" />
-                      <span className="hidden sm:inline">{t("store.title")}</span>
+                      <span className="hidden sm:inline">
+                        {t("store.title")}
+                      </span>
                       <span className="sm:hidden">{t("store.short")}</span>
                     </TabsTrigger>
-                    <TabsTrigger 
-                      value="redemptions" 
-                      className="data-[state=active]:bg-white dark:data-[state=active]:bg-gray-700 rounded-xl transition-all"
+                    <TabsTrigger
+                      value="redemptions"
+                      className="data-[state=active]:bg-white dark:data-[state=active]:bg-gray-700 rounded-md transition-all"
                     >
                       <Package className="h-4 w-4 mr-2" />
-                      <span className="hidden sm:inline">{t("redemptions.title")}</span>
-                      <span className="sm:hidden">{t("redemptions.short")}</span>
+                      <span className="hidden sm:inline">
+                        {t("redemptions.title")}
+                      </span>
+                      <span className="sm:hidden">
+                        {t("redemptions.short")}
+                      </span>
                     </TabsTrigger>
                   </TabsList>
-                  
+
                   <TabsContent value="published" className="mt-6">
                     <IdeasTabView mode="published" />
                   </TabsContent>
-                  
+
                   <TabsContent value="suggested" className="mt-6">
                     <IdeasTabView mode="suggested" />
                   </TabsContent>
-                  
+
                   <TabsContent value="store" className="mt-6">
                     <StoreManagement />
                   </TabsContent>
-                  
+
                   <TabsContent value="redemptions" className="mt-6">
                     <RedemptionManagement />
                   </TabsContent>
@@ -367,13 +393,22 @@ export default function HomePage() {
         </div>
       </div>
 
+      {/* Mobile Bottom Navigation */}
+      {user?.userRole === "creator" && (
+        <MobileBottomNavigation
+          activeTab={activeTab}
+          onTabChange={setActiveTab}
+          pendingCount={pendingIdeas?.length || 0}
+        />
+      )}
+
       {/* Modals */}
       <IdeaForm
         isOpen={isIdeaFormOpen}
         idea={currentIdea}
         onClose={() => setIsIdeaFormOpen(false)}
       />
-      
+
       <DeleteConfirmation
         isOpen={isDeleteModalOpen}
         onClose={() => setIsDeleteModalOpen(false)}

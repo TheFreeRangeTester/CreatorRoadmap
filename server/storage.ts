@@ -1,9 +1,11 @@
-import { ideas as ideasTable, users, votes as votesTable, publicLinks as publicLinksTable, 
+import {
+  ideas as ideasTable, users, votes as votesTable, publicLinks as publicLinksTable,
   type User, type InsertUser, type Idea, type InsertIdea, type UpdateIdea, type SuggestIdea,
   type Vote, type InsertVote, type PublicLink, type InsertPublicLink, type PublicLinkResponse,
   type UpdateProfile, type UpdateSubscription, type UserPointsResponse, type InsertPointTransaction,
-  type PointTransactionResponse, type StoreItem, type InsertStoreItem, type UpdateStoreItem, 
-  type StoreItemResponse, type StoreRedemption, type InsertStoreRedemption, type StoreRedemptionResponse } from "@shared/schema";
+  type PointTransactionResponse, type StoreItem, type InsertStoreItem, type UpdateStoreItem,
+  type StoreItemResponse, type StoreRedemption, type InsertStoreRedemption, type StoreRedemptionResponse
+} from "@shared/schema";
 import session from "express-session";
 import createMemoryStore from "memorystore";
 import { randomBytes } from "crypto";
@@ -19,63 +21,64 @@ export interface IStorage {
   createUser(user: InsertUser): Promise<User>;
   updateUserProfile(id: number, profileData: UpdateProfile): Promise<User | undefined>;
   updateUserPassword(id: number, hashedPassword: string): Promise<User | undefined>;
-  
+
   // Idea operations
   getIdeas(): Promise<Idea[]>;
   getIdea(id: number): Promise<Idea | undefined>;
+  getIdeasByCreator(creatorId: number): Promise<Idea[]>;
   createIdea(idea: InsertIdea, creatorId: number): Promise<Idea>;
   updateIdea(id: number, idea: UpdateIdea): Promise<Idea | undefined>;
   deleteIdea(id: number): Promise<void>;
-  
+
   // Idea suggestion operations
   suggestIdea(suggestion: SuggestIdea, suggestedBy: number): Promise<Idea>;
   approveIdea(id: number): Promise<Idea | undefined>;
   getPendingIdeas(creatorId: number): Promise<Idea[]>;
-  
+
   // Vote operations
   getVoteByUserOrSession(ideaId: number, userId?: number, sessionId?: string): Promise<Vote | undefined>;
   createVote(vote: InsertVote, userId?: number, sessionId?: string): Promise<Vote>;
   incrementVote(ideaId: number): Promise<void>;
-  
+
   // Position operations
   updatePositions(): Promise<void>;
-  
+
   // Public link operations
   createPublicLink(creatorId: number, options?: InsertPublicLink): Promise<PublicLinkResponse>;
   getPublicLinkByToken(token: string): Promise<PublicLink | undefined>;
   getUserPublicLinks(creatorId: number): Promise<PublicLinkResponse[]>;
   togglePublicLinkStatus(id: number, isActive: boolean): Promise<PublicLink | undefined>;
   deletePublicLink(id: number): Promise<void>;
-  
+
   // Subscription operations
   updateUserSubscription(id: number, subscriptionData: UpdateSubscription): Promise<User | undefined>;
   startUserTrial(id: number): Promise<User | undefined>;
   getUserByStripeCustomerId(stripeCustomerId: string): Promise<User | undefined>;
-  
+
   // Audience stats operations
   getUserAudienceStats(userId: number): Promise<{ votesGiven: number; ideasSuggested: number; ideasApproved: number; }>;
-  
+
   // Idea quota operations
   getUserIdeaQuota(userId: number): Promise<{ count: number; limit: number; hasReachedLimit: boolean; }>;
-  
+
   // Points operations (per creator)
   getUserPoints(userId: number, creatorId: number): Promise<UserPointsResponse>;
   createUserPoints(userId: number, creatorId: number): Promise<UserPointsResponse>;
   updateUserPoints(userId: number, creatorId: number, pointsChange: number, type: 'earned' | 'spent', reason: string, relatedId?: number): Promise<UserPointsResponse>;
   getUserPointTransactions(userId: number, creatorId: number, limit?: number): Promise<PointTransactionResponse[]>;
-  
+
   // Store operations
   getStoreItems(creatorId: number): Promise<StoreItemResponse[]>;
   getStoreItem(id: number): Promise<StoreItem | undefined>;
   createStoreItem(item: InsertStoreItem, creatorId: number): Promise<StoreItemResponse>;
   updateStoreItem(id: number, item: UpdateStoreItem): Promise<StoreItemResponse | undefined>;
   deleteStoreItem(id: number): Promise<void>;
-  
+
   // Store redemption operations
   getStoreRedemptions(creatorId: number, limit?: number, offset?: number, status?: 'pending' | 'completed'): Promise<{ redemptions: StoreRedemptionResponse[]; total: number; }>;
   createStoreRedemption(redemption: InsertStoreRedemption, userId: number): Promise<StoreRedemptionResponse>;
   updateRedemptionStatus(id: number, status: 'pending' | 'completed'): Promise<StoreRedemptionResponse | undefined>;
-  
+
   // Session store
   sessionStore: any;
 }
@@ -156,8 +159,8 @@ export class MemStorage implements IStorage {
 
   async createUser(insertUser: InsertUser): Promise<User> {
     const id = this.currentUserId++;
-    const user: User = { 
-      ...insertUser, 
+    const user: User = {
+      ...insertUser,
       id,
       profileDescription: insertUser.profileDescription || null,
       logoUrl: insertUser.logoUrl || null,
@@ -184,11 +187,11 @@ export class MemStorage implements IStorage {
     this.users.set(id, user);
     return user;
   }
-  
+
   async updateUserProfile(id: number, profileData: UpdateProfile): Promise<User | undefined> {
     const user = this.users.get(id);
     if (!user) return undefined;
-    
+
     const updatedUser: User = {
       ...user,
       profileDescription: profileData.profileDescription ?? user.profileDescription,
@@ -205,7 +208,7 @@ export class MemStorage implements IStorage {
       email: profileData.email !== undefined ? profileData.email : user.email,
       // No longer using Google authentication
     };
-    
+
     this.users.set(id, updatedUser);
     return updatedUser;
   }
@@ -232,10 +235,15 @@ export class MemStorage implements IStorage {
     return this.ideas.get(id);
   }
 
+  async getIdeasByCreator(creatorId: number): Promise<Idea[]> {
+    const allIdeas = Array.from(this.ideas.values());
+    return allIdeas.filter(idea => idea.creatorId === creatorId);
+  }
+
   async createIdea(insertIdea: InsertIdea, creatorId: number): Promise<Idea> {
     const id = this.currentIdeaId++;
     const now = new Date();
-    
+
     // Nueva idea con posiciones en null inicialmente
     const idea: Idea = {
       ...insertIdea,
@@ -249,13 +257,13 @@ export class MemStorage implements IStorage {
       status: 'approved',     // Por defecto las ideas creadas por el creador están aprobadas
       suggestedBy: null       // No es una idea sugerida
     };
-    
+
     // Insertar la idea con posiciones en null
     this.ideas.set(id, idea);
-    
+
     // Actualizar posiciones de todas las ideas, incluida la nueva
     await this.updatePositions();
-    
+
     // Obtener la idea actualizada con la nueva posición
     return this.ideas.get(id)!;
   }
@@ -276,23 +284,23 @@ export class MemStorage implements IStorage {
 
   async deleteIdea(id: number): Promise<void> {
     this.ideas.delete(id);
-    
+
     // Remove votes for this idea
     Array.from(this.votes.entries()).forEach(([voteId, vote]) => {
       if (vote.ideaId === id) {
         this.votes.delete(voteId);
       }
     });
-    
+
     // Update positions after deleting an idea
     await this.updatePositions();
   }
-  
+
   // Idea suggestion methods
   async suggestIdea(suggestion: SuggestIdea, suggestedBy: number): Promise<Idea> {
     const id = this.currentIdeaId++;
     const now = new Date();
-    
+
     // Nueva idea sugerida
     const idea: Idea = {
       id,
@@ -307,28 +315,28 @@ export class MemStorage implements IStorage {
       status: 'pending',
       suggestedBy: suggestedBy
     };
-    
+
     this.ideas.set(id, idea);
     return idea;
   }
-  
+
   async approveIdea(id: number): Promise<Idea | undefined> {
     const idea = this.ideas.get(id);
     if (!idea) return undefined;
-    
+
     const updatedIdea: Idea = {
       ...idea,
       status: 'approved'
     };
-    
+
     this.ideas.set(id, updatedIdea);
-    
+
     // Actualizar posiciones después de aprobar
     await this.updatePositions();
-    
+
     return updatedIdea;
   }
-  
+
   async getPendingIdeas(creatorId: number): Promise<Idea[]> {
     return Array.from(this.ideas.values())
       .filter(idea => idea.creatorId === creatorId && idea.status === 'pending');
@@ -353,12 +361,12 @@ export class MemStorage implements IStorage {
       sessionId: sessionId || null,
       votedAt: new Date(),
     };
-    
+
     this.votes.set(id, newVote);
-    
+
     // Increment the idea vote count
     await this.incrementVote(vote.ideaId);
-    
+
     return newVote;
   }
 
@@ -367,7 +375,7 @@ export class MemStorage implements IStorage {
     if (idea) {
       idea.votes += 1;
       this.ideas.set(ideaId, idea);
-      
+
       // Update positions after vote changes
       await this.updatePositions();
     }
@@ -377,12 +385,12 @@ export class MemStorage implements IStorage {
   async updatePositions(): Promise<void> {
     // Sort ideas by votes (descending)
     const sortedIdeas = Array.from(this.ideas.values()).sort((a, b) => b.votes - a.votes);
-    
+
     // Update positions
     sortedIdeas.forEach((idea, index) => {
       const position = index + 1;
       const previousPosition = idea.currentPosition;
-      
+
       this.ideas.set(idea.id, {
         ...idea,
         previousPosition: previousPosition,
@@ -396,7 +404,7 @@ export class MemStorage implements IStorage {
   async getIdeasWithPositions(): Promise<IdeaWithPosition[]> {
     const ideas = await this.getIdeas();
     const sortedIdeas = ideas.sort((a, b) => b.votes - a.votes);
-    
+
     const ideasWithPosition = await Promise.all(sortedIdeas.map(async idea => {
       // Obtener el nombre de usuario del que sugirió la idea, si existe
       let suggestedByUsername = undefined;
@@ -406,7 +414,7 @@ export class MemStorage implements IStorage {
           suggestedByUsername = suggester.username;
         }
       }
-      
+
       return {
         id: idea.id,
         title: idea.title,
@@ -422,12 +430,12 @@ export class MemStorage implements IStorage {
           previous: idea.previousPosition,
           // Si no hay posición previa o es igual a la actual, el cambio es 0 (sin cambio)
           change: idea.previousPosition && idea.currentPosition && idea.previousPosition !== idea.currentPosition
-            ? idea.previousPosition - idea.currentPosition 
+            ? idea.previousPosition - idea.currentPosition
             : 0
         }
       };
     }));
-    
+
     return ideasWithPosition;
   }
 
@@ -442,7 +450,7 @@ export class MemStorage implements IStorage {
     if (options?.expiresAt) {
       expiresAt = new Date(options.expiresAt);
     }
-    
+
     const publicLink: PublicLink = {
       id,
       token,
@@ -451,48 +459,48 @@ export class MemStorage implements IStorage {
       isActive: true,
       expiresAt
     };
-    
+
     this.publicLinks.set(id, publicLink);
-    
+
     // Create the full URL for sharing
     const baseUrl = process.env.BASE_URL || 'http://localhost:5000';
     const url = `${baseUrl}/l/${token}`;
-    
+
     return {
       ...publicLink,
       url
     };
   }
-  
+
   async getPublicLinkByToken(token: string): Promise<PublicLink | undefined> {
     return Array.from(this.publicLinks.values()).find(link => link.token === token);
   }
-  
+
   async getUserPublicLinks(creatorId: number): Promise<PublicLinkResponse[]> {
     const userLinks = Array.from(this.publicLinks.values())
       .filter(link => link.creatorId === creatorId);
-    
+
     const baseUrl = process.env.BASE_URL || 'http://localhost:5000';
-    
+
     return userLinks.map(link => ({
       ...link,
       url: `${baseUrl}/l/${link.token}`
     }));
   }
-  
+
   async togglePublicLinkStatus(id: number, isActive: boolean): Promise<PublicLink | undefined> {
     const link = this.publicLinks.get(id);
     if (!link) return undefined;
-    
+
     const updatedLink: PublicLink = {
       ...link,
       isActive
     };
-    
+
     this.publicLinks.set(id, updatedLink);
     return updatedLink;
   }
-  
+
   async deletePublicLink(id: number): Promise<void> {
     this.publicLinks.delete(id);
   }
@@ -537,15 +545,15 @@ export class MemStorage implements IStorage {
   async getUserAudienceStats(userId: number): Promise<{ votesGiven: number; ideasSuggested: number; ideasApproved: number; }> {
     // Count votes given by user
     const votesGiven = Array.from(this.votes.values()).filter(vote => vote.userId === userId).length;
-    
+
     // Count ideas suggested by user
     const ideasSuggested = Array.from(this.ideas.values()).filter(idea => idea.suggestedBy === userId).length;
-    
+
     // Count approved ideas suggested by user
     const ideasApproved = Array.from(this.ideas.values()).filter(
       idea => idea.suggestedBy === userId && idea.status === 'approved'
     ).length;
-    
+
     return {
       votesGiven,
       ideasSuggested,
@@ -572,7 +580,7 @@ export class MemStorage implements IStorage {
     const limit = hasPremium ? 999999 : 10;
 
     // Contar ideas creadas por el usuario (incluyendo aprobadas y pendientes, pero no rechazadas)
-    const count = Array.from(this.ideas.values()).filter(idea => 
+    const count = Array.from(this.ideas.values()).filter(idea =>
       idea.creatorId === userId && (idea.status === 'approved' || idea.status === 'pending')
     ).length;
 
@@ -609,25 +617,25 @@ export class MemStorage implements IStorage {
 
   async updateUserPoints(userId: number, creatorId: number, pointsChange: number, type: 'earned' | 'spent', reason: string, relatedId?: number): Promise<UserPointsResponse> {
     let currentPoints = await this.getUserPoints(userId, creatorId);
-    
+
     // Update points
     const updatedPoints: UserPointsResponse = {
       userId,
-      totalPoints: type === 'earned' 
-        ? currentPoints.totalPoints + pointsChange 
+      totalPoints: type === 'earned'
+        ? currentPoints.totalPoints + pointsChange
         : currentPoints.totalPoints - pointsChange,
-      pointsEarned: type === 'earned' 
-        ? currentPoints.pointsEarned + pointsChange 
+      pointsEarned: type === 'earned'
+        ? currentPoints.pointsEarned + pointsChange
         : currentPoints.pointsEarned,
-      pointsSpent: type === 'spent' 
-        ? currentPoints.pointsSpent + pointsChange 
+      pointsSpent: type === 'spent'
+        ? currentPoints.pointsSpent + pointsChange
         : currentPoints.pointsSpent,
     };
-    
+
     // Save updated points
     const key = `${userId}-${creatorId}`;
     this.userPointsMap.set(key, updatedPoints);
-    
+
     // Record transaction
     const transaction: PointTransactionResponse = {
       id: this.currentPointTransactionId++,
@@ -640,7 +648,7 @@ export class MemStorage implements IStorage {
       createdAt: new Date(),
     };
     this.pointTransactionsMap.set(transaction.id, transaction);
-    
+
     return updatedPoints;
   }
 
@@ -649,7 +657,7 @@ export class MemStorage implements IStorage {
       .filter(t => t.userId === userId && t.creatorId === creatorId)
       .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime())
       .slice(0, limit);
-    
+
     return transactions;
   }
 
@@ -657,7 +665,7 @@ export class MemStorage implements IStorage {
   async getStoreItems(creatorId: number): Promise<StoreItemResponse[]> {
     const items = Array.from(this.storeItems.values())
       .filter(item => item.creatorId === creatorId);
-    
+
     return items.map(item => ({
       ...item,
       isAvailable: item.isActive && (item.maxQuantity === null || item.currentQuantity < item.maxQuantity)
@@ -671,7 +679,7 @@ export class MemStorage implements IStorage {
   async createStoreItem(item: InsertStoreItem, creatorId: number): Promise<StoreItemResponse> {
     const id = this.currentStoreItemId++;
     const now = new Date();
-    
+
     const storeItem: StoreItem = {
       id,
       creatorId,
@@ -682,9 +690,9 @@ export class MemStorage implements IStorage {
       createdAt: now,
       updatedAt: now,
     };
-    
+
     this.storeItems.set(id, storeItem);
-    
+
     return {
       ...storeItem,
       isAvailable: true
@@ -694,15 +702,15 @@ export class MemStorage implements IStorage {
   async updateStoreItem(id: number, item: UpdateStoreItem): Promise<StoreItemResponse | undefined> {
     const existingItem = this.storeItems.get(id);
     if (!existingItem) return undefined;
-    
+
     const updatedItem: StoreItem = {
       ...existingItem,
       ...item,
       updatedAt: new Date(),
     };
-    
+
     this.storeItems.set(id, updatedItem);
-    
+
     return {
       ...updatedItem,
       isAvailable: updatedItem.isActive && (updatedItem.maxQuantity === null || updatedItem.currentQuantity < updatedItem.maxQuantity)
@@ -722,22 +730,22 @@ export class MemStorage implements IStorage {
   async getStoreRedemptions(creatorId: number, limit: number = 10, offset: number = 0, status?: 'pending' | 'completed'): Promise<{ redemptions: StoreRedemptionResponse[]; total: number; }> {
     let allRedemptions = Array.from(this.storeRedemptions.values())
       .filter(redemption => redemption.creatorId === creatorId);
-    
+
     // Apply status filter if provided
     if (status) {
       allRedemptions = allRedemptions.filter(redemption => redemption.status === status);
     }
-    
+
     allRedemptions = allRedemptions.sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
-    
+
     const total = allRedemptions.length;
     const redemptions = allRedemptions.slice(offset, offset + limit);
-    
+
     // Enrich with user and store item data
     const enrichedRedemptions: StoreRedemptionResponse[] = redemptions.map(redemption => {
       const user = this.users.get(redemption.userId);
       const storeItem = this.storeItems.get(redemption.storeItemId);
-      
+
       return {
         ...redemption,
         status: redemption.status as 'pending' | 'completed',
@@ -747,7 +755,7 @@ export class MemStorage implements IStorage {
         storeItemDescription: storeItem?.description || 'Unknown',
       };
     });
-    
+
     return { redemptions: enrichedRedemptions, total };
   }
 
@@ -756,15 +764,15 @@ export class MemStorage implements IStorage {
     if (!storeItem) {
       throw new Error('Store item not found');
     }
-    
+
     const user = this.users.get(userId);
     if (!user) {
       throw new Error('User not found');
     }
-    
+
     const id = this.currentStoreRedemptionId++;
     const now = new Date();
-    
+
     const storeRedemption: StoreRedemption = {
       id,
       ...redemption,
@@ -775,9 +783,9 @@ export class MemStorage implements IStorage {
       createdAt: now,
       completedAt: null,
     };
-    
+
     this.storeRedemptions.set(id, storeRedemption);
-    
+
     // Update store item quantity
     const updatedItem = {
       ...storeItem,
@@ -785,7 +793,7 @@ export class MemStorage implements IStorage {
       updatedAt: now,
     };
     this.storeItems.set(storeItem.id, updatedItem);
-    
+
     return {
       ...storeRedemption,
       status: storeRedemption.status as 'pending' | 'completed',
@@ -799,19 +807,19 @@ export class MemStorage implements IStorage {
   async updateRedemptionStatus(id: number, status: 'pending' | 'completed'): Promise<StoreRedemptionResponse | undefined> {
     const redemption = this.storeRedemptions.get(id);
     if (!redemption) return undefined;
-    
+
     const updatedRedemption: StoreRedemption = {
       ...redemption,
       status,
       completedAt: status === 'completed' ? new Date() : null,
     };
-    
+
     this.storeRedemptions.set(id, updatedRedemption);
-    
+
     // Get user and store item data for response
     const user = this.users.get(redemption.userId);
     const storeItem = this.storeItems.get(redemption.storeItemId);
-    
+
     return {
       ...updatedRedemption,
       status: updatedRedemption.status as 'pending' | 'completed',

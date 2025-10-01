@@ -39,9 +39,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.json(updatedUser);
     } catch (error) {
       if (error instanceof ZodError) {
-        return res.status(400).json({ 
-          message: "Validation error", 
-          errors: fromZodError(error).message 
+        return res.status(400).json({
+          message: "Validation error",
+          errors: fromZodError(error).message
         });
       }
 
@@ -61,15 +61,15 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Verificar que el rol solicitado sea válido
       const { userRole } = req.body;
       if (userRole !== "creator") {
-        return res.status(400).json({ 
-          message: "Invalid role. Only upgrading to 'creator' is allowed." 
+        return res.status(400).json({
+          message: "Invalid role. Only upgrading to 'creator' is allowed."
         });
       }
 
       // Verificar que el usuario actual sea 'audience'
       if (req.user.userRole !== "audience") {
-        return res.status(400).json({ 
-          message: "User is already a creator or has a different role." 
+        return res.status(400).json({
+          message: "User is already a creator or has a different role."
         });
       }
 
@@ -150,16 +150,16 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Prevent users from suggesting ideas to themselves
       if (creatorId === userId) {
         console.log(`[SUGGESTION] User ${userId} tried to suggest to themselves`);
-        return res.status(403).json({ 
+        return res.status(403).json({
           message: "Cannot suggest ideas to yourself",
-          error: "self_suggest_attempt" 
+          error: "self_suggest_attempt"
         });
       }
 
       // Check if user has enough points for this creator
       const userPoints = await storage.getUserPoints(userId, creatorId);
       if (userPoints.totalPoints < SUGGESTION_COST) {
-        return res.status(403).json({ 
+        return res.status(403).json({
           message: "Not enough points",
           currentPoints: userPoints.totalPoints,
           requiredPoints: SUGGESTION_COST
@@ -205,7 +205,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       if (isNaN(creatorId)) {
         return res.status(400).json({ message: "Invalid creator ID" });
       }
-      
+
       const points = await storage.getUserPoints(userId, creatorId);
 
       res.json(points);
@@ -225,7 +225,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const userId = req.user.id;
       // For creators accessing their own dashboard, use their own ID as creatorId
       const creatorId = userId;
-      
+
       const points = await storage.getUserPoints(userId, creatorId);
 
       res.json(points);
@@ -277,6 +277,36 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Dashboard stats endpoint
+  app.get("/api/user/dashboard-stats", async (req: Request, res: Response) => {
+    try {
+      if (!req.isAuthenticated()) {
+        return res.status(401).json({ message: "Unauthorized" });
+      }
+
+      if (req.user.userRole !== 'creator') {
+        return res.status(403).json({ message: "Only creators can access dashboard stats" });
+      }
+
+      // Get creator's ideas and votes
+      const ideas = await storage.getIdeasByCreator(req.user.id);
+      const publishedIdeas = ideas.filter(idea => idea.status === 'approved');
+      const totalVotes = publishedIdeas.reduce((sum, idea) => sum + idea.voteCount, 0);
+
+      const stats = {
+        totalIdeas: publishedIdeas.length,
+        totalVotes,
+        pendingSuggestions: 0, // Will be calculated separately
+        publishedIdeas: publishedIdeas.length,
+      };
+
+      res.json(stats);
+    } catch (error) {
+      console.error("Error fetching dashboard stats:", error);
+      res.status(500).json({ message: "Failed to fetch dashboard stats" });
+    }
+  });
+
   // Ideas API routes
   // Get all ideas
   app.get("/api/ideas", async (req: Request, res: Response) => {
@@ -290,8 +320,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
       if (req.isAuthenticated()) {
         if (req.user.userRole === 'creator') {
           // Para creadores: mostrar solo sus propias ideas
-          ideas = allIdeas.filter(idea => 
-            idea.creatorId === req.user.id && 
+          ideas = allIdeas.filter(idea =>
+            idea.creatorId === req.user.id &&
             idea.status === 'approved'
           );
         } else {
@@ -359,7 +389,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Check idea quota for non-premium users
       const quota = await storage.getUserIdeaQuota(creatorId);
       if (quota.hasReachedLimit) {
-        return res.status(403).json({ 
+        return res.status(403).json({
           message: "Idea limit reached. Upgrade to premium to create unlimited ideas.",
           premiumRequired: true,
           quota
@@ -412,8 +442,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Check if the idea has too many votes to be edited (optional)
       const maxVotesForEdit = 100; // Example threshold
       if (existingIdea.votes > maxVotesForEdit) {
-        return res.status(403).json({ 
-          message: `Ideas with more than ${maxVotesForEdit} votes cannot be edited to prevent manipulation` 
+        return res.status(403).json({
+          message: `Ideas with more than ${maxVotesForEdit} votes cannot be edited to prevent manipulation`
         });
       }
 
@@ -489,19 +519,19 @@ export async function registerRoutes(app: Express): Promise<Server> {
     console.log(`[VOTE-DEBUG] Session:`, req.session);
     console.log(`[VOTE-DEBUG] Authenticated:`, req.isAuthenticated());
     console.log(`[VOTE-DEBUG] User:`, req.user);
-    
+
     try {
       // Require authentication to vote
       if (!req.isAuthenticated()) {
         console.log("[OLD-VOTE] Authentication failed");
         return res.status(401).json({ message: "Authentication required to vote" });
       }
-      
+
       const userId = req.user!.id;
 
       const ideaId = Number(req.params.id);
       console.log(`[OLD-VOTE] User ${userId} voting for idea ${ideaId}`);
-      
+
       if (isNaN(ideaId)) {
         console.log("[OLD-VOTE] Invalid idea ID");
         return res.status(400).json({ message: "Invalid idea ID" });
@@ -522,7 +552,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
 
       console.log(`[OLD-VOTE] Creating vote for user ${userId} on idea ${ideaId}`);
-      
+
       // Create the vote
       await storage.createVote({ ideaId }, userId);
       console.log(`[OLD-VOTE] Vote created successfully`);
@@ -652,12 +682,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       // Get all ideas for this creator
       const allIdeas = await storage.getIdeasWithPositions();
-      
+
       // Filter ideas:
       // 1. Ideas created by the creator (status: approved)
       // 2. Ideas suggested to the creator by others (status: approved)
-      const ideas = allIdeas.filter(idea => 
-        idea.status === 'approved' && 
+      const ideas = allIdeas.filter(idea =>
+        idea.status === 'approved' &&
         (idea.creatorId === creator.id)
       );
 
@@ -767,7 +797,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     console.log(`[PENDING] === PENDING IDEAS REQUEST START ===`);
     console.log(`[PENDING] User authenticated:`, req.isAuthenticated());
     console.log(`[PENDING] User:`, req.user);
-    
+
     try {
       if (!req.isAuthenticated()) {
         console.log(`[PENDING] DENIED: Not authenticated`);
@@ -819,7 +849,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     console.log(`[APPROVE] Cookies:`, req.headers.cookie);
     console.log(`[APPROVE] User authenticated:`, req.isAuthenticated());
     console.log(`[APPROVE] User from session:`, req.user);
-    
+
     try {
       if (!req.isAuthenticated()) {
         console.log(`[APPROVE] DENIED: Not authenticated - session missing or invalid`);
@@ -830,7 +860,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       console.log(`[APPROVE] Processing idea ID: ${id}`);
       console.log(`[APPROVE] ID from params: ${req.params.id}`);
       console.log(`[APPROVE] Parsed ID: ${id}, isNaN: ${isNaN(id)}`);
-      
+
       // Verificar que el usuario tenga rol de creador
       console.log(`[APPROVE] User ${req.user.id} (${req.user.username}) with role ${req.user.userRole} attempting to approve idea ${id}`);
       if (req.user.userRole !== 'creator') {
@@ -918,13 +948,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
       console.log(`[MAIN-VOTE] Session:`, req.session);
       console.log(`[MAIN-VOTE] Authenticated:`, req.isAuthenticated());
       console.log(`[MAIN-VOTE] User:`, req.user);
-      
+
       // Require authentication to vote
       if (!req.isAuthenticated()) {
         console.log("[MAIN-VOTE] Authentication failed");
         return res.status(401).json({ message: "Authentication required to vote" });
       }
-      
+
       const userId = req.user!.id;
 
       const ideaId = Number(req.params.id);
@@ -945,9 +975,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Prevent creator from voting their own ideas
       if (idea.creatorId === userId) {
         console.log(`[MAIN-VOTE] User ${userId} tried to vote their own idea ${ideaId}`);
-        return res.status(403).json({ 
+        return res.status(403).json({
           message: "Cannot vote on your own ideas",
-          error: "self_vote_attempt" 
+          error: "self_vote_attempt"
         });
       }
 
@@ -959,7 +989,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
 
       console.log(`[MAIN-VOTE] Creating vote for user ${userId} on idea ${ideaId}`);
-      
+
       // Create the vote
       await storage.createVote({ ideaId }, userId);
       console.log(`[MAIN-VOTE] Vote created successfully`);
@@ -988,7 +1018,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       console.log(`[VOTE] Session:`, req.session);
       console.log(`[VOTE] Authenticated:`, req.isAuthenticated());
       console.log(`[VOTE] User:`, req.user);
-      
+
       // Require authentication to vote
       if (!req.isAuthenticated()) {
         console.log("[VOTE] Authentication failed");
@@ -1029,9 +1059,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Prevent creator from voting their own ideas
       if (idea.creatorId === userId) {
         console.log(`[VOTE] User ${userId} tried to vote their own idea ${ideaId}`);
-        return res.status(403).json({ 
+        return res.status(403).json({
           message: "Cannot vote on your own ideas",
-          error: "self_vote_attempt" 
+          error: "self_vote_attempt"
         });
       }
 
@@ -1049,7 +1079,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
 
       console.log(`[VOTE] Creating vote for user ${userId} on idea ${ideaId}`);
-      
+
       // Create the vote
       await storage.createVote({ ideaId }, userId);
       console.log(`[VOTE] Vote created successfully`);
@@ -1115,7 +1145,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       console.log(`[PUBLIC-VOTE] Session:`, req.session);
       console.log(`[PUBLIC-VOTE] Authenticated:`, req.isAuthenticated());
       console.log(`[PUBLIC-VOTE] User:`, req.user);
-      
+
       // Require authentication to vote
       if (!req.isAuthenticated()) {
         console.log("[PUBLIC-VOTE] Authentication failed");
@@ -1157,9 +1187,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Prevent creator from voting their own ideas
       if (idea.creatorId === userId) {
         console.log(`[PUBLIC-VOTE] User ${userId} tried to vote their own idea ${ideaId}`);
-        return res.status(403).json({ 
+        return res.status(403).json({
           message: "Cannot vote on your own ideas",
-          error: "self_vote_attempt" 
+          error: "self_vote_attempt"
         });
       }
 
@@ -1193,7 +1223,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Subscription routes
-  
+
   // Start trial
   app.post("/api/subscription/start-trial", async (req: Request, res: Response) => {
     try {
@@ -1215,7 +1245,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       // Start the trial
       const updatedUser = await storage.startUserTrial(userId);
-      
+
       if (!updatedUser) {
         return res.status(500).json({ message: "Failed to start trial" });
       }
@@ -1258,7 +1288,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
           }
         });
         customerId = customer.id;
-        
+
         // Update user with Stripe customer ID
         await storage.updateUserSubscription(userId, {
           stripeCustomerId: customerId
@@ -1276,7 +1306,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       try {
         const products = await stripe.products.list({ limit: 1 });
         product = products.data.find(p => p.name === 'Fanlist Premium');
-        
+
         if (!product) {
           product = await stripe.products.create({
             name: 'Fanlist Premium',
@@ -1291,19 +1321,19 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Create or get prices
       let priceId;
       try {
-        const prices = await stripe.prices.list({ 
+        const prices = await stripe.prices.list({
           product: product.id,
-          limit: 10 
+          limit: 10
         });
-        
+
         const targetAmount = plan === 'monthly' ? 500 : 3600; // $5/month or $36/year
         const targetInterval = plan === 'monthly' ? 'month' : 'year';
-        
-        let price = prices.data.find(p => 
-          p.unit_amount === targetAmount && 
+
+        let price = prices.data.find(p =>
+          p.unit_amount === targetAmount &&
           p.recurring?.interval === targetInterval
         );
-        
+
         if (!price) {
           price = await stripe.prices.create({
             product: product.id,
@@ -1314,7 +1344,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
             }
           });
         }
-        
+
         priceId = price.id;
       } catch (error) {
         console.error("Error creating/getting price:", error);
@@ -1403,7 +1433,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(500).json({ message: "Failed to cancel subscription" });
       }
 
-      res.json({ 
+      res.json({
         message: "Subscription cancelled successfully",
         status: "cancelled"
       });
@@ -1428,7 +1458,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         }
 
         const userId = req.user!.id;
-        
+
         if (scenario === 'success') {
           // Simular pago exitoso
           const endDate = new Date();
@@ -1447,23 +1477,23 @@ export async function registerRoutes(app: Express): Promise<Server> {
           });
 
           const { password, ...userWithoutPassword } = updatedUser!;
-          return res.json({ 
-            success: true, 
+          return res.json({
+            success: true,
             message: "Payment simulation successful",
             user: userWithoutPassword,
             confetti: true // Trigger confetti animation
           });
         } else if (scenario === 'cancel') {
-          return res.json({ 
-            success: false, 
+          return res.json({
+            success: false,
             message: "Payment was cancelled by user",
-            cancelled: true 
+            cancelled: true
           });
         } else if (scenario === 'fail') {
-          return res.status(400).json({ 
-            success: false, 
+          return res.status(400).json({
+            success: false,
             message: "Payment failed - insufficient funds",
-            error: "payment_failed" 
+            error: "payment_failed"
           });
         }
 
@@ -1500,7 +1530,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         });
 
         const { password, ...userWithoutPassword } = updatedUser!;
-        res.json({ 
+        res.json({
           success: true,
           message: "Subscription cancelled successfully",
           user: userWithoutPassword
@@ -1515,7 +1545,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     app.post("/api/stripe/test/webhook", async (req: Request, res: Response) => {
       try {
         const { eventType, userId, plan } = req.body;
-        
+
         if (!userId || !eventType) {
           return res.status(400).json({ message: "userId and eventType required" });
         }
@@ -1539,9 +1569,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
               stripeSubscriptionId: `test_sub_${userId}_${Date.now()}`
             });
 
-            res.json({ 
-              success: true, 
-              message: `Webhook ${eventType} processed successfully` 
+            res.json({
+              success: true,
+              message: `Webhook ${eventType} processed successfully`
             });
             break;
           }
@@ -1554,17 +1584,17 @@ export async function registerRoutes(app: Express): Promise<Server> {
               stripeSubscriptionId: undefined
             });
 
-            res.json({ 
-              success: true, 
-              message: "Subscription deleted webhook processed" 
+            res.json({
+              success: true,
+              message: "Subscription deleted webhook processed"
             });
             break;
           }
 
           case 'invoice.payment_failed': {
-            res.json({ 
-              success: true, 
-              message: "Payment failed webhook processed - subscription remains active" 
+            res.json({
+              success: true,
+              message: "Payment failed webhook processed - subscription remains active"
             });
             break;
           }
@@ -1611,7 +1641,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Stripe webhook endpoint
   app.post("/api/stripe/webhook", async (req: Request, res: Response) => {
     const sig = req.headers['stripe-signature'] as string;
-    
+
     let event: Stripe.Event;
 
     try {
@@ -1629,7 +1659,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         case 'customer.subscription.updated': {
           const subscription = event.data.object as Stripe.Subscription;
           const customerId = subscription.customer as string;
-          
+
           // Find user by Stripe customer ID
           const user = await storage.getUserByStripeCustomerId(customerId);
           if (!user) {
@@ -1639,10 +1669,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
           // Determine subscription plan
           const plan = subscription.metadata?.plan || 'monthly';
-          
+
           // Calculate end date
           const endDate = new Date((subscription as any).current_period_end * 1000);
-          
+
           // Update user subscription
           await storage.updateUserSubscription(user.id, {
             subscriptionStatus: 'premium',
@@ -1659,7 +1689,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         case 'customer.subscription.deleted': {
           const subscription = event.data.object as Stripe.Subscription;
           const customerId = subscription.customer as string;
-          
+
           // Find user by Stripe customer ID
           const user = await storage.getUserByStripeCustomerId(customerId);
           if (!user) {
@@ -1682,7 +1712,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         case 'invoice.payment_succeeded': {
           const invoice = event.data.object as Stripe.Invoice;
           const customerId = invoice.customer as string;
-          
+
           // Find user by Stripe customer ID
           const user = await storage.getUserByStripeCustomerId(customerId);
           if (!user) {
@@ -1697,7 +1727,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         case 'invoice.payment_failed': {
           const invoice = event.data.object as Stripe.Invoice;
           const customerId = invoice.customer as string;
-          
+
           // Find user by Stripe customer ID
           const user = await storage.getUserByStripeCustomerId(customerId);
           if (!user) {
@@ -1713,7 +1743,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         case 'checkout.session.completed': {
           const session = event.data.object as Stripe.Checkout.Session;
           const customerId = session.customer as string;
-          
+
           // Find user by Stripe customer ID
           const user = await storage.getUserByStripeCustomerId(customerId);
           if (!user) {
@@ -1791,7 +1821,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       const validatedData = insertStoreItemSchema.parse(req.body);
       const newItem = await storage.createStoreItem(validatedData, userId);
-      
+
       res.status(201).json(newItem);
     } catch (error) {
       console.error("Error creating store item:", error);
@@ -1829,7 +1859,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       const validatedData = updateStoreItemSchema.parse(req.body);
       const updatedItem = await storage.updateStoreItem(itemId, validatedData);
-      
+
       if (!updatedItem) {
         return res.status(404).json({ message: "Store item not found" });
       }
@@ -1897,7 +1927,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const offset = (page - 1) * limit;
 
       const result = await storage.getStoreRedemptions(userId, limit, offset, status);
-      
+
       res.json({
         redemptions: result.redemptions,
         pagination: {
@@ -1937,7 +1967,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
 
       const updatedRedemption = await storage.updateRedemptionStatus(redemptionId, status);
-      
+
       if (!updatedRedemption) {
         return res.status(404).json({ message: "Redemption not found" });
       }
@@ -1959,7 +1989,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const { username } = req.params;
       const creator = await storage.getUserByUsername(username);
-      
+
       if (!creator || creator.userRole !== 'creator') {
         return res.status(404).json({ message: "Creator not found" });
       }
@@ -1967,7 +1997,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const items = await storage.getStoreItems(creator.id);
       // Only return active and available items to the public
       const publicItems = items.filter(item => item.isActive && item.isAvailable);
-      
+
       res.json(publicItems);
     } catch (error) {
       console.error("Error fetching creator store:", error);
@@ -1983,7 +2013,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       const { username, itemId } = req.params;
       const userId = req.user!.id;
-      
+
       const creator = await storage.getUserByUsername(username);
       if (!creator || creator.userRole !== 'creator') {
         return res.status(404).json({ message: "Creator not found" });
@@ -2008,14 +2038,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const creatorId = creator.id;
       const userPoints = await storage.getUserPoints(userId, creatorId);
       if (userPoints.totalPoints < item.pointsCost) {
-        return res.status(400).json({ 
-          message: `Insufficient points. You need ${item.pointsCost} points but only have ${userPoints.totalPoints}` 
+        return res.status(400).json({
+          message: `Insufficient points. You need ${item.pointsCost} points but only have ${userPoints.totalPoints}`
         });
       }
 
       // Create redemption and deduct points in transaction
       const redemption = await storage.createStoreRedemption({ storeItemId: itemIdNum }, userId);
-      
+
       // Deduct points from user
       await storage.updateUserPoints(userId, creatorId, item.pointsCost, 'spent', 'store_redemption', itemIdNum);
 

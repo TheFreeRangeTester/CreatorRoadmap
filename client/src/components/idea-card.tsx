@@ -39,14 +39,9 @@ export default function IdeaCard({
   const { t } = useTranslation();
   const { user } = useAuth();
 
-  // Función para determinar el gradiente basado en el ID
-  const getGradientClass = (id: number) => {
-    const gradients = [
-      "bg-gradient-to-r from-primary/5 to-blue-500/5 dark:from-primary/10 dark:to-blue-500/10",
-      "bg-gradient-to-r from-emerald-500/5 to-green-500/5 dark:from-emerald-500/10 dark:to-green-500/10",
-      "bg-gradient-to-r from-rose-500/5 to-red-500/5 dark:from-rose-500/10 dark:to-red-500/10",
-    ];
-    return gradients[id % 3];
+  // Simplified background - no more gradients for cleaner look
+  const getCardClass = () => {
+    return "bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700";
   };
 
   // Verificar si el usuario actual es el creador de la idea
@@ -135,21 +130,21 @@ export default function IdeaCard({
 
   const position = getPositionIndicator();
 
-  // Definición de animaciones
+  // Definición de animaciones más sutiles
   const cardVariants = {
-    initial: { opacity: 0, y: 20 },
+    initial: { opacity: 0, y: 10 },
     animate: {
       opacity: 1,
       y: 0,
-      transition: { duration: 0.4, ease: "easeOut" },
+      transition: { duration: 0.3, ease: "easeOut" },
     },
     hover: {
-      y: -2,
+      y: -1,
       transition: {
         type: "spring",
         stiffness: 400,
         damping: 25,
-        duration: 0.3,
+        duration: 0.2,
       },
     },
     tap: { scale: 0.98, transition: { duration: 0.1 } },
@@ -166,10 +161,10 @@ export default function IdeaCard({
 
   const buttonVariants = {
     hover: {
-      scale: 1.05,
-      transition: { duration: 0.2 },
+      scale: 1.02,
+      transition: { duration: 0.15 },
     },
-    tap: { scale: 0.95 },
+    tap: { scale: 0.98 },
   };
 
   const iconVariants = {
@@ -229,9 +224,7 @@ export default function IdeaCard({
       </AnimatePresence>
 
       <Card
-        className={`idea-card overflow-hidden dark:bg-gray-800 dark:border-gray-700 ${getGradientClass(
-          idea.id
-        )} h-full flex flex-col rounded-3xl oval-card`}
+        className={`idea-card overflow-hidden ${getCardClass()} h-full flex flex-col rounded-xl shadow-sm hover:shadow-md transition-all duration-300`}
       >
         <CardContent className="p-6 sm:p-8 flex flex-col h-full min-h-[180px] text-center">
           <div className="mb-3 sm:mb-4">
@@ -265,10 +258,10 @@ export default function IdeaCard({
                     variants={buttonVariants}
                     whileHover="hover"
                     whileTap="tap"
-                    className={`glass-card flex items-center px-3 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/50 focus:ring-offset-1 dark:focus:ring-offset-gray-800 min-w-[80px] text-xs sm:text-sm font-medium transition-all duration-300 ${
+                    className={`flex items-center px-4 py-2 rounded-lg border transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:ring-offset-1 dark:focus:ring-offset-gray-800 min-w-[80px] text-xs sm:text-sm font-medium ${
                       hasVoted
-                        ? "opacity-60 cursor-not-allowed"
-                        : "hover:scale-105 active:scale-95"
+                        ? "bg-gray-100 dark:bg-gray-700 border-gray-300 dark:border-gray-600 text-gray-500 dark:text-gray-400 cursor-not-allowed"
+                        : "bg-blue-50 dark:bg-blue-900/20 border-blue-200 dark:border-blue-800 text-blue-700 dark:text-blue-300 hover:bg-blue-100 dark:hover:bg-blue-900/30 hover:border-blue-300 dark:hover:border-blue-700"
                     }`}
                     onClick={handleVote}
                     disabled={hasVoted || isVoting}
@@ -276,17 +269,29 @@ export default function IdeaCard({
                     {isVoting ? (
                       <span className="flex items-center justify-center">
                         <Loader2 className="w-4 h-4 mr-2 animate-spin text-primary" />
-                        <span className="text-primary">{t("common.voting")}</span>
+                        <span className="text-primary">
+                          {t("common.voting")}
+                        </span>
                       </span>
                     ) : (
                       <>
                         <IconBadge
                           icon={hasVoted ? Heart : ThumbsUp}
                           size="sm"
-                          gradient={hasVoted ? "from-gray-400 to-gray-500" : "from-primary to-primary/80"}
+                          gradient={
+                            hasVoted
+                              ? "from-gray-400 to-gray-500"
+                              : "from-primary to-primary/80"
+                          }
                           className="mr-2"
                         />
-                        <span className={hasVoted ? "text-gray-500" : "text-primary font-semibold"}>
+                        <span
+                          className={
+                            hasVoted
+                              ? "text-gray-500"
+                              : "text-primary font-semibold"
+                          }
+                        >
                           {hasVoted ? t("common.voted") : t("common.vote")}
                         </span>
                       </>
@@ -297,7 +302,7 @@ export default function IdeaCard({
                     variants={buttonVariants}
                     whileHover="hover"
                     whileTap="tap"
-                    className="glass-card flex items-center px-3 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:ring-offset-1 dark:focus:ring-offset-gray-800 min-w-[100px] text-xs sm:text-sm font-medium hover:scale-105 active:scale-95 transition-all duration-300"
+                    className="flex items-center px-4 py-2 rounded-lg border border-blue-200 dark:border-blue-800 bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-300 hover:bg-blue-100 dark:hover:bg-blue-900/30 hover:border-blue-300 dark:hover:border-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:ring-offset-1 dark:focus:ring-offset-gray-800 min-w-[100px] text-xs sm:text-sm font-medium transition-all duration-200"
                     onClick={() => {
                       // Store the current page for redirect after login
                       localStorage.setItem(
@@ -375,7 +380,7 @@ export default function IdeaCard({
               </div>
             )}
           </div>
-          
+
           {/* Badge de posición en la parte inferior */}
           <div className="pt-3 border-t border-gray-100 dark:border-gray-700 mt-auto">
             <div className="flex justify-center">

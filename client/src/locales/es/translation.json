@@ -330,7 +330,7 @@
     "published": "Ideas",
     "suggested": "Sugeridas",
     "suggestedShort": "Sug.",
-    "total": "ideas", 
+    "total": "ideas",
     "title": "Ideas",
     "description": "Votar por contenido",
     "noSuggestedIdeas": "Aún no hay ideas sugeridas",
@@ -371,6 +371,24 @@
     "yourPublicProfile": "Tu Perfil Público",
     "publicView": "Enlace Público",
     "shareProfileDesc": "Este enlace dirige a tus seguidores a la versión pública de tu perfil, donde pueden ver y votar por tus ideas de contenido.",
+    "overview": {
+      "totalIdeas": "Total Ideas",
+      "totalIdeasDesc": "Ideas publicadas",
+      "totalVotes": "Total Votes",
+      "totalVotesDesc": "Votos recibidos",
+      "pendingSuggestions": "Sugerencias Pendientes",
+      "pendingSuggestionsDesc": "Esperando aprobación",
+      "engagement": "Engagement",
+      "engagementDesc": "Votos por idea",
+      "totalPoints": "Total Points",
+      "totalPointsDesc": "Puntos disponibles",
+      "votesGiven": "Votes Given",
+      "votesGivenDesc": "Ideas votadas",
+      "ideasSuggested": "Ideas Suggested",
+      "ideasSuggestedDesc": "Ideas enviadas",
+      "approvalRate": "Approval Rate",
+      "approvalRateDesc": "Ideas aprobadas"
+    },
     "aboutPublicProfile": "Acerca de tu perfil público:",
     "publicProfileVisibility": "Esta página es visible para cualquier persona con el enlace, incluso si no tiene cuenta en la plataforma.",
     "visitorVoting": "Los visitantes pueden ver tus ideas y votar por ellas, ayudándote a determinar qué contenido crear primero.",
@@ -501,7 +519,7 @@
     "subscriptionCancelledDesc": "Tu suscripción ha sido cancelada exitosamente",
     "cancelError": "Hubo un error al cancelar tu suscripción",
     "navigation": {
-    "explore": "Explorar",
+      "explore": "Explorar",
       "title": "Navegación",
       "backToDashboard": "Volver al Dashboard"
     },
@@ -748,7 +766,7 @@
     "subtitle": "Las ideas más votadas por la comunidad"
   },
   "leaderboard": {
-    "otherIdeas": "Otras ideas geniales", 
+    "otherIdeas": "Otras ideas geniales",
     "otherIdeasDesc": "¡Cada voto cuenta para subir en el ranking!"
   },
   "mobile": {

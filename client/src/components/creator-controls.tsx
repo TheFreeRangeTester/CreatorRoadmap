@@ -1,10 +1,6 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import {
-  PlusCircle,
-  Upload,
-  Lock,
-} from "lucide-react";
+import { PlusCircle, Upload, Lock } from "lucide-react";
 import {
   Tooltip,
   TooltipContent,
@@ -18,7 +14,10 @@ import type { UserResponse } from "@shared/schema";
 import { SharingTipsTooltip } from "./sharing-tips-tooltip";
 import CSVImportModal from "./csv-import-modal";
 import SubscriptionStatusIcon from "./subscription-status-icon";
-import { hasActivePremiumAccess, getPremiumAccessStatus } from "@shared/premium-utils";
+import {
+  hasActivePremiumAccess,
+  getPremiumAccessStatus,
+} from "@shared/premium-utils";
 
 interface CreatorControlsProps {
   onAddIdea: () => void;
@@ -49,22 +48,22 @@ export default function CreatorControls({ onAddIdea }: CreatorControlsProps) {
 
   const handleCSVImportClick = () => {
     if (!user) return;
-    
+
     const premiumStatus = getPremiumAccessStatus(user);
-    
+
     if (!premiumStatus.hasAccess) {
       let description = "";
-      
+
       switch (premiumStatus.reason) {
-        case 'trial_expired':
+        case "trial_expired":
           description = t(
             "csvImport.trialExpired.description",
             "Your free trial has expired. Upgrade to continue using CSV import."
           );
           break;
-        case 'premium_expired':
+        case "premium_expired":
           description = t(
-            "csvImport.premiumExpired.description", 
+            "csvImport.premiumExpired.description",
             "Your premium subscription has expired. Renew to continue using CSV import."
           );
           break;
@@ -74,7 +73,7 @@ export default function CreatorControls({ onAddIdea }: CreatorControlsProps) {
             "CSV import is available for Pro users only. Upgrade to access this feature."
           );
       }
-      
+
       toast({
         title: t("csvImport.proRequired.title", "Pro Feature"),
         description,
@@ -92,7 +91,7 @@ export default function CreatorControls({ onAddIdea }: CreatorControlsProps) {
       <div className="flex flex-col gap-6">
         {/* Header row with subscription status icon */}
         <div className="flex flex-col space-y-3 sm:flex-row sm:items-center sm:justify-between sm:space-y-0">
-          <h2 className="text-2xl font-bold bg-gradient-to-r from-gray-900 to-gray-600 dark:from-white dark:to-gray-300 bg-clip-text text-transparent">
+          <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
             {t("dashboard.creatorDashboard", "Panel de Creador")}
           </h2>
           <SubscriptionStatusIcon />
@@ -130,8 +129,12 @@ export default function CreatorControls({ onAddIdea }: CreatorControlsProps) {
                     {t("csvImport.button", "Importar CSV")}
                   </span>
                   {!isProUser && (
-                    <svg className="w-4 h-4 ml-2 text-amber-500" viewBox="0 0 24 24" fill="currentColor">
-                      <path d="M12 2L15.09 8.26L22 9L17 14L18.18 21L12 17.77L5.82 21L7 14L2 9L8.91 8.26L12 2Z"/>
+                    <svg
+                      className="w-4 h-4 ml-2 text-amber-500"
+                      viewBox="0 0 24 24"
+                      fill="currentColor"
+                    >
+                      <path d="M12 2L15.09 8.26L22 9L17 14L18.18 21L12 17.77L5.82 21L7 14L2 9L8.91 8.26L12 2Z" />
                     </svg>
                   )}
                 </Button>

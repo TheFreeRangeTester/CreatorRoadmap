@@ -326,7 +326,7 @@
   "ideas": {
     "short": "Ideas",
     "published": "Ideas",
-    "suggested": "Suggested", 
+    "suggested": "Suggested",
     "suggestedShort": "Sug.",
     "total": "ideas",
     "title": "Ideas",
@@ -369,6 +369,24 @@
     "yourPublicProfile": "Your Public Profile",
     "publicView": "Public Link",
     "shareProfileDesc": "This link directs your followers to the public version of your profile, where they can view and vote on your content ideas.",
+    "overview": {
+      "totalIdeas": "Total Ideas",
+      "totalIdeasDesc": "Published ideas",
+      "totalVotes": "Total Votes",
+      "totalVotesDesc": "Votes received",
+      "pendingSuggestions": "Pending Suggestions",
+      "pendingSuggestionsDesc": "Awaiting approval",
+      "engagement": "Engagement",
+      "engagementDesc": "Votes per idea",
+      "totalPoints": "Total Points",
+      "totalPointsDesc": "Available points",
+      "votesGiven": "Votes Given",
+      "votesGivenDesc": "Ideas voted for",
+      "ideasSuggested": "Ideas Suggested",
+      "ideasSuggestedDesc": "Ideas submitted",
+      "approvalRate": "Approval Rate",
+      "approvalRateDesc": "Ideas approved"
+    },
     "aboutPublicProfile": "About your public profile:",
     "publicProfileVisibility": "This page is visible to anyone with the link, even if they don't have an account on the platform.",
     "visitorVoting": "Visitors can view your ideas and vote on them, helping you determine what content to create first.",
@@ -505,7 +523,7 @@
     "subscriptionCancelledDesc": "Your subscription has been cancelled successfully",
     "cancelError": "There was an error cancelling your subscription",
     "navigation": {
-    "explore": "Explore",
+      "explore": "Explore",
       "title": "Navigation",
       "backToDashboard": "Back to Dashboard"
     },
