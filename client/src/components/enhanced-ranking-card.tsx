@@ -14,6 +14,7 @@ interface EnhancedRankingCardProps {
     title: string;
     description: string;
     votes: number;
+    niche?: string | null;
     position?: {
       current: number | null;
       previous: number | null;
@@ -274,7 +275,17 @@ export default function EnhancedRankingCard({
             </motion.div>
 
             {/* Badges de información en la parte superior */}
-            <div className="flex justify-center gap-2 mb-4">
+            <div className="flex justify-center gap-2 mb-4 flex-wrap">
+              {/* Badge de nicho */}
+              {idea.niche && (
+                <Badge 
+                  variant="secondary" 
+                  className="text-xs bg-primary/10 text-primary dark:bg-primary/20 dark:text-primary-300 border border-primary/20"
+                >
+                  {t(`ideaForm.niches.${idea.niche}`, idea.niche)}
+                </Badge>
+              )}
+              
               {recentVotes24h > 0 && (
                 <Badge 
                   variant="secondary" 
