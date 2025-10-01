@@ -294,13 +294,31 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const pendingIdeas = ideas.filter(idea => idea.status === 'pending');
       const totalVotes = publishedIdeas.reduce((sum, idea) => sum + idea.votes, 0);
 
-      console.log(`[DASHBOARD-STATS] User ${req.user.id}: ${ideas.length} total ideas, ${publishedIdeas.length} published, ${pendingIdeas.length} pending, ${totalVotes} total votes`);
+      // Calculate top niche
+      const nicheVotes: Record<string, number> = {};
+      publishedIdeas.forEach(idea => {
+        if (idea.niche) {
+          nicheVotes[idea.niche] = (nicheVotes[idea.niche] || 0) + idea.votes;
+        }
+      });
+
+      let topNiche: { name: string; votes: number } | null = null;
+      if (Object.keys(nicheVotes).length > 0) {
+        const topNicheEntry = Object.entries(nicheVotes).reduce((max, [niche, votes]) => 
+          votes > max.votes ? { name: niche, votes } : max, 
+          { name: '', votes: 0 }
+        );
+        topNiche = topNicheEntry.votes > 0 ? topNicheEntry : null;
+      }
+
+      console.log(`[DASHBOARD-STATS] User ${req.user.id}: ${ideas.length} total ideas, ${publishedIdeas.length} published, ${pendingIdeas.length} pending, ${totalVotes} total votes, top niche: ${topNiche?.name || 'none'} with ${topNiche?.votes || 0} votes`);
 
       const stats = {
         totalIdeas: publishedIdeas.length,
         totalVotes,
         pendingSuggestions: pendingIdeas.length,
         publishedIdeas: publishedIdeas.length,
+        topNiche,
       };
 
       res.json(stats);
