@@ -190,6 +190,7 @@ export class DatabaseStorage implements IStorage {
       .set({
         title: updateData.title,
         description: updateData.description,
+        niche: updateData.niche,
       })
       .where(eq(ideas.id, id))
       .returning();
