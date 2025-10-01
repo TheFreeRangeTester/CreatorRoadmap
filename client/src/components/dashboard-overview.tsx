@@ -46,8 +46,11 @@ export function DashboardOverview({ className }: DashboardOverviewProps) {
       queryKey: ["/api/user/dashboard-stats"],
       enabled: user?.userRole === "creator",
       queryFn: async () => {
+        console.log("[DASHBOARD-OVERVIEW] Fetching creator stats...");
         const response = await apiRequest("/api/user/dashboard-stats");
-        return response.json();
+        const data = await response.json();
+        console.log("[DASHBOARD-OVERVIEW] Creator stats received:", data);
+        return data;
       },
     });
 
@@ -119,6 +122,8 @@ export function DashboardOverview({ className }: DashboardOverviewProps) {
       pendingSuggestions: pendingSuggestions?.length || 0,
       publishedIdeas: 0,
     };
+
+    console.log("[DASHBOARD-OVERVIEW] Creator stats being used:", stats);
 
     const creatorMetrics = [
       {
@@ -209,6 +214,11 @@ export function DashboardOverview({ className }: DashboardOverviewProps) {
 
   // Audience overview
   if (user?.userRole === "audience") {
+    console.log("[DASHBOARD-OVERVIEW] Audience stats being used:", {
+      pointsData,
+      stats,
+    });
+
     const audienceMetrics = [
       {
         icon: Star,
@@ -293,4 +303,3 @@ export function DashboardOverview({ className }: DashboardOverviewProps) {
 
   return null;
 }
-
