@@ -32,7 +32,16 @@ export function IdeasTabView({ mode = "published" }: IdeasTabViewProps) {
   } = useQuery<IdeaResponse[]>({
     queryKey: ["/api/ideas"],
     enabled: mode === "published",
+    staleTime: 0,
+    gcTime: 0,
   });
+
+  // Debug log to see actual data
+  useEffect(() => {
+    if (ideas && ideas.length > 0) {
+      console.log('[IDEAS-TAB] First idea data:', ideas[0]);
+    }
+  }, [ideas]);
 
   // Fetch pending ideas
   const {
