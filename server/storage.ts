@@ -110,6 +110,7 @@ export class MemStorage implements IStorage {
   private pointTransactionsMap: Map<number, PointTransactionResponse>;
   private storeItems: Map<number, StoreItem>;
   private storeRedemptions: Map<number, StoreRedemption>;
+  private audienceStatsMap: Map<number, { votesGiven: number; ideasSuggested: number; ideasApproved: number }>;
   currentUserId: number;
   currentIdeaId: number;
   currentVoteId: number;
