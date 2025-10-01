@@ -206,7 +206,7 @@ export default function IdeaForm({ isOpen, idea, onClose }: IdeaFormProps) {
   return (
     <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
       <DialogContent className="sm:max-w-[600px] rounded-xl bg-white/95 dark:bg-gray-900/95 backdrop-blur-sm border border-gray-200/50 dark:border-gray-700/50 shadow-xl p-0 w-full max-w-none overflow-hidden">
-        <DialogHeader className="text-left px-8 pt-8 pb-6 border-b border-gray-100 dark:border-gray-800">
+        <DialogHeader className="text-center px-8 pt-8 pb-6 border-b border-gray-100 dark:border-gray-800">
           <DialogTitle className="font-heading text-xl sm:text-2xl font-semibold text-gray-900 dark:text-white leading-tight">
             {isEditing
               ? t("ideaForm.editTitle", "Edit idea")
