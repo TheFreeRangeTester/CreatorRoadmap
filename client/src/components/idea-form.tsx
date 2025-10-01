@@ -318,46 +318,46 @@ export default function IdeaForm({ isOpen, idea, onClose }: IdeaFormProps) {
                             placeholder={t("ideaForm.nichePlaceholder")}
                           />
                         </SelectTrigger>
-                        <SelectContent className="rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 shadow-lg">
+                        <SelectContent className="rounded-md border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 shadow-lg">
                           <SelectItem
                             value="unboxing"
-                            className="text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700"
+                            className="text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 py-3 px-4"
                           >
                             {t("ideaForm.niches.unboxing")}
                           </SelectItem>
                           <SelectItem
                             value="review"
-                            className="text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700"
+                            className="text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 py-3 px-4"
                           >
                             {t("ideaForm.niches.review")}
                           </SelectItem>
                           <SelectItem
                             value="tutorial"
-                            className="text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700"
+                            className="text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 py-3 px-4"
                           >
                             {t("ideaForm.niches.tutorial")}
                           </SelectItem>
                           <SelectItem
                             value="vlog"
-                            className="text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700"
+                            className="text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 py-3 px-4"
                           >
                             {t("ideaForm.niches.vlog")}
                           </SelectItem>
                           <SelectItem
                             value="behindTheScenes"
-                            className="text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700"
+                            className="text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 py-3 px-4"
                           >
                             {t("ideaForm.niches.behindTheScenes")}
                           </SelectItem>
                           <SelectItem
                             value="qna"
-                            className="text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700"
+                            className="text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 py-3 px-4"
                           >
                             {t("ideaForm.niches.qna")}
                           </SelectItem>
                           <SelectItem
                             value="other"
-                            className="text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700"
+                            className="text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 py-3 px-4"
                           >
                             {t("ideaForm.niches.other")}
                           </SelectItem>
