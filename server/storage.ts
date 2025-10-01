@@ -129,6 +129,7 @@ export class MemStorage implements IStorage {
     this.pointTransactionsMap = new Map();
     this.storeItems = new Map();
     this.storeRedemptions = new Map();
+    this.audienceStatsMap = new Map();
     this.currentUserId = 1;
     this.currentIdeaId = 1;
     this.currentVoteId = 1;
