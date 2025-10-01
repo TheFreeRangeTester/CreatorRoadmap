@@ -132,8 +132,12 @@ export default function IdeaForm({ isOpen, idea, onClose }: IdeaFormProps) {
       return await res.json();
     },
     onSuccess: () => {
+      // Invalidar todas las queries relacionadas con ideas
       queryClient.invalidateQueries({ queryKey: ["/api/ideas"] });
+      queryClient.invalidateQueries({ queryKey: ["ideas"] });
+      queryClient.invalidateQueries({ queryKey: ["dashboard-stats"] });
       queryClient.invalidateQueries({ queryKey: ["ideaQuota", user?.id] });
+
       toast({
         title: t("ideas.created", "Idea created"),
         description: t(
@@ -176,8 +180,13 @@ export default function IdeaForm({ isOpen, idea, onClose }: IdeaFormProps) {
 
       return await res.json();
     },
-    onSuccess: () => {
+    onSuccess: (data) => {
+      console.log("[IDEA-FORM] Update successful, server returned:", data);
+      // Invalidar todas las queries relacionadas con ideas
       queryClient.invalidateQueries({ queryKey: ["/api/ideas"] });
+      queryClient.invalidateQueries({ queryKey: ["ideas"] });
+      queryClient.invalidateQueries({ queryKey: ["dashboard-stats"] });
+
       toast({
         title: t("ideas.updated", "Idea updated"),
         description: t(
@@ -199,6 +208,7 @@ export default function IdeaForm({ isOpen, idea, onClose }: IdeaFormProps) {
 
   // Form submission
   function onSubmit(values: z.infer<typeof insertIdeaSchema>) {
+    console.log("[IDEA-FORM] Submitting form with values:", values);
     if (isEditing) {
       updateMutation.mutate(values);
     } else {
@@ -310,6 +320,7 @@ export default function IdeaForm({ isOpen, idea, onClose }: IdeaFormProps) {
                     ) : (
                       <Select
                         onValueChange={(value) => {
+                          console.log("[IDEA-FORM] Niche changed to:", value);
                           if (value === "other") {
                             setShowCustomNiche(true);
                             field.onChange("");
