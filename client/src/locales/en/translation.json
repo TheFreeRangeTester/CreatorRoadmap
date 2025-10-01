@@ -344,6 +344,7 @@
     "approve": "Approve",
     "reject": "Reject",
     "approved": "Idea approved",
+    "edit": "Edit",
     "approvedSuccess": "The idea has been approved successfully",
     "rejected": "Idea rejected",
     "rejectedSuccess": "The idea has been rejected",
