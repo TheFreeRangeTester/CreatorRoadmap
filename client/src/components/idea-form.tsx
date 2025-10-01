@@ -206,7 +206,7 @@ export default function IdeaForm({ isOpen, idea, onClose }: IdeaFormProps) {
   return (
     <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
       <DialogContent className="sm:max-w-[600px] rounded-xl bg-white/95 dark:bg-gray-900/95 backdrop-blur-sm border border-gray-200/50 dark:border-gray-700/50 shadow-xl p-0 w-full max-w-none overflow-hidden">
-        <DialogHeader className="text-left px-6 pt-6 pb-4 border-b border-gray-100 dark:border-gray-800">
+        <DialogHeader className="text-left px-8 pt-8 pb-6 border-b border-gray-100 dark:border-gray-800">
           <DialogTitle className="font-heading text-xl sm:text-2xl font-semibold text-gray-900 dark:text-white leading-tight">
             {isEditing
               ? t("ideaForm.editTitle", "Edit idea")
@@ -228,7 +228,7 @@ export default function IdeaForm({ isOpen, idea, onClose }: IdeaFormProps) {
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(onSubmit)}
-            className="space-y-8 px-6 py-6"
+            className="space-y-8 px-8 py-8"
           >
             <FormField
               control={form.control}
@@ -243,7 +243,7 @@ export default function IdeaForm({ isOpen, idea, onClose }: IdeaFormProps) {
                       placeholder={t("ideaForm.titlePlaceholder")}
                       maxLength={100}
                       disabled={isLimitReached}
-                      className="h-12 rounded-lg border-2 border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all duration-200 text-gray-900 dark:text-white placeholder:text-gray-500 dark:placeholder:text-gray-400"
+                      className="h-12 rounded-lg border-2 border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all duration-200 text-gray-900 dark:text-white placeholder:text-gray-500 dark:placeholder:text-gray-400 px-4"
                       {...field}
                     />
                   </FormControl>
@@ -264,7 +264,7 @@ export default function IdeaForm({ isOpen, idea, onClose }: IdeaFormProps) {
                     <Textarea
                       placeholder={t("ideaForm.descriptionPlaceholder")}
                       maxLength={280}
-                      className="resize-none h-28 rounded-lg border-2 border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all duration-200 text-gray-900 dark:text-white placeholder:text-gray-500 dark:placeholder:text-gray-400"
+                      className="resize-none h-28 rounded-lg border-2 border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all duration-200 text-gray-900 dark:text-white placeholder:text-gray-500 dark:placeholder:text-gray-400 px-4 py-3"
                       disabled={isLimitReached}
                       {...field}
                     />
@@ -294,7 +294,7 @@ export default function IdeaForm({ isOpen, idea, onClose }: IdeaFormProps) {
                         placeholder={t("ideaForm.customNichePlaceholder")}
                         maxLength={50}
                         disabled={isLimitReached}
-                        className="h-12 rounded-lg border-2 border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all duration-200 text-gray-900 dark:text-white placeholder:text-gray-500 dark:placeholder:text-gray-400"
+                        className="h-12 rounded-lg border-2 border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all duration-200 text-gray-900 dark:text-white placeholder:text-gray-500 dark:placeholder:text-gray-400 px-4"
                         {...field}
                         onBlur={() => {
                           if (!field.value) setShowCustomNiche(false);
@@ -313,7 +313,7 @@ export default function IdeaForm({ isOpen, idea, onClose }: IdeaFormProps) {
                         value={field.value}
                         disabled={isLimitReached}
                       >
-                        <SelectTrigger className="h-12 rounded-lg border-2 border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all duration-200 text-gray-900 dark:text-white">
+                        <SelectTrigger className="h-12 rounded-lg border-2 border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all duration-200 text-gray-900 dark:text-white px-4">
                           <SelectValue
                             placeholder={t("ideaForm.nichePlaceholder")}
                           />
@@ -370,7 +370,7 @@ export default function IdeaForm({ isOpen, idea, onClose }: IdeaFormProps) {
               )}
             />
 
-            <div className="flex flex-col sm:flex-row gap-3 pt-6 border-t border-gray-100 dark:border-gray-800">
+            <div className="flex flex-col sm:flex-row gap-3 pt-8 px-8 pb-8 border-t border-gray-100 dark:border-gray-800">
               <Button
                 type="button"
                 variant="outline"
