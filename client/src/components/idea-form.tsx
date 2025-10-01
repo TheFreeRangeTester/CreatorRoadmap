@@ -310,7 +310,7 @@ export default function IdeaForm({ isOpen, idea, onClose }: IdeaFormProps) {
                             field.onChange(value);
                           }
                         }}
-                        value={field.value}
+                        value={field.value || ""}
                         disabled={isLimitReached}
                       >
                         <SelectTrigger className="h-12 rounded-lg border-2 border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all duration-200 text-gray-900 dark:text-white px-4">
