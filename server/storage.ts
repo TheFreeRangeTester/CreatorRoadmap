@@ -281,6 +281,7 @@ export class MemStorage implements IStorage {
       ...idea,
       title: updateData.title,
       description: updateData.description,
+      niche: updateData.niche,
     };
 
     this.ideas.set(id, updatedIdea);

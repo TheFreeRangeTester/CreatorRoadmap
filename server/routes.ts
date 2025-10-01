@@ -304,8 +304,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       let topNiche: { name: string; votes: number } | null = null;
       if (Object.keys(nicheVotes).length > 0) {
-        const topNicheEntry = Object.entries(nicheVotes).reduce((max, [niche, votes]) => 
-          votes > max.votes ? { name: niche, votes } : max, 
+        const topNicheEntry = Object.entries(nicheVotes).reduce((max, [niche, votes]) =>
+          votes > max.votes ? { name: niche, votes } : max,
           { name: '', votes: 0 }
         );
         topNiche = topNicheEntry.votes > 0 ? topNicheEntry : null;
@@ -472,6 +472,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
       if (!updatedIdea) {
         return res.status(404).json({ message: "Failed to update idea" });
       }
+
+      console.log("[SERVER] Updated idea with niche:", updatedIdea.niche);
 
       const ideasWithPositions = await storage.getIdeasWithPositions();
       const updatedIdeaWithPosition = ideasWithPositions.find(i => i.id === updatedIdea.id);
