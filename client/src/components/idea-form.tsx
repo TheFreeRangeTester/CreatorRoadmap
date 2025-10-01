@@ -318,7 +318,7 @@ export default function IdeaForm({ isOpen, idea, onClose }: IdeaFormProps) {
                             placeholder={t("ideaForm.nichePlaceholder")}
                           />
                         </SelectTrigger>
-                        <SelectContent className="rounded-md border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 shadow-lg">
+                        <SelectContent className="rounded-none border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 shadow-lg [&>div]:p-2">
                           <SelectItem
                             value="unboxing"
                             className="text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 py-3 px-4"
