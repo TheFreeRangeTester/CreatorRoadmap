@@ -236,6 +236,15 @@ export default function IdeaCard({
             {idea.description}
           </p>
 
+          {/* Mostrar nicho si existe */}
+          {idea.niche && (
+            <div className="mb-3 flex justify-center">
+              <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-primary/10 dark:bg-primary/20 text-primary dark:text-primary-300 border border-primary/20 dark:border-primary/30">
+                {t(`niches.${idea.niche}`, idea.niche)}
+              </span>
+            </div>
+          )}
+
           {/* Mostrar badge si la idea fue sugerida por otro usuario */}
           {idea.suggestedByUsername && (
             <div className="text-xs text-gray-500 dark:text-gray-400 mb-3 flex justify-center">

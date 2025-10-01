@@ -189,6 +189,7 @@ export const ideaResponseSchema = z.object({
   id: z.number(),
   title: z.string(),
   description: z.string(),
+  niche: z.string().optional().nullable(),
   votes: z.number(),
   createdAt: z.date(),
   creatorId: z.number(),
