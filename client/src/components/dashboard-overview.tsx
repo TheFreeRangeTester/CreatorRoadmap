@@ -26,6 +26,10 @@ interface CreatorStats {
   totalVotes: number;
   pendingSuggestions: number;
   publishedIdeas: number;
+  topNiche?: {
+    name: string;
+    votes: number;
+  } | null;
 }
 
 interface AudienceStats {
@@ -159,15 +163,13 @@ export function DashboardOverview({ className }: DashboardOverviewProps) {
       },
       {
         icon: TrendingUp,
-        title: t("dashboard.overview.engagement", "Engagement"),
-        value:
-          stats.totalIdeas > 0
-            ? Math.round((stats.totalVotes / stats.totalIdeas) * 100)
-            : 0,
-        description: t("dashboard.overview.engagementDesc", "Votos por idea"),
+        title: t("dashboard.overview.topNiches", "Top Niches"),
+        value: stats.topNiche?.name || t("dashboard.overview.noNicheData", "No data yet"),
+        description: t("dashboard.overview.topNichesDesc", "Most voted category"),
         color: "text-purple-600",
         bgColor: "bg-purple-50 dark:bg-purple-900/20",
-        suffix: "%",
+        isText: true,
+        votes: stats.topNiche?.votes,
       },
     ];
 
@@ -192,10 +194,23 @@ export function DashboardOverview({ className }: DashboardOverviewProps) {
               <CardContent className="pt-0">
                 <div className="flex items-center space-x-2">
                   <div className="text-2xl font-bold text-gray-900 dark:text-white">
-                    {metric.value.toLocaleString()}
-                    {metric.suffix}
+                    {(metric as any).isText ? (
+                      <div className="flex flex-col">
+                        <span className="text-xl capitalize">{metric.value}</span>
+                        {(metric as any).votes !== undefined && (
+                          <span className="text-sm font-normal text-gray-500 dark:text-gray-400">
+                            {(metric as any).votes} {t("ideas.votes", "votes")}
+                          </span>
+                        )}
+                      </div>
+                    ) : (
+                      <>
+                        {(metric.value as number).toLocaleString()}
+                        {(metric as any).suffix}
+                      </>
+                    )}
                   </div>
-                  {metric.badge === "attention" && (
+                  {(metric as any).badge === "attention" && (
                     <Badge variant="destructive" className="text-xs">
                       {t("common.attention", "Attention")}
                     </Badge>
