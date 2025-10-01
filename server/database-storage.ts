@@ -1,9 +1,11 @@
-import { ideas, users, votes, publicLinks, userPoints, pointTransactions, storeItems, storeRedemptions,
+import {
+  ideas, users, votes, publicLinks, userPoints, pointTransactions, storeItems, storeRedemptions,
   type User, type InsertUser, type Idea, type InsertIdea, type UpdateIdea, type SuggestIdea,
   type Vote, type InsertVote, type PublicLink, type InsertPublicLink, type PublicLinkResponse,
   type UpdateProfile, type UpdateSubscription, type UserPointsResponse, type InsertPointTransaction,
   type PointTransactionResponse, type StoreItem, type InsertStoreItem, type UpdateStoreItem,
-  type StoreItemResponse, type StoreRedemption, type InsertStoreRedemption, type StoreRedemptionResponse } from "@shared/schema";
+  type StoreItemResponse, type StoreRedemption, type InsertStoreRedemption, type StoreRedemptionResponse
+} from "@shared/schema";
 import session from "express-session";
 import connectPg from "connect-pg-simple";
 import { db, pool } from "./db";
@@ -17,9 +19,9 @@ export class DatabaseStorage implements IStorage {
   sessionStore: any;
 
   constructor() {
-    this.sessionStore = new PostgresSessionStore({ 
+    this.sessionStore = new PostgresSessionStore({
       pool,
-      createTableIfMissing: true 
+      createTableIfMissing: true
     });
   }
 
@@ -43,12 +45,12 @@ export class DatabaseStorage implements IStorage {
     const [user] = await db.insert(users).values(insertUser).returning();
     return user;
   }
-  
+
   async updateUserProfile(id: number, profileData: UpdateProfile): Promise<User | undefined> {
     // Obtener el usuario actual
     const [currentUser] = await db.select().from(users).where(eq(users.id, id));
     if (!currentUser) return undefined;
-    
+
     // Actualizar sólo los campos proporcionados
     const [updatedUser] = await db
       .update(users)
@@ -69,7 +71,7 @@ export class DatabaseStorage implements IStorage {
       })
       .where(eq(users.id, id))
       .returning();
-    
+
     return updatedUser;
   }
 
@@ -80,7 +82,7 @@ export class DatabaseStorage implements IStorage {
         .set({ password: hashedPassword })
         .where(eq(users.id, id))
         .returning();
-      
+
       return updatedUser;
     } catch (error) {
       console.error("Error updating user password:", error);
@@ -104,7 +106,7 @@ export class DatabaseStorage implements IStorage {
 
   async createIdea(insertIdea: InsertIdea, creatorId: number): Promise<Idea> {
     const now = new Date();
-    
+
     // Nueva idea con 0 votos y posiciones en null inicialmente
     const ideaToInsert = {
       ...insertIdea,
@@ -117,22 +119,22 @@ export class DatabaseStorage implements IStorage {
       status: 'approved',     // Por defecto las ideas creadas por el creador están aprobadas
       suggestedBy: null       // No es una idea sugerida
     };
-    
+
     // Insertar la idea con posiciones en null
     const [idea] = await db.insert(ideas).values(ideaToInsert).returning();
-    
+
     // Actualizar posiciones de todas las ideas, incluida la nueva
     await this.updatePositions();
-    
+
     // Obtener la idea actualizada para devolverla
     const [updatedIdea] = await db.select().from(ideas).where(eq(ideas.id, idea.id));
-    
+
     return updatedIdea;
   }
-  
+
   async suggestIdea(suggestion: SuggestIdea, suggestedBy: number): Promise<Idea> {
     const now = new Date();
-    
+
     // Nueva idea sugerida con 0 votos, estado pendiente y usuario que la sugiere
     const ideaToInsert = {
       title: suggestion.title,
@@ -146,13 +148,13 @@ export class DatabaseStorage implements IStorage {
       status: 'pending',      // Las ideas sugeridas inician como pendientes
       suggestedBy: suggestedBy // ID del usuario que la sugirió
     };
-    
+
     // Insertar la idea sugerida
     const [idea] = await db.insert(ideas).values(ideaToInsert).returning();
-    
+
     return idea;
   }
-  
+
   async approveIdea(id: number): Promise<Idea | undefined> {
     // Actualizar el estado de la idea a 'approved'
     const [idea] = await db
@@ -160,19 +162,19 @@ export class DatabaseStorage implements IStorage {
       .set({ status: 'approved' })
       .where(eq(ideas.id, id))
       .returning();
-    
+
     if (idea) {
       // Después de aprobar, actualizar posiciones
       await this.updatePositions();
-      
+
       // Obtener la idea actualizada
       const [updatedIdea] = await db.select().from(ideas).where(eq(ideas.id, id));
       return updatedIdea;
     }
-    
+
     return undefined;
   }
-  
+
   async getPendingIdeas(creatorId: number): Promise<Idea[]> {
     // Obtener todas las ideas pendientes para un creador
     return db
@@ -194,17 +196,17 @@ export class DatabaseStorage implements IStorage {
       })
       .where(eq(ideas.id, id))
       .returning();
-    
+
     return idea;
   }
 
   async deleteIdea(id: number): Promise<void> {
     // First, delete any votes for this idea
     await db.delete(votes).where(eq(votes.ideaId, id));
-    
+
     // Then delete the idea itself
     await db.delete(ideas).where(eq(ideas.id, id));
-    
+
     // Update positions after deleting an idea
     await this.updatePositions();
   }
@@ -217,10 +219,10 @@ export class DatabaseStorage implements IStorage {
         .select()
         .from(votes)
         .where(and(eq(votes.ideaId, ideaId), eq(votes.userId, userId)));
-      
+
       return vote;
     }
-    
+
     return undefined;
   }
 
@@ -229,7 +231,7 @@ export class DatabaseStorage implements IStorage {
     if (!userId) {
       throw new Error("User ID is required to vote");
     }
-    
+
     const [newVote] = await db
       .insert(votes)
       .values({
@@ -239,10 +241,10 @@ export class DatabaseStorage implements IStorage {
         votedAt: new Date(),
       })
       .returning();
-    
+
     // Increment the idea vote count
     await this.incrementVote(vote.ideaId);
-    
+
     return newVote;
   }
 
@@ -253,7 +255,7 @@ export class DatabaseStorage implements IStorage {
         votes: sql`${ideas.votes} + 1`
       })
       .where(eq(ideas.id, ideaId));
-    
+
     // Update positions after vote changes
     await this.updatePositions();
   }
@@ -265,12 +267,12 @@ export class DatabaseStorage implements IStorage {
       .select()
       .from(ideas)
       .orderBy(desc(ideas.votes), asc(ideas.createdAt));
-    
+
     // Update positions for each idea
     for (let i = 0; i < sortedIdeas.length; i++) {
       const idea = sortedIdeas[i];
       const position = i + 1;
-      
+
       await db
         .update(ideas)
         .set({
@@ -288,7 +290,7 @@ export class DatabaseStorage implements IStorage {
       .select()
       .from(ideas)
       .orderBy(desc(ideas.votes), asc(ideas.createdAt));
-    
+
     // Convertir ideas a IdeaWithPosition con información del sugeridor
     const ideasWithPosition = await Promise.all(allIdeas.map(async idea => {
       // Obtener el nombre de usuario del que sugirió la idea, si existe
@@ -298,16 +300,17 @@ export class DatabaseStorage implements IStorage {
           .select()
           .from(users)
           .where(eq(users.id, idea.suggestedBy));
-        
+
         if (suggester) {
           suggestedByUsername = suggester.username;
         }
       }
-      
+
       return {
         id: idea.id,
         title: idea.title,
         description: idea.description,
+        niche: idea.niche,
         votes: idea.votes,
         createdAt: idea.createdAt,
         creatorId: idea.creatorId,
@@ -319,12 +322,12 @@ export class DatabaseStorage implements IStorage {
           previous: idea.previousPosition,
           // Si no hay posición previa o es igual a la actual, el cambio es 0 (sin cambio)
           change: idea.previousPosition && idea.currentPosition && idea.previousPosition !== idea.currentPosition
-            ? idea.previousPosition - idea.currentPosition 
+            ? idea.previousPosition - idea.currentPosition
             : 0
         }
       };
     }));
-    
+
     return ideasWithPosition;
   }
 
@@ -338,7 +341,7 @@ export class DatabaseStorage implements IStorage {
     if (options?.expiresAt) {
       expiresAt = new Date(options.expiresAt);
     }
-    
+
     const [publicLink] = await db
       .insert(publicLinks)
       .values({
@@ -349,51 +352,51 @@ export class DatabaseStorage implements IStorage {
         expiresAt
       })
       .returning();
-    
+
     // Create the full URL for sharing
     const protocol = process.env.NODE_ENV === 'production' ? 'https://' : 'http://';
     const baseUrl = process.env.REPL_SLUG ? `${protocol}${process.env.REPL_SLUG}.${process.env.REPL_OWNER}.repl.co` : 'http://localhost:5000';
     const url = `${baseUrl}/l/${token}`;
-    
+
     return {
       ...publicLink,
       url
     };
   }
-  
+
   async getPublicLinkByToken(token: string): Promise<PublicLink | undefined> {
     const [link] = await db
       .select()
       .from(publicLinks)
       .where(eq(publicLinks.token, token));
-    
+
     return link;
   }
-  
+
   async getUserPublicLinks(creatorId: number): Promise<PublicLinkResponse[]> {
     const userLinks = await db
       .select()
       .from(publicLinks)
       .where(eq(publicLinks.creatorId, creatorId));
-    
+
     const baseUrl = process.env.BASE_URL || 'http://localhost:5000';
-    
+
     return userLinks.map(link => ({
       ...link,
       url: `${baseUrl}/l/${link.token}`
     }));
   }
-  
+
   async togglePublicLinkStatus(id: number, isActive: boolean): Promise<PublicLink | undefined> {
     const [updatedLink] = await db
       .update(publicLinks)
       .set({ isActive })
       .where(eq(publicLinks.id, id))
       .returning();
-    
+
     return updatedLink;
   }
-  
+
   async deletePublicLink(id: number): Promise<void> {
     await db.delete(publicLinks).where(eq(publicLinks.id, id));
   }
@@ -405,7 +408,7 @@ export class DatabaseStorage implements IStorage {
       .set(subscriptionData)
       .where(eq(users.id, id))
       .returning();
-    
+
     return updatedUser;
   }
 
@@ -423,7 +426,7 @@ export class DatabaseStorage implements IStorage {
       })
       .where(eq(users.id, id))
       .returning();
-    
+
     return updatedUser;
   }
 
@@ -432,7 +435,7 @@ export class DatabaseStorage implements IStorage {
       .select()
       .from(users)
       .where(eq(users.stripeCustomerId, stripeCustomerId));
-    
+
     return user;
   }
 
@@ -441,17 +444,17 @@ export class DatabaseStorage implements IStorage {
     const votesResult = await db.select({ count: sql<number>`count(*)` })
       .from(votes)
       .where(eq(votes.userId, userId));
-    
+
     // Count ideas suggested by user
     const suggestedResult = await db.select({ count: sql<number>`count(*)` })
       .from(ideas)
       .where(eq(ideas.suggestedBy, userId));
-    
+
     // Count approved ideas suggested by user
     const approvedResult = await db.select({ count: sql<number>`count(*)` })
       .from(ideas)
       .where(and(eq(ideas.suggestedBy, userId), eq(ideas.status, 'approved')));
-    
+
     return {
       votesGiven: votesResult[0]?.count || 0,
       ideasSuggested: suggestedResult[0]?.count || 0,
@@ -508,12 +511,12 @@ export class DatabaseStorage implements IStorage {
         eq(userPoints.userId, userId),
         eq(userPoints.creatorId, creatorId)
       ));
-    
+
     if (!userPointsRecord) {
       // Create initial points record if it doesn't exist
       return await this.createUserPoints(userId, creatorId);
     }
-    
+
     return {
       userId: userPointsRecord.userId,
       totalPoints: userPointsRecord.totalPoints,
@@ -525,7 +528,7 @@ export class DatabaseStorage implements IStorage {
   async createUserPoints(userId: number, creatorId: number): Promise<UserPointsResponse> {
     const [newUserPoints] = await db
       .insert(userPoints)
-      .values({ 
+      .values({
         userId,
         creatorId,
         totalPoints: 0,
@@ -533,7 +536,7 @@ export class DatabaseStorage implements IStorage {
         pointsSpent: 0
       })
       .returning();
-    
+
     return {
       userId: newUserPoints.userId,
       totalPoints: newUserPoints.totalPoints,
@@ -545,9 +548,9 @@ export class DatabaseStorage implements IStorage {
   async updateUserPoints(userId: number, creatorId: number, pointsChange: number, type: 'earned' | 'spent', reason: string, relatedId?: number): Promise<UserPointsResponse> {
     // Get current points or create if doesn't exist
     let currentPoints = await this.getUserPoints(userId, creatorId);
-    
+
     const updateData: any = { updatedAt: new Date() };
-    
+
     if (type === 'earned') {
       updateData.totalPoints = currentPoints.totalPoints + pointsChange;
       updateData.pointsEarned = currentPoints.pointsEarned + pointsChange;
@@ -555,7 +558,7 @@ export class DatabaseStorage implements IStorage {
       updateData.totalPoints = currentPoints.totalPoints - pointsChange;
       updateData.pointsSpent = currentPoints.pointsSpent + pointsChange;
     }
-    
+
     // Update points in transaction
     await db.transaction(async (tx) => {
       // Update user points
@@ -566,7 +569,7 @@ export class DatabaseStorage implements IStorage {
           eq(userPoints.userId, userId),
           eq(userPoints.creatorId, creatorId)
         ));
-      
+
       // Record transaction
       await tx
         .insert(pointTransactions)
@@ -579,7 +582,7 @@ export class DatabaseStorage implements IStorage {
           relatedId: relatedId || null,
         });
     });
-    
+
     // Return updated points
     return await this.getUserPoints(userId, creatorId);
   }
@@ -594,7 +597,7 @@ export class DatabaseStorage implements IStorage {
       ))
       .orderBy(desc(pointTransactions.createdAt))
       .limit(limit);
-    
+
     return transactions.map(t => ({
       id: t.id,
       userId: t.userId,
@@ -614,7 +617,7 @@ export class DatabaseStorage implements IStorage {
       .from(storeItems)
       .where(eq(storeItems.creatorId, creatorId))
       .orderBy(desc(storeItems.createdAt));
-    
+
     return items.map(item => ({
       ...item,
       isAvailable: item.isActive && (item.maxQuantity === null || item.currentQuantity < item.maxQuantity)
@@ -639,7 +642,7 @@ export class DatabaseStorage implements IStorage {
         isActive: true,
       })
       .returning();
-    
+
     return {
       ...storeItem,
       isAvailable: true
@@ -655,9 +658,9 @@ export class DatabaseStorage implements IStorage {
       })
       .where(eq(storeItems.id, id))
       .returning();
-    
+
     if (!updatedItem) return undefined;
-    
+
     return {
       ...updatedItem,
       isAvailable: updatedItem.isActive && (updatedItem.maxQuantity === null || updatedItem.currentQuantity < updatedItem.maxQuantity)
@@ -679,15 +682,15 @@ export class DatabaseStorage implements IStorage {
     if (status) {
       whereConditions.push(eq(storeRedemptions.status, status));
     }
-    
+
     // Get total count
     const [totalResult] = await db
       .select({ count: sql<number>`count(*)` })
       .from(storeRedemptions)
       .where(and(...whereConditions));
-    
+
     const total = totalResult.count;
-    
+
     // Get redemptions with user and store item data
     const redemptions = await db
       .select({
@@ -711,7 +714,7 @@ export class DatabaseStorage implements IStorage {
       .orderBy(desc(storeRedemptions.createdAt))
       .limit(limit)
       .offset(offset);
-    
+
     return {
       redemptions: redemptions.map(r => ({
         ...r,
@@ -728,16 +731,16 @@ export class DatabaseStorage implements IStorage {
         .select()
         .from(storeItems)
         .where(eq(storeItems.id, redemption.storeItemId));
-      
+
       if (!storeItem) {
         throw new Error('Store item not found');
       }
-      
+
       // Check if item is available
       if (!storeItem.isActive || (storeItem.maxQuantity !== null && storeItem.currentQuantity >= storeItem.maxQuantity)) {
         throw new Error('Store item is not available');
       }
-      
+
       // Create redemption
       const [newRedemption] = await tx
         .insert(storeRedemptions)
@@ -749,7 +752,7 @@ export class DatabaseStorage implements IStorage {
           status: 'pending',
         })
         .returning();
-      
+
       // Update store item quantity
       await tx
         .update(storeItems)
@@ -758,16 +761,16 @@ export class DatabaseStorage implements IStorage {
           updatedAt: new Date(),
         })
         .where(eq(storeItems.id, storeItem.id));
-      
+
       return { newRedemption, storeItem };
     });
-    
+
     // Get user data
     const [user] = await db
       .select()
       .from(users)
       .where(eq(users.id, userId));
-    
+
     return {
       ...result.newRedemption,
       status: result.newRedemption.status as 'pending' | 'completed',
@@ -787,9 +790,9 @@ export class DatabaseStorage implements IStorage {
       })
       .where(eq(storeRedemptions.id, id))
       .returning();
-    
+
     if (!updatedRedemption) return undefined;
-    
+
     // Get additional data for response
     const [redemptionData] = await db
       .select({
@@ -802,7 +805,7 @@ export class DatabaseStorage implements IStorage {
       .innerJoin(users, eq(storeRedemptions.userId, users.id))
       .innerJoin(storeItems, eq(storeRedemptions.storeItemId, storeItems.id))
       .where(eq(storeRedemptions.id, id));
-    
+
     return {
       ...updatedRedemption,
       status: updatedRedemption.status as 'pending' | 'completed',

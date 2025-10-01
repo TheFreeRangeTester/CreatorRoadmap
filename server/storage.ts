@@ -87,6 +87,7 @@ export interface IdeaWithPosition {
   id: number;
   title: string;
   description: string;
+  niche: string | null;
   votes: number;
   createdAt: Date;
   creatorId: number;
@@ -425,6 +426,7 @@ export class MemStorage implements IStorage {
         id: idea.id,
         title: idea.title,
         description: idea.description,
+        niche: idea.niche,
         votes: idea.votes,
         createdAt: idea.createdAt,
         creatorId: idea.creatorId,
