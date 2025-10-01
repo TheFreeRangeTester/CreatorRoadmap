@@ -53,11 +53,17 @@ export default function IdeaForm({ isOpen, idea, onClose }: IdeaFormProps) {
   const [showCustomNiche, setShowCustomNiche] = useState(false);
 
   // Check if user has premium access
-  const hasPremium = user ? hasActivePremiumAccess({
-    subscriptionStatus: ((user as any).subscriptionStatus || "free") as "free" | "trial" | "premium" | "canceled",
-    trialEndDate: (user as any).trialEndDate || null,
-    subscriptionEndDate: (user as any).subscriptionEndDate || null
-  }) : false;
+  const hasPremium = user
+    ? hasActivePremiumAccess({
+        subscriptionStatus: ((user as any).subscriptionStatus || "free") as
+          | "free"
+          | "trial"
+          | "premium"
+          | "canceled",
+        trialEndDate: (user as any).trialEndDate || null,
+        subscriptionEndDate: (user as any).subscriptionEndDate || null,
+      })
+    : false;
 
   // Check if limit is reached for non-premium users
   const isLimitReached = !isEditing && !hasPremium && quota?.hasReachedLimit;
@@ -76,14 +82,21 @@ export default function IdeaForm({ isOpen, idea, onClose }: IdeaFormProps) {
   useEffect(() => {
     if (isOpen) {
       const currentNiche = idea?.niche || "";
-      const isPredefinedNiche = ['unboxing', 'review', 'tutorial', 'vlog', 'behindTheScenes', 'qna'].includes(currentNiche);
-      
+      const isPredefinedNiche = [
+        "unboxing",
+        "review",
+        "tutorial",
+        "vlog",
+        "behindTheScenes",
+        "qna",
+      ].includes(currentNiche);
+
       form.reset({
         title: idea?.title || "",
         description: idea?.description || "",
         niche: currentNiche,
       });
-      
+
       setShowCustomNiche(!isPredefinedNiche && currentNiche !== "");
     }
   }, [isOpen, idea, form]);
@@ -95,7 +108,7 @@ export default function IdeaForm({ isOpen, idea, onClose }: IdeaFormProps) {
       const res = await fetch("/api/ideas", {
         method: "POST",
         headers: {
-        credentials: "include",
+          credentials: "include",
           "Content-Type": "application/json",
           "X-Requested-With": "XMLHttpRequest",
         },
@@ -140,7 +153,7 @@ export default function IdeaForm({ isOpen, idea, onClose }: IdeaFormProps) {
       const res = await fetch(`/api/ideas/${idea?.id}`, {
         method: "PUT",
         headers: {
-        credentials: "include",
+          credentials: "include",
           "Content-Type": "application/json",
           "X-Requested-With": "XMLHttpRequest",
         },
@@ -192,14 +205,14 @@ export default function IdeaForm({ isOpen, idea, onClose }: IdeaFormProps) {
 
   return (
     <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
-      <DialogContent className="sm:max-w-[500px] rounded-3xl glass-card text-center p-4 sm:p-6 lg:p-8 w-full max-w-none overflow-hidden">
-        <DialogHeader className="text-center">
-          <DialogTitle className="font-heading text-base sm:text-lg lg:text-xl mb-2 break-words leading-tight max-w-full overflow-hidden text-center">
+      <DialogContent className="sm:max-w-[600px] rounded-xl bg-white/95 dark:bg-gray-900/95 backdrop-blur-sm border border-gray-200/50 dark:border-gray-700/50 shadow-xl p-0 w-full max-w-none overflow-hidden">
+        <DialogHeader className="text-left px-6 pt-6 pb-4 border-b border-gray-100 dark:border-gray-800">
+          <DialogTitle className="font-heading text-xl sm:text-2xl font-semibold text-gray-900 dark:text-white leading-tight">
             {isEditing
               ? t("ideaForm.editTitle", "Edit idea")
               : t("ideaForm.addTitle", "Add new idea")}
           </DialogTitle>
-          <DialogDescription className="text-sm text-neutral-600 dark:text-neutral-300 px-2 sm:px-4 break-words">
+          <DialogDescription className="text-sm text-gray-600 dark:text-gray-400 mt-2 leading-relaxed">
             {isEditing
               ? t("ideaForm.editDescription", "Make changes to your idea.")
               : t(
@@ -213,13 +226,16 @@ export default function IdeaForm({ isOpen, idea, onClose }: IdeaFormProps) {
         {!isEditing && <IdeaLimitNotice />}
 
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6 px-2">
+          <form
+            onSubmit={form.handleSubmit(onSubmit)}
+            className="space-y-8 px-6 py-6"
+          >
             <FormField
               control={form.control}
               name="title"
               render={({ field }) => (
-                <FormItem className="text-center">
-                  <FormLabel className="text-sm font-medium text-neutral-700 dark:text-neutral-300">
+                <FormItem className="space-y-3">
+                  <FormLabel className="text-sm font-semibold text-gray-900 dark:text-white">
                     {t("ideaForm.title", "Title")}
                   </FormLabel>
                   <FormControl>
@@ -227,7 +243,7 @@ export default function IdeaForm({ isOpen, idea, onClose }: IdeaFormProps) {
                       placeholder={t("ideaForm.titlePlaceholder")}
                       maxLength={100}
                       disabled={isLimitReached}
-                      className="rounded-2xl glass-input"
+                      className="h-12 rounded-lg border-2 border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all duration-200 text-gray-900 dark:text-white placeholder:text-gray-500 dark:placeholder:text-gray-400"
                       {...field}
                     />
                   </FormControl>
@@ -240,21 +256,24 @@ export default function IdeaForm({ isOpen, idea, onClose }: IdeaFormProps) {
               control={form.control}
               name="description"
               render={({ field }) => (
-                <FormItem className="text-center">
-                  <FormLabel className="text-sm font-medium text-neutral-700 dark:text-neutral-300">
+                <FormItem className="space-y-3">
+                  <FormLabel className="text-sm font-semibold text-gray-900 dark:text-white">
                     {t("ideaForm.description", "Description")}
                   </FormLabel>
                   <FormControl>
                     <Textarea
                       placeholder={t("ideaForm.descriptionPlaceholder")}
                       maxLength={280}
-                      className="resize-none h-24 rounded-2xl glass-input"
+                      className="resize-none h-28 rounded-lg border-2 border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all duration-200 text-gray-900 dark:text-white placeholder:text-gray-500 dark:placeholder:text-gray-400"
                       disabled={isLimitReached}
                       {...field}
                     />
                   </FormControl>
-                  <div className="mt-2 text-xs text-neutral-500">
-                    {charCount}/280 {t("ideaForm.characters", "characters")}
+                  <div className="flex justify-between items-center text-xs text-gray-500 dark:text-gray-400">
+                    <span>
+                      {charCount}/280 {t("ideaForm.characters", "characters")}
+                    </span>
+                    <span className="text-gray-400">•</span>
                   </div>
                   <FormMessage />
                 </FormItem>
@@ -265,8 +284,8 @@ export default function IdeaForm({ isOpen, idea, onClose }: IdeaFormProps) {
               control={form.control}
               name="niche"
               render={({ field }) => (
-                <FormItem className="text-center">
-                  <FormLabel className="text-sm font-medium text-neutral-700 dark:text-neutral-300">
+                <FormItem className="space-y-3">
+                  <FormLabel className="text-sm font-semibold text-gray-900 dark:text-white">
                     {t("ideaForm.niche", "Niche")}
                   </FormLabel>
                   <FormControl>
@@ -275,7 +294,7 @@ export default function IdeaForm({ isOpen, idea, onClose }: IdeaFormProps) {
                         placeholder={t("ideaForm.customNichePlaceholder")}
                         maxLength={50}
                         disabled={isLimitReached}
-                        className="rounded-2xl glass-input"
+                        className="h-12 rounded-lg border-2 border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all duration-200 text-gray-900 dark:text-white placeholder:text-gray-500 dark:placeholder:text-gray-400"
                         {...field}
                         onBlur={() => {
                           if (!field.value) setShowCustomNiche(false);
@@ -294,17 +313,54 @@ export default function IdeaForm({ isOpen, idea, onClose }: IdeaFormProps) {
                         value={field.value}
                         disabled={isLimitReached}
                       >
-                        <SelectTrigger className="rounded-2xl glass-input">
-                          <SelectValue placeholder={t("ideaForm.nichePlaceholder")} />
+                        <SelectTrigger className="h-12 rounded-lg border-2 border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all duration-200 text-gray-900 dark:text-white">
+                          <SelectValue
+                            placeholder={t("ideaForm.nichePlaceholder")}
+                          />
                         </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="unboxing">{t("ideaForm.niches.unboxing")}</SelectItem>
-                          <SelectItem value="review">{t("ideaForm.niches.review")}</SelectItem>
-                          <SelectItem value="tutorial">{t("ideaForm.niches.tutorial")}</SelectItem>
-                          <SelectItem value="vlog">{t("ideaForm.niches.vlog")}</SelectItem>
-                          <SelectItem value="behindTheScenes">{t("ideaForm.niches.behindTheScenes")}</SelectItem>
-                          <SelectItem value="qna">{t("ideaForm.niches.qna")}</SelectItem>
-                          <SelectItem value="other">{t("ideaForm.niches.other")}</SelectItem>
+                        <SelectContent className="rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 shadow-lg">
+                          <SelectItem
+                            value="unboxing"
+                            className="text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700"
+                          >
+                            {t("ideaForm.niches.unboxing")}
+                          </SelectItem>
+                          <SelectItem
+                            value="review"
+                            className="text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700"
+                          >
+                            {t("ideaForm.niches.review")}
+                          </SelectItem>
+                          <SelectItem
+                            value="tutorial"
+                            className="text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700"
+                          >
+                            {t("ideaForm.niches.tutorial")}
+                          </SelectItem>
+                          <SelectItem
+                            value="vlog"
+                            className="text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700"
+                          >
+                            {t("ideaForm.niches.vlog")}
+                          </SelectItem>
+                          <SelectItem
+                            value="behindTheScenes"
+                            className="text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700"
+                          >
+                            {t("ideaForm.niches.behindTheScenes")}
+                          </SelectItem>
+                          <SelectItem
+                            value="qna"
+                            className="text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700"
+                          >
+                            {t("ideaForm.niches.qna")}
+                          </SelectItem>
+                          <SelectItem
+                            value="other"
+                            className="text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700"
+                          >
+                            {t("ideaForm.niches.other")}
+                          </SelectItem>
                         </SelectContent>
                       </Select>
                     )}
@@ -314,15 +370,22 @@ export default function IdeaForm({ isOpen, idea, onClose }: IdeaFormProps) {
               )}
             />
 
-            <div className="flex justify-center space-x-3 pt-4">
-              <Button type="button" variant="outline" onClick={onClose}>
+            <div className="flex flex-col sm:flex-row gap-3 pt-6 border-t border-gray-100 dark:border-gray-800">
+              <Button
+                type="button"
+                variant="outline"
+                onClick={onClose}
+                className="flex-1 sm:flex-none h-12 rounded-lg border-2 border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 font-medium transition-all duration-200"
+              >
                 {t("common.cancel", "Cancel")}
               </Button>
               {!isLimitReached && (
                 <Button
                   type="submit"
-                  disabled={createMutation.isPending || updateMutation.isPending}
-                  className="min-w-[100px]"
+                  disabled={
+                    createMutation.isPending || updateMutation.isPending
+                  }
+                  className="flex-1 sm:flex-none h-12 rounded-lg bg-gradient-to-r from-primary to-primary/90 hover:from-primary/90 hover:to-primary text-white font-semibold shadow-lg hover:shadow-xl transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   {createMutation.isPending || updateMutation.isPending ? (
                     <span className="flex items-center justify-center">
