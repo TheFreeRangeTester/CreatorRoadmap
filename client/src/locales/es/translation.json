@@ -378,8 +378,9 @@
       "totalVotesDesc": "Votos recibidos",
       "pendingSuggestions": "Sugerencias Pendientes",
       "pendingSuggestionsDesc": "Esperando aprobación",
-      "engagement": "Engagement",
-      "engagementDesc": "Votos por idea",
+      "topNiches": "Nichos Principales",
+      "topNichesDesc": "Categoría más votada",
+      "noNicheData": "Sin datos aún",
       "totalPoints": "Total Points",
       "totalPointsDesc": "Puntos disponibles",
       "votesGiven": "Votes Given",
@@ -430,11 +431,23 @@
     "submitIdea": "Guardar idea",
     "title": "Título",
     "description": "Descripción",
+    "niche": "Nicho",
+    "nichePlaceholder": "Selecciona un nicho",
+    "customNichePlaceholder": "Ingresa nicho personalizado",
     "characters": "caracteres",
     "titlePlaceholder": "Ingresa un título llamativo (requerido)",
     "descriptionPlaceholder": "Describe tu idea en 280 caracteres o menos",
     "editTitle": "Editar idea",
-    "editDescription": "Realiza cambios en tu idea."
+    "editDescription": "Realiza cambios en tu idea.",
+    "niches": {
+      "unboxing": "Unboxing",
+      "review": "Reseña",
+      "tutorial": "Tutorial",
+      "vlog": "Vlog",
+      "behindTheScenes": "Detrás de cámaras",
+      "qna": "Preguntas y respuestas",
+      "other": "Otro"
+    }
   },
   "csvImport": {
     "title": "Importar Ideas desde CSV",
