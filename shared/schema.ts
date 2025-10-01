@@ -42,6 +42,7 @@ export const ideas = pgTable("ideas", {
   previousPosition: integer("previous_position"),
   status: text("status").notNull().default('approved'), // 'approved', 'pending'
   suggestedBy: integer("suggested_by").references(() => users.id), // ID del usuario que sugirió la idea
+  niche: text("niche"), // Content niche/category (e.g., "unboxing", "review", "tutorial")
 });
 
 // A table to track votes to prevent multiple votes
