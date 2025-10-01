@@ -138,6 +138,9 @@ export class MemStorage implements IStorage {
     this.sessionStore = new MemoryStore({
       checkPeriod: 86400000, // Prune expired entries every 24h
     });
+
+    // Initialize with demo data
+    this.initializeDemoData();
   }
 
   // User methods
@@ -829,10 +832,174 @@ export class MemStorage implements IStorage {
       storeItemDescription: storeItem?.description || 'Unknown',
     };
   }
+
+  // Initialize demo data for testing
+  private initializeDemoData() {
+    // Create demo users
+    const demoCreator: User = {
+      id: 1,
+      username: 'demo_creator',
+      email: 'creator@demo.com',
+      hashedPassword: 'hashed_password',
+      userRole: 'creator',
+      displayName: 'Demo Creator',
+      bio: 'I create amazing content for my audience',
+      profileImageUrl: null,
+      isEmailVerified: true,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+      subscriptionStatus: 'active',
+      subscriptionTier: 'pro',
+      subscriptionStartDate: new Date(),
+      subscriptionEndDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000), // 30 days from now
+    };
+
+    const demoAudience: User = {
+      id: 2,
+      username: 'demo_audience',
+      email: 'audience@demo.com',
+      hashedPassword: 'hashed_password',
+      userRole: 'audience',
+      displayName: 'Demo Audience',
+      bio: 'I love voting for great content ideas',
+      profileImageUrl: null,
+      isEmailVerified: true,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+      subscriptionStatus: 'active',
+      subscriptionTier: 'free',
+      subscriptionStartDate: new Date(),
+      subscriptionEndDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
+    };
+
+    this.users.set(1, demoCreator);
+    this.users.set(2, demoAudience);
+
+    // Create demo ideas
+    const now = new Date();
+    const demoIdeas: Idea[] = [
+      {
+        id: 1,
+        title: 'Tutorial de React Hooks Avanzados',
+        description: 'Un tutorial completo sobre useCallback, useMemo y useRef con ejemplos prácticos',
+        votes: 15,
+        creatorId: 1,
+        createdAt: new Date(now.getTime() - 5 * 24 * 60 * 60 * 1000), // 5 days ago
+        updatedAt: new Date(now.getTime() - 2 * 24 * 60 * 60 * 1000), // 2 days ago
+        status: 'approved',
+        voteCount: 15,
+        lastPositionUpdate: new Date(now.getTime() - 2 * 24 * 60 * 60 * 1000),
+        position: 1,
+      },
+      {
+        id: 2,
+        title: 'Comparativa de Frameworks JavaScript',
+        description: 'Análisis detallado de React vs Vue vs Angular en 2024',
+        votes: 23,
+        creatorId: 1,
+        createdAt: new Date(now.getTime() - 3 * 24 * 60 * 60 * 1000), // 3 days ago
+        updatedAt: new Date(now.getTime() - 1 * 24 * 60 * 60 * 1000), // 1 day ago
+        status: 'approved',
+        voteCount: 23,
+        lastPositionUpdate: new Date(now.getTime() - 1 * 24 * 60 * 60 * 1000),
+        position: 2,
+      },
+      {
+        id: 3,
+        title: 'Guía de TypeScript para Principiantes',
+        description: 'Desde tipos básicos hasta generics avanzados',
+        votes: 8,
+        creatorId: 1,
+        createdAt: new Date(now.getTime() - 1 * 24 * 60 * 60 * 1000), // 1 day ago
+        updatedAt: new Date(now.getTime() - 1 * 24 * 60 * 60 * 1000),
+        status: 'approved',
+        voteCount: 8,
+        lastPositionUpdate: new Date(now.getTime() - 1 * 24 * 60 * 60 * 1000),
+        position: 3,
+      },
+      {
+        id: 4,
+        title: 'Tutorial de Next.js 14',
+        description: 'Nuevas características y mejores prácticas',
+        votes: 0,
+        creatorId: 1,
+        createdAt: new Date(now.getTime() - 6 * 60 * 60 * 1000), // 6 hours ago
+        updatedAt: new Date(now.getTime() - 6 * 60 * 60 * 1000),
+        status: 'pending',
+        voteCount: 0,
+        lastPositionUpdate: new Date(now.getTime() - 6 * 60 * 60 * 1000),
+        position: null,
+      },
+      {
+        id: 5,
+        title: 'Optimización de Performance en React',
+        description: 'Técnicas para mejorar el rendimiento de aplicaciones React',
+        votes: 0,
+        creatorId: 1,
+        createdAt: new Date(now.getTime() - 2 * 60 * 60 * 1000), // 2 hours ago
+        updatedAt: new Date(now.getTime() - 2 * 60 * 60 * 1000),
+        status: 'pending',
+        voteCount: 0,
+        lastPositionUpdate: new Date(now.getTime() - 2 * 60 * 60 * 1000),
+        position: null,
+      },
+    ];
+
+    demoIdeas.forEach(idea => {
+      this.ideas.set(idea.id, idea);
+    });
+
+    // Create demo votes
+    const demoVotes: Vote[] = [
+      {
+        id: 1,
+        ideaId: 1,
+        userId: 2,
+        sessionId: null,
+        createdAt: new Date(now.getTime() - 4 * 24 * 60 * 60 * 1000),
+      },
+      {
+        id: 2,
+        ideaId: 2,
+        userId: 2,
+        sessionId: null,
+        createdAt: new Date(now.getTime() - 2 * 24 * 60 * 60 * 1000),
+      },
+      {
+        id: 3,
+        ideaId: 3,
+        userId: 2,
+        sessionId: null,
+        createdAt: new Date(now.getTime() - 1 * 24 * 60 * 60 * 1000),
+      },
+    ];
+
+    demoVotes.forEach(vote => {
+      this.votes.set(vote.id, vote);
+    });
+
+    // Create demo user points
+    this.userPointsMap.set(2, {
+      totalPoints: 150,
+      pointsUsed: 50,
+      pointsAvailable: 100,
+    });
+
+    // Create demo audience stats
+    this.audienceStatsMap.set(2, {
+      votesGiven: 3,
+      ideasSuggested: 2,
+      ideasApproved: 1,
+    });
+
+    // Update current IDs to avoid conflicts
+    this.currentUserId = 3;
+    this.currentIdeaId = 6;
+    this.currentVoteId = 4;
+
+    console.log('[STORAGE] Demo data initialized successfully');
+  }
 }
 
-// Import the DatabaseStorage implementation
-import { DatabaseStorage } from "./database-storage";
-
-// Use DatabaseStorage instead of MemStorage
-export const storage = new DatabaseStorage();
+// Use MemStorage with demo data for testing
+export const storage = new MemStorage();
