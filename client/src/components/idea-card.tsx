@@ -240,7 +240,7 @@ export default function IdeaCard({
           {idea.niche && (
             <div className="mb-3 flex justify-center">
               <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-primary/10 dark:bg-primary/20 text-primary dark:text-primary-300 border border-primary/20 dark:border-primary/30">
-                {t(`niches.${idea.niche}`, idea.niche)}
+                {t(`ideaForm.niches.${idea.niche}`, idea.niche)}
               </span>
             </div>
           )}

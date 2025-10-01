@@ -91,6 +91,13 @@ export default function IdeaForm({ isOpen, idea, onClose }: IdeaFormProps) {
         "qna",
       ].includes(currentNiche);
 
+      console.log(
+        "[IDEA-FORM] Resetting form with niche:",
+        currentNiche,
+        "isPredefined:",
+        isPredefinedNiche
+      );
+
       form.reset({
         title: idea?.title || "",
         description: idea?.description || "",
