@@ -38,6 +38,8 @@ export default function IdeaCard({
   const [hasVoted, setHasVoted] = useState(false);
   const { t } = useTranslation();
   const { user } = useAuth();
+  
+  console.log('[IDEA-CARD] Rendering idea:', { id: idea.id, title: idea.title, niche: idea.niche });
 
   // Simplified background - no more gradients for cleaner look
   const getCardClass = () => {
