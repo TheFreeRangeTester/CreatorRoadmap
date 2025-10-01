@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { useMutation } from "@tanstack/react-query";
@@ -19,6 +19,13 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import {
   Dialog,
   DialogContent,
@@ -43,6 +50,7 @@ export default function IdeaForm({ isOpen, idea, onClose }: IdeaFormProps) {
   const { user } = useAuth();
   const { data: quota, isLoading: quotaLoading } = useIdeaQuota();
   const isEditing = !!idea;
+  const [showCustomNiche, setShowCustomNiche] = useState(false);
 
   // Check if user has premium access
   const hasPremium = user ? hasActivePremiumAccess({
@@ -60,16 +68,23 @@ export default function IdeaForm({ isOpen, idea, onClose }: IdeaFormProps) {
     defaultValues: {
       title: idea?.title || "",
       description: idea?.description || "",
+      niche: idea?.niche || "",
     },
   });
 
   // Reset form when idea changes
   useEffect(() => {
     if (isOpen) {
+      const currentNiche = idea?.niche || "";
+      const isPredefinedNiche = ['unboxing', 'review', 'tutorial', 'vlog', 'behindTheScenes', 'qna'].includes(currentNiche);
+      
       form.reset({
         title: idea?.title || "",
         description: idea?.description || "",
+        niche: currentNiche,
       });
+      
+      setShowCustomNiche(!isPredefinedNiche && currentNiche !== "");
     }
   }, [isOpen, idea, form]);
 
@@ -241,6 +256,59 @@ export default function IdeaForm({ isOpen, idea, onClose }: IdeaFormProps) {
                   <div className="mt-2 text-xs text-neutral-500">
                     {charCount}/280 {t("ideaForm.characters", "characters")}
                   </div>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="niche"
+              render={({ field }) => (
+                <FormItem className="text-center">
+                  <FormLabel className="text-sm font-medium text-neutral-700 dark:text-neutral-300">
+                    {t("ideaForm.niche", "Niche")}
+                  </FormLabel>
+                  <FormControl>
+                    {showCustomNiche ? (
+                      <Input
+                        placeholder={t("ideaForm.customNichePlaceholder")}
+                        maxLength={50}
+                        disabled={isLimitReached}
+                        className="rounded-2xl glass-input"
+                        {...field}
+                        onBlur={() => {
+                          if (!field.value) setShowCustomNiche(false);
+                        }}
+                      />
+                    ) : (
+                      <Select
+                        onValueChange={(value) => {
+                          if (value === "other") {
+                            setShowCustomNiche(true);
+                            field.onChange("");
+                          } else {
+                            field.onChange(value);
+                          }
+                        }}
+                        value={field.value}
+                        disabled={isLimitReached}
+                      >
+                        <SelectTrigger className="rounded-2xl glass-input">
+                          <SelectValue placeholder={t("ideaForm.nichePlaceholder")} />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="unboxing">{t("ideaForm.niches.unboxing")}</SelectItem>
+                          <SelectItem value="review">{t("ideaForm.niches.review")}</SelectItem>
+                          <SelectItem value="tutorial">{t("ideaForm.niches.tutorial")}</SelectItem>
+                          <SelectItem value="vlog">{t("ideaForm.niches.vlog")}</SelectItem>
+                          <SelectItem value="behindTheScenes">{t("ideaForm.niches.behindTheScenes")}</SelectItem>
+                          <SelectItem value="qna">{t("ideaForm.niches.qna")}</SelectItem>
+                          <SelectItem value="other">{t("ideaForm.niches.other")}</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    )}
+                  </FormControl>
                   <FormMessage />
                 </FormItem>
               )}

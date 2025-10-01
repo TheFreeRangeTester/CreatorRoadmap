@@ -173,6 +173,7 @@ export const userResponseSchema = z.object({
 export const insertIdeaSchema = z.object({
   title: z.string().min(1, { message: "Title is required" }).max(100, { message: "Title must be 100 characters or less" }),
   description: z.string().max(280, { message: "Description must be 280 characters or less" }).optional().default(""),
+  niche: z.string().optional(),
 });
 
 // Schema específico para sugerir ideas a un creador
