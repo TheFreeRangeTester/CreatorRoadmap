@@ -48,7 +48,7 @@ export function MobileBottomNavigation({
     {
       id: "redemptions",
       icon: Package,
-      label: t("dashboard.redemptions"),
+      label: t("redemptions.short"),
       color: "text-orange-600",
     },
   ];
