@@ -24,16 +24,19 @@ export function IdeasTabView({ mode = "published" }: IdeasTabViewProps) {
   const [isIdeaFormOpen, setIsIdeaFormOpen] = useState(false);
   const [currentIdea, setCurrentIdea] = useState<IdeaResponse | null>(null);
 
-  // Fetch published ideas
+  // Fetch published ideas with forced refresh
   const {
     data: ideas,
     isLoading: isLoadingIdeas,
     isError: isErrorIdeas,
+    refetch: refetchIdeas,
   } = useQuery<IdeaResponse[]>({
     queryKey: ["/api/ideas"],
     enabled: mode === "published",
     staleTime: 0,
     gcTime: 0,
+    refetchOnMount: 'always',
+    refetchOnWindowFocus: false,
   });
 
 
@@ -85,9 +88,9 @@ export function IdeasTabView({ mode = "published" }: IdeasTabViewProps) {
         }, 500); // Small delay for better UX
       }
     },
-    onSuccess: () => {
-      // Invalidate ideas to update vote counts and positions
-      queryClient.invalidateQueries({ queryKey: ["/api/ideas"] });
+    onSuccess: async () => {
+      // Force refetch ideas to get fresh data
+      await refetchIdeas();
       // Invalidate user data to update points immediately
       queryClient.invalidateQueries({ queryKey: ["/api/user"] });
       // Invalidate user points specifically  
@@ -122,8 +125,8 @@ export function IdeasTabView({ mode = "published" }: IdeasTabViewProps) {
         method: "DELETE"
       });
     },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["/api/ideas"] });
+    onSuccess: async () => {
+      await refetchIdeas();
       toast({
         title: "Idea eliminada",
         description: "La idea ha sido eliminada correctamente.",
@@ -169,7 +172,7 @@ export function IdeasTabView({ mode = "published" }: IdeasTabViewProps) {
         throw error;
       }
     },
-    onSuccess: () => {
+    onSuccess: async () => {
       toast({
         title: t("ideas.approved"),
         description: t("ideas.approvedSuccess"),
@@ -178,7 +181,7 @@ export function IdeasTabView({ mode = "published" }: IdeasTabViewProps) {
       });
       // Refresh pending and approved ideas lists
       refetchPending();
-      queryClient.invalidateQueries({ queryKey: ["/api/ideas"] });
+      await refetchIdeas();
       
       // Invalidate all points-related queries (user who suggested gets 2 points reward)
       queryClient.invalidateQueries({ queryKey: ["/api/user/points"] });
