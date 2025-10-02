@@ -354,6 +354,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
         ideas = [];
       }
 
+      // Prevent HTTP caching
+      res.set({
+        'Cache-Control': 'no-store, no-cache, must-revalidate, private',
+        'Pragma': 'no-cache',
+        'Expires': '0'
+      });
+
       res.json(ideas);
     } catch (error) {
       console.error("Error fetching ideas:", error);
