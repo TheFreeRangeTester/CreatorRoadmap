@@ -148,6 +148,17 @@ export default function IdeaListView({
               
               {/* Badges Row */}
               <div className="flex items-center gap-3 flex-wrap">
+                {/* Niche Badge */}
+                {idea.niche && (
+                  <Badge 
+                    variant="secondary"
+                    className="bg-primary/10 dark:bg-primary/20 text-primary dark:text-primary-300 border border-primary/20 dark:border-primary/30 text-xs px-2 py-1"
+                    data-testid={`niche-badge-list-${idea.id}`}
+                  >
+                    {t(`ideaForm.niches.${idea.niche}`, idea.niche)}
+                  </Badge>
+                )}
+
                 {/* Position Change Badge */}
                 <Badge 
                   variant="secondary" 
