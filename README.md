@@ -8,6 +8,17 @@ Fanlist is a modern web application designed to help content creators plan and m
 
 Visit us at [fanlist.live](https://fanlist.live)
 
+## 📚 Documentation
+
+**📖 [Complete User Documentation](./docs/README.md)** - Everything you need to know about using Fanlist
+
+### Quick Links
+- 🚀 [Getting Started Guide](./docs/getting-started.md)
+- 🎨 [Creator Dashboard Guide](./docs/creator-dashboard.md)
+- 👥 [Audience Features Guide](./docs/audience-features.md)
+- ❓ [Frequently Asked Questions](./docs/faq.md)
+- 🆘 [Contact Support](./docs/contact-support.md)
+
 ## 🚀 Features
 
 - Modern and responsive user interface
@@ -41,6 +52,15 @@ Visit us at [fanlist.live](https://fanlist.live)
 - **Authentication:**
   - Firebase
   - Passport.js
+
+## 🆘 Support
+
+Need help? We're here to assist you!
+
+- 📚 **[Complete Documentation](./docs/README.md)** - Full user guides and tutorials
+- ❓ **[FAQ](./docs/faq.md)** - Frequently asked questions
+- 🐛 **[Report Issues](https://github.com/TheFreeRangeTester/CreatorRoadmap/issues)** - Bug reports and support requests
+- 💡 **[Feature Requests](https://github.com/TheFreeRangeTester/CreatorRoadmap/issues)** - Suggest new features
 
 ## 📝 License
 
