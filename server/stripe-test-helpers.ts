@@ -16,39 +16,88 @@ export interface TestPaymentData {
  */
 export async function simulateSuccessfulPayment(data: TestPaymentData) {
   const { userId, plan } = data;
-  
-  // Calcular fecha de finalización
-  const endDate = new Date();
-  if (plan === 'monthly') {
-    endDate.setMonth(endDate.getMonth() + 1);
-  } else {
-    endDate.setFullYear(endDate.getFullYear() + 1);
+
+  try {
+    // Verificar que el usuario existe
+    const user = await storage.getUser(userId);
+    if (!user) {
+      return {
+        success: false,
+        error: 'Usuario no encontrado'
+      };
+    }
+
+    // Calcular fecha de finalización
+    const endDate = new Date();
+    if (plan === 'monthly') {
+      endDate.setMonth(endDate.getMonth() + 1);
+    } else {
+      endDate.setFullYear(endDate.getFullYear() + 1);
+    }
+
+    // Actualizar suscripción del usuario
+    const updatedUser = await storage.updateUserSubscription(userId, {
+      subscriptionStatus: 'premium',
+      subscriptionPlan: plan,
+      subscriptionEndDate: endDate,
+      stripeCustomerId: `test_customer_${userId}`,
+      stripeSubscriptionId: `test_sub_${userId}_${Date.now()}`
+    });
+
+    return {
+      success: true,
+      message: 'Pago simulado exitoso',
+      subscriptionData: {
+        plan: plan,
+        status: 'active',
+        endDate: endDate
+      }
+    };
+  } catch (error) {
+    return {
+      success: false,
+      error: 'El pago falló'
+    };
   }
-
-  // Actualizar suscripción del usuario
-  const updatedUser = await storage.updateUserSubscription(userId, {
-    subscriptionStatus: 'premium',
-    subscriptionPlan: plan,
-    subscriptionEndDate: endDate,
-    stripeCustomerId: `test_customer_${userId}`,
-    stripeSubscriptionId: `test_sub_${userId}_${Date.now()}`
-  });
-
-  return updatedUser;
 }
 
 /**
  * Simula la cancelación de una suscripción para testing
  */
 export async function simulateSubscriptionCancellation(userId: number) {
-  const updatedUser = await storage.updateUserSubscription(userId, {
-    subscriptionStatus: 'free',
-    subscriptionPlan: undefined,
-    subscriptionEndDate: undefined,
-    stripeSubscriptionId: undefined
-  });
+  try {
+    // Verificar que el usuario existe
+    const user = await storage.getUser(userId);
+    if (!user) {
+      return {
+        success: false,
+        error: 'Usuario no encontrado'
+      };
+    }
 
-  return updatedUser;
+    // Verificar que tiene una suscripción activa
+    if (user.subscriptionStatus !== 'premium' && user.subscriptionStatus !== 'trial') {
+      return {
+        success: false,
+        error: 'El usuario no tiene una suscripción activa'
+      };
+    }
+
+    const updatedUser = await storage.updateUserSubscription(userId, {
+      subscriptionStatus: 'free',
+      subscriptionCanceledAt: new Date()
+    });
+
+    return {
+      success: true,
+      message: 'Suscripción cancelada exitosamente'
+    };
+  } catch (error) {
+    return {
+      success: false,
+      error: 'La cancelación falló'
+    };
+  }
 }
 
 /**
@@ -74,7 +123,7 @@ export function isTestMode(): boolean {
  */
 export function simulateWebhookEvent(eventType: string, data: any) {
   const timestamp = Math.floor(Date.now() / 1000);
-  
+
   const mockEvent = {
     id: `evt_test_${Date.now()}`,
     object: 'event',

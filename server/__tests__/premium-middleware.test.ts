@@ -2,6 +2,35 @@ import { describe, it, expect, beforeEach, jest } from '@jest/globals';
 import { Request, Response, NextFunction } from 'express';
 import { requirePremiumAccess, isPremiumOperation, conditionalPremiumAccess } from '../premium-middleware';
 
+// Helper function to create complete mock user
+const createMockUser = (overrides: any = {}) => ({
+  id: 1,
+  username: 'test-user',
+  password: 'hashed_password',
+  userRole: 'creator',
+  profileDescription: null,
+  logoUrl: null,
+  twitterUrl: null,
+  instagramUrl: null,
+  youtubeUrl: null,
+  tiktokUrl: null,
+  threadsUrl: null,
+  websiteUrl: null,
+  profileBackground: 'gradient-1',
+  email: 'test@example.com',
+  subscriptionStatus: 'free',
+  hasUsedTrial: false,
+  trialStartDate: null,
+  trialEndDate: null,
+  stripeCustomerId: null,
+  stripeSubscriptionId: null,
+  subscriptionPlan: null,
+  subscriptionStartDate: null,
+  subscriptionEndDate: null,
+  subscriptionCanceledAt: null,
+  ...overrides
+});
+
 describe('Premium Middleware', () => {
   let mockRequest: Partial<Request>;
   let mockResponse: Partial<Response>;
@@ -11,6 +40,7 @@ describe('Premium Middleware', () => {
     mockRequest = {
       user: undefined,
       headers: {},
+      isAuthenticated: jest.fn().mockReturnValue(true),
     };
 
     mockResponse = {
@@ -23,31 +53,11 @@ describe('Premium Middleware', () => {
 
   describe('requirePremiumAccess', () => {
     it('should allow access for premium users', () => {
-      const mockUser = {
-        id: 1,
+      const mockUser = createMockUser({
         username: 'premium-user',
-        password: '',
-        userRole: 'creator',
-        profileDescription: null,
-        logoUrl: null,
-        twitterUrl: null,
-        instagramUrl: null,
         subscriptionStatus: 'premium',
-        subscriptionCanceledAt: null,
-        youtubeUrl: null,
-        tiktokUrl: null,
-        threadsUrl: null,
-        websiteUrl: null,
-        facebookUrl: null,
-        linkedinUrl: null,
-        githubUrl: null,
-        personalEmail: null,
-        businessEmail: null,
-        phone: null,
-        address: null,
-        city: null,
-        country: null,
-      };
+        subscriptionPlan: 'monthly',
+      });
       mockRequest.user = mockUser;
 
       requirePremiumAccess(mockRequest as Request, mockResponse as Response, mockNext);
@@ -105,6 +115,7 @@ describe('Premium Middleware', () => {
 
     it('should reject access for unauthenticated users', () => {
       mockRequest.user = undefined;
+      (mockRequest.isAuthenticated as jest.Mock).mockReturnValue(false);
 
       requirePremiumAccess(mockRequest as Request, mockResponse as Response, mockNext);
 
@@ -181,12 +192,10 @@ describe('Premium Middleware', () => {
       mockRequest.headers = {
         'x-premium-operation': 'true',
       };
-      const mockUser = {
-        id: 1,
+      const mockUser = createMockUser({
         subscriptionStatus: 'free',
         username: 'free-user',
-        userRole: 'creator',
-      };
+      });
       mockRequest.user = mockUser;
 
       conditionalPremiumAccess(mockRequest as Request, mockResponse as Response, mockNext);
@@ -197,12 +206,10 @@ describe('Premium Middleware', () => {
 
     it('should skip premium validation for regular operations', () => {
       mockRequest.headers = {};
-      const mockUser = {
-        id: 1,
+      const mockUser = createMockUser({
         subscriptionStatus: 'free',
         username: 'free-user',
-        userRole: 'creator',
-      };
+      });
       mockRequest.user = mockUser;
 
       conditionalPremiumAccess(mockRequest as Request, mockResponse as Response, mockNext);
@@ -215,12 +222,10 @@ describe('Premium Middleware', () => {
       mockRequest.headers = {
         'x-premium-operation': 'true',
       };
-      const mockUser = {
-        id: 1,
+      const mockUser = createMockUser({
         subscriptionStatus: 'premium',
         username: 'premium-user',
-        userRole: 'creator',
-      };
+      });
       mockRequest.user = mockUser;
 
       conditionalPremiumAccess(mockRequest as Request, mockResponse as Response, mockNext);

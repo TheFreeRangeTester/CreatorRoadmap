@@ -107,7 +107,7 @@ export class MemStorage implements IStorage {
   private ideas: Map<number, Idea>;
   private votes: Map<number, Vote>;
   private publicLinks: Map<number, PublicLink>;
-  private userPointsMap: Map<number, UserPointsResponse>;
+  private userPointsMap: Map<string, UserPointsResponse>;
   private pointTransactionsMap: Map<number, PointTransactionResponse>;
   private storeItems: Map<number, StoreItem>;
   private storeRedemptions: Map<number, StoreRedemption>;
@@ -261,7 +261,8 @@ export class MemStorage implements IStorage {
       currentPosition: null,  // Inicialmente null
       previousPosition: null, // Siempre null para ideas nuevas
       status: 'approved',     // Por defecto las ideas creadas por el creador están aprobadas
-      suggestedBy: null       // No es una idea sugerida
+      suggestedBy: null,      // No es una idea sugerida
+      niche: insertIdea.niche || null  // Convertir undefined a null
     };
 
     // Insertar la idea con posiciones en null
@@ -282,7 +283,7 @@ export class MemStorage implements IStorage {
       ...idea,
       title: updateData.title,
       description: updateData.description,
-      niche: updateData.niche,
+      niche: updateData.niche || null,
     };
 
     this.ideas.set(id, updatedIdea);
@@ -320,7 +321,8 @@ export class MemStorage implements IStorage {
       currentPosition: null,
       previousPosition: null,
       status: 'pending',
-      suggestedBy: suggestedBy
+      suggestedBy: suggestedBy,
+      niche: (suggestion as any).niche || null
     };
 
     this.ideas.set(id, idea);
@@ -845,9 +847,8 @@ export class MemStorage implements IStorage {
       id: 1,
       username: 'demo_creator',
       email: 'creator@demo.com',
-      hashedPassword: 'hashed_password',
+      password: 'hashed_password',
       userRole: 'creator',
-      displayName: 'Demo Creator',
       bio: 'I create amazing content for my audience',
       profileImageUrl: null,
       isEmailVerified: true,
@@ -863,9 +864,8 @@ export class MemStorage implements IStorage {
       id: 2,
       username: 'demo_audience',
       email: 'audience@demo.com',
-      hashedPassword: 'hashed_password',
+      password: 'hashed_password',
       userRole: 'audience',
-      displayName: 'Demo Audience',
       bio: 'I love voting for great content ideas',
       profileImageUrl: null,
       isEmailVerified: true,
@@ -890,9 +890,7 @@ export class MemStorage implements IStorage {
         votes: 15,
         creatorId: 1,
         createdAt: new Date(now.getTime() - 5 * 24 * 60 * 60 * 1000), // 5 days ago
-        updatedAt: new Date(now.getTime() - 2 * 24 * 60 * 60 * 1000), // 2 days ago
         status: 'approved',
-        voteCount: 15,
         lastPositionUpdate: new Date(now.getTime() - 2 * 24 * 60 * 60 * 1000),
         position: 1,
       },
@@ -903,9 +901,7 @@ export class MemStorage implements IStorage {
         votes: 23,
         creatorId: 1,
         createdAt: new Date(now.getTime() - 3 * 24 * 60 * 60 * 1000), // 3 days ago
-        updatedAt: new Date(now.getTime() - 1 * 24 * 60 * 60 * 1000), // 1 day ago
         status: 'approved',
-        voteCount: 23,
         lastPositionUpdate: new Date(now.getTime() - 1 * 24 * 60 * 60 * 1000),
         position: 2,
       },
@@ -916,9 +912,7 @@ export class MemStorage implements IStorage {
         votes: 8,
         creatorId: 1,
         createdAt: new Date(now.getTime() - 1 * 24 * 60 * 60 * 1000), // 1 day ago
-        updatedAt: new Date(now.getTime() - 1 * 24 * 60 * 60 * 1000),
         status: 'approved',
-        voteCount: 8,
         lastPositionUpdate: new Date(now.getTime() - 1 * 24 * 60 * 60 * 1000),
         position: 3,
       },
@@ -929,9 +923,7 @@ export class MemStorage implements IStorage {
         votes: 0,
         creatorId: 1,
         createdAt: new Date(now.getTime() - 6 * 60 * 60 * 1000), // 6 hours ago
-        updatedAt: new Date(now.getTime() - 6 * 60 * 60 * 1000),
         status: 'pending',
-        voteCount: 0,
         lastPositionUpdate: new Date(now.getTime() - 6 * 60 * 60 * 1000),
         position: null,
       },
@@ -942,9 +934,7 @@ export class MemStorage implements IStorage {
         votes: 0,
         creatorId: 1,
         createdAt: new Date(now.getTime() - 2 * 60 * 60 * 1000), // 2 hours ago
-        updatedAt: new Date(now.getTime() - 2 * 60 * 60 * 1000),
         status: 'pending',
-        voteCount: 0,
         lastPositionUpdate: new Date(now.getTime() - 2 * 60 * 60 * 1000),
         position: null,
       },
@@ -961,21 +951,21 @@ export class MemStorage implements IStorage {
         ideaId: 1,
         userId: 2,
         sessionId: null,
-        createdAt: new Date(now.getTime() - 4 * 24 * 60 * 60 * 1000),
+        votedAt: new Date(now.getTime() - 4 * 24 * 60 * 60 * 1000),
       },
       {
         id: 2,
         ideaId: 2,
         userId: 2,
         sessionId: null,
-        createdAt: new Date(now.getTime() - 2 * 24 * 60 * 60 * 1000),
+        votedAt: new Date(now.getTime() - 2 * 24 * 60 * 60 * 1000),
       },
       {
         id: 3,
         ideaId: 3,
         userId: 2,
         sessionId: null,
-        createdAt: new Date(now.getTime() - 1 * 24 * 60 * 60 * 1000),
+        votedAt: new Date(now.getTime() - 1 * 24 * 60 * 60 * 1000),
       },
     ];
 
@@ -984,9 +974,8 @@ export class MemStorage implements IStorage {
     });
 
     // Create demo user points
-    this.userPointsMap.set(2, {
+    this.userPointsMap.set('2-1', {
       totalPoints: 150,
-      pointsUsed: 50,
       pointsAvailable: 100,
     });
 

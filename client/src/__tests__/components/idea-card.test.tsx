@@ -1,5 +1,4 @@
 import "@testing-library/jest-dom";
-import "@testing-library/jest-dom/extend-expect";
 import { describe, it, expect, jest, beforeEach } from "@jest/globals";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";

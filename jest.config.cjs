@@ -8,7 +8,13 @@ module.exports = {
     '**/*.{test,spec}.{ts,tsx,js}'
   ],
   transform: {
-    '^.+\\.(ts|tsx)$': 'ts-jest',
+    '^.+\\.(ts|tsx)$': ['ts-jest', {
+      tsconfig: {
+        jsx: 'react-jsx',
+        esModuleInterop: true,
+        allowSyntheticDefaultImports: true,
+      },
+    }],
   },
   moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json', 'node'],
   setupFilesAfterEnv: ['<rootDir>/jest.setup.cjs'],
@@ -42,5 +48,11 @@ module.exports = {
   transformIgnorePatterns: [
     'node_modules/(?!(wouter|@tanstack/react-query|framer-motion)/)',
   ],
+  extensionsToTreatAsEsm: ['.ts', '.tsx'],
+  globals: {
+    'ts-jest': {
+      useESM: true,
+    },
+  },
   moduleDirectories: ['node_modules', '<rootDir>'],
 };

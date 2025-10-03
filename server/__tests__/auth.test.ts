@@ -6,13 +6,15 @@ import { setupAuth } from '../auth';
 import { MemStorage } from '../storage';
 
 // Mock crypto module
-const mockCrypto = {
-  scrypt: jest.fn() as jest.MockedFunction<any>,
-  randomBytes: jest.fn() as jest.MockedFunction<any>,
-  timingSafeEqual: jest.fn() as jest.MockedFunction<any>,
-};
+const mockScrypt = jest.fn();
+const mockRandomBytes = jest.fn();
+const mockTimingSafeEqual = jest.fn();
 
-jest.mock('crypto', () => mockCrypto);
+jest.mock('crypto', () => ({
+  scrypt: mockScrypt,
+  randomBytes: mockRandomBytes,
+  timingSafeEqual: mockTimingSafeEqual,
+}));
 
 describe('Auth Module', () => {
   let app: express.Application;
@@ -35,11 +37,11 @@ describe('Auth Module', () => {
     setupAuth(app as any);
 
     // Mock de funciones de crypto
-    mockCrypto.randomBytes.mockImplementation((size: number) => {
+    mockRandomBytes.mockImplementation((size: number) => {
       return Buffer.from('a'.repeat(size));
     });
 
-    mockCrypto.scrypt.mockImplementation(
+    mockScrypt.mockImplementation(
       (password: string, salt: Buffer, keylen: number, callback: Function) => {
         // Simple mock hash for testing
         const hash = Buffer.from(password + salt.toString(), 'utf8');
@@ -47,7 +49,7 @@ describe('Auth Module', () => {
       }
     );
 
-    mockCrypto.timingSafeEqual.mockImplementation((a: Buffer, b: Buffer) => {
+    mockTimingSafeEqual.mockImplementation((a: Buffer, b: Buffer) => {
       return a.toString() === b.toString();
     });
   });
