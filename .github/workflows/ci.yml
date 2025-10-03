@@ -24,8 +24,16 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Run working tests
-        run: npm test -- --testPathPatterns="(shared|simple|schema|utils)" --passWithNoTests
+      - name: Run working tests with coverage
+        run: npm test -- --testPathPatterns="(shared|simple|schema|utils)" --passWithNoTests --coverage --coverageReporters=text --coverageReporters=lcov --coverageThreshold='{}'
 
       - name: Build project
         run: npm run build
+
+      - name: Upload coverage reports
+        uses: codecov/codecov-action@v3
+        with:
+          file: ./coverage/lcov.info
+          flags: unittests
+          name: codecov-umbrella
+          fail_ci_if_error: false
