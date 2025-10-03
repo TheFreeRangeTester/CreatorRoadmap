@@ -15,21 +15,18 @@ We're here to help! Get the support you need for your Fanlist experience.
 - **Page not loading**: Refresh your browser or clear cache
 - **Mobile issues**: Try updating your browser or using desktop
 
-## 📧 Contact Methods
+## 🐛 GitHub Issues Support
 
-### Email Support
-- **Primary Email**: support@fanlist.live
-- **Response Time**: 24 hours (Premium users get priority)
-- **Business Hours**: Monday-Friday, 9 AM - 5 PM EST
-- **Best For**: Detailed questions, account issues, feature requests
+### Our Support Method
+We provide support exclusively through GitHub Issues to ensure transparency and community involvement.
 
 ### GitHub Issues
-- **Technical Issues**: [Report bugs and technical problems](https://github.com/tu-usuario/CreatorRoadmap/issues)
-- **Feature Requests**: [Suggest new features](https://github.com/tu-usuario/CreatorRoadmap/discussions)
+- **All Support**: [Create an issue for any support request](https://github.com/TheFreeRangeTester/CreatorRoadmap/issues)
 - **Public Discussion**: Community can see and contribute to solutions
-- **Best For**: Technical bugs, feature suggestions, development discussions
+- **Response Time**: We respond within 24-48 hours
+- **Best For**: Technical issues, feature requests, account problems, general questions
 
-## 🎯 What to Include in Your Support Request
+## 🎯 What to Include in Your GitHub Issue
 
 ### For Technical Issues
 - **Description**: Clear explanation of the problem
@@ -41,7 +38,7 @@ We're here to help! Get the support you need for your Fanlist experience.
 
 ### For Account Issues
 - **Username**: Your Fanlist username
-- **Email**: The email associated with your account
+- **Email**: The email associated with your account (keep private)
 - **Problem Description**: What's not working with your account
 - **When It Started**: When you first noticed the issue
 - **Previous Solutions**: What you've already tried to fix it
@@ -57,13 +54,12 @@ We're here to help! Get the support you need for your Fanlist experience.
 
 ### Premium User Benefits
 - **Priority Response**: Faster response times (within 24 hours)
-- **Dedicated Support**: Direct access to our support team
 - **Advanced Troubleshooting**: Help with complex issues
 - **Feature Requests**: Priority consideration for your suggestions
 
 ### How to Get Premium Support
 1. **Upgrade to Premium**: Subscribe to our premium plan
-2. **Contact Support**: Use the same channels but mention your premium status
+2. **Create GitHub Issue**: Use GitHub Issues but mention your premium status
 3. **Get Priority**: Receive faster, more detailed responses
 4. **Enhanced Help**: Access to advanced troubleshooting and features
 
@@ -74,6 +70,12 @@ We're here to help! Get the support you need for your Fanlist experience.
 - **Display Problems**: Visual or layout issues
 - **Performance Issues**: Slow loading or crashes
 - **Data Problems**: Missing or incorrect information
+
+### How to Report Bugs
+1. **Create GitHub Issue**: [Report bugs through GitHub Issues](https://github.com/TheFreeRangeTester/CreatorRoadmap/issues)
+2. **Use Bug Template**: Use the template provided in the issue creation form
+3. **Provide Details**: Include all relevant information about the problem
+4. **Attach Screenshots**: Visual evidence helps us understand the issue
 
 ### Bug Report Template
 ```
@@ -107,6 +109,12 @@ We're here to help! Get the support you need for your Fanlist experience.
 - **Implementation Ideas**: Suggest how it might work
 - **Priority Level**: Indicate how important this is to you
 
+### How to Submit Feature Requests
+1. **Create GitHub Issue**: [Submit feature requests through GitHub Issues](https://github.com/TheFreeRangeTester/CreatorRoadmap/issues)
+2. **Use Feature Template**: Use the template provided in the issue creation form
+3. **Provide Details**: Include all relevant information about your request
+4. **Community Discussion**: Engage with other users who might have similar ideas
+
 ### Feature Request Template
 ```
 **Feature Title**: [Brief, descriptive title]
@@ -135,19 +143,18 @@ We're here to help! Get the support you need for your Fanlist experience.
 - **[Premium Subscriptions Guide](./premium-subscriptions.md)**: Understand premium features
 
 ### Community Resources
-- **GitHub Discussions**: [Community discussions and Q&A](https://github.com/tu-usuario/CreatorRoadmap/discussions)
-- **GitHub Issues**: [Bug reports and feature requests](https://github.com/tu-usuario/CreatorRoadmap/issues)
+- **GitHub Issues**: [Bug reports, feature requests, and support](https://github.com/TheFreeRangeTester/CreatorRoadmap/issues)
 - **FAQ**: [Frequently Asked Questions](./faq.md)
+- **Wiki**: [Complete user documentation](./README.md)
 
 ## ⏰ Response Times
 
 ### Standard Support
-- **Email**: 24-48 hours
-- **GitHub Issues**: 1-3 business days
+- **GitHub Issues**: 24-48 hours
 - **Business Hours**: Monday-Friday, 9 AM - 5 PM EST
 
 ### Premium Support
-- **Email**: 24 hours or less
+- **GitHub Issues**: 24 hours or less
 - **Priority Issues**: Same day response
 - **Business Hours**: Monday-Friday, 9 AM - 5 PM EST
 
@@ -158,15 +165,15 @@ We're here to help! Get the support you need for your Fanlist experience.
 
 ## 🔄 Follow-Up Process
 
-### After Contacting Support
-1. **Confirmation**: You'll receive a confirmation email
+### After Creating a GitHub Issue
+1. **Confirmation**: You'll receive a confirmation from GitHub
 2. **Initial Response**: We'll respond within our standard timeframes
 3. **Resolution**: We'll work to resolve your issue
 4. **Follow-Up**: We'll check if the solution worked
 5. **Feedback**: We appreciate your feedback on our support
 
 ### If Your Issue Isn't Resolved
-- **Escalate**: Ask for escalation to senior support
+- **Update the Issue**: Add more information to your existing GitHub issue
 - **Provide More Info**: Give additional details about the problem
 - **Try Alternatives**: We may suggest alternative solutions
 - **Stay in Touch**: Keep us updated on any changes
@@ -178,6 +185,7 @@ We're here to help! Get the support you need for your Fanlist experience.
 - **Include Context**: Explain what you were trying to do
 - **Be Patient**: We'll respond as quickly as possible
 - **Follow Up**: Let us know if our solution worked
+- **Use GitHub Issues**: Create issues for all support requests
 
 ### For Our Team
 - **Timely Response**: We respond within our stated timeframes
@@ -187,6 +195,6 @@ We're here to help! Get the support you need for your Fanlist experience.
 
 ---
 
-**Ready to get help?** Choose the contact method that works best for you and we'll be happy to assist!
+**Ready to get help?** [Create a GitHub Issue](https://github.com/TheFreeRangeTester/CreatorRoadmap/issues) and we'll be happy to assist!
 
 *For immediate help, check our [FAQ](./faq.md) or browse our [documentation](./README.md)*
