@@ -25,7 +25,7 @@ jobs:
         run: npm ci
 
       - name: Run working tests
-        run: npm test -- --testPathPattern="(shared|simple|schema|utils)" --passWithNoTests
+        run: npm test -- --testPathPatterns="(shared|simple|schema|utils)" --passWithNoTests
 
       - name: Build project
         run: npm run build
