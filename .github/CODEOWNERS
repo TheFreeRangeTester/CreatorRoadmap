@@ -1,0 +1,26 @@
+# Global code owners - Solo tú puedes aprobar cambios
+* @patominer
+
+# Directorios específicos
+/client/ @patominer
+/server/ @patominer
+/shared/ @patominer
+
+# Archivos de configuración críticos
+package.json @patominer
+package-lock.json @patominer
+tsconfig.json @patominer
+vite.config.ts @patominer
+tailwind.config.ts @patominer
+jest.config.cjs @patominer
+
+# Archivos de documentación
+README.md @patominer
+TESTING_GUIDE.md @patominer
+STRIPE_TESTING_GUIDE.md @patominer
+
+# Archivos de GitHub
+.github/ @patominer
+
+# Archivos de base de datos
+drizzle.config.ts @patominer
