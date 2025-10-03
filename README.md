@@ -13,6 +13,7 @@ Visit us at [fanlist.live](https://fanlist.live)
 **📖 [Complete User Documentation](./docs/README.md)** - Everything you need to know about using Fanlist
 
 ### Quick Links
+
 - 🚀 [Getting Started Guide](./docs/getting-started.md)
 - 🎨 [Creator Dashboard Guide](./docs/creator-dashboard.md)
 - 👥 [Audience Features Guide](./docs/audience-features.md)
