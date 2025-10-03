@@ -6,10 +6,8 @@ Fanlist offers premium subscriptions that unlock advanced features for both crea
 
 ### Premium Benefits
 - **Unlimited Ideas**: Create as many content ideas as you want
-- **Advanced Analytics**: Detailed insights into audience engagement
 - **CSV Import/Export**: Bulk import and export of ideas
 - **Points Store**: Create and manage reward systems
-- **Priority Support**: Faster customer service response
 - **Enhanced Customization**: More profile and branding options
 
 ### Free vs Premium Comparison
@@ -17,11 +15,9 @@ Fanlist offers premium subscriptions that unlock advanced features for both crea
 | Feature | Free | Premium |
 |---------|------|---------|
 | Ideas | Up to 10 visible | Unlimited |
-| Analytics | Basic stats | Advanced insights |
 | CSV Import | ❌ | ✅ |
 | Points Store | ❌ | ✅ |
 | Custom Branding | Basic | Enhanced |
-| Support | Standard | Priority |
 
 ## 💰 Pricing Plans
 
@@ -65,7 +61,7 @@ Fanlist offers premium subscriptions that unlock advanced features for both crea
 - **Audience Choice**: Give your audience more options to vote on
 - **Content Planning**: Plan content months in advance
 
-### Advanced Analytics
+### Enhanced Features
 - **Vote Trends**: See when and how often people vote
 - **Popular Ideas**: Identify which ideas get the most engagement
 - **Audience Insights**: Understand your community's preferences
@@ -92,10 +88,8 @@ Fanlist offers premium subscriptions that unlock advanced features for both crea
 ## 👥 Premium Features for Audience
 
 ### Enhanced Engagement
-- **Priority Voting**: Your votes may have increased weight
-- **Exclusive Access**: Early access to new features
-- **Premium Support**: Faster customer service response
-- **Advanced Analytics**: See your engagement statistics
+- **Priority Voting**: Your votes may have increased weight (coming soon)
+- **Exclusive Access**: Early access to new features (coming soon)
 
 ### Better Experience
 - **Ad-Free Browsing**: Cleaner, distraction-free interface

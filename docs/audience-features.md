@@ -96,10 +96,9 @@ When visiting creator profiles, see your specific activity:
 ## 🔍 Discovering Creators
 
 ### Finding Creators
-- **Public Leaderboard**: Browse all creators and their ideas
-- **Search Function**: Find specific creators by username
 - **Social Media**: Creators often share their Fanlist profiles
-- **Recommendations**: Discover creators similar to ones you follow
+- **Direct Links**: Access creator profiles through shared links
+- **Creator Sharing**: Creators promote their profiles on other platforms
 
 ### Creator Profile Features
 - **Public Information**: Bio, social links, and branding
@@ -116,9 +115,8 @@ When visiting creator profiles, see your specific activity:
 - **Social Links**: Connect your social media accounts
 
 ### Privacy Settings
-- **Public Activity**: Show/hide your voting activity
-- **Profile Visibility**: Control who can see your profile
-- **Notification Preferences**: Choose what updates you receive
+- **Profile Information**: Control what information you share in your profile
+- **Social Links**: Choose which social media accounts to connect
 
 ## 📱 Mobile Experience
 
@@ -143,10 +141,8 @@ When visiting creator profiles, see your specific activity:
 - **Basic Profile**: Standard profile customization
 
 ### Premium Account Benefits (Future)
-- **Enhanced Features**: Advanced engagement tools
-- **Priority Support**: Faster customer service
-- **Exclusive Access**: Special creator content
-- **Advanced Analytics**: Detailed engagement insights
+- **Enhanced Features**: Additional engagement tools (coming soon)
+- **Priority Support**: Faster customer service (coming soon)
 
 ## 🎯 Best Practices
 

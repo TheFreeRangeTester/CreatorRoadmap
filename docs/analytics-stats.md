@@ -29,11 +29,10 @@ Your creator dashboard displays key metrics at a glance:
 - **Suggestion Quality**: How often you approve audience suggestions
 - **Engagement Trends**: Changes in voting behavior over time
 
-### Advanced Analytics (Premium)
+### Enhanced Analytics (Premium)
 
 #### Detailed Metrics
 - **Vote Distribution**: How votes are spread across ideas
-- **Audience Growth**: New followers and engagement increases
 - **Content Performance**: Success rates by category
 - **Time-Based Analysis**: Engagement patterns by day/week/month
 
@@ -160,13 +159,12 @@ When visiting creator profiles, see your specific activity:
 - **Comparative Analysis**: Compare against benchmarks
 - **Actionable Insights**: Focus on actionable data
 
-## 🚀 Advanced Analytics (Premium)
+## 🚀 Enhanced Analytics (Premium)
 
 ### Enhanced Metrics
 - **Detailed Breakdowns**: Granular performance data
 - **Advanced Filtering**: Custom data views
 - **Comparative Analysis**: Side-by-side comparisons
-- **Predictive Insights**: Future performance predictions
 
 ### Custom Dashboards
 - **Personalized Views**: Customize analytics display

@@ -81,9 +81,8 @@ Complete guide to setting up and managing your Fanlist account.
 - **Social Links**: Connect your social media accounts
 
 ### Privacy Settings
-- **Profile Visibility**: Control who can see your profile
-- **Activity Privacy**: Show or hide your voting activity
-- **Notification Preferences**: Choose what updates you receive
+- **Profile Information**: Control what information you share in your profile
+- **Social Links**: Choose which social media accounts to connect
 
 ### Account Management
 - **Change Password**: Update your password anytime

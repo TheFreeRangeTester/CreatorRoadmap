@@ -90,16 +90,9 @@ Connect your social media accounts:
 - **Data Preservation**: Existing data is maintained
 
 ### Privacy Settings
-- **Profile Visibility**: Control who can see your profile
-- **Activity Privacy**: Show or hide your voting activity
-- **Contact Preferences**: Choose communication methods
-- **Data Sharing**: Control how your data is used
-
-### Notification Preferences
-- **Email Notifications**: Choose what emails you receive
-- **Activity Alerts**: Get notified of important activities
-- **Engagement Updates**: Stay informed about interactions
-- **System Messages**: Receive platform updates
+- **Profile Information**: Control what information you share in your profile
+- **Social Links**: Choose which social media accounts to connect
+- **Contact Information**: Manage your email and contact preferences
 
 ## 🎨 Creator-Specific Customization
 
@@ -139,9 +132,8 @@ Connect your social media accounts:
 
 ### Profile Visibility
 - **Public Profiles**: Visible to anyone with the link
-- **Private Information**: Control what information is public
-- **Activity Sharing**: Choose what activity to share
-- **Contact Information**: Control who can contact you
+- **Profile Information**: Control what information you share publicly
+- **Social Links**: Choose which social media accounts to display
 
 ### Data Protection
 - **Secure Storage**: Profile data is securely stored
@@ -218,10 +210,9 @@ Connect your social media accounts:
 ## 🎯 Advanced Customization
 
 ### Premium Features (Future)
-- **Custom Themes**: Advanced background customization
-- **Enhanced Branding**: More branding options
-- **Advanced Analytics**: Profile performance insights
-- **Custom Domains**: Personal domain integration
+- **Custom Themes**: Advanced background customization (coming soon)
+- **Enhanced Branding**: More branding options (coming soon)
+- **Custom Domains**: Personal domain integration (coming soon)
 
 ### Integration Options
 - **API Access**: Programmatic profile management
