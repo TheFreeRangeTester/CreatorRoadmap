@@ -265,19 +265,19 @@ export function DashboardOverview({ className }: DashboardOverviewProps) {
               className="min-w-[85%] snap-center"
             >
               <Card className="bg-white/90 dark:bg-gray-900/90 backdrop-blur-sm border border-gray-200/50 dark:border-gray-700/50 shadow-lg h-full">
-                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4">
-                  <CardTitle className="text-base font-semibold text-gray-700 dark:text-gray-300">
+                <CardHeader className="flex flex-col items-center justify-center space-y-3 pb-4">
+                  <div className={`p-3 rounded-xl ${metric.bgColor}`}>
+                    <metric.icon className={`h-7 w-7 ${metric.color}`} />
+                  </div>
+                  <CardTitle className="text-base font-semibold text-gray-700 dark:text-gray-300 text-center">
                     {metric.title}
                   </CardTitle>
-                  <div className={`p-3 rounded-xl ${metric.bgColor}`}>
-                    <metric.icon className={`h-6 w-6 ${metric.color}`} />
-                  </div>
                 </CardHeader>
-                <CardContent className="pt-0">
-                  <div className="flex items-center space-x-2 mb-2">
-                    <div className="text-4xl font-bold text-gray-900 dark:text-white">
+                <CardContent className="pt-0 text-center">
+                  <div className="flex flex-col items-center justify-center mb-2">
+                    <div className="text-4xl font-bold text-gray-900 dark:text-white mb-1">
                       {(metric as any).isText ? (
-                        <div className="flex flex-col">
+                        <div className="flex flex-col items-center">
                           <span className="text-2xl capitalize">
                             {metric.value}
                           </span>
@@ -296,7 +296,7 @@ export function DashboardOverview({ className }: DashboardOverviewProps) {
                       )}
                     </div>
                     {(metric as any).badge === "attention" && (
-                      <Badge variant="destructive" className="text-xs">
+                      <Badge variant="destructive" className="text-xs mt-2">
                         {t("common.attention", "Attention")}
                       </Badge>
                     )}
@@ -445,15 +445,15 @@ export function DashboardOverview({ className }: DashboardOverviewProps) {
               className="min-w-[85%] snap-center"
             >
               <Card className="bg-white/90 dark:bg-gray-900/90 backdrop-blur-sm border border-gray-200/50 dark:border-gray-700/50 shadow-lg h-full">
-                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4">
-                  <CardTitle className="text-base font-semibold text-gray-700 dark:text-gray-300">
+                <CardHeader className="flex flex-col items-center justify-center space-y-3 pb-4">
+                  <div className={`p-3 rounded-xl ${metric.bgColor}`}>
+                    <metric.icon className={`h-7 w-7 ${metric.color}`} />
+                  </div>
+                  <CardTitle className="text-base font-semibold text-gray-700 dark:text-gray-300 text-center">
                     {metric.title}
                   </CardTitle>
-                  <div className={`p-3 rounded-xl ${metric.bgColor}`}>
-                    <metric.icon className={`h-6 w-6 ${metric.color}`} />
-                  </div>
                 </CardHeader>
-                <CardContent className="pt-0">
+                <CardContent className="pt-0 text-center">
                   <div className="text-4xl font-bold text-gray-900 dark:text-white mb-2">
                     {metric.value.toLocaleString()}
                     {metric.suffix}
