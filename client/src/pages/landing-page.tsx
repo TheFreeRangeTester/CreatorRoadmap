@@ -257,7 +257,7 @@ export default function LandingPage() {
               transition={{ duration: 0.8, delay: 0.2 }}
               className="lg:order-2"
             >
-              <DemoCarousel onWatchDemo={() => setIsDemoOpen(true)} />
+              <DemoCarousel />
             </motion.div>
           </div>
         </div>

@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { ChevronLeft, ChevronRight, Play } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useTranslation } from "react-i18next";
 
 // Import carousel images
@@ -54,11 +53,7 @@ const swipePower = (offset: number, velocity: number) => {
   return Math.abs(offset) * velocity;
 };
 
-interface DemoCarouselProps {
-  onWatchDemo?: () => void;
-}
-
-export default function DemoCarousel({ onWatchDemo }: DemoCarouselProps) {
+export default function DemoCarousel() {
   const [current, setCurrent] = useState(0);
   const [direction, setDirection] = useState(0);
   const [isAutoPlay, setIsAutoPlay] = useState(true);
@@ -144,26 +139,10 @@ export default function DemoCarousel({ onWatchDemo }: DemoCarouselProps) {
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.4 }}
-                  className="text-sm md:text-base opacity-90 mb-4"
+                  className="text-sm md:text-base opacity-90"
                 >
                   {t(imageData[current].descriptionKey)}
                 </motion.p>
-                {onWatchDemo && (
-                  <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.5 }}
-                  >
-                    <Button
-                      onClick={onWatchDemo}
-                      size="lg"
-                      className="bg-gradient-to-r from-white/90 to-white/80 text-gray-900 hover:from-white hover:to-white/90 backdrop-blur-sm"
-                    >
-                      <Play className="h-4 w-4 mr-2" />
-                      {t("demo.watchDemo")}
-                    </Button>
-                  </motion.div>
-                )}
               </div>
             </div>
           </motion.div>
