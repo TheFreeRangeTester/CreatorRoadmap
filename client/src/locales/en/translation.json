@@ -28,27 +28,19 @@
     },
     "carousel": {
       "slide1": {
-        "title": "Connect with Your Audience",
-        "description": "Receive direct feedback from your followers through voting and comments"
+        "title": "Capture Your Ideas",
+        "description": "Keep all the ideas that come to your mind in one centralized place",
+        "alt": "Ideas and concepts development diagram"
       },
       "slide2": {
-        "title": "Create Live Content",
-        "description": "Stream and create real-time content with your audience"
-      },
-      "slide3": {
-        "title": "Develop Brilliant Ideas",
-        "description": "Turn concepts into reality with planning and growth tools"
-      }
-    },
-    "carousel": {
-      "slide1": {
+        "title": "Let Your Audience Decide",
+        "description": "Put the power in your audience's hands to help you decide what they want to see from you",
         "alt": "Audience engagement and voting interface"
       },
-      "slide2": {
-        "alt": "Creator live streaming setup"
-      },
       "slide3": {
-        "alt": "Ideas and concepts development diagram"
+        "title": "Create Content That Matters",
+        "description": "Create content that matters, validated by your audience",
+        "alt": "Creator live streaming setup"
       }
     },
     "stats": {

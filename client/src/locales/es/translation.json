@@ -28,27 +28,19 @@
     },
     "carousel": {
       "slide1": {
-        "title": "Conecta con tu Audiencia",
-        "description": "Recibe feedback directo de tus seguidores mediante votaciones y comentarios"
+        "title": "Captura tus Ideas",
+        "description": "Deja todas las ideas que se te vienen a la cabeza en un lugar centralizado",
+        "alt": "Diagrama de desarrollo de ideas y conceptos"
       },
       "slide2": {
-        "title": "Crea Contenido en Vivo",
-        "description": "Streaming y creación de contenido en tiempo real con tu audiencia"
-      },
-      "slide3": {
-        "title": "Desarrolla Ideas Brillantes",
-        "description": "Convierte conceptos en realidad con herramientas de planificación y crecimiento"
-      }
-    },
-    "carousel": {
-      "slide1": {
+        "title": "Deja que tu Audiencia Decida",
+        "description": "Deja en manos de tu audiencia ayudarte a decidir qué quieren ver de ti",
         "alt": "Interfaz de participación y votación de audiencia"
       },
-      "slide2": {
-        "alt": "Configuración de streaming en vivo del creador"
-      },
       "slide3": {
-        "alt": "Diagrama de desarrollo de ideas y conceptos"
+        "title": "Crea Contenido que Importa",
+        "description": "Crea contenido que importa, validado por tu audiencia",
+        "alt": "Configuración de streaming en vivo del creador"
       }
     },
     "stats": {
