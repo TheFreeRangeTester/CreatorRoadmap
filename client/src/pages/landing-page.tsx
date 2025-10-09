@@ -1,8 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { Link, useLocation } from "wouter";
-import {
-  motion,
-} from "framer-motion";
+import { motion } from "framer-motion";
 import { useToast } from "@/hooks/use-toast";
 import gsap from "gsap";
 import { SplitText } from "gsap/SplitText";
@@ -21,7 +19,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { useTranslation } from "react-i18next";
 import DemoDialog from "@/components/demo-dialog";
-import demoGifPath from "@assets/DemoGIF.gif";
+import DemoCarousel from "@/components/demo-carousel";
 import { LandingHeader } from "@/components/landing-header";
 
 const fadeIn = {
@@ -259,27 +257,7 @@ export default function LandingPage() {
               transition={{ duration: 0.8, delay: 0.2 }}
               className="lg:order-2"
             >
-              <div
-                className="bg-gradient-to-br from-white via-gray-50/80 to-primary/[0.02] dark:from-gray-800 dark:via-gray-900 dark:to-primary/[0.03] border border-gray-200/50 dark:border-gray-700/50 rounded-xl shadow-xl overflow-hidden cursor-pointer transition-all duration-300 hover:shadow-2xl hover:-translate-y-1"
-                onClick={() => setIsDemoOpen(true)}
-              >
-                <div className="relative aspect-video overflow-hidden">
-                  <img
-                    src={demoGifPath}
-                    alt={t("demo.altText")}
-                    className="w-full h-full object-cover"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
-                  <div className="absolute inset-0 flex items-center justify-center">
-                    <Button
-                      size="lg"
-                      className="bg-gradient-to-r from-white/90 to-white/80 text-gray-900 hover:from-white hover:to-white/90 backdrop-blur-sm"
-                    >
-                      {t("demo.watchDemo")}
-                    </Button>
-                  </div>
-                </div>
-              </div>
+              <DemoCarousel />
             </motion.div>
           </div>
         </div>

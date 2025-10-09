@@ -26,6 +26,23 @@
       "leaderboardPreview": "Leaderboard preview",
       "seeFullDemo": "See Full Demo"
     },
+    "carousel": {
+      "slide1": {
+        "title": "Capture Your Ideas",
+        "description": "Keep all the ideas that come to your mind in one centralized place",
+        "alt": "Ideas and concepts development diagram"
+      },
+      "slide2": {
+        "title": "Let Your Audience Decide",
+        "description": "Put the power in your audience's hands to help you decide what they want to see from you",
+        "alt": "Audience engagement and voting interface"
+      },
+      "slide3": {
+        "title": "Create Content That Matters",
+        "description": "Create content that matters, validated by your audience",
+        "alt": "Creator live streaming setup"
+      }
+    },
     "stats": {
       "activeCreators": "Active Creators",
       "votesMonthly": "Monthly Votes",

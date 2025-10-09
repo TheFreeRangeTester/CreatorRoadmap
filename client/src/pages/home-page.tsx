@@ -311,7 +311,7 @@ export default function HomePage() {
                   onValueChange={setActiveTab}
                   className="w-full"
                 >
-                  <TabsList className="grid w-full grid-cols-4 bg-gray-100 dark:bg-gray-800 rounded-lg">
+                  <TabsList className="hidden md:grid w-full grid-cols-4 bg-gray-100 dark:bg-gray-800 rounded-lg">
                     <TabsTrigger
                       value="published"
                       className="data-[state=active]:bg-white dark:data-[state=active]:bg-gray-700 rounded-md transition-all"

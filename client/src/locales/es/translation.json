@@ -26,6 +26,23 @@
       "leaderboardPreview": "Vista previa del ranking",
       "seeFullDemo": "Ver Demo Completo"
     },
+    "carousel": {
+      "slide1": {
+        "title": "Captura tus Ideas",
+        "description": "Deja todas las ideas que se te vienen a la cabeza en un lugar centralizado",
+        "alt": "Diagrama de desarrollo de ideas y conceptos"
+      },
+      "slide2": {
+        "title": "Deja que tu Audiencia Decida",
+        "description": "Deja en manos de tu audiencia ayudarte a decidir qué quieren ver de ti",
+        "alt": "Interfaz de participación y votación de audiencia"
+      },
+      "slide3": {
+        "title": "Crea Contenido que Importa",
+        "description": "Crea contenido que importa, validado por tu audiencia",
+        "alt": "Configuración de streaming en vivo del creador"
+      }
+    },
     "stats": {
       "activeCreators": "Creadores Activos",
       "votesMonthly": "Votos Mensuales",
