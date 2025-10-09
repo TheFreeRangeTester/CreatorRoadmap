@@ -4,10 +4,10 @@ import { ChevronLeft, ChevronRight, Play } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useTranslation } from "react-i18next";
 
-// Importar las imágenes (necesitarás crear estos archivos)
-import image1 from "@/assets/carousel/audience-engagement.png";
-import image2 from "@/assets/carousel/live-streaming.png";
-import image3 from "@/assets/carousel/idea-concept.png";
+// Placeholder images - using data URIs for simple colored backgrounds
+const image1 = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='600'%3E%3Crect fill='%239333ea' width='800' height='600'/%3E%3C/svg%3E";
+const image2 = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='600'%3E%3Crect fill='%23a855f7' width='800' height='600'/%3E%3C/svg%3E";
+const image3 = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='600'%3E%3Crect fill='%23c084fc' width='800' height='600'/%3E%3C/svg%3E";
 
 const images = [
   {
