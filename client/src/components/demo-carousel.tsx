@@ -61,7 +61,7 @@ interface DemoCarouselProps {
 export default function DemoCarousel({ onWatchDemo }: DemoCarouselProps) {
   const [current, setCurrent] = useState(0);
   const [direction, setDirection] = useState(0);
-  const [isAutoPlay, setIsAutoPlay] = useState(false);
+  const [isAutoPlay, setIsAutoPlay] = useState(true);
   const { t } = useTranslation();
 
   const nextSlide = () => {
@@ -79,11 +79,16 @@ export default function DemoCarousel({ onWatchDemo }: DemoCarouselProps) {
     setCurrent(index);
   };
 
-  // Auto-play functionality (disabled)
+  // Auto-play functionality - 5 seconds interval
   useEffect(() => {
-    // Auto-play is disabled - images don't change automatically
-    return;
-  }, []);
+    if (!isAutoPlay) return;
+
+    const interval = setInterval(() => {
+      nextSlide();
+    }, 5000); // 5 seconds
+
+    return () => clearInterval(interval);
+  }, [isAutoPlay, current]);
 
   return (
     <div className="relative w-full max-w-4xl mx-auto">
@@ -114,6 +119,8 @@ export default function DemoCarousel({ onWatchDemo }: DemoCarouselProps) {
               }
             }}
             className="absolute inset-0 cursor-grab active:cursor-grabbing"
+            onMouseEnter={() => setIsAutoPlay(false)}
+            onMouseLeave={() => setIsAutoPlay(true)}
           >
             <img
               src={imageData[current].src}
@@ -189,6 +196,8 @@ export default function DemoCarousel({ onWatchDemo }: DemoCarouselProps) {
                 ? "bg-gradient-to-r from-purple-600 to-blue-600 scale-125"
                 : "bg-gray-300 hover:bg-gray-400"
             }`}
+            onMouseEnter={() => setIsAutoPlay(false)}
+            onMouseLeave={() => setIsAutoPlay(true)}
           />
         ))}
       </div>
