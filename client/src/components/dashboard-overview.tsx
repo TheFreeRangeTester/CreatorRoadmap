@@ -1,5 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { motion } from "framer-motion";
+import { useState, useRef, useEffect } from "react";
 import {
   Lightbulb,
   ThumbsUp,
@@ -17,6 +18,7 @@ import { useReactiveStats } from "@/hooks/use-reactive-stats";
 import { apiRequest } from "@/lib/queryClient";
 import { Skeleton } from "@/components/ui/skeleton";
 import { IdeaResponse } from "@shared/schema";
+import { cn } from "@/lib/utils";
 
 interface DashboardOverviewProps {
   className?: string;
@@ -40,7 +42,50 @@ interface AudienceStats {
   ideasApproved: number;
 }
 
+// Carousel Indicators Component
+function CarouselIndicators({
+  total,
+  active,
+}: {
+  total: number;
+  active: number;
+}) {
+  return (
+    <div className="flex justify-center gap-2 mt-4 lg:hidden">
+      {Array.from({ length: total }).map((_, index) => (
+        <div
+          key={index}
+          className={cn(
+            "h-1.5 rounded-full transition-all duration-300",
+            index === active
+              ? "w-6 bg-blue-600 dark:bg-blue-400"
+              : "w-1.5 bg-gray-300 dark:bg-gray-600"
+          )}
+        />
+      ))}
+    </div>
+  );
+}
+
 export function DashboardOverview({ className }: DashboardOverviewProps) {
+  const [activeSlide, setActiveSlide] = useState(0);
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
+
+  // Handle scroll to update active slide indicator
+  useEffect(() => {
+    const container = scrollContainerRef.current;
+    if (!container) return;
+
+    const handleScroll = () => {
+      const scrollLeft = container.scrollLeft;
+      const cardWidth = container.offsetWidth;
+      const newSlide = Math.round(scrollLeft / cardWidth);
+      setActiveSlide(newSlide);
+    };
+
+    container.addEventListener("scroll", handleScroll);
+    return () => container.removeEventListener("scroll", handleScroll);
+  }, []);
   const { t } = useTranslation();
   const { user } = useAuth();
   const { points: pointsData, stats } = useReactiveStats();
@@ -98,23 +143,47 @@ export function DashboardOverview({ className }: DashboardOverviewProps) {
 
   if (isLoading) {
     return (
-      <div
-        className={`grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4 ${className}`}
-      >
-        {Array.from({ length: 4 }).map((_, index) => (
-          <Card
-            key={index}
-            className="bg-white/90 dark:bg-gray-900/90 backdrop-blur-sm border border-gray-200/50 dark:border-gray-700/50"
-          >
-            <CardHeader className="pb-2 md:pb-3">
-              <Skeleton className="h-4 w-24" />
-            </CardHeader>
-            <CardContent className="pt-0">
-              <Skeleton className="h-8 w-16 mb-2" />
-              <Skeleton className="h-3 w-32" />
-            </CardContent>
-          </Card>
-        ))}
+      <div className={className}>
+        {/* Mobile Carousel */}
+        <div
+          className="lg:hidden flex gap-4 overflow-x-auto snap-x snap-mandatory scrollbar-hide px-4 -mx-4"
+          style={{ scrollbarWidth: "none" }}
+        >
+          {Array.from({ length: 4 }).map((_, index) => (
+            <Card
+              key={index}
+              className="bg-white/90 dark:bg-gray-900/90 backdrop-blur-sm border border-gray-200/50 dark:border-gray-700/50 min-w-[85%] snap-center"
+            >
+              <CardHeader className="pb-3">
+                <Skeleton className="h-4 w-24" />
+              </CardHeader>
+              <CardContent className="pt-0">
+                <Skeleton className="h-8 w-16 mb-2" />
+                <Skeleton className="h-3 w-32" />
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+
+        {/* Desktop Grid */}
+        <div className="hidden lg:grid lg:grid-cols-4 gap-4">
+          {Array.from({ length: 4 }).map((_, index) => (
+            <Card
+              key={index}
+              className="bg-white/90 dark:bg-gray-900/90 backdrop-blur-sm border border-gray-200/50 dark:border-gray-700/50"
+            >
+              <CardHeader className="pb-3">
+                <Skeleton className="h-4 w-24" />
+              </CardHeader>
+              <CardContent className="pt-0">
+                <Skeleton className="h-8 w-16 mb-2" />
+                <Skeleton className="h-3 w-32" />
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+
+        <CarouselIndicators total={4} active={0} />
       </div>
     );
   }
@@ -180,60 +249,127 @@ export function DashboardOverview({ className }: DashboardOverviewProps) {
     ];
 
     return (
-      <motion.div
-        variants={containerVariants}
-        initial="hidden"
-        animate="visible"
-        className={`grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4 ${className}`}
-      >
-        {creatorMetrics.map((metric, index) => (
-          <motion.div key={index} variants={itemVariants}>
-            <Card className="bg-white/90 dark:bg-gray-900/90 backdrop-blur-sm border border-gray-200/50 dark:border-gray-700/50 hover:shadow-lg transition-all duration-300">
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 md:pb-3 px-3 md:px-6 pt-3 md:pt-6">
-                <CardTitle className="text-xs md:text-sm font-medium text-gray-600 dark:text-gray-400 leading-tight">
-                  {metric.title}
-                </CardTitle>
-                <div className={`p-1.5 md:p-2 rounded-lg ${metric.bgColor}`}>
-                  <metric.icon
-                    className={`h-3 w-3 md:h-4 md:w-4 ${metric.color}`}
-                  />
-                </div>
-              </CardHeader>
-              <CardContent className="pt-0 px-3 md:px-6 pb-3 md:pb-6">
-                <div className="flex items-center space-x-2">
-                  <div className="text-lg md:text-2xl font-bold text-gray-900 dark:text-white">
-                    {(metric as any).isText ? (
-                      <div className="flex flex-col">
-                        <span className="text-base md:text-xl capitalize truncate">
-                          {metric.value}
-                        </span>
-                        {(metric as any).votes !== undefined && (
-                          <span className="text-xs md:text-sm font-normal text-gray-500 dark:text-gray-400">
-                            {(metric as any).votes} {t("ideas.votes", "votes")}
+      <div className={className}>
+        {/* Mobile Carousel */}
+        <div
+          ref={scrollContainerRef}
+          className="lg:hidden flex gap-4 overflow-x-auto snap-x snap-mandatory scrollbar-hide px-4 -mx-4"
+          style={{ scrollbarWidth: "none" }}
+        >
+          {creatorMetrics.map((metric, index) => (
+            <motion.div
+              key={index}
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: index * 0.1 }}
+              className="min-w-[85%] snap-center"
+            >
+              <Card className="bg-white/90 dark:bg-gray-900/90 backdrop-blur-sm border border-gray-200/50 dark:border-gray-700/50 shadow-lg h-full">
+                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4">
+                  <CardTitle className="text-base font-semibold text-gray-700 dark:text-gray-300">
+                    {metric.title}
+                  </CardTitle>
+                  <div className={`p-3 rounded-xl ${metric.bgColor}`}>
+                    <metric.icon className={`h-6 w-6 ${metric.color}`} />
+                  </div>
+                </CardHeader>
+                <CardContent className="pt-0">
+                  <div className="flex items-center space-x-2 mb-2">
+                    <div className="text-4xl font-bold text-gray-900 dark:text-white">
+                      {(metric as any).isText ? (
+                        <div className="flex flex-col">
+                          <span className="text-2xl capitalize">
+                            {metric.value}
                           </span>
-                        )}
-                      </div>
-                    ) : (
-                      <>
-                        {(metric.value as number).toLocaleString()}
-                        {(metric as any).suffix}
-                      </>
+                          {(metric as any).votes !== undefined && (
+                            <span className="text-sm font-normal text-gray-500 dark:text-gray-400 mt-1">
+                              {(metric as any).votes}{" "}
+                              {t("ideas.votes", "votes")}
+                            </span>
+                          )}
+                        </div>
+                      ) : (
+                        <>
+                          {(metric.value as number).toLocaleString()}
+                          {(metric as any).suffix}
+                        </>
+                      )}
+                    </div>
+                    {(metric as any).badge === "attention" && (
+                      <Badge variant="destructive" className="text-xs">
+                        {t("common.attention", "Attention")}
+                      </Badge>
                     )}
                   </div>
-                  {(metric as any).badge === "attention" && (
-                    <Badge variant="destructive" className="text-xs">
-                      {t("common.attention", "Attention")}
-                    </Badge>
-                  )}
-                </div>
-                <p className="text-xs text-gray-500 dark:text-gray-400 mt-1 leading-tight">
-                  {metric.description}
-                </p>
-              </CardContent>
-            </Card>
-          </motion.div>
-        ))}
-      </motion.div>
+                  <p className="text-sm text-gray-500 dark:text-gray-400">
+                    {metric.description}
+                  </p>
+                </CardContent>
+              </Card>
+            </motion.div>
+          ))}
+        </div>
+
+        {/* Desktop Grid */}
+        <motion.div
+          variants={containerVariants}
+          initial="hidden"
+          animate="visible"
+          className="hidden lg:grid lg:grid-cols-4 gap-4"
+        >
+          {creatorMetrics.map((metric, index) => (
+            <motion.div key={index} variants={itemVariants}>
+              <Card className="bg-white/90 dark:bg-gray-900/90 backdrop-blur-sm border border-gray-200/50 dark:border-gray-700/50 hover:shadow-lg transition-all duration-300">
+                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3">
+                  <CardTitle className="text-sm font-medium text-gray-600 dark:text-gray-400">
+                    {metric.title}
+                  </CardTitle>
+                  <div className={`p-2 rounded-lg ${metric.bgColor}`}>
+                    <metric.icon className={`h-4 w-4 ${metric.color}`} />
+                  </div>
+                </CardHeader>
+                <CardContent className="pt-0">
+                  <div className="flex items-center space-x-2">
+                    <div className="text-2xl font-bold text-gray-900 dark:text-white">
+                      {(metric as any).isText ? (
+                        <div className="flex flex-col">
+                          <span className="text-xl capitalize">
+                            {metric.value}
+                          </span>
+                          {(metric as any).votes !== undefined && (
+                            <span className="text-sm font-normal text-gray-500 dark:text-gray-400">
+                              {(metric as any).votes}{" "}
+                              {t("ideas.votes", "votes")}
+                            </span>
+                          )}
+                        </div>
+                      ) : (
+                        <>
+                          {(metric.value as number).toLocaleString()}
+                          {(metric as any).suffix}
+                        </>
+                      )}
+                    </div>
+                    {(metric as any).badge === "attention" && (
+                      <Badge variant="destructive" className="text-xs">
+                        {t("common.attention", "Attention")}
+                      </Badge>
+                    )}
+                  </div>
+                  <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                    {metric.description}
+                  </p>
+                </CardContent>
+              </Card>
+            </motion.div>
+          ))}
+        </motion.div>
+
+        <CarouselIndicators
+          total={creatorMetrics.length}
+          active={activeSlide}
+        />
+      </div>
     );
   }
 
@@ -293,38 +429,81 @@ export function DashboardOverview({ className }: DashboardOverviewProps) {
     ];
 
     return (
-      <motion.div
-        variants={containerVariants}
-        initial="hidden"
-        animate="visible"
-        className={`grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4 ${className}`}
-      >
-        {audienceMetrics.map((metric, index) => (
-          <motion.div key={index} variants={itemVariants}>
-            <Card className="bg-white/90 dark:bg-gray-900/90 backdrop-blur-sm border border-gray-200/50 dark:border-gray-700/50 hover:shadow-lg transition-all duration-300">
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 md:pb-3 px-3 md:px-6 pt-3 md:pt-6">
-                <CardTitle className="text-xs md:text-sm font-medium text-gray-600 dark:text-gray-400 leading-tight">
-                  {metric.title}
-                </CardTitle>
-                <div className={`p-1.5 md:p-2 rounded-lg ${metric.bgColor}`}>
-                  <metric.icon
-                    className={`h-3 w-3 md:h-4 md:w-4 ${metric.color}`}
-                  />
-                </div>
-              </CardHeader>
-              <CardContent className="pt-0 px-3 md:px-6 pb-3 md:pb-6">
-                <div className="text-lg md:text-2xl font-bold text-gray-900 dark:text-white">
-                  {metric.value.toLocaleString()}
-                  {metric.suffix}
-                </div>
-                <p className="text-xs text-gray-500 dark:text-gray-400 mt-1 leading-tight">
-                  {metric.description}
-                </p>
-              </CardContent>
-            </Card>
-          </motion.div>
-        ))}
-      </motion.div>
+      <div className={className}>
+        {/* Mobile Carousel */}
+        <div
+          ref={scrollContainerRef}
+          className="lg:hidden flex gap-4 overflow-x-auto snap-x snap-mandatory scrollbar-hide px-4 -mx-4"
+          style={{ scrollbarWidth: "none" }}
+        >
+          {audienceMetrics.map((metric, index) => (
+            <motion.div
+              key={index}
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: index * 0.1 }}
+              className="min-w-[85%] snap-center"
+            >
+              <Card className="bg-white/90 dark:bg-gray-900/90 backdrop-blur-sm border border-gray-200/50 dark:border-gray-700/50 shadow-lg h-full">
+                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4">
+                  <CardTitle className="text-base font-semibold text-gray-700 dark:text-gray-300">
+                    {metric.title}
+                  </CardTitle>
+                  <div className={`p-3 rounded-xl ${metric.bgColor}`}>
+                    <metric.icon className={`h-6 w-6 ${metric.color}`} />
+                  </div>
+                </CardHeader>
+                <CardContent className="pt-0">
+                  <div className="text-4xl font-bold text-gray-900 dark:text-white mb-2">
+                    {metric.value.toLocaleString()}
+                    {metric.suffix}
+                  </div>
+                  <p className="text-sm text-gray-500 dark:text-gray-400">
+                    {metric.description}
+                  </p>
+                </CardContent>
+              </Card>
+            </motion.div>
+          ))}
+        </div>
+
+        {/* Desktop Grid */}
+        <motion.div
+          variants={containerVariants}
+          initial="hidden"
+          animate="visible"
+          className="hidden lg:grid lg:grid-cols-4 gap-4"
+        >
+          {audienceMetrics.map((metric, index) => (
+            <motion.div key={index} variants={itemVariants}>
+              <Card className="bg-white/90 dark:bg-gray-900/90 backdrop-blur-sm border border-gray-200/50 dark:border-gray-700/50 hover:shadow-lg transition-all duration-300">
+                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3">
+                  <CardTitle className="text-sm font-medium text-gray-600 dark:text-gray-400">
+                    {metric.title}
+                  </CardTitle>
+                  <div className={`p-2 rounded-lg ${metric.bgColor}`}>
+                    <metric.icon className={`h-4 w-4 ${metric.color}`} />
+                  </div>
+                </CardHeader>
+                <CardContent className="pt-0">
+                  <div className="text-2xl font-bold text-gray-900 dark:text-white">
+                    {metric.value.toLocaleString()}
+                    {metric.suffix}
+                  </div>
+                  <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                    {metric.description}
+                  </p>
+                </CardContent>
+              </Card>
+            </motion.div>
+          ))}
+        </motion.div>
+
+        <CarouselIndicators
+          total={audienceMetrics.length}
+          active={activeSlide}
+        />
+      </div>
     );
   }
 
