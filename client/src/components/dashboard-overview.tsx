@@ -16,6 +16,7 @@ import { useAuth } from "@/hooks/use-auth";
 import { useReactiveStats } from "@/hooks/use-reactive-stats";
 import { apiRequest } from "@/lib/queryClient";
 import { Skeleton } from "@/components/ui/skeleton";
+import { IdeaResponse } from "@shared/schema";
 
 interface DashboardOverviewProps {
   className?: string;
@@ -98,14 +99,14 @@ export function DashboardOverview({ className }: DashboardOverviewProps) {
   if (isLoading) {
     return (
       <div
-        className={`grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 ${className}`}
+        className={`grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4 ${className}`}
       >
         {Array.from({ length: 4 }).map((_, index) => (
           <Card
             key={index}
             className="bg-white/90 dark:bg-gray-900/90 backdrop-blur-sm border border-gray-200/50 dark:border-gray-700/50"
           >
-            <CardHeader className="pb-3">
+            <CardHeader className="pb-2 md:pb-3">
               <Skeleton className="h-4 w-24" />
             </CardHeader>
             <CardContent className="pt-0">
@@ -164,8 +165,13 @@ export function DashboardOverview({ className }: DashboardOverviewProps) {
       {
         icon: TrendingUp,
         title: t("dashboard.overview.topNiches", "Top Niches"),
-        value: stats.topNiche?.name || t("dashboard.overview.noNicheData", "No data yet"),
-        description: t("dashboard.overview.topNichesDesc", "Most voted category"),
+        value:
+          stats.topNiche?.name ||
+          t("dashboard.overview.noNicheData", "No data yet"),
+        description: t(
+          "dashboard.overview.topNichesDesc",
+          "Most voted category"
+        ),
         color: "text-purple-600",
         bgColor: "bg-purple-50 dark:bg-purple-900/20",
         isText: true,
@@ -178,27 +184,31 @@ export function DashboardOverview({ className }: DashboardOverviewProps) {
         variants={containerVariants}
         initial="hidden"
         animate="visible"
-        className={`grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 ${className}`}
+        className={`grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4 ${className}`}
       >
         {creatorMetrics.map((metric, index) => (
           <motion.div key={index} variants={itemVariants}>
             <Card className="bg-white/90 dark:bg-gray-900/90 backdrop-blur-sm border border-gray-200/50 dark:border-gray-700/50 hover:shadow-lg transition-all duration-300">
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3">
-                <CardTitle className="text-sm font-medium text-gray-600 dark:text-gray-400">
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 md:pb-3 px-3 md:px-6 pt-3 md:pt-6">
+                <CardTitle className="text-xs md:text-sm font-medium text-gray-600 dark:text-gray-400 leading-tight">
                   {metric.title}
                 </CardTitle>
-                <div className={`p-2 rounded-lg ${metric.bgColor}`}>
-                  <metric.icon className={`h-4 w-4 ${metric.color}`} />
+                <div className={`p-1.5 md:p-2 rounded-lg ${metric.bgColor}`}>
+                  <metric.icon
+                    className={`h-3 w-3 md:h-4 md:w-4 ${metric.color}`}
+                  />
                 </div>
               </CardHeader>
-              <CardContent className="pt-0">
+              <CardContent className="pt-0 px-3 md:px-6 pb-3 md:pb-6">
                 <div className="flex items-center space-x-2">
-                  <div className="text-2xl font-bold text-gray-900 dark:text-white">
+                  <div className="text-lg md:text-2xl font-bold text-gray-900 dark:text-white">
                     {(metric as any).isText ? (
                       <div className="flex flex-col">
-                        <span className="text-xl capitalize">{metric.value}</span>
+                        <span className="text-base md:text-xl capitalize truncate">
+                          {metric.value}
+                        </span>
                         {(metric as any).votes !== undefined && (
-                          <span className="text-sm font-normal text-gray-500 dark:text-gray-400">
+                          <span className="text-xs md:text-sm font-normal text-gray-500 dark:text-gray-400">
                             {(metric as any).votes} {t("ideas.votes", "votes")}
                           </span>
                         )}
@@ -216,7 +226,7 @@ export function DashboardOverview({ className }: DashboardOverviewProps) {
                     </Badge>
                   )}
                 </div>
-                <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                <p className="text-xs text-gray-500 dark:text-gray-400 mt-1 leading-tight">
                   {metric.description}
                 </p>
               </CardContent>
@@ -287,25 +297,27 @@ export function DashboardOverview({ className }: DashboardOverviewProps) {
         variants={containerVariants}
         initial="hidden"
         animate="visible"
-        className={`grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 ${className}`}
+        className={`grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4 ${className}`}
       >
         {audienceMetrics.map((metric, index) => (
           <motion.div key={index} variants={itemVariants}>
             <Card className="bg-white/90 dark:bg-gray-900/90 backdrop-blur-sm border border-gray-200/50 dark:border-gray-700/50 hover:shadow-lg transition-all duration-300">
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3">
-                <CardTitle className="text-sm font-medium text-gray-600 dark:text-gray-400">
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 md:pb-3 px-3 md:px-6 pt-3 md:pt-6">
+                <CardTitle className="text-xs md:text-sm font-medium text-gray-600 dark:text-gray-400 leading-tight">
                   {metric.title}
                 </CardTitle>
-                <div className={`p-2 rounded-lg ${metric.bgColor}`}>
-                  <metric.icon className={`h-4 w-4 ${metric.color}`} />
+                <div className={`p-1.5 md:p-2 rounded-lg ${metric.bgColor}`}>
+                  <metric.icon
+                    className={`h-3 w-3 md:h-4 md:w-4 ${metric.color}`}
+                  />
                 </div>
               </CardHeader>
-              <CardContent className="pt-0">
-                <div className="text-2xl font-bold text-gray-900 dark:text-white">
+              <CardContent className="pt-0 px-3 md:px-6 pb-3 md:pb-6">
+                <div className="text-lg md:text-2xl font-bold text-gray-900 dark:text-white">
                   {metric.value.toLocaleString()}
                   {metric.suffix}
                 </div>
-                <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                <p className="text-xs text-gray-500 dark:text-gray-400 mt-1 leading-tight">
                   {metric.description}
                 </p>
               </CardContent>
