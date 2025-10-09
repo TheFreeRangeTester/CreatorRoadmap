@@ -9,27 +9,25 @@ import image1 from "@assets/carousel-engagement.png";
 import image2 from "@assets/carousel-streaming.png";
 import image3 from "@assets/carousel-ideas.png";
 
-const images = [
+// Las traducciones se manejan dinámicamente en el componente
+const imageData = [
   {
     src: image1,
-    alt: "Audience engagement and voting",
-    title: "Conecta con tu Audiencia",
-    description:
-      "Recibe feedback directo de tus seguidores mediante votaciones y comentarios",
+    altKey: "carousel.slide1.alt",
+    titleKey: "landing.carousel.slide1.title",
+    descriptionKey: "landing.carousel.slide1.description",
   },
   {
     src: image2,
-    alt: "Creator live streaming",
-    title: "Crea Contenido en Vivo",
-    description:
-      "Streaming y creación de contenido en tiempo real con tu audiencia",
+    altKey: "carousel.slide2.alt",
+    titleKey: "landing.carousel.slide2.title",
+    descriptionKey: "landing.carousel.slide2.description",
   },
   {
     src: image3,
-    alt: "Ideas and concepts diagram",
-    title: "Desarrolla Ideas Brillantes",
-    description:
-      "Convierte conceptos en realidad con herramientas de planificación y crecimiento",
+    altKey: "carousel.slide3.alt",
+    titleKey: "landing.carousel.slide3.title",
+    descriptionKey: "landing.carousel.slide3.description",
   },
 ];
 
@@ -67,12 +65,12 @@ export default function DemoCarousel({ onWatchDemo }: DemoCarouselProps) {
 
   const nextSlide = () => {
     setDirection(1);
-    setCurrent((prev) => (prev === images.length - 1 ? 0 : prev + 1));
+    setCurrent((prev) => (prev === imageData.length - 1 ? 0 : prev + 1));
   };
 
   const prevSlide = () => {
     setDirection(-1);
-    setCurrent((prev) => (prev === 0 ? images.length - 1 : prev - 1));
+    setCurrent((prev) => (prev === 0 ? imageData.length - 1 : prev - 1));
   };
 
   const goToSlide = (index: number) => {
@@ -124,8 +122,8 @@ export default function DemoCarousel({ onWatchDemo }: DemoCarouselProps) {
             onMouseLeave={() => setIsAutoPlay(true)}
           >
             <img
-              src={images[current].src}
-              alt={images[current].alt}
+              src={imageData[current].src}
+              alt={t(imageData[current].altKey)}
               className="w-full h-full object-cover"
               draggable={false}
             />
@@ -139,7 +137,7 @@ export default function DemoCarousel({ onWatchDemo }: DemoCarouselProps) {
                   transition={{ delay: 0.3 }}
                   className="text-xl md:text-2xl font-bold mb-2"
                 >
-                  {images[current].title}
+                  {t(imageData[current].titleKey)}
                 </motion.h3>
                 <motion.p
                   initial={{ opacity: 0, y: 20 }}
@@ -147,7 +145,7 @@ export default function DemoCarousel({ onWatchDemo }: DemoCarouselProps) {
                   transition={{ delay: 0.4 }}
                   className="text-sm md:text-base opacity-90 mb-4"
                 >
-                  {images[current].description}
+                  {t(imageData[current].descriptionKey)}
                 </motion.p>
                 {onWatchDemo && (
                   <motion.div
@@ -192,7 +190,7 @@ export default function DemoCarousel({ onWatchDemo }: DemoCarouselProps) {
 
       {/* Dots Indicator */}
       <div className="flex justify-center mt-6 space-x-2">
-        {images.map((_, index) => (
+        {imageData.map((_, index) => (
           <button
             key={index}
             onClick={() => goToSlide(index)}

@@ -26,6 +26,31 @@
       "leaderboardPreview": "Leaderboard preview",
       "seeFullDemo": "See Full Demo"
     },
+    "carousel": {
+      "slide1": {
+        "title": "Connect with Your Audience",
+        "description": "Receive direct feedback from your followers through voting and comments"
+      },
+      "slide2": {
+        "title": "Create Live Content",
+        "description": "Stream and create real-time content with your audience"
+      },
+      "slide3": {
+        "title": "Develop Brilliant Ideas",
+        "description": "Turn concepts into reality with planning and growth tools"
+      }
+    },
+    "carousel": {
+      "slide1": {
+        "alt": "Audience engagement and voting interface"
+      },
+      "slide2": {
+        "alt": "Creator live streaming setup"
+      },
+      "slide3": {
+        "alt": "Ideas and concepts development diagram"
+      }
+    },
     "stats": {
       "activeCreators": "Active Creators",
       "votesMonthly": "Monthly Votes",

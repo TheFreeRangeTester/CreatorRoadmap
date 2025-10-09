@@ -26,6 +26,31 @@
       "leaderboardPreview": "Vista previa del ranking",
       "seeFullDemo": "Ver Demo Completo"
     },
+    "carousel": {
+      "slide1": {
+        "title": "Conecta con tu Audiencia",
+        "description": "Recibe feedback directo de tus seguidores mediante votaciones y comentarios"
+      },
+      "slide2": {
+        "title": "Crea Contenido en Vivo",
+        "description": "Streaming y creación de contenido en tiempo real con tu audiencia"
+      },
+      "slide3": {
+        "title": "Desarrolla Ideas Brillantes",
+        "description": "Convierte conceptos en realidad con herramientas de planificación y crecimiento"
+      }
+    },
+    "carousel": {
+      "slide1": {
+        "alt": "Interfaz de participación y votación de audiencia"
+      },
+      "slide2": {
+        "alt": "Configuración de streaming en vivo del creador"
+      },
+      "slide3": {
+        "alt": "Diagrama de desarrollo de ideas y conceptos"
+      }
+    },
     "stats": {
       "activeCreators": "Creadores Activos",
       "votesMonthly": "Votos Mensuales",
