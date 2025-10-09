@@ -61,7 +61,7 @@ interface DemoCarouselProps {
 export default function DemoCarousel({ onWatchDemo }: DemoCarouselProps) {
   const [current, setCurrent] = useState(0);
   const [direction, setDirection] = useState(0);
-  const [isAutoPlay, setIsAutoPlay] = useState(true);
+  const [isAutoPlay, setIsAutoPlay] = useState(false);
   const { t } = useTranslation();
 
   const nextSlide = () => {
@@ -79,21 +79,16 @@ export default function DemoCarousel({ onWatchDemo }: DemoCarouselProps) {
     setCurrent(index);
   };
 
-  // Auto-play functionality
+  // Auto-play functionality (disabled)
   useEffect(() => {
-    if (!isAutoPlay) return;
-
-    const interval = setInterval(() => {
-      nextSlide();
-    }, 4000);
-
-    return () => clearInterval(interval);
-  }, [isAutoPlay, current]);
+    // Auto-play is disabled - images don't change automatically
+    return;
+  }, []);
 
   return (
     <div className="relative w-full max-w-4xl mx-auto">
       {/* Carousel Container */}
-      <div className="relative aspect-video overflow-hidden rounded-xl shadow-xl bg-gradient-to-br from-white via-gray-50/80 to-primary/[0.02] dark:from-gray-800 dark:via-gray-900 dark:to-primary/[0.03] border border-gray-200/50 dark:border-gray-700/50">
+      <div className="relative aspect-video overflow-hidden rounded-xl shadow-xl bg-gradient-to-br from-white via-gray-50/80 to-primary/[0.02] dark:from-gray-800 dark:via-gray-900 dark:to-primary/[0.03] border border-gray-200/50 dark:border-gray-700/50 group">
         <AnimatePresence initial={false} custom={direction}>
           <motion.div
             key={current}
@@ -119,8 +114,6 @@ export default function DemoCarousel({ onWatchDemo }: DemoCarouselProps) {
               }
             }}
             className="absolute inset-0 cursor-grab active:cursor-grabbing"
-            onMouseEnter={() => setIsAutoPlay(false)}
-            onMouseLeave={() => setIsAutoPlay(true)}
           >
             <img
               src={imageData[current].src}
@@ -169,21 +162,17 @@ export default function DemoCarousel({ onWatchDemo }: DemoCarouselProps) {
           </motion.div>
         </AnimatePresence>
 
-        {/* Navigation Arrows */}
+        {/* Navigation Arrows - Hidden until hover */}
         <button
           onClick={prevSlide}
-          className="absolute left-4 top-1/2 -translate-y-1/2 z-10 p-2 rounded-full bg-white/20 hover:bg-white/30 backdrop-blur-sm transition-all duration-200 hover:scale-110"
-          onMouseEnter={() => setIsAutoPlay(false)}
-          onMouseLeave={() => setIsAutoPlay(true)}
+          className="absolute left-4 top-1/2 -translate-y-1/2 z-10 p-2 rounded-full bg-white/20 hover:bg-white/30 backdrop-blur-sm transition-all duration-200 hover:scale-110 opacity-0 group-hover:opacity-100"
         >
           <ChevronLeft className="h-6 w-6 text-white" />
         </button>
 
         <button
           onClick={nextSlide}
-          className="absolute right-4 top-1/2 -translate-y-1/2 z-10 p-2 rounded-full bg-white/20 hover:bg-white/30 backdrop-blur-sm transition-all duration-200 hover:scale-110"
-          onMouseEnter={() => setIsAutoPlay(false)}
-          onMouseLeave={() => setIsAutoPlay(true)}
+          className="absolute right-4 top-1/2 -translate-y-1/2 z-10 p-2 rounded-full bg-white/20 hover:bg-white/30 backdrop-blur-sm transition-all duration-200 hover:scale-110 opacity-0 group-hover:opacity-100"
         >
           <ChevronRight className="h-6 w-6 text-white" />
         </button>
@@ -200,21 +189,8 @@ export default function DemoCarousel({ onWatchDemo }: DemoCarouselProps) {
                 ? "bg-gradient-to-r from-purple-600 to-blue-600 scale-125"
                 : "bg-gray-300 hover:bg-gray-400"
             }`}
-            onMouseEnter={() => setIsAutoPlay(false)}
-            onMouseLeave={() => setIsAutoPlay(true)}
           />
         ))}
-      </div>
-
-      {/* Progress Bar */}
-      <div className="mt-4 w-full bg-gray-200 dark:bg-gray-700 rounded-full h-1 overflow-hidden">
-        <motion.div
-          className="h-full bg-gradient-to-r from-purple-600 to-blue-600"
-          initial={{ width: "0%" }}
-          animate={{ width: "100%" }}
-          transition={{ duration: 4, ease: "linear" }}
-          key={current} // Reset animation when slide changes
-        />
       </div>
     </div>
   );
