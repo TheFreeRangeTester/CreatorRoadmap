@@ -245,10 +245,7 @@ function PodiumCard({
   const handleVoteClick = () => {
     if (!user) {
       // User not authenticated - redirect to auth and save current path
-      const currentPath = window.location.pathname;
-      console.log("[TOP3] User not authenticated, saving redirect path:", currentPath);
-      localStorage.setItem("redirectAfterAuth", currentPath);
-      console.log("[TOP3] Stored in localStorage:", localStorage.getItem("redirectAfterAuth"));
+      localStorage.setItem("redirectAfterAuth", window.location.pathname);
       window.location.href = "/auth";
       return;
     }

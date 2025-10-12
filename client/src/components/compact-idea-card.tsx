@@ -226,13 +226,7 @@ export function CompactIdeaCard({
               <Button
                 size="sm"
                 onClick={() => {
-                  const currentPath = window.location.pathname;
-                  console.log("[COMPACT] User not authenticated, saving redirect path:", currentPath);
-                  localStorage.setItem(
-                    "redirectAfterAuth",
-                    currentPath
-                  );
-                  console.log("[COMPACT] Stored in localStorage:", localStorage.getItem("redirectAfterAuth"));
+                  localStorage.setItem("redirectAfterAuth", window.location.pathname);
                   window.location.href = "/auth";
                 }}
                 className="w-full h-8 text-xs font-medium bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white shadow-md hover:shadow-lg transition-all duration-200"

@@ -146,11 +146,7 @@ export default function ModernPublicProfile() {
   }, [data?.ideas, user, username]);
 
   const handleVote = async (ideaId: number) => {
-    console.log("[PROFILE] handleVote called for idea:", ideaId, "user:", user?.username, "isOwnProfile:", isOwnProfile);
-    if (!user || isOwnProfile) {
-      console.log("[PROFILE] Vote blocked - no user or own profile");
-      return;
-    }
+    if (!user || isOwnProfile) return;
 
     setIsVoting(prev => ({ ...prev, [ideaId]: true }));
 

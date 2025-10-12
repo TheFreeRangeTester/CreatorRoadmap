@@ -197,7 +197,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
       // Handle post-login redirection
       if (redirectAfterAuth) {
-        console.log("[AUTH] Redirecting to stored URL:", redirectAfterAuth);
         // Set a flag to prevent auth-page from doing another redirect
         localStorage.setItem("skipAuthPageRedirect", "true");
         // Clear the stored redirect URL
@@ -254,7 +253,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
       // Handle post-registration redirection
       if (redirectAfterAuth) {
-        console.log("[AUTH] Redirecting after registration to stored URL:", redirectAfterAuth);
         // Set a flag to prevent auth-page from doing another redirect
         localStorage.setItem("skipAuthPageRedirect", "true");
         // Clear the stored redirect URL
