@@ -14,7 +14,7 @@ import i18n from "../i18n";
 type UserResponse = {
   id: number;
   username: string;
-  userRole: 'creator' | 'audience';  // Agregamos el campo de rol
+  userRole: "creator" | "audience"; // Agregamos el campo de rol
   profileDescription?: string | null;
   logoUrl?: string | null;
   twitterUrl?: string | null;
@@ -57,7 +57,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const { toast } = useToast();
   const queryClient = useQueryClient();
   const [, navigate] = useLocation();
-  
+
   // Get current user
   const {
     data: user,
@@ -73,25 +73,27 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
-            "X-Requested-With": "XMLHttpRequest"
+            "X-Requested-With": "XMLHttpRequest",
           },
-          credentials: "include"
+          credentials: "include",
         });
-        
+
         console.log("Response status:", res.status);
-        
+
         // Not authenticated
         if (res.status === 401) {
           console.log("User not authenticated");
           return null;
         }
-        
+
         // Other errors
         if (!res.ok) {
-          console.error(`Error fetching user: ${res.status}: ${res.statusText}`);
+          console.error(
+            `Error fetching user: ${res.status}: ${res.statusText}`
+          );
           throw new Error(`${res.status}: ${res.statusText}`);
         }
-        
+
         // Success
         const userData = await res.json();
         console.log("User data received:", userData);
@@ -114,43 +116,44 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "X-Requested-With": "XMLHttpRequest"
+          "X-Requested-With": "XMLHttpRequest",
         },
         body: JSON.stringify(credentials),
-        credentials: "include"
+        credentials: "include",
       });
-      
+
       if (!res.ok) {
         const errorData = await res.text();
         throw new Error(errorData || "Login failed");
       }
-      
+
       return res.json() as Promise<UserResponse>;
     },
     onSuccess: (userData) => {
       // Update cache with user data
       queryClient.setQueryData(["/api/user"], userData);
-      
+
       // Invalidate and refetch user data to ensure it's fresh
       queryClient.invalidateQueries({ queryKey: ["/api/user"] });
       refetchUser();
-      
+
       // Check if there's a redirect URL stored from before login
-      const redirectAfterAuth = localStorage.getItem('redirectAfterAuth');
+      const redirectAfterAuth = localStorage.getItem("redirectAfterAuth");
       const currentPath = window.location.pathname;
-      
+
       // Only redirect audience users away from creator-only areas
-      const isAccessingCreatorOnlyArea = currentPath === '/auth' && 
-        (window.location.search.includes('direct=true') || 
-         localStorage.getItem('attemptingCreatorLogin') === 'true');
-      
-      if (isAccessingCreatorOnlyArea && userData.userRole === 'audience') {
+      const isAccessingCreatorOnlyArea =
+        currentPath === "/auth" &&
+        (window.location.search.includes("direct=true") ||
+          localStorage.getItem("attemptingCreatorLogin") === "true");
+
+      if (isAccessingCreatorOnlyArea && userData.userRole === "audience") {
         // Clear the flag
-        localStorage.removeItem('attemptingCreatorLogin');
-        
+        localStorage.removeItem("attemptingCreatorLogin");
+
         // Store flag for landing page to show error
-        localStorage.setItem('audienceTriedCreatorAccess', 'true');
-        
+        localStorage.setItem("audienceTriedCreatorAccess", "true");
+
         // Show immediate error message without blocking
         toast({
           title: i18n.t("auth.notCreatorAccount"),
@@ -163,39 +166,45 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         fetch("/api/logout", {
           method: "POST",
           headers: {
-            "X-Requested-With": "XMLHttpRequest"
+            "X-Requested-With": "XMLHttpRequest",
           },
-          credentials: "include"
-        }).then(() => {
-          // Clear user from cache smoothly
-          queryClient.setQueryData(["/api/user"], null);
-          queryClient.invalidateQueries({ queryKey: ["/api/user"] });
-          
-          // Navigate smoothly to landing page using React navigation
-          setTimeout(() => {
-            navigate('/');
-          }, 100);
-        }).catch((error) => {
-          console.error("Auto-logout failed:", error);
-        });
-        
+          credentials: "include",
+        })
+          .then(() => {
+            // Clear user from cache smoothly
+            queryClient.setQueryData(["/api/user"], null);
+            queryClient.invalidateQueries({ queryKey: ["/api/user"] });
+
+            // Navigate smoothly to landing page using React navigation
+            setTimeout(() => {
+              navigate("/");
+            }, 100);
+          })
+          .catch((error) => {
+            console.error("Auto-logout failed:", error);
+          });
+
         return; // Don't show success message or redirect
       }
-      
+
       // Show success message for valid logins
       toast({
         title: i18n.t("auth.loginSuccess"),
-        description: i18n.t("auth.welcomeBack", { username: userData.username }),
+        description: i18n.t("auth.welcomeBack", {
+          username: userData.username,
+        }),
       });
-      
+
       // Handle post-login redirection
       if (redirectAfterAuth) {
+        // Set a flag to prevent auth-page from doing another redirect
+        localStorage.setItem("skipAuthPageRedirect", "true");
         // Clear the stored redirect URL
-        localStorage.removeItem('redirectAfterAuth');
+        localStorage.removeItem("redirectAfterAuth");
         // Redirect to the stored URL (usually a creator profile)
         window.location.href = redirectAfterAuth;
       }
-      
+
       // Log login success for debugging
       console.log("Login successful, user data:", userData);
     },
@@ -215,28 +224,41 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "X-Requested-With": "XMLHttpRequest"
+          "X-Requested-With": "XMLHttpRequest",
         },
         body: JSON.stringify(userData),
-        credentials: "include"
+        credentials: "include",
       });
-      
+
       if (!res.ok) {
         const errorData = await res.text();
         throw new Error(errorData || "Registration failed");
       }
-      
+
       return res.json() as Promise<UserResponse>;
     },
     onSuccess: (userData) => {
       // Update cache with user data
       queryClient.setQueryData(["/api/user"], userData);
-      
+
       // Show success message
       toast({
         title: "Registration successful",
         description: `Welcome, ${userData.username}!`,
       });
+
+      // Check if there's a redirect URL stored from before registration
+      const redirectAfterAuth = localStorage.getItem("redirectAfterAuth");
+
+      // Handle post-registration redirection
+      if (redirectAfterAuth) {
+        // Set a flag to prevent auth-page from doing another redirect
+        localStorage.setItem("skipAuthPageRedirect", "true");
+        // Clear the stored redirect URL
+        localStorage.removeItem("redirectAfterAuth");
+        // Redirect to the stored URL (usually a creator profile)
+        window.location.href = redirectAfterAuth;
+      }
     },
     onError: (error: Error) => {
       toast({
@@ -253,12 +275,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       const res = await fetch("/api/logout", {
         method: "POST",
         headers: {
-        credentials: "include",
-          "X-Requested-With": "XMLHttpRequest"
+          credentials: "include",
+          "X-Requested-With": "XMLHttpRequest",
         },
-        credentials: "include"
+        credentials: "include",
       });
-      
+
       if (!res.ok) {
         const errorData = await res.text();
         throw new Error(errorData || "Logout failed");
@@ -267,10 +289,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     onSuccess: () => {
       // Clear user from cache
       queryClient.setQueryData(["/api/user"], null);
-      
+
       // Invalidate to force refetch any user-dependent queries
       queryClient.invalidateQueries({ queryKey: ["/api/user"] });
-      
+
       // Show success message
       toast({
         title: "Logged out",
@@ -292,25 +314,25 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       const res = await fetch("/api/user/role", {
         method: "PATCH",
         headers: {
-        credentials: "include",
+          credentials: "include",
           "Content-Type": "application/json",
-          "X-Requested-With": "XMLHttpRequest"
+          "X-Requested-With": "XMLHttpRequest",
         },
         body: JSON.stringify({ userRole: "creator" }),
-        credentials: "include"
+        credentials: "include",
       });
-      
+
       if (!res.ok) {
         const errorData = await res.text();
         throw new Error(errorData || "Failed to update role");
       }
-      
+
       return res.json() as Promise<UserResponse>;
     },
     onSuccess: (userData) => {
       // Update cache with updated user data
       queryClient.setQueryData(["/api/user"], userData);
-      
+
       // Show success message
       toast({
         title: "¡Felicidades!",
