@@ -99,9 +99,16 @@ export default function AuthPage() {
   // Redirect if already logged in
   useEffect(() => {
     if (user) {
-      // Check if use-auth.tsx already handled the redirect
+      // Check if use-auth.tsx will handle or already handled the redirect
+      const redirectAfterAuth = localStorage.getItem("redirectAfterAuth");
       const skipRedirect =
         localStorage.getItem("skipAuthPageRedirect") === "true";
+      
+      // If there's a redirectAfterAuth, let use-auth.tsx handle it
+      if (redirectAfterAuth) {
+        return;
+      }
+      
       if (skipRedirect) {
         localStorage.removeItem("skipAuthPageRedirect");
         // Don't do anything, the redirect was already handled

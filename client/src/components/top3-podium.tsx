@@ -243,6 +243,13 @@ function PodiumCard({
   };
 
   const handleVoteClick = () => {
+    if (!user) {
+      // User not authenticated - redirect to auth and save current URL
+      localStorage.setItem("redirectAfterAuth", window.location.href);
+      window.location.href = "/auth";
+      return;
+    }
+    
     if (!hasVoted && !isVoting) {
       onVote(idea.id);
     }
@@ -372,7 +379,7 @@ function PodiumCard({
           <div className={cn(isMobile ? "flex flex-col items-end gap-2" : "mt-4")}>
             <Button
               onClick={handleVoteClick}
-              disabled={hasVoted || isVoting || !user}
+              disabled={hasVoted || isVoting}
               size={isMobile ? "sm" : "default"}
               className={cn(
                 "relative overflow-hidden transition-all duration-300",
@@ -390,6 +397,8 @@ function PodiumCard({
                 />
               ) : hasVoted ? (
                 t("common.voted", "¡Votado!")
+              ) : !user ? (
+                t("common.loginToVote", "Inicia sesión para votar")
               ) : (
                 `${t("common.vote", "Votar")} • ${idea.votes}`
               )}
