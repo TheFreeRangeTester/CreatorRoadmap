@@ -3,6 +3,15 @@
 ## Overview
 Fanlist is a web application designed to empower content creators by enabling them to gather ideas, suggestions, and votes directly from their audience. It features a community-driven leaderboard system where content ideas are ranked by audience votes, allowing creators to identify and prioritize the most desired content. The platform aims to streamline content planning, increase audience engagement, and foster a strong creator-community relationship.
 
+## Recent Changes (October 12, 2025)
+### Database Fixes
+- Fixed `user_points` table constraint from `UNIQUE(user_id)` to `UNIQUE(user_id, creator_id)` to allow users to accumulate points for multiple creators separately.
+
+### Authentication & Redirect Fixes
+- **Top3Podium Component**: Added redirect logic for unauthenticated users - now saves current URL to localStorage as `redirectAfterAuth` and redirects to `/auth` when attempting to vote.
+- **use-auth.tsx Hook**: Enhanced login/register success handlers to check for `redirectAfterAuth` and redirect users back to the originating page (usually public profile) instead of dashboard.
+- **auth-page.tsx**: Fixed race condition where auth-page was interfering with use-auth redirection. Added early return if `redirectAfterAuth` exists, allowing use-auth.tsx to handle the redirect without interference.
+
 ## User Preferences
 Preferred communication style: Simple, everyday language.
 
