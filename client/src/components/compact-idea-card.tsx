@@ -248,7 +248,7 @@ export function CompactIdeaCard({
       {/* Hover border effect - only for non-top 3 */}
       {rank > 3 && (
         <motion.div
-          className="absolute inset-0 rounded-2xl border-2 border-transparent"
+          className="absolute inset-0 rounded-2xl border-2 border-transparent pointer-events-none"
           animate={{
             borderColor: isHovered ? "rgba(59, 130, 246, 0.3)" : "transparent",
           }}
