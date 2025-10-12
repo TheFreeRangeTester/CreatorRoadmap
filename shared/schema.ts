@@ -1,4 +1,4 @@
-import { pgTable, text, serial, integer, timestamp, boolean } from "drizzle-orm/pg-core";
+import { pgTable, text, serial, integer, timestamp, boolean, unique } from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
 
@@ -83,7 +83,11 @@ export const userPoints = pgTable("user_points", {
   pointsSpent: integer("points_spent").notNull().default(0), // Total points ever spent
   createdAt: timestamp("created_at").notNull().defaultNow(),
   updatedAt: timestamp("updated_at").notNull().defaultNow(),
-});
+}, (table) => ({
+  // Unique constraint on the combination of userId and creatorId
+  // This allows a user to have different points with each creator
+  userCreatorUnique: unique().on(table.userId, table.creatorId),
+}));
 
 // Table for point transactions/history
 export const pointTransactions = pgTable("point_transactions", {
@@ -132,8 +136,8 @@ export const insertUserSchema = createInsertSchema(users).pick({
   username: z.string()
     .min(3, { message: "El nombre de usuario debe tener al menos 3 caracteres" })
     .max(50, { message: "El nombre de usuario no puede exceder 50 caracteres" })
-    .regex(/^[a-zA-Z0-9_-]+$/, { 
-      message: "El nombre de usuario solo puede contener letras, números, guiones y guiones bajos" 
+    .regex(/^[a-zA-Z0-9_-]+$/, {
+      message: "El nombre de usuario solo puede contener letras, números, guiones y guiones bajos"
     }),
   password: z.string()
     .min(6, { message: "La contraseña debe tener al menos 6 caracteres" })
@@ -218,12 +222,12 @@ export const insertPasswordResetTokenSchema = createInsertSchema(passwordResetTo
 });
 
 export const insertPublicLinkSchema = createInsertSchema(publicLinks)
-  .omit({ 
-    id: true, 
-    creatorId: true, 
-    createdAt: true, 
-    token: true, 
-    isActive: true 
+  .omit({
+    id: true,
+    creatorId: true,
+    createdAt: true,
+    token: true,
+    isActive: true
   })
   .partial()
   .extend({
@@ -248,7 +252,7 @@ export const updateProfileSchema = z.object({
   twitterUrl: z.string().optional().nullable(),
   instagramUrl: z.string().optional().nullable(),
   youtubeUrl: z.string().optional().nullable(),
-  tiktokUrl: z.string().optional().nullable(), 
+  tiktokUrl: z.string().optional().nullable(),
   threadsUrl: z.string().optional().nullable(),
   websiteUrl: z.string().optional().nullable(),
   profileBackground: z.string().optional().nullable(),
