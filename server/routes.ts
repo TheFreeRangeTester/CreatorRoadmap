@@ -1026,15 +1026,40 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       // Award 1 point for voting (to this creator's profile)
       const creatorId = idea.creatorId;
-      await storage.updateUserPoints(userId, creatorId, 1, 'earned', 'vote_given', ideaId);
-      console.log(`[MAIN-VOTE] 1 point awarded to user ${userId}`);
+      try {
+        await storage.updateUserPoints(userId, creatorId, 1, 'earned', 'vote_given', ideaId);
+        console.log(`[MAIN-VOTE] 1 point awarded to user ${userId}`);
+      } catch (pointsError) {
+        console.error(`[MAIN-VOTE] Error awarding points, but vote was registered:`, pointsError);
+        // Continue even if points fail - the vote is what matters most
+      }
 
       // Get the updated idea with its new position
-      const ideasWithPositions = await storage.getIdeasWithPositions();
-      const updatedIdea = ideasWithPositions.find(i => i.id === ideaId);
+      try {
+        const ideasWithPositions = await storage.getIdeasWithPositions();
+        const updatedIdea = ideasWithPositions.find(i => i.id === ideaId);
 
-      console.log(`[MAIN-VOTE] Vote process completed successfully for idea ${ideaId}`);
-      res.status(201).json(updatedIdea);
+        if (!updatedIdea) {
+          console.warn(`[MAIN-VOTE] Could not find updated idea ${ideaId} in positions list`);
+          // Return basic success response instead of failing
+          return res.status(201).json({
+            message: "Vote registered successfully",
+            ideaId: ideaId,
+            votes: (idea.votes || 0) + 1
+          });
+        }
+
+        console.log(`[MAIN-VOTE] Vote process completed successfully for idea ${ideaId}`);
+        res.status(201).json(updatedIdea);
+      } catch (positionError) {
+        console.error(`[MAIN-VOTE] Error fetching positions, but vote was registered:`, positionError);
+        // Return basic success response instead of failing
+        return res.status(201).json({
+          message: "Vote registered successfully",
+          ideaId: ideaId,
+          votes: (idea.votes || 0) + 1
+        });
+      }
     } catch (error) {
       console.error("[MAIN-VOTE] Error voting for idea:", error);
       res.status(500).json({ message: "Failed to register vote" });
@@ -1116,15 +1141,40 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       // Award 1 point for voting (to this creator's profile)
       const creatorId = idea.creatorId;
-      await storage.updateUserPoints(userId, creatorId, 1, 'earned', 'vote_given', ideaId);
-      console.log(`[VOTE] 1 point awarded to user ${userId}`);
+      try {
+        await storage.updateUserPoints(userId, creatorId, 1, 'earned', 'vote_given', ideaId);
+        console.log(`[VOTE] 1 point awarded to user ${userId}`);
+      } catch (pointsError) {
+        console.error(`[VOTE] Error awarding points, but vote was registered:`, pointsError);
+        // Continue even if points fail - the vote is what matters most
+      }
 
       // Get the updated idea with its new position
-      const ideasWithPositions = await storage.getIdeasWithPositions();
-      const updatedIdea = ideasWithPositions.find(i => i.id === ideaId);
+      try {
+        const ideasWithPositions = await storage.getIdeasWithPositions();
+        const updatedIdea = ideasWithPositions.find(i => i.id === ideaId);
 
-      console.log(`[VOTE] Vote process completed successfully for idea ${ideaId}`);
-      res.status(201).json(updatedIdea);
+        if (!updatedIdea) {
+          console.warn(`[VOTE] Could not find updated idea ${ideaId} in positions list`);
+          // Return basic success response instead of failing
+          return res.status(201).json({
+            message: "Vote registered successfully",
+            ideaId: ideaId,
+            votes: (idea.votes || 0) + 1
+          });
+        }
+
+        console.log(`[VOTE] Vote process completed successfully for idea ${ideaId}`);
+        res.status(201).json(updatedIdea);
+      } catch (positionError) {
+        console.error(`[VOTE] Error fetching positions, but vote was registered:`, positionError);
+        // Return basic success response instead of failing
+        return res.status(201).json({
+          message: "Vote registered successfully",
+          ideaId: ideaId,
+          votes: (idea.votes || 0) + 1
+        });
+      }
     } catch (error) {
       console.error("[VOTE] Error voting for idea:", error);
       res.status(500).json({ message: "Failed to register vote" });
@@ -1236,16 +1286,44 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       // Create the vote
       await storage.createVote({ ideaId }, userId);
+      console.log(`[PUBLIC-VOTE] Vote created successfully`);
 
       // Award 1 point for voting (to this creator's profile)
       const creatorId = idea.creatorId;
-      await storage.updateUserPoints(userId, creatorId, 1, 'earned', 'vote_given', ideaId);
+      try {
+        await storage.updateUserPoints(userId, creatorId, 1, 'earned', 'vote_given', ideaId);
+        console.log(`[PUBLIC-VOTE] 1 point awarded to user ${userId}`);
+      } catch (pointsError) {
+        console.error(`[PUBLIC-VOTE] Error awarding points, but vote was registered:`, pointsError);
+        // Continue even if points fail - the vote is what matters most
+      }
 
       // Get the updated idea with its new position
-      const ideasWithPositions = await storage.getIdeasWithPositions();
-      const updatedIdea = ideasWithPositions.find(i => i.id === ideaId);
+      try {
+        const ideasWithPositions = await storage.getIdeasWithPositions();
+        const updatedIdea = ideasWithPositions.find(i => i.id === ideaId);
 
-      res.status(201).json(updatedIdea);
+        if (!updatedIdea) {
+          console.warn(`[PUBLIC-VOTE] Could not find updated idea ${ideaId} in positions list`);
+          // Return basic success response instead of failing
+          return res.status(201).json({
+            message: "Vote registered successfully",
+            ideaId: ideaId,
+            votes: (idea.votes || 0) + 1
+          });
+        }
+
+        console.log(`[PUBLIC-VOTE] Vote process completed successfully for idea ${ideaId}`);
+        res.status(201).json(updatedIdea);
+      } catch (positionError) {
+        console.error(`[PUBLIC-VOTE] Error fetching positions, but vote was registered:`, positionError);
+        // Return basic success response instead of failing
+        return res.status(201).json({
+          message: "Vote registered successfully",
+          ideaId: ideaId,
+          votes: (idea.votes || 0) + 1
+        });
+      }
     } catch (error) {
       console.error("Error voting for idea on public leaderboard:", error);
       res.status(500).json({ message: "Failed to register vote" });
