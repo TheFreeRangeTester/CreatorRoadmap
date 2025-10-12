@@ -4,3 +4,17 @@ dist
 server/public
 vite.config.ts.*
 *.tar.gz
+
+# Test coverage reports
+coverage/
+coverage-report.html
+*.lcov
+.nyc_output/
+
+# Test files disabled (temporary)
+**/*.test.ts.disabled
+**/*.test.tsx.disabled
+**/*.test.js.disabled
+**/*.test.jsx.disabled
+**/*.test.tsx.skip
+**/*.test.ts.skip

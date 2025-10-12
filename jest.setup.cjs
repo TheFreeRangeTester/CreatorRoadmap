@@ -7,6 +7,11 @@ process.env.DATABASE_URL = 'postgresql://test:test@localhost:5432/test';
 // Mock fetch for frontend tests
 global.fetch = jest.fn();
 
+// Add TextEncoder and TextDecoder for Node environment (required by some dependencies)
+const { TextEncoder, TextDecoder } = require('util');
+global.TextEncoder = TextEncoder;
+global.TextDecoder = TextDecoder;
+
 // Mock window.matchMedia for responsive tests
 Object.defineProperty(window, 'matchMedia', {
   writable: true,
