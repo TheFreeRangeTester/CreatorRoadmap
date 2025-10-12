@@ -197,12 +197,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
       // Handle post-login redirection
       if (redirectAfterAuth) {
+        console.log("[AUTH] Redirecting to stored URL:", redirectAfterAuth);
         // Set a flag to prevent auth-page from doing another redirect
         localStorage.setItem("skipAuthPageRedirect", "true");
         // Clear the stored redirect URL
         localStorage.removeItem("redirectAfterAuth");
         // Redirect to the stored URL (usually a creator profile)
         window.location.href = redirectAfterAuth;
+        return; // Stop execution after redirect
       }
 
       // Log login success for debugging
@@ -252,12 +254,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
       // Handle post-registration redirection
       if (redirectAfterAuth) {
+        console.log("[AUTH] Redirecting after registration to stored URL:", redirectAfterAuth);
         // Set a flag to prevent auth-page from doing another redirect
         localStorage.setItem("skipAuthPageRedirect", "true");
         // Clear the stored redirect URL
         localStorage.removeItem("redirectAfterAuth");
         // Redirect to the stored URL (usually a creator profile)
         window.location.href = redirectAfterAuth;
+        return; // Stop execution after redirect
       }
     },
     onError: (error: Error) => {
