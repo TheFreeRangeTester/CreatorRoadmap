@@ -1,479 +1,479 @@
-# 📋 Especificaciones del Sistema - CreatorRoadmap
+# 📋 System Specifications - CreatorRoadmap
 
-## 🎯 Resumen Ejecutivo
+## 🎯 Executive Summary
 
-- **Proyecto**: CreatorRoadmap - Fanlist Platform
-- **Versión**: 1.0.0
-- **Última actualización**: 2024-12-19
-- **Estado**: Producción Activa
+- **Project**: CreatorRoadmap - Fanlist Platform
+- **Version**: 1.0.0
+- **Last Updated**: 2024-12-19
+- **Status**: Active Production
 
-## 👥 Usuarios y Roles
+## 👥 Users and Roles
 
-### 🎨 Para Content Creators
+### 🎨 For Content Creators
 
-- **Descripción**: Usuarios que crean contenido y gestionan ideas para su audiencia
-- **Necesidades**:
-  - Crear y gestionar ideas de contenido
-  - Recibir votos y sugerencias de su audiencia
-  - Analizar métricas de engagement
-  - Gestionar tienda de puntos y recompensas
-  - Personalizar perfil público
-- **Capacidades**:
-  - Crear hasta 10 ideas (free) o ilimitadas (premium)
-  - Aprobar/rechazar sugerencias de audiencia
-  - Configurar tienda de puntos (premium)
-  - Acceder a analytics avanzados (premium)
-  - Compartir perfil público
+- **Description**: Users who create content and manage ideas for their audience
+- **Needs**:
+  - Create and manage content ideas
+  - Receive votes and suggestions from their audience
+  - Analyze engagement metrics
+  - Manage points store and rewards
+  - Customize public profile
+- **Capabilities**:
+  - Create up to 10 ideas (free) or unlimited (premium)
+  - Approve/reject audience suggestions
+  - Configure points store (premium)
+  - Access advanced analytics (premium)
+  - Share public profile
 
-### 🎨 Para Audience Members
+### 🎨 For Audience Members
 
-- **Descripción**: Usuarios que votan por ideas y sugieren contenido a creadores
-- **Necesidades**:
-  - Votar por ideas de contenido
-  - Sugerir nuevas ideas a creadores
-  - Ganar puntos por participación
-  - Canjear recompensas de creadores
-- **Capacidades**:
-  - Votar una vez por idea (gana 1 punto)
-  - Sugerir ideas (cuesta 3 puntos, gana 5 si se aprueba)
-  - Canjear items de tienda de creadores
-  - Ver estadísticas de participación
+- **Description**: Users who vote on ideas and suggest content to creators
+- **Needs**:
+  - Vote on content ideas
+  - Suggest new ideas to creators
+  - Earn points through participation
+  - Redeem creator rewards
+- **Capabilities**:
+  - Vote once per idea (earns 1 point)
+  - Suggest ideas (costs 3 points, earns 5 if approved)
+  - Redeem creator store items
+  - View participation statistics
 
-## 🚀 Funcionalidades Principales
+## 🚀 Main Features
 
-### 📝 FEAT-001: Sistema de Gestión de Ideas
+### 📝 FEAT-001: Idea Management System
 
-- **Descripción**: Permite a los creadores crear, editar y eliminar ideas de contenido con sistema de votación
-- **Prioridad**: Alta
-- **Estado**: Completado
-- **Criterios de Aceptación**:
-  - ✅ Los creadores pueden crear ideas con título (máx 100 chars) y descripción (máx 280 chars)
-  - ✅ Las ideas se muestran ordenadas por votos en tiempo real
-  - ✅ Los creadores pueden editar ideas propias (excepto si tienen >100 votos)
-  - ✅ Los creadores pueden eliminar ideas propias
-  - ✅ Sistema de nichos predefinidos (unboxing, review, tutorial, vlog, behindTheScenes, qna)
-- **Componentes Relacionados**:
-  - `server/routes.ts` - Endpoints POST/PUT/DELETE /api/ideas
-  - `client/src/components/idea-form.tsx` - Formulario de creación/edición
-  - `shared/schema.ts` - Esquemas de validación insertIdeaSchema, updateIdeaSchema
-- **Casos de Uso**:
-  - **CU-001**: Creador crea nueva idea de contenido
-  - **CU-002**: Creador edita idea existente
-  - **CU-003**: Creador elimina idea no deseada
+- **Description**: Allows creators to create, edit and delete content ideas with voting system
+- **Priority**: High
+- **Status**: Completed
+- **Acceptance Criteria**:
+  - ✅ Creators can create ideas with title (max 100 chars) and description (max 280 chars)
+  - ✅ Ideas are displayed ordered by votes in real-time
+  - ✅ Creators can edit their own ideas (except if they have >100 votes)
+  - ✅ Creators can delete their own ideas
+  - ✅ Predefined niches system (unboxing, review, tutorial, vlog, behindTheScenes, qna)
+- **Related Components**:
+  - `server/routes.ts` - POST/PUT/DELETE /api/ideas endpoints
+  - `client/src/components/idea-form.tsx` - Creation/editing form
+  - `shared/schema.ts` - Validation schemas insertIdeaSchema, updateIdeaSchema
+- **Use Cases**:
+  - **CU-001**: Creator creates new content idea
+  - **CU-002**: Creator edits existing idea
+  - **CU-003**: Creator deletes unwanted idea
 
-### 📝 FEAT-002: Sistema de Votación
+### 📝 FEAT-002: Voting System
 
-- **Descripción**: Permite a la audiencia votar por ideas de contenido con sistema de puntos
-- **Prioridad**: Alta
-- **Estado**: Completado
-- **Criterios de Aceptación**:
-  - ✅ Los usuarios pueden votar una vez por idea
-  - ✅ Cada voto otorga 1 punto al votante
-  - ✅ Los creadores no pueden votar sus propias ideas
-  - ✅ Las votaciones se actualizan en tiempo real
-  - ✅ Sistema previene votos duplicados por usuario
-- **Componentes Relacionados**:
-  - `server/routes.ts` - Endpoints POST /api/ideas/:id/vote
-  - `server/database-storage.ts` - Función updateUserPoints para otorgar puntos
-  - `client/src/hooks/use-reactive-stats.tsx` - Actualización reactiva de estadísticas
-- **Casos de Uso**:
-  - **CU-004**: Usuario vota por idea de creador
-  - **CU-005**: Sistema otorga puntos por voto
-  - **CU-006**: Rankings se actualizan automáticamente
+- **Description**: Allows audience to vote on content ideas with points system
+- **Priority**: High
+- **Status**: Completed
+- **Acceptance Criteria**:
+  - ✅ Users can vote once per idea
+  - ✅ Each vote awards 1 point to the voter
+  - ✅ Creators cannot vote on their own ideas
+  - ✅ Votes update in real-time
+  - ✅ System prevents duplicate votes per user
+- **Related Components**:
+  - `server/routes.ts` - POST /api/ideas/:id/vote endpoints
+  - `server/database-storage.ts` - updateUserPoints function to award points
+  - `client/src/hooks/use-reactive-stats.tsx` - Reactive statistics updates
+- **Use Cases**:
+  - **CU-004**: User votes for creator's idea
+  - **CU-005**: System awards points for vote
+  - **CU-006**: Rankings update automatically
 
-### 📝 FEAT-003: Sistema de Sugerencias de Ideas
+### 📝 FEAT-003: Idea Suggestions System
 
-- **Descripción**: Permite a la audiencia sugerir ideas a creadores específicos con sistema de aprobación
-- **Prioridad**: Alta
-- **Estado**: Completado
-- **Criterios de Aceptación**:
-  - ✅ Los usuarios pueden sugerir ideas a creadores específicos
-  - ✅ Cada sugerencia cuesta 3 puntos
-  - ✅ Las sugerencias requieren aprobación del creador
-  - ✅ Ideas aprobadas otorgan 5 puntos al sugeridor
-  - ✅ Los creadores pueden aprobar/rechazar sugerencias
-- **Componentes Relacionados**:
-  - `server/routes.ts` - Endpoints POST /api/creators/:username/suggest, PATCH /api/ideas/:id/approve
-  - `shared/schema.ts` - Esquema suggestIdeaSchema
-  - `client/src/components/suggestion-form.tsx` - Formulario de sugerencias
-- **Casos de Uso**:
-  - **CU-007**: Usuario sugiere idea a creador
-  - **CU-008**: Creador aprueba sugerencia
-  - **CU-009**: Sistema otorga puntos por sugerencia aprobada
+- **Description**: Allows audience to suggest ideas to specific creators with approval system
+- **Priority**: High
+- **Status**: Completed
+- **Acceptance Criteria**:
+  - ✅ Users can suggest ideas to specific creators
+  - ✅ Each suggestion costs 3 points
+  - ✅ Suggestions require creator approval
+  - ✅ Approved ideas award 5 points to suggester
+  - ✅ Creators can approve/reject suggestions
+- **Related Components**:
+  - `server/routes.ts` - POST /api/creators/:username/suggest, PATCH /api/ideas/:id/approve endpoints
+  - `shared/schema.ts` - suggestIdeaSchema
+  - `client/src/components/suggestion-form.tsx` - Suggestions form
+- **Use Cases**:
+  - **CU-007**: User suggests idea to creator
+  - **CU-008**: Creator approves suggestion
+  - **CU-009**: System awards points for approved suggestion
 
-### 📝 FEAT-004: Sistema de Puntos y Recompensas
+### 📝 FEAT-004: Points and Rewards System
 
-- **Descripción**: Sistema de gamificación con puntos por participación y tienda de recompensas
-- **Prioridad**: Alta
-- **Estado**: Completado
-- **Criterios de Aceptación**:
-  - ✅ Los usuarios ganan puntos por votar (+1) y sugerencias aprobadas (+5)
-  - ✅ Los creadores pueden crear items de tienda (premium)
-  - ✅ Los usuarios pueden canjear items con puntos
-  - ✅ Sistema de transacciones con historial completo
-  - ✅ Límite de 5 items por creador en tienda
-- **Componentes Relacionados**:
-  - `server/routes.ts` - Endpoints gestión de tienda y canjes
-  - `client/src/components/store-management.tsx` - Gestión de tienda
-  - `shared/schema.ts` - Esquemas storeItems, storeRedemptions, pointTransactions
-- **Casos de Uso**:
-  - **CU-010**: Creador crea item de tienda
-  - **CU-011**: Usuario canjea item con puntos
-  - **CU-012**: Sistema registra transacción de puntos
+- **Description**: Gamification system with points for participation and rewards store
+- **Priority**: High
+- **Status**: Completed
+- **Acceptance Criteria**:
+  - ✅ Users earn points for voting (+1) and approved suggestions (+5)
+  - ✅ Creators can create store items (premium)
+  - ✅ Users can redeem items with points
+  - ✅ Transaction system with complete history
+  - ✅ Limit of 5 items per creator in store
+- **Related Components**:
+  - `server/routes.ts` - Store management and redemption endpoints
+  - `client/src/components/store-management.tsx` - Store management
+  - `shared/schema.ts` - storeItems, storeRedemptions, pointTransactions schemas
+- **Use Cases**:
+  - **CU-010**: Creator creates store item
+  - **CU-011**: User redeems item with points
+  - **CU-012**: System records points transaction
 
-### 📝 FEAT-005: Sistema de Suscripciones Premium
+### 📝 FEAT-005: Premium Subscription System
 
-- **Descripción**: Sistema de suscripciones con Stripe para funcionalidades premium
-- **Prioridad**: Alta
-- **Estado**: Completado
-- **Criterios de Aceptación**:
-  - ✅ Planes mensual ($9.99) y anual ($99.99)
-  - ✅ Trial gratuito de 14 días
-  - ✅ Integración completa con Stripe
-  - ✅ Webhooks para sincronización de estado
-  - ✅ Funcionalidades premium: ideas ilimitadas, tienda de puntos, analytics
-- **Componentes Relacionados**:
-  - `server/routes.ts` - Endpoints Stripe y gestión de suscripciones
-  - `shared/premium-utils.ts` - Lógica de validación de acceso premium
-  - `client/src/pages/subscription-page.tsx` - Interfaz de suscripciones
-- **Casos de Uso**:
-  - **CU-013**: Usuario inicia trial gratuito
-  - **CU-014**: Usuario se suscribe a plan premium
-  - **CU-015**: Sistema valida acceso a funcionalidades premium
+- **Description**: Stripe-based subscription system for premium features
+- **Priority**: High
+- **Status**: Completed
+- **Acceptance Criteria**:
+  - ✅ Monthly ($9.99) and yearly ($99.99) plans
+  - ✅ 14-day free trial
+  - ✅ Complete Stripe integration
+  - ✅ Webhooks for state synchronization
+  - ✅ Premium features: unlimited ideas, points store, analytics
+- **Related Components**:
+  - `server/routes.ts` - Stripe endpoints and subscription management
+  - `shared/premium-utils.ts` - Premium access validation logic
+  - `client/src/pages/subscription-page.tsx` - Subscription interface
+- **Use Cases**:
+  - **CU-013**: User starts free trial
+  - **CU-014**: User subscribes to premium plan
+  - **CU-015**: System validates access to premium features
 
-### 📝 FEAT-006: Sistema de Autenticación y Perfiles
+### 📝 FEAT-006: Authentication and Profiles System
 
-- **Descripción**: Sistema completo de autenticación con roles y gestión de perfiles
-- **Prioridad**: Alta
-- **Estado**: Completado
-- **Criterios de Aceptación**:
-  - ✅ Registro y login con validación de contraseñas
-  - ✅ Roles de usuario (creator/audience)
-  - ✅ Recuperación de contraseña por email
-  - ✅ Perfiles personalizables con redes sociales
-  - ✅ Sesiones persistentes con cookies seguras
-- **Componentes Relacionados**:
-  - `server/auth.ts` - Configuración Passport.js y rutas de auth
-  - `client/src/hooks/use-auth.tsx` - Hook de autenticación
-  - `client/src/pages/auth-page.tsx` - Interfaz de login/registro
-- **Casos de Uso**:
-  - **CU-016**: Usuario se registra en la plataforma
-  - **CU-017**: Usuario cambia de rol audience a creator
-  - **CU-018**: Usuario recupera contraseña olvidada
+- **Description**: Complete authentication system with roles and profile management
+- **Priority**: High
+- **Status**: Completed
+- **Acceptance Criteria**:
+  - ✅ Registration and login with password validation
+  - ✅ User roles (creator/audience)
+  - ✅ Password recovery via email
+  - ✅ Customizable profiles with social media links
+  - ✅ Persistent sessions with secure cookies
+- **Related Components**:
+  - `server/auth.ts` - Passport.js configuration and auth routes
+  - `client/src/hooks/use-auth.tsx` - Authentication hook
+  - `client/src/pages/auth-page.tsx` - Login/registration interface
+- **Use Cases**:
+  - **CU-016**: User registers on platform
+  - **CU-017**: User changes from audience to creator role
+  - **CU-018**: User recovers forgotten password
 
-### 📝 FEAT-007: Perfiles Públicos y Compartir
+### 📝 FEAT-007: Public Profiles and Sharing
 
-- **Descripción**: Perfiles públicos de creadores con enlaces compartibles
-- **Prioridad**: Media
-- **Estado**: Completado
-- **Criterios de Aceptación**:
-  - ✅ Perfiles públicos accesibles por username
-  - ✅ Enlaces públicos con tokens únicos
-  - ✅ Votación en perfiles públicos
-  - ✅ Personalización de perfil con fondos y logos
-- **Componentes Relacionados**:
-  - `server/routes.ts` - Endpoints GET /api/creators/:username, /api/public/:token
-  - `client/src/pages/modern-public-profile.tsx` - Perfil público
-  - `shared/schema.ts` - Esquemas publicLinks
-- **Casos de Uso**:
-  - **CU-019**: Creador comparte perfil público
-  - **CU-020**: Usuario visita perfil de creador
-  - **CU-021**: Usuario vota en perfil público
+- **Description**: Creator public profiles with shareable links
+- **Priority**: Medium
+- **Status**: Completed
+- **Acceptance Criteria**:
+  - ✅ Public profiles accessible by username
+  - ✅ Public links with unique tokens
+  - ✅ Voting on public profiles
+  - ✅ Profile customization with backgrounds and logos
+- **Related Components**:
+  - `server/routes.ts` - GET /api/creators/:username, /api/public/:token endpoints
+  - `client/src/pages/modern-public-profile.tsx` - Public profile
+  - `shared/schema.ts` - publicLinks schemas
+- **Use Cases**:
+  - **CU-019**: Creator shares public profile
+  - **CU-020**: User visits creator profile
+  - **CU-021**: User votes on public profile
 
-## 🔧 Capacidades Técnicas
+## 🔧 Technical Capabilities
 
-### ⚙️ CAP-001: Base de Datos PostgreSQL con Drizzle ORM
+### ⚙️ CAP-001: PostgreSQL Database with Drizzle ORM
 
-- **Descripción**: Sistema de persistencia con ORM type-safe y migraciones automáticas
-- **Implementación**: Drizzle ORM con esquemas Zod para validación
-- **Dependencias**: PostgreSQL, drizzle-orm, drizzle-zod
-- **Archivos**:
-  - `shared/schema.ts` - Definición de tablas y esquemas
-  - `server/db.ts` - Configuración de conexión
-  - `server/database-storage.ts` - Implementación de operaciones CRUD
+- **Description**: Type-safe persistence system with ORM and automatic migrations
+- **Implementation**: Drizzle ORM with Zod schemas for validation
+- **Dependencies**: PostgreSQL, drizzle-orm, drizzle-zod
+- **Files**:
+  - `shared/schema.ts` - Table and schema definitions
+  - `server/db.ts` - Connection configuration
+  - `server/database-storage.ts` - CRUD operations implementation
 
-### ⚙️ CAP-002: Autenticación con Passport.js
+### ⚙️ CAP-002: Authentication with Passport.js
 
-- **Descripción**: Sistema de autenticación robusto con sesiones persistentes
-- **Implementación**: Passport Local Strategy con hash scrypt
-- **Dependencias**: passport, passport-local, express-session
-- **Archivos**:
-  - `server/auth.ts` - Configuración Passport y rutas de auth
-  - `server/storage.ts` - Interface IStorage para operaciones de usuario
+- **Description**: Robust authentication system with persistent sessions
+- **Implementation**: Passport Local Strategy with scrypt hash
+- **Dependencies**: passport, passport-local, express-session
+- **Files**:
+  - `server/auth.ts` - Passport configuration and auth routes
+  - `server/storage.ts` - IStorage interface for user operations
 
-### ⚙️ CAP-003: API REST con Express.js
+### ⚙️ CAP-003: REST API with Express.js
 
-- **Descripción**: API RESTful completa con validación Zod y manejo de errores
-- **Implementación**: Express con middleware de validación y logging
-- **Dependencias**: express, zod, zod-validation-error
-- **Archivos**:
-  - `server/routes.ts` - Definición de todas las rutas API
-  - `server/index.ts` - Configuración del servidor Express
+- **Description**: Complete RESTful API with Zod validation and error handling
+- **Implementation**: Express with validation middleware and logging
+- **Dependencies**: express, zod, zod-validation-error
+- **Files**:
+  - `server/routes.ts` - All API routes definition
+  - `server/index.ts` - Express server configuration
 
-### ⚙️ CAP-004: Frontend React con TypeScript
+### ⚙️ CAP-004: React Frontend with TypeScript
 
-- **Descripción**: Interfaz de usuario moderna con React 18 y TypeScript
-- **Implementación**: React Query para estado del servidor, Framer Motion para animaciones
-- **Dependencias**: react, @tanstack/react-query, framer-motion
-- **Archivos**:
-  - `client/src/App.tsx` - Configuración de rutas principales
-  - `client/src/hooks/use-auth.tsx` - Hook de autenticación
-  - `client/src/components/` - Componentes UI reutilizables
+- **Description**: Modern user interface with React 18 and TypeScript
+- **Implementation**: React Query for server state, Framer Motion for animations
+- **Dependencies**: react, @tanstack/react-query, framer-motion
+- **Files**:
+  - `client/src/App.tsx` - Main routes configuration
+  - `client/src/hooks/use-auth.tsx` - Authentication hook
+  - `client/src/components/` - Reusable UI components
 
-### ⚙️ CAP-005: Integración Stripe para Pagos
+### ⚙️ CAP-005: Stripe Payment Integration
 
-- **Descripción**: Sistema completo de pagos con webhooks y gestión de suscripciones
-- **Implementación**: Stripe Checkout con webhooks para sincronización
-- **Dependencias**: stripe, @stripe/stripe-js
-- **Archivos**:
-  - `server/routes.ts` - Endpoints Stripe y webhooks
-  - `client/src/pages/subscription-page.tsx` - Interfaz de suscripciones
+- **Description**: Complete payment system with webhooks and subscription management
+- **Implementation**: Stripe Checkout with webhooks for synchronization
+- **Dependencies**: stripe, @stripe/stripe-js
+- **Files**:
+  - `server/routes.ts` - Stripe endpoints and webhooks
+  - `client/src/pages/subscription-page.tsx` - Subscription interface
 
-### ⚙️ CAP-006: Sistema de Notificaciones por Email
+### ⚙️ CAP-006: Email Notification System
 
-- **Descripción**: Servicio de email para recuperación de contraseñas
-- **Implementación**: Resend API con templates HTML
-- **Dependencias**: resend
-- **Archivos**:
-  - `server/services/emailService.ts` - Servicio de envío de emails
-  - `server/services/tokenService.ts` - Gestión de tokens de recuperación
+- **Description**: Email service for password recovery
+- **Implementation**: Resend API with HTML templates
+- **Dependencies**: resend
+- **Files**:
+  - `server/services/emailService.ts` - Email sending service
+  - `server/services/tokenService.ts` - Recovery token management
 
-## 📊 Requisitos No Funcionales
+## 📊 Non-Functional Requirements
 
-### 🔒 REQ-001: Seguridad
+### 🔒 REQ-001: Security
 
-- **Descripción**: Sistema de seguridad robusto con hash de contraseñas, validación de entrada y protección CSRF
-- **Implementación**:
-  - Hash scrypt para contraseñas con salt aleatorio
-  - Validación Zod en todas las entradas
-  - Cookies httpOnly y sameSite para sesiones
-  - Middleware de autenticación en rutas protegidas
-- **Verificación**: Tests de autenticación y validación en `server/__tests__/`
+- **Description**: Robust security system with password hashing, input validation and CSRF protection
+- **Implementation**:
+  - Scrypt hash for passwords with random salt
+  - Zod validation on all inputs
+  - httpOnly and sameSite cookies for sessions
+  - Authentication middleware on protected routes
+- **Verification**: Authentication and validation tests in `server/__tests__/`
 
-### ⚡ REQ-002: Rendimiento
+### ⚡ REQ-002: Performance
 
-- **Descripción**: Sistema optimizado para respuesta rápida y escalabilidad
-- **Métricas**:
-  - Tiempo de respuesta API < 200ms
-  - Carga inicial de página < 2s
-  - Actualizaciones en tiempo real < 100ms
-- **Implementación**:
-  - React Query para cache del cliente
-  - Índices de base de datos en campos críticos
-  - Compresión gzip en servidor
-  - Lazy loading de componentes
+- **Description**: System optimized for fast response and scalability
+- **Metrics**:
+  - API response time < 200ms
+  - Initial page load < 2s
+  - Real-time updates < 100ms
+- **Implementation**:
+  - React Query for client-side caching
+  - Database indexes on critical fields
+  - gzip compression on server
+  - Lazy loading of components
 
-### 🔄 REQ-003: Disponibilidad
+### 🔄 REQ-003: Availability
 
-- **Descripción**: Sistema de alta disponibilidad con manejo de errores robusto
-- **Métricas**: 99.9% uptime objetivo
-- **Implementación**:
-  - Manejo de errores centralizado
-  - Logging detallado para debugging
-  - Fallbacks para operaciones críticas
-  - Validación de datos en múltiples capas
+- **Description**: High availability system with robust error handling
+- **Metrics**: 99.9% uptime target
+- **Implementation**:
+  - Centralized error handling
+  - Detailed logging for debugging
+  - Fallbacks for critical operations
+  - Multi-layer data validation
 
 ## 🎯 User Stories
 
-### 👤 US-001: Como creador de contenido, quiero crear ideas para que mi audiencia pueda votar por ellas
+### 👤 US-001: As a content creator, I want to create ideas so my audience can vote on them
 
-- **Prioridad**: Alta
-- **Estimación**: 8 story points
-- **Criterios de Aceptación**:
-  - Dado que soy un creador autenticado
-  - Cuando creo una nueva idea con título y descripción
-  - Entonces la idea aparece en mi leaderboard con 0 votos
-- **Implementación**:
-  - `server/routes.ts` - Endpoint POST /api/ideas con validación de rol
-  - `client/src/components/idea-form.tsx` - Formulario de creación con validación Zod
+- **Priority**: High
+- **Estimation**: 8 story points
+- **Acceptance Criteria**:
+  - Given that I am an authenticated creator
+  - When I create a new idea with title and description
+  - Then the idea appears in my leaderboard with 0 votes
+- **Implementation**:
+  - `server/routes.ts` - POST /api/ideas endpoint with role validation
+  - `client/src/components/idea-form.tsx` - Creation form with Zod validation
 
-### 👤 US-002: Como miembro de audiencia, quiero votar por ideas para ganar puntos y influir en el contenido
+### 👤 US-002: As an audience member, I want to vote on ideas to earn points and influence content
 
-- **Prioridad**: Alta
-- **Estimación**: 5 story points
-- **Criterios de Aceptación**:
-  - Dado que estoy autenticado como audiencia
-  - Cuando voto por una idea de un creador
-  - Entonces recibo 1 punto y la idea sube en el ranking
-- **Implementación**:
-  - `server/routes.ts` - Endpoint POST /api/ideas/:id/vote con validación de votos únicos
-  - `client/src/hooks/use-reactive-stats.tsx` - Actualización inmediata de UI
+- **Priority**: High
+- **Estimation**: 5 story points
+- **Acceptance Criteria**:
+  - Given that I am authenticated as audience
+  - When I vote on a creator's idea
+  - Then I receive 1 point and the idea rises in ranking
+- **Implementation**:
+  - `server/routes.ts` - POST /api/ideas/:id/vote endpoint with unique vote validation
+  - `client/src/hooks/use-reactive-stats.tsx` - Immediate UI updates
 
-### 👤 US-003: Como creador premium, quiero gestionar una tienda de puntos para recompensar a mi audiencia
+### 👤 US-003: As a premium creator, I want to manage a points store to reward my audience
 
-- **Prioridad**: Media
-- **Estimación**: 13 story points
-- **Criterios de Aceptación**:
-  - Dado que tengo suscripción premium activa
-  - Cuando creo items en mi tienda de puntos
-  - Entonces mi audiencia puede canjearlos con sus puntos
-- **Implementación**:
-  - `server/routes.ts` - Endpoints CRUD para tienda con validación premium
-  - `client/src/components/store-management.tsx` - Interfaz de gestión de tienda
+- **Priority**: Medium
+- **Estimation**: 13 story points
+- **Acceptance Criteria**:
+  - Given that I have an active premium subscription
+  - When I create items in my points store
+  - Then my audience can redeem them with their points
+- **Implementation**:
+  - `server/routes.ts` - CRUD endpoints for store with premium validation
+  - `client/src/components/store-management.tsx` - Store management interface
 
-### 👤 US-004: Como usuario, quiero suscribirme a premium para acceder a funcionalidades avanzadas
+### 👤 US-004: As a user, I want to subscribe to premium to access advanced features
 
-- **Prioridad**: Alta
-- **Estimación**: 21 story points
-- **Criterios de Aceptación**:
-  - Dado que soy un usuario registrado
-  - Cuando me suscribo a un plan premium
-  - Entonces desbloqueo ideas ilimitadas y tienda de puntos
-- **Implementación**:
-  - `server/routes.ts` - Integración Stripe con webhooks
-  - `shared/premium-utils.ts` - Validación de acceso premium
+- **Priority**: High
+- **Estimation**: 21 story points
+- **Acceptance Criteria**:
+  - Given that I am a registered user
+  - When I subscribe to a premium plan
+  - Then I unlock unlimited ideas and points store
+- **Implementation**:
+  - `server/routes.ts` - Stripe integration with webhooks
+  - `shared/premium-utils.ts` - Premium access validation
 
 ## 🔗 API Endpoints
 
 ### 🌐 GET /api/ideas
 
-- **Descripción**: Obtiene todas las ideas del usuario autenticado filtradas por rol
-- **Parámetros**: Ninguno
-- **Respuesta**: Array de ideas con posiciones y estadísticas
-- **Implementación**: `server/routes.ts:333-369`
+- **Description**: Gets all ideas from authenticated user filtered by role
+- **Parameters**: None
+- **Response**: Array of ideas with positions and statistics
+- **Implementation**: `server/routes.ts:333-369`
 
 ### 🌐 POST /api/ideas
 
-- **Descripción**: Crea una nueva idea para el creador autenticado
-- **Parámetros**: `{ title: string, description: string, niche?: string }`
-- **Respuesta**: Idea creada con posición calculada
-- **Implementación**: `server/routes.ts:392-443`
+- **Description**: Creates a new idea for authenticated creator
+- **Parameters**: `{ title: string, description: string, niche?: string }`
+- **Response**: Created idea with calculated position
+- **Implementation**: `server/routes.ts:392-443`
 
 ### 🌐 POST /api/ideas/:id/vote
 
-- **Descripción**: Registra un voto para una idea específica
-- **Parámetros**: Ninguno en body
-- **Respuesta**: Idea actualizada con nuevo conteo de votos
-- **Implementación**: `server/routes.ts:975-1067`
+- **Description**: Registers a vote for a specific idea
+- **Parameters**: None in body
+- **Response**: Updated idea with new vote count
+- **Implementation**: `server/routes.ts:975-1067`
 
 ### 🌐 POST /api/creators/:username/suggest
 
-- **Descripción**: Sugiere una idea a un creador específico
-- **Parámetros**: `{ title: string, description: string }`
-- **Respuesta**: Idea sugerida con estado pending
-- **Implementación**: `server/routes.ts:738-823`
+- **Description**: Suggests an idea to a specific creator
+- **Parameters**: `{ title: string, description: string }`
+- **Response**: Suggested idea with pending status
+- **Implementation**: `server/routes.ts:738-823`
 
 ### 🌐 POST /api/stripe/create-checkout-session
 
-- **Descripción**: Crea sesión de checkout de Stripe para suscripción
-- **Parámetros**: `{ plan: 'monthly'|'yearly', successUrl?: string, cancelUrl?: string }`
-- **Respuesta**: `{ id: string, url: string }`
-- **Implementación**: `server/routes.ts:1371-1505`
+- **Description**: Creates Stripe checkout session for subscription
+- **Parameters**: `{ plan: 'monthly'|'yearly', successUrl?: string, cancelUrl?: string }`
+- **Response**: `{ id: string, url: string }`
+- **Implementation**: `server/routes.ts:1371-1505`
 
 ### 🌐 GET /api/user/points/:creatorId
 
-- **Descripción**: Obtiene puntos del usuario para un creador específico
-- **Parámetros**: creatorId en URL
-- **Respuesta**: `{ userId: number, totalPoints: number, pointsEarned: number, pointsSpent: number }`
-- **Implementación**: `server/routes.ts:197-216`
+- **Description**: Gets user points for a specific creator
+- **Parameters**: creatorId in URL
+- **Response**: `{ userId: number, totalPoints: number, pointsEarned: number, pointsSpent: number }`
+- **Implementation**: `server/routes.ts:197-216`
 
-## 🧪 Casos de Prueba
+## 🧪 Test Cases
 
-### ✅ TC-001: Creación de Idea por Creador
+### ✅ TC-001: Idea Creation by Creator
 
-- **Descripción**: Verifica que un creador puede crear ideas válidas
-- **Pasos**:
-  1. Autenticar como creador
-  2. Enviar POST /api/ideas con datos válidos
-  3. Verificar respuesta 201 con idea creada
-- **Resultado Esperado**: Idea creada con ID único y posición calculada
-- **Archivo**: `server/__tests__/premium-middleware.test.ts`
+- **Description**: Verifies that a creator can create valid ideas
+- **Steps**:
+  1. Authenticate as creator
+  2. Send POST /api/ideas with valid data
+  3. Verify 201 response with created idea
+- **Expected Result**: Idea created with unique ID and calculated position
+- **File**: `server/__tests__/premium-middleware.test.ts`
 
-### ✅ TC-002: Votación Única por Usuario
+### ✅ TC-002: Single Vote per User
 
-- **Descripción**: Verifica que un usuario solo puede votar una vez por idea
-- **Pasos**:
-  1. Usuario vota por idea
-  2. Intentar votar nuevamente por la misma idea
-  3. Verificar error 400
-- **Resultado Esperado**: Segundo voto rechazado con mensaje de error
-- **Archivo**: `server/routes.ts:1014-1019`
+- **Description**: Verifies that a user can only vote once per idea
+- **Steps**:
+  1. User votes on idea
+  2. Attempt to vote again on same idea
+  3. Verify 400 error
+- **Expected Result**: Second vote rejected with error message
+- **File**: `server/routes.ts:1014-1019`
 
-### ✅ TC-003: Validación de Acceso Premium
+### ✅ TC-003: Premium Access Validation
 
-- **Descripción**: Verifica que solo usuarios premium pueden acceder a funcionalidades premium
-- **Pasos**:
-  1. Usuario free intenta crear item de tienda
-  2. Verificar rechazo con error 403
-  3. Usuario premium crea item exitosamente
-- **Resultado Esperado**: Acceso denegado para usuarios free, permitido para premium
-- **Archivo**: `shared/__tests__/premium-utils.test.ts`
+- **Description**: Verifies that only premium users can access premium features
+- **Steps**:
+  1. Free user attempts to create store item
+  2. Verify rejection with 403 error
+  3. Premium user creates item successfully
+- **Expected Result**: Access denied for free users, allowed for premium
+- **File**: `shared/__tests__/premium-utils.test.ts`
 
-### ✅ TC-004: Sistema de Puntos por Votación
+### ✅ TC-004: Points System for Voting
 
-- **Descripción**: Verifica que votar otorga puntos correctamente
-- **Pasos**:
-  1. Usuario con 0 puntos vota por idea
-  2. Verificar que puntos aumentan a 1
-  3. Verificar transacción registrada
-- **Resultado Esperado**: Puntos incrementados y transacción creada
-- **Archivo**: `server/database-storage.ts:548-588`
+- **Description**: Verifies that voting awards points correctly
+- **Steps**:
+  1. User with 0 points votes on idea
+  2. Verify points increase to 1
+  3. Verify transaction recorded
+- **Expected Result**: Points incremented and transaction created
+- **File**: `server/database-storage.ts:548-588`
 
-## 📈 Métricas y KPIs
+## 📈 Metrics and KPIs
 
-### 📊 Métricas de Funcionalidad
+### 📊 Functionality Metrics
 
-- **Cobertura de Especificaciones**: 95% (19/20 funcionalidades principales implementadas)
-- **Tiempo de Respuesta**: <200ms promedio para operaciones CRUD
-- **Disponibilidad**: 99.9% uptime objetivo con monitoreo activo
+- **Specification Coverage**: 95% (19/20 main features implemented)
+- **Response Time**: <200ms average for CRUD operations
+- **Availability**: 99.9% uptime target with active monitoring
 
-### 📊 Métricas de Negocio
+### 📊 Business Metrics
 
-- **Engagement**: Promedio de 3.2 votos por idea
-- **Conversión Premium**: 15% de usuarios activos tienen suscripción premium
-- **Retención**: 78% de usuarios activos en últimos 30 días
+- **Engagement**: Average of 3.2 votes per idea
+- **Premium Conversion**: 15% of active users have premium subscription
+- **Retention**: 78% of active users in last 30 days
 
-## 🔄 Flujos de Trabajo
+## 🔄 Workflows
 
-### 🔄 WF-001: Flujo de Creación y Votación de Ideas
+### 🔄 WF-001: Idea Creation and Voting Flow
 
-- **Descripción**: Proceso completo desde creación de idea hasta votación de audiencia
-- **Pasos**:
-  1. Creador autenticado crea idea via POST /api/ideas
-  2. Sistema valida datos y calcula posición inicial
-  3. Idea aparece en leaderboard público
-  4. Audiencia vota via POST /api/ideas/:id/vote
-  5. Sistema actualiza votos y recalcula posiciones
-  6. Usuarios reciben puntos por votar
-- **Implementación**: `server/routes.ts:392-443` y `server/routes.ts:975-1067`
+- **Description**: Complete process from idea creation to audience voting
+- **Steps**:
+  1. Authenticated creator creates idea via POST /api/ideas
+  2. System validates data and calculates initial position
+  3. Idea appears in public leaderboard
+  4. Audience votes via POST /api/ideas/:id/vote
+  5. System updates votes and recalculates positions
+  6. Users receive points for voting
+- **Implementation**: `server/routes.ts:392-443` and `server/routes.ts:975-1067`
 
-### 🔄 WF-002: Flujo de Suscripción Premium
+### 🔄 WF-002: Premium Subscription Flow
 
-- **Descripción**: Proceso de suscripción desde selección de plan hasta activación
-- **Pasos**:
-  1. Usuario selecciona plan mensual/anual
-  2. Sistema crea sesión Stripe Checkout
-  3. Usuario completa pago en Stripe
-  4. Webhook Stripe notifica confirmación
-  5. Sistema actualiza estado de suscripción
-  6. Usuario accede a funcionalidades premium
-- **Implementación**: `server/routes.ts:1371-1505` y webhook handler
+- **Description**: Subscription process from plan selection to activation
+- **Steps**:
+  1. User selects monthly/yearly plan
+  2. System creates Stripe Checkout session
+  3. User completes payment on Stripe
+  4. Stripe webhook notifies confirmation
+  5. System updates subscription status
+  6. User accesses premium features
+- **Implementation**: `server/routes.ts:1371-1505` and webhook handler
 
-### 🔄 WF-003: Flujo de Sugerencias y Aprobación
+### 🔄 WF-003: Suggestions and Approval Flow
 
-- **Descripción**: Proceso de sugerencia de ideas por audiencia y aprobación por creadores
-- **Pasos**:
-  1. Usuario audiencia sugiere idea (cuesta 3 puntos)
-  2. Sistema crea idea con estado 'pending'
-  3. Creador ve sugerencia en dashboard
-  4. Creador aprueba/rechaza sugerencia
-  5. Si aprobada: idea pasa a 'approved' y usuario gana 5 puntos
-  6. Si rechazada: idea se elimina
-- **Implementación**: `server/routes.ts:738-823` y `server/routes.ts:873-947`
+- **Description**: Process of idea suggestions by audience and approval by creators
+- **Steps**:
+  1. Audience user suggests idea (costs 3 points)
+  2. System creates idea with 'pending' status
+  3. Creator sees suggestion in dashboard
+  4. Creator approves/rejects suggestion
+  5. If approved: idea becomes 'approved' and user gains 5 points
+  6. If rejected: idea is deleted
+- **Implementation**: `server/routes.ts:738-823` and `server/routes.ts:873-947`
 
-## 📚 Referencias
+## 📚 References
 
-### 🔗 Documentación Externa
+### 🔗 External Documentation
 
 - [Drizzle ORM Documentation](https://orm.drizzle.team/)
 - [Stripe API Reference](https://stripe.com/docs/api)
 - [React Query Documentation](https://tanstack.com/query/latest)
 - [Passport.js Documentation](http://www.passportjs.org/)
 
-### 📁 Archivos Relacionados
+### 📁 Related Files
 
-- `README.md` - Documentación principal del proyecto
-- `docs/` - Documentación técnica detallada
-- `package.json` - Dependencias y scripts del proyecto
-- `drizzle.config.ts` - Configuración de base de datos
-- `jest.config.cjs` - Configuración de testing
+- `README.md` - Main project documentation
+- `docs/` - Detailed technical documentation
+- `package.json` - Project dependencies and scripts
+- `drizzle.config.ts` - Database configuration
+- `jest.config.cjs` - Testing configuration
