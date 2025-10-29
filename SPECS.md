@@ -45,7 +45,6 @@
 
 - **Description**: Allows creators to create, edit and delete content ideas with voting system
 - **Priority**: High
-- **Status**: Completed
 - **Acceptance Criteria**:
   - ✅ Creators can create ideas with title (max 100 chars) and description (max 280 chars)
   - ✅ Ideas are displayed ordered by votes in real-time
@@ -65,7 +64,6 @@
 
 - **Description**: Allows audience to vote on content ideas with points system
 - **Priority**: High
-- **Status**: Completed
 - **Acceptance Criteria**:
   - ✅ Users can vote once per idea
   - ✅ Each vote awards 1 point to the voter
@@ -85,7 +83,6 @@
 
 - **Description**: Allows audience to suggest ideas to specific creators with approval system
 - **Priority**: High
-- **Status**: Completed
 - **Acceptance Criteria**:
   - ✅ Users can suggest ideas to specific creators
   - ✅ Each suggestion costs 3 points
@@ -105,7 +102,6 @@
 
 - **Description**: Gamification system with points for participation and rewards store
 - **Priority**: High
-- **Status**: Completed
 - **Acceptance Criteria**:
   - ✅ Users earn points for voting (+1) and approved suggestions (+5)
   - ✅ Creators can create store items (premium)
@@ -125,7 +121,6 @@
 
 - **Description**: Stripe-based subscription system for premium features
 - **Priority**: High
-- **Status**: Completed
 - **Acceptance Criteria**:
   - ✅ Monthly ($9.99) and yearly ($99.99) plans
   - ✅ 14-day free trial
@@ -145,7 +140,6 @@
 
 - **Description**: Complete authentication system with roles and profile management
 - **Priority**: High
-- **Status**: Completed
 - **Acceptance Criteria**:
   - ✅ Registration and login with password validation
   - ✅ User roles (creator/audience)
@@ -165,7 +159,6 @@
 
 - **Description**: Creator public profiles with shareable links
 - **Priority**: Medium
-- **Status**: Completed
 - **Acceptance Criteria**:
   - ✅ Public profiles accessible by username
   - ✅ Public links with unique tokens
@@ -366,48 +359,6 @@
 - **Parameters**: creatorId in URL
 - **Response**: `{ userId: number, totalPoints: number, pointsEarned: number, pointsSpent: number }`
 - **Implementation**: `server/routes.ts:197-216`
-
-## 🧪 Test Cases
-
-### ✅ TC-001: Idea Creation by Creator
-
-- **Description**: Verifies that a creator can create valid ideas
-- **Steps**:
-  1. Authenticate as creator
-  2. Send POST /api/ideas with valid data
-  3. Verify 201 response with created idea
-- **Expected Result**: Idea created with unique ID and calculated position
-- **File**: `server/__tests__/premium-middleware.test.ts`
-
-### ✅ TC-002: Single Vote per User
-
-- **Description**: Verifies that a user can only vote once per idea
-- **Steps**:
-  1. User votes on idea
-  2. Attempt to vote again on same idea
-  3. Verify 400 error
-- **Expected Result**: Second vote rejected with error message
-- **File**: `server/routes.ts:1014-1019`
-
-### ✅ TC-003: Premium Access Validation
-
-- **Description**: Verifies that only premium users can access premium features
-- **Steps**:
-  1. Free user attempts to create store item
-  2. Verify rejection with 403 error
-  3. Premium user creates item successfully
-- **Expected Result**: Access denied for free users, allowed for premium
-- **File**: `shared/__tests__/premium-utils.test.ts`
-
-### ✅ TC-004: Points System for Voting
-
-- **Description**: Verifies that voting awards points correctly
-- **Steps**:
-  1. User with 0 points votes on idea
-  2. Verify points increase to 1
-  3. Verify transaction recorded
-- **Expected Result**: Points incremented and transaction created
-- **File**: `server/database-storage.ts:548-588`
 
 ## 📈 Metrics and KPIs
 
