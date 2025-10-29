@@ -45,6 +45,7 @@
 
 - **Description**: Allows creators to create, edit and delete content ideas with voting system
 - **Priority**: High
+- **Status**: Completed
 - **Acceptance Criteria**:
   - ✅ Creators can create ideas with title (max 100 chars) and description (max 280 chars)
   - ✅ Ideas are displayed ordered by votes in real-time
@@ -64,6 +65,7 @@
 
 - **Description**: Allows audience to vote on content ideas with points system
 - **Priority**: High
+- **Status**: Completed
 - **Acceptance Criteria**:
   - ✅ Users can vote once per idea
   - ✅ Each vote awards 1 point to the voter
@@ -83,6 +85,7 @@
 
 - **Description**: Allows audience to suggest ideas to specific creators with approval system
 - **Priority**: High
+- **Status**: Completed (Note: Awards 2 points instead of 5 for approved suggestions)
 - **Acceptance Criteria**:
   - ✅ Users can suggest ideas to specific creators
   - ✅ Each suggestion costs 3 points
@@ -102,6 +105,7 @@
 
 - **Description**: Gamification system with points for participation and rewards store
 - **Priority**: High
+- **Status**: Completed
 - **Acceptance Criteria**:
   - ✅ Users earn points for voting (+1) and approved suggestions (+5)
   - ✅ Creators can create store items (premium)
@@ -121,6 +125,7 @@
 
 - **Description**: Stripe-based subscription system for premium features
 - **Priority**: High
+- **Status**: Completed
 - **Acceptance Criteria**:
   - ✅ Monthly ($9.99) and yearly ($99.99) plans
   - ✅ 14-day free trial
@@ -140,6 +145,7 @@
 
 - **Description**: Complete authentication system with roles and profile management
 - **Priority**: High
+- **Status**: Completed
 - **Acceptance Criteria**:
   - ✅ Registration and login with password validation
   - ✅ User roles (creator/audience)
@@ -159,6 +165,7 @@
 
 - **Description**: Creator public profiles with shareable links
 - **Priority**: Medium
+- **Status**: Completed
 - **Acceptance Criteria**:
   - ✅ Public profiles accessible by username
   - ✅ Public links with unique tokens
