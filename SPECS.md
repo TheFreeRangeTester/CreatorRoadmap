@@ -298,6 +298,8 @@
 - **Implementation**:
   - `server/routes.ts` - POST /api/ideas/:id/vote endpoint with unique vote validation
   - `client/src/hooks/use-reactive-stats.tsx` - Immediate UI updates
+  - `server/routes.ts` - Awards +1 point via `updateUserPoints(..., 1, 'earned', 'vote_given', ideaId)`
+  - `server/database-storage.ts` - `updateUserPoints` persists balances and `pointTransactions`
 
 ### 👤 US-003: As a premium creator, I want to manage a points store to reward my audience
 
@@ -358,7 +360,9 @@
 - **Description**: Creates Stripe checkout session for subscription
 - **Parameters**: `{ plan: 'monthly'|'yearly', successUrl?: string, cancelUrl?: string }`
 - **Response**: `{ id: string, url: string }`
-- **Implementation**: `server/routes.ts:1371-1505`
+- **Implementation**:
+  - `server/routes.ts:1371-1505` — Handler POST `/api/stripe/create-checkout-session` (auth check, valida cuerpo con Zod, asegura `stripeCustomerId`, crea/recupera Product y Prices según plan, y llama a `stripe.checkout.sessions.create`)
+  - `shared/schema.ts` — `createCheckoutSessionSchema` (validación de `{ plan, successUrl?, cancelUrl? }`)
 
 ### 🌐 GET /api/user/points/:creatorId
 
