@@ -53,9 +53,9 @@
   - ✅ Creators can delete their own ideas
   - ✅ Predefined niches system (unboxing, review, tutorial, vlog, behindTheScenes, qna)
 - **Related Components**:
-  - `server/routes.ts` - POST/PUT/DELETE /api/ideas endpoints
-  - `client/src/components/idea-form.tsx` - Creation/editing form
-  - `shared/schema.ts` - Validation schemas insertIdeaSchema, updateIdeaSchema
+  - `server/routes.ts` — lógica de gestión de ideas
+  - `client/src/components/idea-form.tsx` — formulario de creación/edición
+  - `shared/schema.ts` — validaciones de ideas
 - **Use Cases**:
   - **CU-001**: Creator creates new content idea
   - **CU-002**: Creator edits existing idea
@@ -73,9 +73,9 @@
   - ✅ Votes update in real-time
   - ✅ System prevents duplicate votes per user
 - **Related Components**:
-  - `server/routes.ts` - POST /api/ideas/:id/vote endpoints
-  - `server/database-storage.ts` - updateUserPoints function to award points
-  - `client/src/hooks/use-reactive-stats.tsx` - Reactive statistics updates
+  - `server/routes.ts` — lógica de votos y prevención de duplicados
+  - `server/database-storage.ts` — persistencia de puntos y transacciones
+  - `client/src/hooks/use-reactive-stats.tsx` — actualizaciones reactivas
 - **Use Cases**:
   - **CU-004**: User votes for creator's idea
   - **CU-005**: System awards points for vote
@@ -93,9 +93,9 @@
   - ✅ Approved ideas award 5 points to suggester
   - ✅ Creators can approve/reject suggestions
 - **Related Components**:
-  - `server/routes.ts` - POST /api/creators/:username/suggest, PATCH /api/ideas/:id/approve endpoints
-  - `shared/schema.ts` - suggestIdeaSchema
-  - `client/src/components/suggestion-form.tsx` - Suggestions form
+  - `server/routes.ts` — lógica de sugerencias y aprobación de ideas
+  - `shared/schema.ts` — validaciones de sugerencias
+  - `client/src/components/suggestion-form.tsx` — formulario de sugerencias
 - **Use Cases**:
   - **CU-007**: User suggests idea to creator
   - **CU-008**: Creator approves suggestion
@@ -113,9 +113,9 @@
   - ✅ Transaction system with complete history
   - ✅ Limit of 5 items per creator in store
 - **Related Components**:
-  - `server/routes.ts` - Store management and redemption endpoints
-  - `client/src/components/store-management.tsx` - Store management
-  - `shared/schema.ts` - storeItems, storeRedemptions, pointTransactions schemas
+  - `server/routes.ts` — lógica de tienda y canjes de puntos
+  - `client/src/components/store-management.tsx` — gestión de tienda
+  - `shared/schema.ts` — esquemas de tienda y transacciones de puntos
 - **Use Cases**:
   - **CU-010**: Creator creates store item
   - **CU-011**: User redeems item with points
@@ -133,9 +133,9 @@
   - ✅ Webhooks for state synchronization
   - ✅ Premium features: unlimited ideas, points store, analytics
 - **Related Components**:
-  - `server/routes.ts` - Stripe endpoints and subscription management
-  - `shared/premium-utils.ts` - Premium access validation logic
-  - `client/src/pages/subscription-page.tsx` - Subscription interface
+  - `server/routes.ts` — lógica de suscripciones y estados
+  - `shared/premium-utils.ts` — validación de acceso premium
+  - `client/src/pages/subscription-page.tsx` — interfaz de suscripción
 - **Use Cases**:
   - **CU-013**: User starts free trial
   - **CU-014**: User subscribes to premium plan
@@ -153,9 +153,9 @@
   - ✅ Customizable profiles with social media links
   - ✅ Persistent sessions with secure cookies
 - **Related Components**:
-  - `server/auth.ts` - Passport.js configuration and auth routes
-  - `client/src/hooks/use-auth.tsx` - Authentication hook
-  - `client/src/pages/auth-page.tsx` - Login/registration interface
+  - `server/auth.ts` — autenticación y sesiones
+  - `client/src/hooks/use-auth.tsx` — gestión de autenticación en UI
+  - `client/src/pages/auth-page.tsx` — interfaz de acceso
 - **Use Cases**:
   - **CU-016**: User registers on platform
   - **CU-017**: User changes from audience to creator role
@@ -172,9 +172,9 @@
   - ✅ Voting on public profiles
   - ✅ Profile customization with backgrounds and logos
 - **Related Components**:
-  - `server/routes.ts` - GET /api/creators/:username, /api/public/:token endpoints
-  - `client/src/pages/modern-public-profile.tsx` - Public profile
-  - `shared/schema.ts` - publicLinks schemas
+  - `server/routes.ts` — lógica de perfiles públicos y enlaces compartibles
+  - `client/src/pages/modern-public-profile.tsx` — perfil público
+  - `shared/schema.ts` — esquemas de enlaces públicos
 - **Use Cases**:
   - **CU-019**: Creator shares public profile
   - **CU-020**: User visits creator profile
@@ -273,103 +273,17 @@
   - Fallbacks for critical operations
   - Multi-layer data validation
 
-## 🎯 User Stories
+<!-- User Stories removed: maintained separately in backlog management tools -->
 
-### 👤 US-001: As a content creator, I want to create ideas so my audience can vote on them
+## 🔗 Related Implementation Context
 
-- **Priority**: High
-- **Estimation**: 8 story points
-- **Acceptance Criteria**:
-  - Given that I am an authenticated creator
-  - When I create a new idea with title and description
-  - Then the idea appears in my leaderboard with 0 votes
-- **Implementation**:
-  - `server/routes.ts` - POST /api/ideas endpoint with role validation
-  - `client/src/components/idea-form.tsx` - Creation form with Zod validation
+Nota: Los detalles de API (rutas, contratos, ejemplos) estarán documentados en Swagger/OpenAPI. Aquí solo se listan componentes de alto nivel que implementan los features:
 
-### 👤 US-002: As an audience member, I want to vote on ideas to earn points and influence content
-
-- **Priority**: High
-- **Estimation**: 5 story points
-- **Acceptance Criteria**:
-  - Given that I am authenticated as audience
-  - When I vote on a creator's idea
-  - Then I receive 1 point and the idea rises in ranking
-- **Implementation**:
-  - `server/routes.ts` - POST /api/ideas/:id/vote endpoint with unique vote validation
-  - `client/src/hooks/use-reactive-stats.tsx` - Immediate UI updates
-  - `server/routes.ts` - Awards +1 point via `updateUserPoints(..., 1, 'earned', 'vote_given', ideaId)`
-  - `server/database-storage.ts` - `updateUserPoints` persists balances and `pointTransactions`
-
-### 👤 US-003: As a premium creator, I want to manage a points store to reward my audience
-
-- **Priority**: Medium
-- **Estimation**: 13 story points
-- **Acceptance Criteria**:
-  - Given that I have an active premium subscription
-  - When I create items in my points store
-  - Then my audience can redeem them with their points
-- **Implementation**:
-  - `server/routes.ts` - CRUD endpoints for store with premium validation
-  - `client/src/components/store-management.tsx` - Store management interface
-
-### 👤 US-004: As a user, I want to subscribe to premium to access advanced features
-
-- **Priority**: High
-- **Estimation**: 21 story points
-- **Acceptance Criteria**:
-  - Given that I am a registered user
-  - When I subscribe to a premium plan
-  - Then I unlock unlimited ideas and points store
-- **Implementation**:
-  - `server/routes.ts` - Stripe integration with webhooks
-  - `shared/premium-utils.ts` - Premium access validation
-
-## 🔗 API Endpoints
-
-### 🌐 GET /api/ideas
-
-- **Description**: Gets all ideas from authenticated user filtered by role
-- **Parameters**: None
-- **Response**: Array of ideas with positions and statistics
-- **Implementation**: `server/routes.ts:333-369`
-
-### 🌐 POST /api/ideas
-
-- **Description**: Creates a new idea for authenticated creator
-- **Parameters**: `{ title: string, description: string, niche?: string }`
-- **Response**: Created idea with calculated position
-- **Implementation**: `server/routes.ts:392-443`
-
-### 🌐 POST /api/ideas/:id/vote
-
-- **Description**: Registers a vote for a specific idea
-- **Parameters**: None in body
-- **Response**: Updated idea with new vote count
-- **Implementation**: `server/routes.ts:975-1067`
-
-### 🌐 POST /api/creators/:username/suggest
-
-- **Description**: Suggests an idea to a specific creator
-- **Parameters**: `{ title: string, description: string }`
-- **Response**: Suggested idea with pending status
-- **Implementation**: `server/routes.ts:738-823`
-
-### 🌐 POST /api/stripe/create-checkout-session
-
-- **Description**: Creates Stripe checkout session for subscription
-- **Parameters**: `{ plan: 'monthly'|'yearly', successUrl?: string, cancelUrl?: string }`
-- **Response**: `{ id: string, url: string }`
-- **Implementation**:
-  - `server/routes.ts:1371-1505` — Handler POST `/api/stripe/create-checkout-session` (auth check, valida cuerpo con Zod, asegura `stripeCustomerId`, crea/recupera Product y Prices según plan, y llama a `stripe.checkout.sessions.create`)
-  - `shared/schema.ts` — `createCheckoutSessionSchema` (validación de `{ plan, successUrl?, cancelUrl? }`)
-
-### 🌐 GET /api/user/points/:creatorId
-
-- **Description**: Gets user points for a specific creator
-- **Parameters**: creatorId in URL
-- **Response**: `{ userId: number, totalPoints: number, pointsEarned: number, pointsSpent: number }`
-- **Implementation**: `server/routes.ts:197-216`
+- `server/routes.ts` — orquestación de reglas de negocio
+- `server/database-storage.ts` — persistencia y consistencia de datos
+- `shared/schema.ts` — validaciones y esquemas compartidos
+- `client/src/components/` — interfaz de usuario (formularios, vistas y flujos)
+- `client/src/hooks/` — estado y lógica de UI (autenticación, datos reactivos)
 
 ## 📈 Metrics and KPIs
 
@@ -385,43 +299,7 @@
 - **Premium Conversion**: 15% of active users have premium subscription
 - **Retention**: 78% of active users in last 30 days
 
-## 🔄 Workflows
-
-### 🔄 WF-001: Idea Creation and Voting Flow
-
-- **Description**: Complete process from idea creation to audience voting
-- **Steps**:
-  1. Authenticated creator creates idea via POST /api/ideas
-  2. System validates data and calculates initial position
-  3. Idea appears in public leaderboard
-  4. Audience votes via POST /api/ideas/:id/vote
-  5. System updates votes and recalculates positions
-  6. Users receive points for voting
-- **Implementation**: `server/routes.ts:392-443` and `server/routes.ts:975-1067`
-
-### 🔄 WF-002: Premium Subscription Flow
-
-- **Description**: Subscription process from plan selection to activation
-- **Steps**:
-  1. User selects monthly/yearly plan
-  2. System creates Stripe Checkout session
-  3. User completes payment on Stripe
-  4. Stripe webhook notifies confirmation
-  5. System updates subscription status
-  6. User accesses premium features
-- **Implementation**: `server/routes.ts:1371-1505` and webhook handler
-
-### 🔄 WF-003: Suggestions and Approval Flow
-
-- **Description**: Process of idea suggestions by audience and approval by creators
-- **Steps**:
-  1. Audience user suggests idea (costs 3 points)
-  2. System creates idea with 'pending' status
-  3. Creator sees suggestion in dashboard
-  4. Creator approves/rejects suggestion
-  5. If approved: idea becomes 'approved' and user gains 5 points
-  6. If rejected: idea is deleted
-- **Implementation**: `server/routes.ts:738-823` and `server/routes.ts:873-947`
+<!-- Workflows removed: domain flows to be documented in product/process docs -->
 
 ## 📚 References
 
