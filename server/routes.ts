@@ -1024,6 +1024,17 @@ export async function registerRoutes(app: Express): Promise<Server> {
       await storage.createVote({ ideaId }, userId);
       console.log(`[MAIN-VOTE] Vote created successfully`);
 
+      // Increment niche stats if idea has a niche
+      if (idea.niche) {
+        try {
+          await storage.incrementNicheStats(idea.creatorId, idea.niche, 1);
+          console.log(`[MAIN-VOTE] Niche stats incremented for ${idea.niche}`);
+        } catch (nicheError) {
+          console.error(`[MAIN-VOTE] Error updating niche stats:`, nicheError);
+          // Continue even if niche stats fail
+        }
+      }
+
       // Award 1 point for voting (to this creator's profile)
       const creatorId = idea.creatorId;
       try {
@@ -1138,6 +1149,17 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Create the vote
       await storage.createVote({ ideaId }, userId);
       console.log(`[VOTE] Vote created successfully`);
+
+      // Increment niche stats if idea has a niche
+      if (idea.niche) {
+        try {
+          await storage.incrementNicheStats(idea.creatorId, idea.niche, 1);
+          console.log(`[VOTE] Niche stats incremented for ${idea.niche}`);
+        } catch (nicheError) {
+          console.error(`[VOTE] Error updating niche stats:`, nicheError);
+          // Continue even if niche stats fail
+        }
+      }
 
       // Award 1 point for voting (to this creator's profile)
       const creatorId = idea.creatorId;
@@ -1287,6 +1309,17 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Create the vote
       await storage.createVote({ ideaId }, userId);
       console.log(`[PUBLIC-VOTE] Vote created successfully`);
+
+      // Increment niche stats if idea has a niche
+      if (idea.niche) {
+        try {
+          await storage.incrementNicheStats(idea.creatorId, idea.niche, 1);
+          console.log(`[PUBLIC-VOTE] Niche stats incremented for ${idea.niche}`);
+        } catch (nicheError) {
+          console.error(`[PUBLIC-VOTE] Error updating niche stats:`, nicheError);
+          // Continue even if niche stats fail
+        }
+      }
 
       // Award 1 point for voting (to this creator's profile)
       const creatorId = idea.creatorId;
