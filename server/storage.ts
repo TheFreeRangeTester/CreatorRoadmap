@@ -89,7 +89,7 @@ export interface IStorage {
 
   // Niche stats operations
   incrementNicheStats(creatorId: number, niche: string, votes: number): Promise<void>;
-  getTopNiches(creatorId: number, limit?: number): Promise<{ name: string; votes: number }[]>;
+  getTopNiche(creatorId: number): Promise<{ name: string; votes: number } | null>;
 
   // Session store
   sessionStore: any;
@@ -1085,7 +1085,7 @@ export class MemStorage implements IStorage {
   async incrementNicheStats(creatorId: number, niche: string, votes: number = 1): Promise<void> {
     const key = `${creatorId}-${niche}`;
     const existing = this.nicheStatsMap.get(key);
-    
+
     if (existing) {
       this.nicheStatsMap.set(key, {
         ...existing,
@@ -1103,22 +1103,22 @@ export class MemStorage implements IStorage {
     }
   }
 
-  async getTopNiches(creatorId: number, limit: number = 2): Promise<{ name: string; votes: number }[]> {
+  async getTopNiche(creatorId: number): Promise<{ name: string; votes: number } | null> {
     const creatorNiches = Array.from(this.nicheStatsMap.values())
       .filter(stat => stat.creatorId === creatorId);
-    
+
     if (creatorNiches.length === 0) {
-      return [];
+      return null;
     }
 
-    const sortedNiches = creatorNiches
-      .sort((a, b) => b.totalVotes - a.totalVotes)
-      .slice(0, limit);
+    const topNiche = creatorNiches.reduce((max, stat) =>
+      stat.totalVotes > max.totalVotes ? stat : max
+    );
 
-    return sortedNiches.map(stat => ({
-      name: stat.niche,
-      votes: stat.totalVotes,
-    }));
+    return {
+      name: topNiche.niche,
+      votes: topNiche.totalVotes,
+    };
   }
 }
 
