@@ -145,7 +145,7 @@ export function StoreItemForm({ isOpen, onClose, onSuccess, initialData }: Store
 
   return (
     <Dialog open={isOpen} onOpenChange={handleClose}>
-      <DialogContent className="sm:max-w-[500px] rounded-3xl glass-card text-center p-4 sm:p-6 lg:p-8 w-full max-w-none overflow-hidden">
+      <DialogContent className="sm:max-w-[500px] max-h-[90vh] overflow-y-auto rounded-md glass-card text-center p-4 sm:p-6 lg:p-8 w-full max-w-none">
         <DialogHeader className="text-center">
           <DialogTitle className="font-heading text-base sm:text-lg lg:text-xl mb-2 break-words text-center leading-tight max-w-full overflow-hidden">
             {isEditing ? t('store.editItem') : t('store.createItem')}
@@ -164,7 +164,7 @@ export function StoreItemForm({ isOpen, onClose, onSuccess, initialData }: Store
                       {...field}
                       placeholder="Ej: Vale por una consulta personalizada"
                       maxLength={100}
-                      className="glass-input rounded-2xl"
+                      className="glass-input rounded-md"
                     />
                   </FormControl>
                   <FormMessage />
@@ -184,7 +184,7 @@ export function StoreItemForm({ isOpen, onClose, onSuccess, initialData }: Store
                       placeholder="Describe qué incluye este artículo y cómo se entregará"
                       rows={3}
                       maxLength={500}
-                      className="glass-input rounded-2xl resize-none"
+                      className="glass-input rounded-md resize-none"
                     />
                   </FormControl>
                   <FormMessage />
@@ -206,7 +206,7 @@ export function StoreItemForm({ isOpen, onClose, onSuccess, initialData }: Store
                       max="1000"
                       placeholder="10"
                       onChange={(e) => field.onChange(parseInt(e.target.value) || 0)}
-                      className="glass-input rounded-2xl"
+                      className="glass-input rounded-md"
                     />
                   </FormControl>
                   <FormMessage />
@@ -239,7 +239,7 @@ export function StoreItemForm({ isOpen, onClose, onSuccess, initialData }: Store
                           min="1"
                           max="100"
                           onChange={(e) => field.onChange(parseInt(e.target.value) || 0)}
-                          className="glass-input rounded-2xl"
+                          className="glass-input rounded-md"
                         />
                       </FormControl>
                       <FormMessage />
@@ -249,7 +249,7 @@ export function StoreItemForm({ isOpen, onClose, onSuccess, initialData }: Store
               )}
             </div>
 
-            <div className="flex items-center justify-center space-x-3 rounded-2xl glass-card border p-4 shadow-sm">
+            <div className="flex items-center justify-center space-x-3 rounded-md glass-card border p-4 shadow-sm">
               <div className="space-y-0.5 text-center">
                 <label className="text-sm font-medium text-neutral-700 dark:text-neutral-300">{t('store.isActive')}</label>
                 <p className="text-xs text-neutral-600 dark:text-neutral-400">
@@ -268,14 +268,14 @@ export function StoreItemForm({ isOpen, onClose, onSuccess, initialData }: Store
                 variant="outline"
                 onClick={handleClose}
                 disabled={mutation.isPending}
-                className="rounded-2xl"
+                className="rounded-md"
               >
                 {t('store.cancel')}
               </Button>
               <Button 
                 type="submit" 
                 disabled={mutation.isPending}
-                className="rounded-2xl modern-button"
+                className="rounded-md modern-button"
               >
                 {mutation.isPending
                   ? isEditing

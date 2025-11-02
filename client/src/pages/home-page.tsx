@@ -9,6 +9,7 @@ import { queryClient, apiRequest } from "@/lib/queryClient";
 import IdeaForm from "@/components/idea-form";
 import DeleteConfirmation from "@/components/delete-confirmation";
 import CreatorControls from "@/components/creator-controls";
+import VideoTemplateModal from "@/components/video-template-modal";
 import { IdeaResponse } from "@shared/schema";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useTranslation } from "react-i18next";
@@ -36,6 +37,8 @@ export default function HomePage() {
   const [ideaToDelete] = useState<number | null>(null);
   const [activeTab, setActiveTab] = useState("published");
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isTemplateModalOpen, setIsTemplateModalOpen] = useState(false);
+  const [currentTemplateIdea, setCurrentTemplateIdea] = useState<IdeaResponse | null>(null);
 
   // Fetch ideas
   const {
@@ -133,6 +136,11 @@ export default function HomePage() {
     if (ideaToDelete !== null) {
       deleteMutation.mutate(ideaToDelete);
     }
+  };
+
+  const handleOpenTemplate = (idea: IdeaResponse) => {
+    setCurrentTemplateIdea(idea);
+    setIsTemplateModalOpen(true);
   };
 
   const handleLogout = () => {
@@ -364,7 +372,7 @@ export default function HomePage() {
                   </TabsList>
 
                   <TabsContent value="published" className="mt-6">
-                    <IdeasTabView mode="published" />
+                    <IdeasTabView mode="published" onOpenTemplate={handleOpenTemplate} />
                   </TabsContent>
 
                   <TabsContent value="suggested" className="mt-6">
@@ -415,6 +423,14 @@ export default function HomePage() {
         onConfirm={handleConfirmDelete}
         isDeleting={deleteMutation.isPending}
       />
+
+      {currentTemplateIdea && (
+        <VideoTemplateModal
+          isOpen={isTemplateModalOpen}
+          onClose={() => setIsTemplateModalOpen(false)}
+          idea={currentTemplateIdea}
+        />
+      )}
     </div>
   );
 }

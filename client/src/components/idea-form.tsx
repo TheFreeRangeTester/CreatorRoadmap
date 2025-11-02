@@ -222,7 +222,7 @@ export default function IdeaForm({ isOpen, idea, onClose }: IdeaFormProps) {
 
   return (
     <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
-      <DialogContent className="sm:max-w-[600px] rounded-xl bg-white/95 dark:bg-gray-900/95 backdrop-blur-sm border border-gray-200/50 dark:border-gray-700/50 shadow-xl p-0 w-full max-w-none overflow-hidden">
+      <DialogContent className="sm:max-w-[600px] max-h-[90vh] overflow-y-auto rounded-md bg-white/95 dark:bg-gray-900/95 backdrop-blur-sm border border-gray-200/50 dark:border-gray-700/50 shadow-xl p-0 w-full max-w-none">
         <DialogHeader className="text-center px-8 pt-8 pb-6 border-b border-gray-100 dark:border-gray-800 sm:text-center">
           <DialogTitle className="font-heading text-xl sm:text-2xl font-semibold text-gray-900 dark:text-white leading-tight">
             {isEditing
@@ -260,7 +260,7 @@ export default function IdeaForm({ isOpen, idea, onClose }: IdeaFormProps) {
                       placeholder={t("ideaForm.titlePlaceholder")}
                       maxLength={100}
                       disabled={isLimitReached}
-                      className="h-12 rounded-lg border-2 border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all duration-200 text-gray-900 dark:text-white placeholder:text-gray-500 dark:placeholder:text-gray-400 px-4"
+                      className="h-12 rounded-md border-2 border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all duration-200 text-gray-900 dark:text-white placeholder:text-gray-500 dark:placeholder:text-gray-400 px-4"
                       {...field}
                     />
                   </FormControl>
@@ -281,7 +281,7 @@ export default function IdeaForm({ isOpen, idea, onClose }: IdeaFormProps) {
                     <Textarea
                       placeholder={t("ideaForm.descriptionPlaceholder")}
                       maxLength={280}
-                      className="resize-none h-28 rounded-lg border-2 border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all duration-200 text-gray-900 dark:text-white placeholder:text-gray-500 dark:placeholder:text-gray-400 px-4 py-3"
+                      className="resize-none h-28 rounded-md border-2 border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all duration-200 text-gray-900 dark:text-white placeholder:text-gray-500 dark:placeholder:text-gray-400 px-4 py-3"
                       disabled={isLimitReached}
                       {...field}
                     />
@@ -311,7 +311,7 @@ export default function IdeaForm({ isOpen, idea, onClose }: IdeaFormProps) {
                         placeholder={t("ideaForm.customNichePlaceholder")}
                         maxLength={50}
                         disabled={isLimitReached}
-                        className="h-12 rounded-lg border-2 border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all duration-200 text-gray-900 dark:text-white placeholder:text-gray-500 dark:placeholder:text-gray-400 px-4"
+                        className="h-12 rounded-md border-2 border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all duration-200 text-gray-900 dark:text-white placeholder:text-gray-500 dark:placeholder:text-gray-400 px-4"
                         {...field}
                         onBlur={() => {
                           if (!field.value) setShowCustomNiche(false);
@@ -331,7 +331,7 @@ export default function IdeaForm({ isOpen, idea, onClose }: IdeaFormProps) {
                         value={field.value || ""}
                         disabled={isLimitReached}
                       >
-                        <SelectTrigger className="h-12 rounded-lg border-2 border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all duration-200 text-gray-900 dark:text-white px-4">
+                        <SelectTrigger className="h-12 rounded-md border-2 border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all duration-200 text-gray-900 dark:text-white px-4">
                           <SelectValue
                             placeholder={t("ideaForm.nichePlaceholder")}
                           />
@@ -393,7 +393,7 @@ export default function IdeaForm({ isOpen, idea, onClose }: IdeaFormProps) {
                 type="button"
                 variant="outline"
                 onClick={onClose}
-                className="flex-1 sm:flex-none h-12 rounded-lg border-2 border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 font-medium transition-all duration-200"
+                className="flex-1 sm:flex-none h-12 rounded-md border-2 border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 font-medium transition-all duration-200"
               >
                 {t("common.cancel", "Cancel")}
               </Button>
@@ -403,7 +403,7 @@ export default function IdeaForm({ isOpen, idea, onClose }: IdeaFormProps) {
                   disabled={
                     createMutation.isPending || updateMutation.isPending
                   }
-                  className="flex-1 sm:flex-none h-12 rounded-lg bg-gradient-to-r from-primary to-primary/90 hover:from-primary/90 hover:to-primary text-white font-semibold shadow-lg hover:shadow-xl transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="flex-1 sm:flex-none h-12 rounded-md bg-gradient-to-r from-primary to-primary/90 hover:from-primary/90 hover:to-primary text-white font-semibold shadow-lg hover:shadow-xl transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   {createMutation.isPending || updateMutation.isPending ? (
                     <span className="flex items-center justify-center">

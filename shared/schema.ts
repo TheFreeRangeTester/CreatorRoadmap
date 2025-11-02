@@ -1,4 +1,4 @@
-import { pgTable, text, serial, integer, timestamp, boolean, unique } from "drizzle-orm/pg-core";
+import { pgTable, text, serial, integer, timestamp, boolean, unique, jsonb } from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
 
@@ -126,6 +126,17 @@ export const storeRedemptions = pgTable("store_redemptions", {
   createdAt: timestamp("created_at").notNull().defaultNow(),
   completedAt: timestamp("completed_at"),
 });
+
+// Table for persistent niche statistics
+export const nicheStats = pgTable("niche_stats", {
+  id: serial("id").primaryKey(),
+  creatorId: integer("creator_id").notNull().references(() => users.id),
+  niche: text("niche").notNull(),
+  totalVotes: integer("total_votes").notNull().default(0),
+  updatedAt: timestamp("updated_at").notNull().defaultNow(),
+}, (table) => ({
+  creatorNicheUnique: unique().on(table.creatorId, table.niche),
+}));
 
 // User schemas
 export const insertUserSchema = createInsertSchema(users).pick({
@@ -404,3 +415,50 @@ export type StoreItemResponse = z.infer<typeof storeItemResponseSchema>;
 export type StoreRedemption = typeof storeRedemptions.$inferSelect;
 export type InsertStoreRedemption = z.infer<typeof insertStoreRedemptionSchema>;
 export type StoreRedemptionResponse = z.infer<typeof storeRedemptionResponseSchema>;
+
+// Video planning template table - items with completion status
+export const templateItemSchema = z.object({
+  text: z.string(),
+  completed: z.boolean().default(false),
+});
+
+export const videoTemplates = pgTable("video_templates", {
+  id: serial("id").primaryKey(),
+  ideaId: integer("idea_id").notNull().references(() => ideas.id, { onDelete: 'cascade' }).unique(),
+  pointsToCover: jsonb("points_to_cover").notNull().default([]),
+  visualsNeeded: jsonb("visuals_needed").notNull().default([]),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+  updatedAt: timestamp("updated_at").notNull().defaultNow(),
+});
+
+// Video template schemas
+export const insertVideoTemplateSchema = createInsertSchema(videoTemplates).pick({
+  ideaId: true,
+  pointsToCover: true,
+  visualsNeeded: true,
+}).extend({
+  pointsToCover: z.array(templateItemSchema).default([]),
+  visualsNeeded: z.array(templateItemSchema).default([]),
+});
+
+export const updateVideoTemplateSchema = z.object({
+  pointsToCover: z.array(templateItemSchema),
+  visualsNeeded: z.array(templateItemSchema),
+});
+
+export const videoTemplateResponseSchema = z.object({
+  id: z.number(),
+  ideaId: z.number(),
+  pointsToCover: z.array(templateItemSchema),
+  visualsNeeded: z.array(templateItemSchema),
+  createdAt: z.date(),
+  updatedAt: z.date(),
+});
+
+export type VideoTemplate = typeof videoTemplates.$inferSelect;
+export type InsertVideoTemplate = z.infer<typeof insertVideoTemplateSchema>;
+export type UpdateVideoTemplate = z.infer<typeof updateVideoTemplateSchema>;
+export type VideoTemplateResponse = z.infer<typeof videoTemplateResponseSchema>;
+
+// Niche stats types
+export type NicheStat = typeof nicheStats.$inferSelect;

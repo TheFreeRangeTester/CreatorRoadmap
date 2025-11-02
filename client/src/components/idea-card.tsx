@@ -12,6 +12,7 @@ import {
   User,
   Heart,
   TrendingUp,
+  FileText,
 } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { IdeaResponse } from "@shared/schema";
@@ -24,6 +25,7 @@ interface IdeaCardProps {
   onVote: (ideaId: number) => void;
   onEdit?: (idea: IdeaResponse) => void;
   onDelete?: (ideaId: number) => void;
+  onOpenTemplate?: (idea: IdeaResponse) => void;
   isVoting: boolean;
 }
 
@@ -32,6 +34,7 @@ export default function IdeaCard({
   onVote,
   onEdit,
   onDelete,
+  onOpenTemplate,
   isVoting,
 }: IdeaCardProps) {
   // Check if user has already voted for this idea
@@ -224,7 +227,7 @@ export default function IdeaCard({
       </AnimatePresence>
 
       <Card
-        className={`idea-card overflow-hidden ${getCardClass()} h-full flex flex-col rounded-xl shadow-sm hover:shadow-md transition-all duration-300`}
+        className={`idea-card overflow-hidden ${getCardClass()} h-full flex flex-col rounded-md shadow-sm hover:shadow-md transition-all duration-300`}
       >
         <CardContent className="p-6 sm:p-8 flex flex-col h-full min-h-[180px] text-center">
           <div className="mb-3 sm:mb-4">
@@ -361,9 +364,21 @@ export default function IdeaCard({
               </motion.span>
             </div>
 
-            {/* Edit and Delete actions for creators */}
-            {(onEdit || onDelete) && (
+            {/* Edit, Delete, and Template actions for creators */}
+            {(onEdit || onDelete || onOpenTemplate) && (
               <div className="flex space-x-2 justify-center">
+                {onOpenTemplate && (
+                  <motion.button
+                    whileHover={{ scale: 1.1, rotate: 5 }}
+                    whileTap={{ scale: 0.9 }}
+                    onClick={() => onOpenTemplate(idea)}
+                    className="p-2 text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 rounded-md hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-all duration-200"
+                    aria-label="Open video template"
+                    data-testid={`button-template-${idea.id}`}
+                  >
+                    <FileText className="w-4 h-4 sm:w-5 sm:h-5" />
+                  </motion.button>
+                )}
                 {onEdit && (
                   <motion.button
                     whileHover={{ scale: 1.1, rotate: 5 }}

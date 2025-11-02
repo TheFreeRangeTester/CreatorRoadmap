@@ -2,7 +2,7 @@ import type { Express, Request, Response } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import { setupAuth } from "./auth";
-import { insertIdeaSchema, updateIdeaSchema, insertVoteSchema, insertPublicLinkSchema, suggestIdeaSchema, updateProfileSchema, createCheckoutSessionSchema, insertStoreItemSchema, updateStoreItemSchema, insertStoreRedemptionSchema } from "@shared/schema";
+import { insertIdeaSchema, updateIdeaSchema, insertVoteSchema, insertPublicLinkSchema, suggestIdeaSchema, updateProfileSchema, createCheckoutSessionSchema, insertStoreItemSchema, updateStoreItemSchema, insertStoreRedemptionSchema, insertVideoTemplateSchema, updateVideoTemplateSchema } from "@shared/schema";
 import { ZodError } from "zod";
 import { fromZodError } from "zod-validation-error";
 import Stripe from "stripe";
@@ -294,22 +294,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const pendingIdeas = ideas.filter(idea => idea.status === 'pending');
       const totalVotes = publishedIdeas.reduce((sum, idea) => sum + idea.votes, 0);
 
-      // Calculate top niche
-      const nicheVotes: Record<string, number> = {};
-      publishedIdeas.forEach(idea => {
-        if (idea.niche) {
-          nicheVotes[idea.niche] = (nicheVotes[idea.niche] || 0) + idea.votes;
-        }
-      });
-
-      let topNiche: { name: string; votes: number } | null = null;
-      if (Object.keys(nicheVotes).length > 0) {
-        const topNicheEntry = Object.entries(nicheVotes).reduce((max, [niche, votes]) =>
-          votes > max.votes ? { name: niche, votes } : max,
-          { name: '', votes: 0 }
-        );
-        topNiche = topNicheEntry.votes > 0 ? topNicheEntry : null;
-      }
+      // Get top niche from persistent stats
+      const topNiche = await storage.getTopNiche(req.user.id);
 
       console.log(`[DASHBOARD-STATS] User ${req.user.id}: ${ideas.length} total ideas, ${publishedIdeas.length} published, ${pendingIdeas.length} pending, ${totalVotes} total votes, top niche: ${topNiche?.name || 'none'} with ${topNiche?.votes || 0} votes`);
 
@@ -1024,6 +1010,17 @@ export async function registerRoutes(app: Express): Promise<Server> {
       await storage.createVote({ ideaId }, userId);
       console.log(`[MAIN-VOTE] Vote created successfully`);
 
+      // Increment niche stats if idea has a niche
+      if (idea.niche) {
+        try {
+          await storage.incrementNicheStats(idea.creatorId, idea.niche, 1);
+          console.log(`[MAIN-VOTE] Niche stats incremented for ${idea.niche}`);
+        } catch (nicheError) {
+          console.error(`[MAIN-VOTE] Error updating niche stats:`, nicheError);
+          // Continue even if niche stats fail
+        }
+      }
+
       // Award 1 point for voting (to this creator's profile)
       const creatorId = idea.creatorId;
       try {
@@ -1138,6 +1135,17 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Create the vote
       await storage.createVote({ ideaId }, userId);
       console.log(`[VOTE] Vote created successfully`);
+
+      // Increment niche stats if idea has a niche
+      if (idea.niche) {
+        try {
+          await storage.incrementNicheStats(idea.creatorId, idea.niche, 1);
+          console.log(`[VOTE] Niche stats incremented for ${idea.niche}`);
+        } catch (nicheError) {
+          console.error(`[VOTE] Error updating niche stats:`, nicheError);
+          // Continue even if niche stats fail
+        }
+      }
 
       // Award 1 point for voting (to this creator's profile)
       const creatorId = idea.creatorId;
@@ -1287,6 +1295,17 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Create the vote
       await storage.createVote({ ideaId }, userId);
       console.log(`[PUBLIC-VOTE] Vote created successfully`);
+
+      // Increment niche stats if idea has a niche
+      if (idea.niche) {
+        try {
+          await storage.incrementNicheStats(idea.creatorId, idea.niche, 1);
+          console.log(`[PUBLIC-VOTE] Niche stats incremented for ${idea.niche}`);
+        } catch (nicheError) {
+          console.error(`[PUBLIC-VOTE] Error updating niche stats:`, nicheError);
+          // Continue even if niche stats fail
+        }
+      }
 
       // Award 1 point for voting (to this creator's profile)
       const creatorId = idea.creatorId;
@@ -2161,6 +2180,154 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       console.error("Error redeeming store item:", error);
       res.status(500).json({ message: "Failed to redeem store item" });
+    }
+  });
+
+  // Video template routes (for creators)
+  // Get template by idea ID
+  app.get("/api/video-templates/:ideaId", async (req: Request, res: Response) => {
+    try {
+      if (!req.isAuthenticated()) {
+        return res.status(401).json({ message: "Authentication required" });
+      }
+
+      const ideaId = parseInt(req.params.ideaId);
+      if (isNaN(ideaId)) {
+        return res.status(400).json({ message: "Invalid idea ID" });
+      }
+
+      // Verify the idea exists and belongs to the authenticated user
+      const idea = await storage.getIdea(ideaId);
+      if (!idea) {
+        return res.status(404).json({ message: "Idea not found" });
+      }
+
+      if (idea.creatorId !== req.user!.id) {
+        return res.status(403).json({ message: "Not authorized to view this template" });
+      }
+
+      const template = await storage.getVideoTemplate(ideaId);
+      if (!template) {
+        return res.status(404).json({ message: "Template not found" });
+      }
+
+      res.json(template);
+    } catch (error) {
+      console.error("Error fetching video template:", error);
+      res.status(500).json({ message: "Failed to fetch video template" });
+    }
+  });
+
+  // Create new template
+  app.post("/api/video-templates", async (req: Request, res: Response) => {
+    try {
+      if (!req.isAuthenticated()) {
+        return res.status(401).json({ message: "Authentication required" });
+      }
+
+      const validatedData = insertVideoTemplateSchema.parse(req.body);
+
+      // Verify the idea exists and belongs to the authenticated user
+      const idea = await storage.getIdea(validatedData.ideaId);
+      if (!idea) {
+        return res.status(404).json({ message: "Idea not found" });
+      }
+
+      if (idea.creatorId !== req.user!.id) {
+        return res.status(403).json({ message: "Not authorized to create template for this idea" });
+      }
+
+      // Check if template already exists for this idea
+      const existingTemplate = await storage.getVideoTemplate(validatedData.ideaId);
+      if (existingTemplate) {
+        return res.status(400).json({ message: "Template already exists for this idea" });
+      }
+
+      const template = await storage.createVideoTemplate(validatedData);
+      res.status(201).json(template);
+    } catch (error) {
+      if (error instanceof ZodError) {
+        return res.status(400).json({
+          message: "Validation error",
+          errors: fromZodError(error).message
+        });
+      }
+
+      console.error("Error creating video template:", error);
+      res.status(500).json({ message: "Failed to create video template" });
+    }
+  });
+
+  // Update template
+  app.put("/api/video-templates/:ideaId", async (req: Request, res: Response) => {
+    try {
+      if (!req.isAuthenticated()) {
+        return res.status(401).json({ message: "Authentication required" });
+      }
+
+      const ideaId = parseInt(req.params.ideaId);
+      if (isNaN(ideaId)) {
+        return res.status(400).json({ message: "Invalid idea ID" });
+      }
+
+      const validatedData = updateVideoTemplateSchema.parse(req.body);
+
+      // Verify the idea exists and belongs to the authenticated user
+      const idea = await storage.getIdea(ideaId);
+      if (!idea) {
+        return res.status(404).json({ message: "Idea not found" });
+      }
+
+      if (idea.creatorId !== req.user!.id) {
+        return res.status(403).json({ message: "Not authorized to update this template" });
+      }
+
+      const template = await storage.updateVideoTemplate(ideaId, validatedData);
+      if (!template) {
+        return res.status(404).json({ message: "Template not found" });
+      }
+
+      res.json(template);
+    } catch (error) {
+      if (error instanceof ZodError) {
+        return res.status(400).json({
+          message: "Validation error",
+          errors: fromZodError(error).message
+        });
+      }
+
+      console.error("Error updating video template:", error);
+      res.status(500).json({ message: "Failed to update video template" });
+    }
+  });
+
+  // Delete template
+  app.delete("/api/video-templates/:ideaId", async (req: Request, res: Response) => {
+    try {
+      if (!req.isAuthenticated()) {
+        return res.status(401).json({ message: "Authentication required" });
+      }
+
+      const ideaId = parseInt(req.params.ideaId);
+      if (isNaN(ideaId)) {
+        return res.status(400).json({ message: "Invalid idea ID" });
+      }
+
+      // Verify the idea exists and belongs to the authenticated user
+      const idea = await storage.getIdea(ideaId);
+      if (!idea) {
+        return res.status(404).json({ message: "Idea not found" });
+      }
+
+      if (idea.creatorId !== req.user!.id) {
+        return res.status(403).json({ message: "Not authorized to delete this template" });
+      }
+
+      await storage.deleteVideoTemplate(ideaId);
+      res.status(204).send();
+    } catch (error) {
+      console.error("Error deleting video template:", error);
+      res.status(500).json({ message: "Failed to delete video template" });
     }
   });
 

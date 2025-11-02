@@ -1,10 +1,12 @@
 import {
-  ideas, users, votes, publicLinks, userPoints, pointTransactions, storeItems, storeRedemptions,
+  ideas, users, votes, publicLinks, userPoints, pointTransactions, storeItems, storeRedemptions, videoTemplates, nicheStats,
   type User, type InsertUser, type Idea, type InsertIdea, type UpdateIdea, type SuggestIdea,
   type Vote, type InsertVote, type PublicLink, type InsertPublicLink, type PublicLinkResponse,
   type UpdateProfile, type UpdateSubscription, type UserPointsResponse, type InsertPointTransaction,
   type PointTransactionResponse, type StoreItem, type InsertStoreItem, type UpdateStoreItem,
-  type StoreItemResponse, type StoreRedemption, type InsertStoreRedemption, type StoreRedemptionResponse
+  type StoreItemResponse, type StoreRedemption, type InsertStoreRedemption, type StoreRedemptionResponse,
+  type VideoTemplate, type InsertVideoTemplate, type UpdateVideoTemplate, type VideoTemplateResponse,
+  type NicheStat
 } from "@shared/schema";
 import session from "express-session";
 import connectPg from "connect-pg-simple";
@@ -813,6 +815,84 @@ export class DatabaseStorage implements IStorage {
       userEmail: redemptionData?.userEmail || 'Unknown',
       storeItemTitle: redemptionData?.storeItemTitle || 'Unknown',
       storeItemDescription: redemptionData?.storeItemDescription || 'Unknown',
+    };
+  }
+
+  // Video template methods
+  async getVideoTemplate(ideaId: number): Promise<VideoTemplateResponse | undefined> {
+    const [template] = await db
+      .select()
+      .from(videoTemplates)
+      .where(eq(videoTemplates.ideaId, ideaId));
+
+    return template;
+  }
+
+  async createVideoTemplate(insertTemplate: InsertVideoTemplate): Promise<VideoTemplateResponse> {
+    const [template] = await db
+      .insert(videoTemplates)
+      .values(insertTemplate)
+      .returning();
+
+    return template;
+  }
+
+  async updateVideoTemplate(ideaId: number, updateData: UpdateVideoTemplate): Promise<VideoTemplateResponse | undefined> {
+    const [template] = await db
+      .update(videoTemplates)
+      .set({
+        pointsToCover: updateData.pointsToCover,
+        visualsNeeded: updateData.visualsNeeded,
+        updatedAt: new Date(),
+      })
+      .where(eq(videoTemplates.ideaId, ideaId))
+      .returning();
+
+    return template;
+  }
+
+  async deleteVideoTemplate(ideaId: number): Promise<void> {
+    await db.delete(videoTemplates).where(eq(videoTemplates.ideaId, ideaId));
+  }
+
+  async incrementNicheStats(creatorId: number, niche: string, votes: number = 1): Promise<void> {
+    const [existing] = await db
+      .select()
+      .from(nicheStats)
+      .where(and(eq(nicheStats.creatorId, creatorId), eq(nicheStats.niche, niche)));
+
+    if (existing) {
+      await db
+        .update(nicheStats)
+        .set({
+          totalVotes: existing.totalVotes + votes,
+          updatedAt: new Date(),
+        })
+        .where(eq(nicheStats.id, existing.id));
+    } else {
+      await db.insert(nicheStats).values({
+        creatorId,
+        niche,
+        totalVotes: votes,
+      });
+    }
+  }
+
+  async getTopNiche(creatorId: number): Promise<{ name: string; votes: number } | null> {
+    const [topNiche] = await db
+      .select()
+      .from(nicheStats)
+      .where(eq(nicheStats.creatorId, creatorId))
+      .orderBy(desc(nicheStats.totalVotes))
+      .limit(1);
+
+    if (!topNiche) {
+      return null;
+    }
+
+    return {
+      name: topNiche.niche,
+      votes: topNiche.totalVotes,
     };
   }
 }
