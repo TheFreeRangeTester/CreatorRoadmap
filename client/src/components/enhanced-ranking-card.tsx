@@ -224,9 +224,9 @@ export default function EnhancedRankingCard({
         )}
       </AnimatePresence>
 
-      <Card className={`overflow-hidden ${medalInfo.border || 'border-0'} ${medalInfo.shadow} hover:${medalInfo.glow} transition-all duration-500 ${medalInfo.bgColor} rounded-sm glass-card ${
+      <Card className={`overflow-hidden ${medalInfo.border || 'border-0'} ${medalInfo.shadow} hover:${medalInfo.glow} transition-all duration-500 ${medalInfo.bgColor} rounded-md glass-card ${
         isTopThree ? 'transform-gpu relative animate-pulse-subtle' : ''
-      } ${isTopThree ? 'before:absolute before:inset-0 before:rounded-sm before:p-1 before:bg-gradient-to-r before:from-white/20 before:via-transparent before:to-white/20 before:-z-10' : ''}`}>
+      } ${isTopThree ? 'before:absolute before:inset-0 before:rounded-md before:p-1 before:bg-gradient-to-r before:from-white/20 before:via-transparent before:to-white/20 before:-z-10' : ''}`}>
         <div className="flex flex-col">
           {/* Contenido principal centrado */}
           <div className={`flex-1 ${isTopThree ? 'p-8' : 'p-6'} text-center`}>

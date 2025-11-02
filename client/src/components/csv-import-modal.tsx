@@ -229,7 +229,7 @@ export default function CSVImportModal({
 
   return (
     <Dialog open={open} onOpenChange={handleClose}>
-      <DialogContent className="max-w-4xl max-h-[90vh] overflow-hidden rounded-sm glass-card text-center p-6 sm:p-8">
+      <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto rounded-md glass-card text-center p-6 sm:p-8">
         <DialogHeader className="text-center">
           <DialogTitle className="font-heading text-lg sm:text-xl mb-2 flex items-center justify-center gap-2">
             <Upload className="h-5 w-5" />
@@ -246,7 +246,7 @@ export default function CSVImportModal({
               {/* File Upload Area */}
               <div
                 {...getRootProps()}
-                className={`border-2 border-dashed rounded-sm p-8 text-center cursor-pointer transition-colors ${
+                className={`border-2 border-dashed rounded-md p-8 text-center cursor-pointer transition-colors ${
                   isDragActive
                     ? 'border-primary bg-primary/5'
                     : 'border-gray-300 hover:border-primary'
@@ -271,7 +271,7 @@ export default function CSVImportModal({
               </div>
 
               {/* Template Download */}
-              <div className="bg-blue-50 dark:bg-blue-900/20 rounded-sm p-4 border border-blue-200 dark:border-blue-800">
+              <div className="bg-blue-50 dark:bg-blue-900/20 rounded-md p-4 border border-blue-200 dark:border-blue-800">
                 <div className="flex items-center justify-between">
                   <div>
                     <h4 className="font-medium mb-1">
@@ -320,7 +320,7 @@ export default function CSVImportModal({
 
                 {/* Summary */}
                 <div className="grid grid-cols-2 gap-4">
-                  <div className="bg-green-50 dark:bg-green-900/20 p-4 rounded-sm border border-green-200 dark:border-green-800">
+                  <div className="bg-green-50 dark:bg-green-900/20 p-4 rounded-md border border-green-200 dark:border-green-800">
                     <div className="flex items-center gap-2">
                       <CheckCircle className="h-5 w-5 text-green-600" />
                       <span className="font-medium text-green-700 dark:text-green-300">
@@ -328,7 +328,7 @@ export default function CSVImportModal({
                       </span>
                     </div>
                   </div>
-                  <div className="bg-red-50 dark:bg-red-900/20 p-4 rounded-sm border border-red-200 dark:border-red-800">
+                  <div className="bg-red-50 dark:bg-red-900/20 p-4 rounded-md border border-red-200 dark:border-red-800">
                     <div className="flex items-center gap-2">
                       <AlertTriangle className="h-5 w-5 text-red-600" />
                       <span className="font-medium text-red-700 dark:text-red-300">
@@ -339,12 +339,12 @@ export default function CSVImportModal({
                 </div>
 
                 {/* Ideas List */}
-                <ScrollArea className="h-64 border rounded-sm">
+                <ScrollArea className="h-64 border rounded-md">
                   <div className="p-4 space-y-3">
                     {parsedIdeas.map((idea, index) => (
                       <div
                         key={index}
-                        className={`p-3 rounded-sm border ${
+                        className={`p-3 rounded-md border ${
                           idea.isValid
                             ? 'bg-green-50 dark:bg-green-900/20 border-green-200 dark:border-green-800'
                             : 'bg-red-50 dark:bg-red-900/20 border-red-200 dark:border-red-800'

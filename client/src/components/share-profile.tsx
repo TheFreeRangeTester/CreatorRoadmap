@@ -96,7 +96,7 @@ export default function ShareProfile() {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="bg-gray-50 dark:bg-gray-800 p-4 rounded-sm border border-gray-200 dark:border-gray-700 mb-4">
+          <div className="bg-gray-50 dark:bg-gray-800 p-4 rounded-md border border-gray-200 dark:border-gray-700 mb-4">
             <div className="font-mono text-sm text-gray-800 dark:text-gray-200 break-all">
               {profileUrl}
             </div>

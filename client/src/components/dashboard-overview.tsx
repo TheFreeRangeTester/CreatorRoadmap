@@ -266,7 +266,7 @@ export function DashboardOverview({ className }: DashboardOverviewProps) {
             >
               <Card className="bg-white/90 dark:bg-gray-900/90 backdrop-blur-sm border border-gray-200/50 dark:border-gray-700/50 shadow-lg h-full">
                 <CardHeader className="flex flex-col items-center justify-center space-y-3 pb-4">
-                  <div className={`p-3 rounded-sm ${metric.bgColor}`}>
+                  <div className={`p-3 rounded-md ${metric.bgColor}`}>
                     <metric.icon className={`h-7 w-7 ${metric.color}`} />
                   </div>
                   <CardTitle className="text-base font-semibold text-gray-700 dark:text-gray-300 text-center">
@@ -324,7 +324,7 @@ export function DashboardOverview({ className }: DashboardOverviewProps) {
                   <CardTitle className="text-sm font-medium text-gray-600 dark:text-gray-400">
                     {metric.title}
                   </CardTitle>
-                  <div className={`p-2 rounded-sm ${metric.bgColor}`}>
+                  <div className={`p-2 rounded-md ${metric.bgColor}`}>
                     <metric.icon className={`h-4 w-4 ${metric.color}`} />
                   </div>
                 </CardHeader>
@@ -446,7 +446,7 @@ export function DashboardOverview({ className }: DashboardOverviewProps) {
             >
               <Card className="bg-white/90 dark:bg-gray-900/90 backdrop-blur-sm border border-gray-200/50 dark:border-gray-700/50 shadow-lg h-full">
                 <CardHeader className="flex flex-col items-center justify-center space-y-3 pb-4">
-                  <div className={`p-3 rounded-sm ${metric.bgColor}`}>
+                  <div className={`p-3 rounded-md ${metric.bgColor}`}>
                     <metric.icon className={`h-7 w-7 ${metric.color}`} />
                   </div>
                   <CardTitle className="text-base font-semibold text-gray-700 dark:text-gray-300 text-center">
@@ -481,7 +481,7 @@ export function DashboardOverview({ className }: DashboardOverviewProps) {
                   <CardTitle className="text-sm font-medium text-gray-600 dark:text-gray-400">
                     {metric.title}
                   </CardTitle>
-                  <div className={`p-2 rounded-sm ${metric.bgColor}`}>
+                  <div className={`p-2 rounded-md ${metric.bgColor}`}>
                     <metric.icon className={`h-4 w-4 ${metric.color}`} />
                   </div>
                 </CardHeader>

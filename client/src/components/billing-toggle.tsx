@@ -12,11 +12,11 @@ export default function BillingToggle({ value, onChange }: BillingToggleProps) {
   const { t } = useTranslation();
   
   return (
-    <div className="inline-flex items-center rounded-sm border p-1 bg-background">
+    <div className="inline-flex items-center rounded-md border p-1 bg-background">
       <Button
         variant={value === "monthly" ? "default" : "ghost"}
         size="sm"
-        className="rounded-sm px-3 py-1 transition-all"
+        className="rounded-md px-3 py-1 transition-all"
         onClick={() => onChange("monthly")}
       >
         {t("pricing.monthly", "Monthly")}
@@ -24,7 +24,7 @@ export default function BillingToggle({ value, onChange }: BillingToggleProps) {
       <Button
         variant={value === "yearly" ? "default" : "ghost"}
         size="sm"
-        className="rounded-sm px-3 py-1 transition-all"
+        className="rounded-md px-3 py-1 transition-all"
         onClick={() => onChange("yearly")}
       >
         {t("pricing.yearly", "Yearly (20% off)")}

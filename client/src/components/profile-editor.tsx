@@ -164,7 +164,7 @@ export default function ProfileEditor() {
   if (!user) return null;
 
   return (
-    <Card className="shadow-md border-t-4 border-t-primary rounded-sm bg-white dark:bg-gray-900 w-full max-w-none">
+    <Card className="shadow-md border-t-4 border-t-primary rounded-md bg-white dark:bg-gray-900 w-full max-w-none">
       <CardHeader className="bg-gradient-to-r from-primary-50 to-blue-50 dark:from-primary-950/30 dark:to-blue-950/20 space-y-3 pb-6 px-4 sm:px-6 pt-6">
         <div className="w-full overflow-hidden">
           <CardTitle className="text-lg sm:text-xl font-semibold flex items-center justify-center gap-2 break-words leading-relaxed text-center">
@@ -181,7 +181,7 @@ export default function ProfileEditor() {
         <form onSubmit={handleSubmit}>
           <div className="space-y-6">
             {/* Perfil y Avatar */}
-            <div className="flex flex-col sm:flex-row items-center gap-6 p-4 bg-gray-50 dark:bg-gray-800/30 rounded-sm">
+            <div className="flex flex-col sm:flex-row items-center gap-6 p-4 bg-gray-50 dark:bg-gray-800/30 rounded-md">
               <div className="flex-shrink-0">
                 <Avatar className="h-24 w-24 border-4 border-primary/10 shadow-lg">
                   <AvatarImage
@@ -213,7 +213,7 @@ export default function ProfileEditor() {
             </div>
 
             {/* Descripción */}
-            <div className="p-4 border border-gray-100 dark:border-gray-800 rounded-sm">
+            <div className="p-4 border border-gray-100 dark:border-gray-800 rounded-md">
               <Label htmlFor="profileDescription" className="font-medium">
                 {t("profile.description")}
               </Label>
@@ -229,7 +229,7 @@ export default function ProfileEditor() {
             </div>
 
             {/* Compartir Perfil */}
-            <div className="p-4 border border-gray-100 dark:border-gray-800 rounded-sm">
+            <div className="p-4 border border-gray-100 dark:border-gray-800 rounded-md">
               <div className="flex items-center gap-2 mb-3">
                 <Share2 className="h-5 w-5 text-primary" />
                 <h3 className="font-medium text-lg">
@@ -241,7 +241,7 @@ export default function ProfileEditor() {
                 {t("profile.shareProfileDesc")}
               </p>
               
-              <div className="flex items-center gap-2 p-3 bg-gray-50 dark:bg-gray-800/50 rounded-sm border">
+              <div className="flex items-center gap-2 p-3 bg-gray-50 dark:bg-gray-800/50 rounded-md border">
                 <code className="flex-1 text-sm text-gray-700 dark:text-gray-300 truncate">
                   {window.location.origin}/{user.username.toLowerCase()}
                 </code>
@@ -274,7 +274,7 @@ export default function ProfileEditor() {
             </div>
 
             {/* Fondo del perfil */}
-            <div className="p-4 border border-gray-100 dark:border-gray-800 rounded-sm">
+            <div className="p-4 border border-gray-100 dark:border-gray-800 rounded-md">
               <div className="flex items-center gap-2 mb-4">
                 <PaintBucket className="h-5 w-5 text-primary" />
                 <h3 className="font-medium text-lg">
@@ -298,7 +298,7 @@ export default function ProfileEditor() {
                 }}
                 className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4"
               >
-                <div className="flex items-center space-x-2 border border-gray-200 dark:border-gray-700 rounded-sm p-3 hover:bg-gray-50 dark:hover:bg-gray-800 cursor-pointer transition-colors relative">
+                <div className="flex items-center space-x-2 border border-gray-200 dark:border-gray-700 rounded-md p-3 hover:bg-gray-50 dark:hover:bg-gray-800 cursor-pointer transition-colors relative">
                   <RadioGroupItem
                     value="gradient-1"
                     id="gradient-1"
@@ -313,7 +313,7 @@ export default function ProfileEditor() {
                   </label>
                 </div>
 
-                <div className="flex items-center space-x-2 border border-gray-200 dark:border-gray-700 rounded-sm p-3 hover:bg-gray-50 dark:hover:bg-gray-800 cursor-pointer transition-colors relative">
+                <div className="flex items-center space-x-2 border border-gray-200 dark:border-gray-700 rounded-md p-3 hover:bg-gray-50 dark:hover:bg-gray-800 cursor-pointer transition-colors relative">
                   <RadioGroupItem
                     value="gradient-2"
                     id="gradient-2"
@@ -328,7 +328,7 @@ export default function ProfileEditor() {
                   </label>
                 </div>
 
-                <div className="flex items-center space-x-2 border border-gray-200 dark:border-gray-700 rounded-sm p-3 hover:bg-gray-50 dark:hover:bg-gray-800 cursor-pointer transition-colors relative">
+                <div className="flex items-center space-x-2 border border-gray-200 dark:border-gray-700 rounded-md p-3 hover:bg-gray-50 dark:hover:bg-gray-800 cursor-pointer transition-colors relative">
                   <RadioGroupItem
                     value="gradient-3"
                     id="gradient-3"
@@ -343,7 +343,7 @@ export default function ProfileEditor() {
                   </label>
                 </div>
 
-                <div className="flex items-center space-x-2 border border-gray-200 dark:border-gray-700 rounded-sm p-3 hover:bg-gray-50 dark:hover:bg-gray-800 cursor-pointer transition-colors relative">
+                <div className="flex items-center space-x-2 border border-gray-200 dark:border-gray-700 rounded-md p-3 hover:bg-gray-50 dark:hover:bg-gray-800 cursor-pointer transition-colors relative">
                   <RadioGroupItem
                     value="gradient-4"
                     id="gradient-4"
@@ -358,7 +358,7 @@ export default function ProfileEditor() {
                   </label>
                 </div>
 
-                <div className="flex items-center space-x-2 border border-gray-200 dark:border-gray-700 rounded-sm p-3 hover:bg-gray-50 dark:hover:bg-gray-800 cursor-pointer transition-colors relative">
+                <div className="flex items-center space-x-2 border border-gray-200 dark:border-gray-700 rounded-md p-3 hover:bg-gray-50 dark:hover:bg-gray-800 cursor-pointer transition-colors relative">
                   <RadioGroupItem
                     value="pattern-1"
                     id="pattern-1"
@@ -380,7 +380,7 @@ export default function ProfileEditor() {
                   </label>
                 </div>
 
-                <div className="flex items-center space-x-2 border border-gray-200 dark:border-gray-700 rounded-sm p-3 hover:bg-gray-50 dark:hover:bg-gray-800 cursor-pointer transition-colors relative">
+                <div className="flex items-center space-x-2 border border-gray-200 dark:border-gray-700 rounded-md p-3 hover:bg-gray-50 dark:hover:bg-gray-800 cursor-pointer transition-colors relative">
                   <RadioGroupItem
                     value="pattern-2"
                     id="pattern-2"
@@ -405,13 +405,13 @@ export default function ProfileEditor() {
             </div>
 
             {/* Enlaces sociales */}
-            <div className="p-4 border border-gray-100 dark:border-gray-800 rounded-sm">
+            <div className="p-4 border border-gray-100 dark:border-gray-800 rounded-md">
               <h3 className="font-medium text-lg mb-4">
                 {t("profile.socialLinks")}
               </h3>
 
               <div className="grid gap-4 sm:grid-cols-2">
-                <div className="group relative rounded-sm">
+                <div className="group relative rounded-md">
                   <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
                     <Twitter className="h-4 w-4 text-blue-500 group-focus-within:text-blue-600" />
                   </div>
@@ -427,7 +427,7 @@ export default function ProfileEditor() {
                   />
                 </div>
 
-                <div className="group relative rounded-sm">
+                <div className="group relative rounded-md">
                   <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
                     <Instagram className="h-4 w-4 text-pink-500 group-focus-within:text-pink-600" />
                   </div>
@@ -443,7 +443,7 @@ export default function ProfileEditor() {
                   />
                 </div>
 
-                <div className="group relative rounded-sm">
+                <div className="group relative rounded-md">
                   <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
                     <Youtube className="h-4 w-4 text-red-500 group-focus-within:text-red-600" />
                   </div>
@@ -459,7 +459,7 @@ export default function ProfileEditor() {
                   />
                 </div>
 
-                <div className="group relative rounded-sm">
+                <div className="group relative rounded-md">
                   <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
                     <FaTiktok className="h-3.5 w-3.5 text-gray-800 dark:text-gray-300 group-focus-within:text-gray-900 dark:group-focus-within:text-white" />
                   </div>
@@ -475,7 +475,7 @@ export default function ProfileEditor() {
                   />
                 </div>
 
-                <div className="group relative rounded-sm">
+                <div className="group relative rounded-md">
                   <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
                     <FaThreads className="h-3.5 w-3.5 text-gray-800 dark:text-gray-300 group-focus-within:text-gray-900 dark:group-focus-within:text-white" />
                   </div>
@@ -491,7 +491,7 @@ export default function ProfileEditor() {
                   />
                 </div>
 
-                <div className="group relative rounded-sm">
+                <div className="group relative rounded-md">
                   <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
                     <Globe className="h-4 w-4 text-primary group-focus-within:text-primary-600" />
                   </div>

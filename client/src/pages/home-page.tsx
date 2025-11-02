@@ -322,7 +322,7 @@ export default function HomePage() {
                   <TabsList className="hidden md:grid w-full grid-cols-4 bg-gray-100 dark:bg-gray-800 rounded-lg">
                     <TabsTrigger
                       value="published"
-                      className="data-[state=active]:bg-white dark:data-[state=active]:bg-gray-700 rounded-sm transition-all"
+                      className="data-[state=active]:bg-white dark:data-[state=active]:bg-gray-700 rounded-md transition-all"
                     >
                       <Grid3x3 className="h-4 w-4 mr-2" />
                       <span className="hidden sm:inline">
@@ -349,7 +349,7 @@ export default function HomePage() {
                     </TabsTrigger>
                     <TabsTrigger
                       value="store"
-                      className="data-[state=active]:bg-white dark:data-[state=active]:bg-gray-700 rounded-sm transition-all"
+                      className="data-[state=active]:bg-white dark:data-[state=active]:bg-gray-700 rounded-md transition-all"
                     >
                       <Store className="h-4 w-4 mr-2" />
                       <span className="hidden sm:inline">
@@ -359,7 +359,7 @@ export default function HomePage() {
                     </TabsTrigger>
                     <TabsTrigger
                       value="redemptions"
-                      className="data-[state=active]:bg-white dark:data-[state=active]:bg-gray-700 rounded-sm transition-all"
+                      className="data-[state=active]:bg-white dark:data-[state=active]:bg-gray-700 rounded-md transition-all"
                     >
                       <Package className="h-4 w-4 mr-2" />
                       <span className="hidden sm:inline">

@@ -174,7 +174,7 @@ export default function AuthDebug() {
               {user && (
                 <div>
                   <p className="font-semibold">Usuario:</p>
-                  <pre className="bg-muted p-4 rounded-sm text-sm overflow-auto">
+                  <pre className="bg-muted p-4 rounded-md text-sm overflow-auto">
                     {JSON.stringify(user, null, 2)}
                   </pre>
                 </div>
@@ -183,7 +183,7 @@ export default function AuthDebug() {
               {error && (
                 <div>
                   <p className="font-semibold text-destructive">Error:</p>
-                  <pre className="bg-destructive/10 p-4 rounded-sm text-sm overflow-auto">
+                  <pre className="bg-destructive/10 p-4 rounded-md text-sm overflow-auto">
                     {JSON.stringify(error, null, 2)}
                   </pre>
                 </div>
@@ -192,7 +192,7 @@ export default function AuthDebug() {
               {serverStatus && (
                 <div>
                   <p className="font-semibold">Respuesta del servidor (/api/user):</p>
-                  <pre className="bg-muted p-4 rounded-sm text-sm overflow-auto">
+                  <pre className="bg-muted p-4 rounded-md text-sm overflow-auto">
                     {JSON.stringify(serverStatus, null, 2)}
                   </pre>
                 </div>

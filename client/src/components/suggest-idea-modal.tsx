@@ -173,7 +173,7 @@ export default function SuggestIdeaModal({
       }
       onOpenChange(newOpen);
     }}>
-      <DialogContent className="sm:max-w-md rounded-sm glass-card text-center p-6 sm:p-8">
+      <DialogContent className="sm:max-w-md rounded-md glass-card text-center p-6 sm:p-8">
         <DialogHeader className="text-center">
           <DialogTitle className="font-heading text-lg sm:text-xl mb-2">
             {t('suggestIdea.title', { username })}
@@ -186,7 +186,7 @@ export default function SuggestIdeaModal({
         {/* Mostrar mensaje de inicio de sesión si el usuario no está autenticado */}
         {!user ? (
           <div className="space-y-4 py-4">
-            <div className="p-4 rounded-sm bg-amber-50 border border-amber-200 text-amber-800 dark:bg-amber-900/30 dark:border-amber-800 dark:text-amber-200">
+            <div className="p-4 rounded-md bg-amber-50 border border-amber-200 text-amber-800 dark:bg-amber-900/30 dark:border-amber-800 dark:text-amber-200">
               <h3 className="text-sm font-semibold mb-2">
                 {t('suggestIdea.loginRequired', 'Login required')}
               </h3>
@@ -226,7 +226,7 @@ export default function SuggestIdeaModal({
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6 py-2 px-2">
             {/* General form error message */}
             {formError && (
-              <div className="p-3 rounded-sm bg-red-50 border border-red-200 text-red-800 dark:bg-red-900/30 dark:border-red-800 dark:text-red-200 text-center">
+              <div className="p-3 rounded-md bg-red-50 border border-red-200 text-red-800 dark:bg-red-900/30 dark:border-red-800 dark:text-red-200 text-center">
                 <p className="text-sm font-medium">{formError}</p>
               </div>
             )}
@@ -237,7 +237,7 @@ export default function SuggestIdeaModal({
                 id="title"
                 placeholder="Ej: Tutorial sobre edición de videos"
                 {...form.register("title")}
-                className="w-full rounded-sm glass-input"
+                className="w-full rounded-md glass-input"
               />
               {form.formState.errors.title && (
                 <p className="text-sm text-red-500 mt-1">
@@ -252,7 +252,7 @@ export default function SuggestIdeaModal({
                 id="description"
                 placeholder="Sería genial que compartas tips sobre qué software usar, workflow de edición..."
                 {...form.register("description")}
-                className="min-h-[100px] rounded-sm glass-input"
+                className="min-h-[100px] rounded-md glass-input"
               />
               {form.formState.errors.description && (
                 <p className="text-sm text-red-500 mt-1">

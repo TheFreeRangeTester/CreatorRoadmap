@@ -227,7 +227,7 @@ export default function IdeaCard({
       </AnimatePresence>
 
       <Card
-        className={`idea-card overflow-hidden ${getCardClass()} h-full flex flex-col rounded-sm shadow-sm hover:shadow-md transition-all duration-300`}
+        className={`idea-card overflow-hidden ${getCardClass()} h-full flex flex-col rounded-md shadow-sm hover:shadow-md transition-all duration-300`}
       >
         <CardContent className="p-6 sm:p-8 flex flex-col h-full min-h-[180px] text-center">
           <div className="mb-3 sm:mb-4">
@@ -372,7 +372,7 @@ export default function IdeaCard({
                     whileHover={{ scale: 1.1, rotate: 5 }}
                     whileTap={{ scale: 0.9 }}
                     onClick={() => onOpenTemplate(idea)}
-                    className="p-2 text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 rounded-sm hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-all duration-200"
+                    className="p-2 text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 rounded-md hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-all duration-200"
                     aria-label="Open video template"
                     data-testid={`button-template-${idea.id}`}
                   >
@@ -384,7 +384,7 @@ export default function IdeaCard({
                     whileHover={{ scale: 1.1, rotate: 5 }}
                     whileTap={{ scale: 0.9 }}
                     onClick={() => onEdit(idea)}
-                    className="p-2 text-neutral-400 hover:text-neutral-500 dark:text-neutral-400 dark:hover:text-neutral-300 rounded-sm hover:bg-neutral-100 dark:hover:bg-gray-700 transition-all duration-200"
+                    className="p-2 text-neutral-400 hover:text-neutral-500 dark:text-neutral-400 dark:hover:text-neutral-300 rounded-md hover:bg-neutral-100 dark:hover:bg-gray-700 transition-all duration-200"
                     aria-label="Edit idea"
                   >
                     <Pencil className="w-4 h-4 sm:w-5 sm:h-5" />
@@ -395,7 +395,7 @@ export default function IdeaCard({
                     whileHover={{ scale: 1.1, rotate: 5 }}
                     whileTap={{ scale: 0.9 }}
                     onClick={() => onDelete(idea.id)}
-                    className="p-2 text-neutral-400 hover:text-red-500 dark:text-neutral-400 dark:hover:text-red-400 rounded-sm hover:bg-neutral-100 dark:hover:bg-gray-700 transition-all duration-200"
+                    className="p-2 text-neutral-400 hover:text-red-500 dark:text-neutral-400 dark:hover:text-red-400 rounded-md hover:bg-neutral-100 dark:hover:bg-gray-700 transition-all duration-200"
                     aria-label="Delete idea"
                   >
                     <Trash2 className="w-4 h-4 sm:w-5 sm:h-5" />

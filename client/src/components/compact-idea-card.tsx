@@ -115,7 +115,7 @@ export function CompactIdeaCard({
   return (
     <motion.div
       className={cn(
-        "group relative bg-white dark:bg-gray-900 rounded-sm overflow-hidden transition-all duration-300",
+        "group relative bg-white dark:bg-gray-900 rounded-md overflow-hidden transition-all duration-300",
         rank <= 3
           ? topThreeStyle.container
           : "border border-gray-200/50 dark:border-gray-700/50 hover:shadow-lg hover:shadow-gray-200/50 dark:hover:shadow-gray-800/50 hover:border-gray-300/50 dark:hover:border-gray-600/50",
@@ -149,7 +149,7 @@ export function CompactIdeaCard({
           <div className="flex items-center gap-2">
             <motion.div
               className={cn(
-                "flex items-center justify-center w-8 h-8 rounded-sm text-sm font-bold shadow-lg",
+                "flex items-center justify-center w-8 h-8 rounded-md text-sm font-bold shadow-lg",
                 getRankStyling()
               )}
               whileHover={{ scale: 1.1 }}
@@ -242,7 +242,7 @@ export function CompactIdeaCard({
       {/* Hover border effect - only for non-top 3 */}
       {rank > 3 && (
         <motion.div
-          className="absolute inset-0 rounded-sm border-2 border-transparent pointer-events-none"
+          className="absolute inset-0 rounded-md border-2 border-transparent pointer-events-none"
           animate={{
             borderColor: isHovered ? "rgba(59, 130, 246, 0.3)" : "transparent",
           }}

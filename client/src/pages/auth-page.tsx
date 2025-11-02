@@ -353,7 +353,7 @@ export default function AuthPage() {
                             : t("auth.registerCreatorSubtitle")}
                         </CardDescription>
                         <div
-                          className={`mt-3 py-2 px-3 bg-green-50 dark:bg-green-900 border border-green-200 dark:border-green-800 rounded-sm`}
+                          className={`mt-3 py-2 px-3 bg-green-50 dark:bg-green-900 border border-green-200 dark:border-green-800 rounded-md`}
                         >
                           <p className="text-xs text-green-700 dark:text-green-300">
                             {isPublicProfile
@@ -446,7 +446,7 @@ export default function AuthPage() {
                                         />
                                         <Label
                                           htmlFor="creator"
-                                          className={`flex flex-col items-center justify-between rounded-sm border-2 border-muted bg-transparent p-4 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary ${
+                                          className={`flex flex-col items-center justify-between rounded-md border-2 border-muted bg-transparent p-4 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary ${
                                             isPublicProfile
                                               ? "opacity-50 cursor-not-allowed"
                                               : ""
@@ -468,7 +468,7 @@ export default function AuthPage() {
                                         />
                                         <Label
                                           htmlFor="audience"
-                                          className="flex flex-col items-center justify-between rounded-sm border-2 border-muted bg-transparent p-4 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary"
+                                          className="flex flex-col items-center justify-between rounded-md border-2 border-muted bg-transparent p-4 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary"
                                         >
                                           <div className="mb-3 text-center font-semibold">
                                             {t("auth.audienceRole")}

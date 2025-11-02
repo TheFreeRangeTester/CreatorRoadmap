@@ -207,7 +207,7 @@ ${visualsNeeded.map((visual, i) => `- ${visual.completed ? '~~' + visual.text + 
               <Label className="text-sm font-semibold text-gray-700 dark:text-gray-300">
                 Idea del video
               </Label>
-              <div className="p-4 bg-gray-50 dark:bg-gray-800 rounded-sm border border-gray-200 dark:border-gray-700">
+              <div className="p-4 bg-gray-50 dark:bg-gray-800 rounded-md border border-gray-200 dark:border-gray-700">
                 <h3 className="font-semibold text-lg text-gray-900 dark:text-white mb-2">
                   {idea.title}
                 </h3>
@@ -244,7 +244,7 @@ ${visualsNeeded.map((visual, i) => `- ${visual.completed ? '~~' + visual.text + 
                       initial={{ opacity: 0, y: -10 }}
                       animate={{ opacity: 1, y: 0 }}
                       exit={{ opacity: 0, y: -10 }}
-                      className="flex items-center gap-3 p-3 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-sm group"
+                      className="flex items-center gap-3 p-3 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-md group"
                       data-testid={`point-${index}`}
                     >
                       <Checkbox
@@ -322,7 +322,7 @@ ${visualsNeeded.map((visual, i) => `- ${visual.completed ? '~~' + visual.text + 
                       initial={{ opacity: 0, y: -10 }}
                       animate={{ opacity: 1, y: 0 }}
                       exit={{ opacity: 0, y: -10 }}
-                      className="flex items-center gap-3 p-3 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-sm group"
+                      className="flex items-center gap-3 p-3 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-md group"
                       data-testid={`visual-${index}`}
                     >
                       <Checkbox
