@@ -372,7 +372,7 @@ export default function IdeaCard({
                     whileHover={{ scale: 1.1, rotate: 5 }}
                     whileTap={{ scale: 0.9 }}
                     onClick={() => onOpenTemplate(idea)}
-                    className="p-2 text-neutral-400 hover:text-primary dark:text-neutral-400 dark:hover:text-primary-300 rounded-md hover:bg-neutral-100 dark:hover:bg-gray-700 transition-all duration-200"
+                    className="p-2 text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 rounded-md hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-all duration-200"
                     aria-label="Open video template"
                     data-testid={`button-template-${idea.id}`}
                   >

@@ -220,7 +220,7 @@ export default function IdeaListView({
                   onClick={() => onOpenTemplate(idea)}
                   variant="outline"
                   size="sm"
-                  className="border-primary/30 dark:border-primary/50 text-primary hover:bg-primary/10 dark:hover:bg-primary/20"
+                  className="border-blue-400 dark:border-blue-500 text-blue-600 dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/20 font-medium"
                   data-testid={`button-template-list-${idea.id}`}
                 >
                   <FileText className="h-4 w-4" />

@@ -3,11 +3,22 @@
 ## Overview
 Fanlist is a web application designed to empower content creators by enabling them to gather ideas, suggestions, and votes directly from their audience. It features a community-driven leaderboard system where content ideas are ranked by audience votes, allowing creators to identify and prioritize the most desired content. The platform aims to streamline content planning, increase audience engagement, and foster a strong creator-community relationship.
 
-## Recent Changes (October 12, 2025)
-### Database Fixes
+## Recent Changes
+
+### November 2, 2025 - Video Planning Templates
+- **New Feature**: Added video planning template system for creators to plan content before production.
+- **Database**: Created `video_templates` table with fields for idea_id, points_to_cover, visuals_needed.
+- **VideoTemplateModal Component**: Modal UI with collapsible sections for organizing video planning (points to cover, visuals needed).
+- **API Routes**: Full CRUD endpoints (`/api/video-templates`) with authentication ensuring only idea owners can manage their templates.
+- **UI Integration**: Template button (FileText icon) added to IdeaCard and IdeaListView, visible only to creators.
+- **Export Feature**: Markdown export functionality to use templates in external editors.
+- **Styling**: Blue-themed buttons with improved contrast for better visibility.
+
+### October 12, 2025
+#### Database Fixes
 - Fixed `user_points` table constraint from `UNIQUE(user_id)` to `UNIQUE(user_id, creator_id)` to allow users to accumulate points for multiple creators separately.
 
-### Authentication & Redirect Fixes
+#### Authentication & Redirect Fixes
 - **Top3Podium Component**: Added redirect logic for unauthenticated users - now saves current URL to localStorage as `redirectAfterAuth` and redirects to `/auth` when attempting to vote.
 - **use-auth.tsx Hook**: Enhanced login/register success handlers to check for `redirectAfterAuth` and redirect users back to the originating page (usually public profile) instead of dashboard.
 - **auth-page.tsx**: Fixed race condition where auth-page was interfering with use-auth redirection. Added early return if `redirectAfterAuth` exists, allowing use-auth.tsx to handle the redirect without interference.
@@ -37,6 +48,7 @@ Preferred communication style: Simple, everyday language.
 
 ### Feature Specifications
 - **Idea Management**: CRUD operations, community suggestion system with approval workflow, dynamic leaderboards, vote tracking, and anti-spam measures.
+- **Video Planning Templates**: Creators can create planning templates for each idea with points to cover and visuals needed. Features include collapsible sections, markdown export, and template persistence per idea.
 - **Subscription Management**: Freemium model, Stripe integration, premium feature access control.
 - **User Authentication**: Session-based auth, role-based access (creator/audience), password reset.
 - **Points System**: Users earn points by voting, spend points on suggestions, and receive rewards for approved suggestions. Real-time UI updates for point transactions.
