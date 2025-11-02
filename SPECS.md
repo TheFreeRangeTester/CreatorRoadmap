@@ -53,9 +53,11 @@
   - ✅ Creators can delete their own ideas
   - ✅ Predefined niches system (unboxing, review, tutorial, vlog, behindTheScenes, qna)
 - **Related Components**:
-  - `server/routes.ts` — lógica de gestión de ideas
-  - `client/src/components/idea-form.tsx` — formulario de creación/edición
-  - `shared/schema.ts` — validaciones de ideas
+  - **Backend - Orchestration**: `server/routes.ts` — handlers POST/PUT/DELETE `/api/ideas` (creation line ~392, update ~446, deletion ~500)
+  - **Backend - Persistence**: `server/database-storage.ts` — methods `createIdea()`, `updateIdea()`, `deleteIdea()`, `getIdeasByCreator()`, `updatePositions()` (lines ~107-133, ~183-220, ~237-257)
+  - **Backend - Validation**: `shared/schema.ts` — schemas `insertIdeaSchema`, `updateIdeaSchema`, `ideas` table (lines ~177-191)
+  - **Frontend - UI**: `client/src/components/idea-form.tsx` — create/edit form with Zod validation
+  - **Frontend - View**: `client/src/components/ideas-tab-view.tsx` — list and management of creator's ideas
 - **Use Cases**:
   - **CU-001**: Creator creates new content idea
   - **CU-002**: Creator edits existing idea
@@ -73,9 +75,12 @@
   - ✅ Votes update in real-time
   - ✅ System prevents duplicate votes per user
 - **Related Components**:
-  - `server/routes.ts` — lógica de votos y prevención de duplicados
-  - `server/database-storage.ts` — persistencia de puntos y transacciones
-  - `client/src/hooks/use-reactive-stats.tsx` — actualizaciones reactivas
+  - **Backend - Orchestration**: `server/routes.ts` — handlers POST `/api/ideas/:id/vote`, `/api/creators/:username/ideas/:ideaId/vote`, `/api/public/:token/ideas/:ideaId/vote` (lines ~975-1182)
+  - **Backend - Persistence**: `server/database-storage.ts` — methods `createVote()`, `getVoteByUserOrSession()`, `updateUserPoints()` to award +1 point (lines ~293-330, ~548-588)
+  - **Backend - Validation**: `shared/schema.ts` — `votes` table, `pointTransactions` table, duplicate vote validation (lines ~48-55, ~92-102)
+  - **Frontend - UI**: `client/src/components/ideas-tab-view.tsx` — vote mutation and UI updates (lines ~72-119)
+  - **Frontend - Profiles**: `client/src/pages/creator-profile-unified.tsx`, `client/src/pages/modern-public-profile.tsx` — vote handlers on public profiles
+  - **Frontend - State**: `client/src/hooks/use-reactive-stats.tsx` — reactive statistics updates after voting
 - **Use Cases**:
   - **CU-004**: User votes for creator's idea
   - **CU-005**: System awards points for vote
@@ -93,9 +98,12 @@
   - ✅ Approved ideas award 5 points to suggester
   - ✅ Creators can approve/reject suggestions
 - **Related Components**:
-  - `server/routes.ts` — lógica de sugerencias y aprobación de ideas
-  - `shared/schema.ts` — validaciones de sugerencias
-  - `client/src/components/suggestion-form.tsx` — formulario de sugerencias
+  - **Backend - Orchestration**: `server/routes.ts` — handlers POST `/api/creators/:username/suggest` (suggest, lines ~738-823), PATCH `/api/ideas/:id/approve` (approve, lines ~873-947), GET `/api/pending-ideas` (list pending, lines ~826-870)
+  - **Backend - Persistence**: `server/database-storage.ts` — methods `suggestIdea()` creates idea with status='pending' (lines ~135-156), `approveIdea()` updates to 'approved' and awards +2 points (lines ~158-176), `getPendingIdeas()` (lines ~178-186)
+  - **Backend - Points**: `server/database-storage.ts` — `updateUserPoints()` deduct 3 points when suggesting (line ~787 in routes), award 2 points when approving (line ~930 in routes)
+  - **Backend - Validation**: `shared/schema.ts` — schema `suggestIdeaSchema` with creatorId (lines ~184-188), `ideas` table with `suggestedBy` field (line ~44)
+  - **Frontend - UI Suggestions**: `client/src/components/suggest-idea-modal.tsx`, `client/src/components/suggest-idea-dialog.tsx` — suggestion forms
+  - **Frontend - UI Approval**: `client/src/components/ideas-tab-view.tsx` — approval mutation and pending list (lines ~144-221)
 - **Use Cases**:
   - **CU-007**: User suggests idea to creator
   - **CU-008**: Creator approves suggestion
@@ -113,9 +121,14 @@
   - ✅ Transaction system with complete history
   - ✅ Limit of 5 items per creator in store
 - **Related Components**:
-  - `server/routes.ts` — lógica de tienda y canjes de puntos
-  - `client/src/components/store-management.tsx` — gestión de tienda
-  - `shared/schema.ts` — esquemas de tienda y transacciones de puntos
+  - **Backend - Orchestration**: `server/routes.ts` — store CRUD handlers: GET/POST `/api/creators/:username/store` (lines ~1883-1931), PUT/DELETE `/api/creators/:username/store/:itemId` (lines ~1934-2012), POST `/api/creators/:username/store/:itemId/redeem` (lines ~2116-2165)
+  - **Backend - Persistence**: `server/database-storage.ts` — methods `getStoreItems()`, `createStoreItem()`, `updateStoreItem()`, `deleteStoreItem()` (lines ~614-672), `createStoreRedemption()`, `getStoreRedemptions()` for redemptions
+  - **Backend - Points**: `server/database-storage.ts` — `updateUserPoints()` deduct points when redeeming (line ~2158 in routes), sufficient balance validation
+  - **Backend - Premium Validation**: `server/premium-middleware.ts` — premium access validation for creating/editing items
+  - **Backend - Validation**: `shared/schema.ts` — tables `storeItems`, `storeRedemptions`, schemas `insertStoreItemSchema`, `updateStoreItemSchema` (lines ~104-128, ~349-407)
+  - **Frontend - Management**: `client/src/components/store-management.tsx` — store items CRUD for creators
+  - **Frontend - Form**: `client/src/components/store-item-form.tsx` — create/edit item form
+  - **Frontend - Redemptions**: `client/src/components/public-store.tsx`, `client/src/pages/modern-public-profile.tsx` — redemption UI for audience
 - **Use Cases**:
   - **CU-010**: Creator creates store item
   - **CU-011**: User redeems item with points
@@ -133,9 +146,12 @@
   - ✅ Webhooks for state synchronization
   - ✅ Premium features: unlimited ideas, points store, analytics
 - **Related Components**:
-  - `server/routes.ts` — lógica de suscripciones y estados
-  - `shared/premium-utils.ts` — validación de acceso premium
-  - `client/src/pages/subscription-page.tsx` — interfaz de suscripción
+  - **Backend - Orchestration**: `server/routes.ts` — handlers POST `/api/stripe/create-checkout-session` (create session, lines ~1371-1505), POST `/api/stripe/cancel-subscription` (cancel, lines ~1508-1552), POST `/api/stripe/webhook` (webhooks, lines ~1750-1875), POST `/api/user/start-trial` (free trial, lines ~1343-1368)
+  - **Backend - Validation**: `shared/premium-utils.ts` — function `hasActivePremiumAccess()` validates premium/trial/canceled status (lines ~13-46), `getTrialDaysRemaining()`
+  - **Backend - Persistence**: `server/database-storage.ts` — methods `updateUserSubscription()`, `getUserByStripeCustomerId()`, `startUserTrial()` to update states
+  - **Backend - Middleware**: `server/premium-middleware.ts` — `requirePremiumAccess()`, `conditionalPremiumAccess()` to protect premium routes
+  - **Backend - Validation**: `shared/schema.ts` — `users` table with fields subscriptionStatus, stripeCustomerId, stripeSubscriptionId, etc. (lines ~20-30), `createCheckoutSessionSchema` (lines ~265-269)
+  - **Frontend - UI**: `client/src/pages/subscription-page.tsx` — plan selection interface and subscription management
 - **Use Cases**:
   - **CU-013**: User starts free trial
   - **CU-014**: User subscribes to premium plan
@@ -153,9 +169,12 @@
   - ✅ Customizable profiles with social media links
   - ✅ Persistent sessions with secure cookies
 - **Related Components**:
-  - `server/auth.ts` — autenticación y sesiones
-  - `client/src/hooks/use-auth.tsx` — gestión de autenticación en UI
-  - `client/src/pages/auth-page.tsx` — interfaz de acceso
+  - **Backend - Authentication**: `server/auth.ts` — Passport.js configuration (lines ~36-87), handlers POST `/api/auth/register` (lines ~88-132), POST `/api/auth/login` (lines ~134-169), POST `/api/auth/logout`, POST `/api/auth/forgot-password` (lines ~207-276), POST `/api/auth/reset-password` (lines ~278-318), functions `hashPassword()`, `comparePasswords()` (lines ~23-34)
+  - **Backend - Services**: `server/services/emailService.ts` — password recovery email sending, `server/services/tokenService.ts` — recovery token management
+  - **Backend - Persistence**: `server/database-storage.ts` — methods `createUser()`, `getUserByUsername()`, `getUserByEmail()`, `updateUserPassword()`, `updateUserProfile()` for user management
+  - **Backend - Validation**: `shared/schema.ts` — schema `insertUserSchema`, table `passwordResetTokens` (lines ~131-149, ~57-64), `updateProfileSchema` (lines ~249-262)
+  - **Frontend - Hook**: `client/src/hooks/use-auth.tsx` — authentication provider, login/register/logout mutations, user state management (lines ~56-366)
+  - **Frontend - UI**: `client/src/pages/auth-page.tsx` — login and registration forms with Zod validation (lines ~33-510)
 - **Use Cases**:
   - **CU-016**: User registers on platform
   - **CU-017**: User changes from audience to creator role
@@ -172,9 +191,12 @@
   - ✅ Voting on public profiles
   - ✅ Profile customization with backgrounds and logos
 - **Related Components**:
-  - `server/routes.ts` — lógica de perfiles públicos y enlaces compartibles
-  - `client/src/pages/modern-public-profile.tsx` — perfil público
-  - `shared/schema.ts` — esquemas de enlaces públicos
+  - **Backend - Orchestration**: `server/routes.ts` — handlers GET `/api/creators/:username` (public profile by username, lines ~1185-1217), GET/POST `/api/public/:token` (public leaderboard by token, lines ~1222-1331), POST `/api/public/:token/ideas/:ideaId/vote` (vote on public leaderboard)
+  - **Backend - Persistence**: `server/database-storage.ts` — methods `getPublicLinkByToken()`, `createPublicLink()`, `getUserByUsername()` for profiles, validation of active/expired links
+  - **Backend - Validation**: `shared/schema.ts` — table `publicLinks` (lines ~67-74), schema `insertPublicLinkSchema` (lines ~224-236), unique token validation
+  - **Frontend - Public Profile**: `client/src/pages/modern-public-profile.tsx` — public profile view with ideas, voting and suggestions (lines ~57-576)
+  - **Frontend - Public Leaderboard**: `client/src/pages/public-leaderboard-page.tsx` — shared leaderboard view by token (lines ~39-390)
+  - **Frontend - Sharing**: `client/src/components/share-profile.tsx` — component to generate and share public links
 - **Use Cases**:
   - **CU-019**: Creator shares public profile
   - **CU-020**: User visits creator profile
@@ -277,13 +299,13 @@
 
 ## 🔗 Related Implementation Context
 
-Nota: Los detalles de API (rutas, contratos, ejemplos) estarán documentados en Swagger/OpenAPI. Aquí solo se listan componentes de alto nivel que implementan los features:
+Note: API details (routes, contracts, examples) will be documented in Swagger/OpenAPI. Here only high-level components that implement the features are listed:
 
-- `server/routes.ts` — orquestación de reglas de negocio
-- `server/database-storage.ts` — persistencia y consistencia de datos
-- `shared/schema.ts` — validaciones y esquemas compartidos
-- `client/src/components/` — interfaz de usuario (formularios, vistas y flujos)
-- `client/src/hooks/` — estado y lógica de UI (autenticación, datos reactivos)
+- `server/routes.ts` — business rules orchestration
+- `server/database-storage.ts` — data persistence and consistency
+- `shared/schema.ts` — shared validations and schemas
+- `client/src/components/` — user interface (forms, views and flows)
+- `client/src/hooks/` — UI state and logic (authentication, reactive data)
 
 ## 📈 Metrics and KPIs
 
