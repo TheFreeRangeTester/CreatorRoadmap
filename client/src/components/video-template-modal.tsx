@@ -19,6 +19,7 @@ import { useToast } from "@/hooks/use-toast";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { apiRequest } from "@/lib/queryClient";
 import { IdeaResponse, VideoTemplateResponse } from "@shared/schema";
+import { Checkbox } from "@/components/ui/checkbox";
 import {
   Plus,
   X,
@@ -30,6 +31,12 @@ import {
   FileText,
   Eye,
 } from "lucide-react";
+
+// Template item type
+type TemplateItem = {
+  text: string;
+  completed: boolean;
+};
 
 interface VideoTemplateModalProps {
   isOpen: boolean;
@@ -45,8 +52,8 @@ export default function VideoTemplateModal({
   const { toast } = useToast();
   const queryClient = useQueryClient();
 
-  const [pointsToCover, setPointsToCover] = useState<string[]>([]);
-  const [visualsNeeded, setVisualsNeeded] = useState<string[]>([]);
+  const [pointsToCover, setPointsToCover] = useState<TemplateItem[]>([]);
+  const [visualsNeeded, setVisualsNeeded] = useState<TemplateItem[]>([]);
   const [newPoint, setNewPoint] = useState("");
   const [newVisual, setNewVisual] = useState("");
   const [isPointsOpen, setIsPointsOpen] = useState(true);
@@ -111,7 +118,7 @@ export default function VideoTemplateModal({
 
   const handleAddPoint = () => {
     if (newPoint.trim()) {
-      setPointsToCover([...pointsToCover, newPoint.trim()]);
+      setPointsToCover([...pointsToCover, { text: newPoint.trim(), completed: false }]);
       setNewPoint("");
     }
   };
@@ -120,15 +127,27 @@ export default function VideoTemplateModal({
     setPointsToCover(pointsToCover.filter((_, i) => i !== index));
   };
 
+  const handleTogglePoint = (index: number) => {
+    setPointsToCover(pointsToCover.map((item, i) => 
+      i === index ? { ...item, completed: !item.completed } : item
+    ));
+  };
+
   const handleAddVisual = () => {
     if (newVisual.trim()) {
-      setVisualsNeeded([...visualsNeeded, newVisual.trim()]);
+      setVisualsNeeded([...visualsNeeded, { text: newVisual.trim(), completed: false }]);
       setNewVisual("");
     }
   };
 
   const handleRemoveVisual = (index: number) => {
     setVisualsNeeded(visualsNeeded.filter((_, i) => i !== index));
+  };
+
+  const handleToggleVisual = (index: number) => {
+    setVisualsNeeded(visualsNeeded.map((item, i) => 
+      i === index ? { ...item, completed: !item.completed } : item
+    ));
   };
 
   const handleSave = () => {
@@ -142,10 +161,10 @@ export default function VideoTemplateModal({
 ${idea.description}
 
 ## Puntos a cubrir
-${pointsToCover.map((point, i) => `${i + 1}. ${point}`).join("\n")}
+${pointsToCover.map((point, i) => `${i + 1}. ${point.completed ? '~~' + point.text + '~~' : point.text} ${point.completed ? '✓' : ''}`).join("\n")}
 
 ## Visuales necesarios
-${visualsNeeded.map((visual, i) => `- ${visual}`).join("\n")}
+${visualsNeeded.map((visual, i) => `- ${visual.completed ? '~~' + visual.text + '~~' : visual.text} ${visual.completed ? '✓' : ''}`).join("\n")}
 `;
 
     const blob = new Blob([markdown], { type: "text/markdown" });
@@ -225,11 +244,21 @@ ${visualsNeeded.map((visual, i) => `- ${visual}`).join("\n")}
                       initial={{ opacity: 0, y: -10 }}
                       animate={{ opacity: 1, y: 0 }}
                       exit={{ opacity: 0, y: -10 }}
-                      className="flex items-center gap-2 p-3 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg group"
+                      className="flex items-center gap-3 p-3 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg group"
                       data-testid={`point-${index}`}
                     >
-                      <span className="flex-1 text-sm text-gray-700 dark:text-gray-300">
-                        {index + 1}. {point}
+                      <Checkbox
+                        checked={point.completed}
+                        onCheckedChange={() => handleTogglePoint(index)}
+                        className="mt-0.5"
+                        data-testid={`checkbox-point-${index}`}
+                      />
+                      <span className={`flex-1 text-sm ${
+                        point.completed 
+                          ? 'line-through text-gray-400 dark:text-gray-500' 
+                          : 'text-gray-700 dark:text-gray-300'
+                      }`}>
+                        {index + 1}. {point.text}
                       </span>
                       <Button
                         variant="ghost"
@@ -293,11 +322,21 @@ ${visualsNeeded.map((visual, i) => `- ${visual}`).join("\n")}
                       initial={{ opacity: 0, y: -10 }}
                       animate={{ opacity: 1, y: 0 }}
                       exit={{ opacity: 0, y: -10 }}
-                      className="flex items-center gap-2 p-3 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg group"
+                      className="flex items-center gap-3 p-3 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg group"
                       data-testid={`visual-${index}`}
                     >
-                      <span className="flex-1 text-sm text-gray-700 dark:text-gray-300">
-                        • {visual}
+                      <Checkbox
+                        checked={visual.completed}
+                        onCheckedChange={() => handleToggleVisual(index)}
+                        className="mt-0.5"
+                        data-testid={`checkbox-visual-${index}`}
+                      />
+                      <span className={`flex-1 text-sm ${
+                        visual.completed 
+                          ? 'line-through text-gray-400 dark:text-gray-500' 
+                          : 'text-gray-700 dark:text-gray-300'
+                      }`}>
+                        • {visual.text}
                       </span>
                       <Button
                         variant="ghost"
