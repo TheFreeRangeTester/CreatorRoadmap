@@ -1,11 +1,12 @@
 import {
-  ideas as ideasTable, users, votes as votesTable, publicLinks as publicLinksTable,
+  ideas as ideasTable, users, votes as votesTable, publicLinks as publicLinksTable, nicheStats,
   type User, type InsertUser, type Idea, type InsertIdea, type UpdateIdea, type SuggestIdea,
   type Vote, type InsertVote, type PublicLink, type InsertPublicLink, type PublicLinkResponse,
   type UpdateProfile, type UpdateSubscription, type UserPointsResponse, type InsertPointTransaction,
   type PointTransactionResponse, type StoreItem, type InsertStoreItem, type UpdateStoreItem,
   type StoreItemResponse, type StoreRedemption, type InsertStoreRedemption, type StoreRedemptionResponse,
-  type VideoTemplate, type InsertVideoTemplate, type UpdateVideoTemplate, type VideoTemplateResponse
+  type VideoTemplate, type InsertVideoTemplate, type UpdateVideoTemplate, type VideoTemplateResponse,
+  type NicheStat
 } from "@shared/schema";
 import session from "express-session";
 import createMemoryStore from "memorystore";
@@ -86,6 +87,10 @@ export interface IStorage {
   updateVideoTemplate(ideaId: number, template: UpdateVideoTemplate): Promise<VideoTemplateResponse | undefined>;
   deleteVideoTemplate(ideaId: number): Promise<void>;
 
+  // Niche stats operations
+  incrementNicheStats(creatorId: number, niche: string, votes: number): Promise<void>;
+  getTopNiche(creatorId: number): Promise<{ name: string; votes: number } | null>;
+
   // Session store
   sessionStore: any;
 }
@@ -120,6 +125,7 @@ export class MemStorage implements IStorage {
   private storeRedemptions: Map<number, StoreRedemption>;
   private videoTemplates: Map<number, VideoTemplate>;
   private audienceStatsMap: Map<number, { votesGiven: number; ideasSuggested: number; ideasApproved: number }>;
+  private nicheStatsMap: Map<string, NicheStat>;
   currentUserId: number;
   currentIdeaId: number;
   currentVoteId: number;
@@ -141,6 +147,7 @@ export class MemStorage implements IStorage {
     this.storeRedemptions = new Map();
     this.videoTemplates = new Map();
     this.audienceStatsMap = new Map();
+    this.nicheStatsMap = new Map();
     this.currentUserId = 1;
     this.currentIdeaId = 1;
     this.currentVoteId = 1;
@@ -1073,6 +1080,45 @@ export class MemStorage implements IStorage {
     this.currentVoteId = 4;
 
     console.log('[STORAGE] Demo data initialized successfully');
+  }
+
+  async incrementNicheStats(creatorId: number, niche: string, votes: number = 1): Promise<void> {
+    const key = `${creatorId}-${niche}`;
+    const existing = this.nicheStatsMap.get(key);
+    
+    if (existing) {
+      this.nicheStatsMap.set(key, {
+        ...existing,
+        totalVotes: existing.totalVotes + votes,
+        updatedAt: new Date(),
+      });
+    } else {
+      this.nicheStatsMap.set(key, {
+        id: this.nicheStatsMap.size + 1,
+        creatorId,
+        niche,
+        totalVotes: votes,
+        updatedAt: new Date(),
+      });
+    }
+  }
+
+  async getTopNiche(creatorId: number): Promise<{ name: string; votes: number } | null> {
+    const creatorNiches = Array.from(this.nicheStatsMap.values())
+      .filter(stat => stat.creatorId === creatorId);
+    
+    if (creatorNiches.length === 0) {
+      return null;
+    }
+
+    const topNiche = creatorNiches.reduce((max, stat) => 
+      stat.totalVotes > max.totalVotes ? stat : max
+    );
+
+    return {
+      name: topNiche.niche,
+      votes: topNiche.totalVotes,
+    };
   }
 }
 

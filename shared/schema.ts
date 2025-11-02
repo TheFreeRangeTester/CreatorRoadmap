@@ -127,6 +127,17 @@ export const storeRedemptions = pgTable("store_redemptions", {
   completedAt: timestamp("completed_at"),
 });
 
+// Table for persistent niche statistics
+export const nicheStats = pgTable("niche_stats", {
+  id: serial("id").primaryKey(),
+  creatorId: integer("creator_id").notNull().references(() => users.id),
+  niche: text("niche").notNull(),
+  totalVotes: integer("total_votes").notNull().default(0),
+  updatedAt: timestamp("updated_at").notNull().defaultNow(),
+}, (table) => ({
+  creatorNicheUnique: unique().on(table.creatorId, table.niche),
+}));
+
 // User schemas
 export const insertUserSchema = createInsertSchema(users).pick({
   username: true,
@@ -448,3 +459,6 @@ export type VideoTemplate = typeof videoTemplates.$inferSelect;
 export type InsertVideoTemplate = z.infer<typeof insertVideoTemplateSchema>;
 export type UpdateVideoTemplate = z.infer<typeof updateVideoTemplateSchema>;
 export type VideoTemplateResponse = z.infer<typeof videoTemplateResponseSchema>;
+
+// Niche stats types
+export type NicheStat = typeof nicheStats.$inferSelect;
