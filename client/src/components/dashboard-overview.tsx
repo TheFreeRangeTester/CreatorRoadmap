@@ -9,6 +9,7 @@ import {
   Star,
   Clock,
   AlertCircle,
+  Gift,
 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -33,6 +34,7 @@ interface CreatorStats {
     name: string;
     votes: number;
   } | null;
+  pendingRedemptions?: number;
 }
 
 interface AudienceStats {
@@ -149,7 +151,7 @@ export function DashboardOverview({ className }: DashboardOverviewProps) {
           className="lg:hidden flex gap-4 overflow-x-auto snap-x snap-mandatory scrollbar-hide px-4 -mx-4"
           style={{ scrollbarWidth: "none" }}
         >
-          {Array.from({ length: 4 }).map((_, index) => (
+          {Array.from({ length: 5 }).map((_, index) => (
             <Card
               key={index}
               className="bg-white/90 dark:bg-gray-900/90 backdrop-blur-sm border border-gray-200/50 dark:border-gray-700/50 min-w-[85%] snap-center"
@@ -167,7 +169,7 @@ export function DashboardOverview({ className }: DashboardOverviewProps) {
 
         {/* Desktop Grid */}
         <div className="hidden lg:grid lg:grid-cols-2 gap-4">
-          {Array.from({ length: 4 }).map((_, index) => (
+          {Array.from({ length: 5 }).map((_, index) => (
             <Card
               key={index}
               className="bg-white/90 dark:bg-gray-900/90 backdrop-blur-sm border border-gray-200/50 dark:border-gray-700/50"
@@ -183,7 +185,7 @@ export function DashboardOverview({ className }: DashboardOverviewProps) {
           ))}
         </div>
 
-        <CarouselIndicators total={4} active={0} />
+        <CarouselIndicators total={5} active={0} />
       </div>
     );
   }
@@ -230,6 +232,21 @@ export function DashboardOverview({ className }: DashboardOverviewProps) {
         color: "text-orange-600",
         bgColor: "bg-orange-50 dark:bg-orange-900/20",
         badge: stats.pendingSuggestions > 0 ? "attention" : undefined,
+      },
+      {
+        icon: Gift,
+        title: t(
+          "dashboard.overview.pendingRedemptions",
+          "Pending Redemptions"
+        ),
+        value: stats.pendingRedemptions || 0,
+        description: t(
+          "dashboard.overview.pendingRedemptionsDesc",
+          "Redenciones pendientes"
+        ),
+        color: "text-amber-600",
+        bgColor: "bg-amber-50 dark:bg-amber-900/20",
+        badge: (stats.pendingRedemptions || 0) > 0 ? "attention" : undefined,
       },
       {
         icon: TrendingUp,

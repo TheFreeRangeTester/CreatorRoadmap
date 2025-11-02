@@ -129,142 +129,215 @@ export default function IdeaListView({
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      className="group bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm border border-gray-200/50 dark:border-gray-700/50 rounded-2xl p-4 hover:bg-white/90 dark:hover:bg-gray-900/90 hover:shadow-lg transition-all duration-300 hover:border-gray-300/60 dark:hover:border-gray-600/60"
+      transition={{ duration: 0.3, ease: "easeOut" }}
+      className="group bg-white/90 dark:bg-gray-900/90 backdrop-blur-sm border border-gray-200/60 dark:border-gray-700/60 rounded-xl p-5 hover:bg-white dark:hover:bg-gray-900 hover:shadow-xl hover:border-gray-300 dark:hover:border-gray-600 transition-all duration-300 ease-out hover:-translate-y-0.5"
     >
-      <div className="flex items-start gap-4">
-        {/* Position Ranking */}
-        <div className="flex-shrink-0 flex flex-col items-center">
-          <div
-            className={`text-2xl font-bold ${getRankingStyle(position)} min-w-[2rem] text-center`}
+      <div className="flex items-start gap-5">
+        {/* Position Ranking - Enhanced Visual */}
+        <div className="flex-shrink-0 flex flex-col items-center justify-center">
+          <motion.div
+            className={`text-2xl font-extrabold ${getRankingStyle(position)} min-w-[3rem] text-center px-2 py-1 rounded-lg bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-800 dark:to-gray-900 border-2 border-gray-200 dark:border-gray-700`}
+            whileHover={{ scale: 1.05 }}
+            transition={{ type: "spring", stiffness: 400, damping: 17 }}
           >
             #{position}
-          </div>
+          </motion.div>
+          {position <= 3 && (
+            <motion.div
+              initial={{ opacity: 0, scale: 0 }}
+              animate={{ opacity: 1, scale: 1 }}
+              className="text-xs mt-1 text-yellow-500 dark:text-yellow-400 font-semibold"
+            >
+              {position === 1 && "🏆"}
+              {position === 2 && "🥈"}
+              {position === 3 && "🥉"}
+            </motion.div>
+          )}
         </div>
 
         {/* Main Content */}
         <div className="flex-1 min-w-0">
-          <div className="flex items-start justify-between gap-3">
+          <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
             {/* Title and Description */}
-            <div className="flex-1 min-w-0">
-              <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2 line-clamp-2">
+            <div className="flex-1 min-w-0 space-y-2">
+              <h3 className="text-lg font-bold text-gray-900 dark:text-white leading-tight line-clamp-2 group-hover:text-primary dark:group-hover:text-primary-400 transition-colors duration-200">
                 {idea.title}
               </h3>
               {idea.description && (
-                <p className="text-sm text-gray-600 dark:text-gray-400 line-clamp-2 mb-3">
+                <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed line-clamp-2">
                   {idea.description}
                 </p>
               )}
 
-              {/* Badges Row - Compact Horizontal */}
-              <div className="flex items-center gap-2 flex-wrap mb-2">
-                {/* Niche Badge */}
+              {/* Badges Row - Visual List Style with UX improvements */}
+              <div className="flex items-center gap-2.5 flex-wrap mt-3">
+                {/* Niche Badge - Enhanced Visual with interaction */}
                 {idea.niche && (
+                  <motion.div
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    transition={{ type: "spring", stiffness: 400, damping: 17 }}
+                  >
+                    <Badge
+                      variant="secondary"
+                      className="bg-primary/15 dark:bg-primary/25 text-primary dark:text-primary-200 border-2 border-primary/30 dark:border-primary/40 text-xs px-3 py-1.5 font-semibold shadow-sm hover:shadow-md hover:bg-primary/20 dark:hover:bg-primary/35 transition-all duration-200 cursor-default"
+                      data-testid={`niche-badge-list-${idea.id}`}
+                    >
+                      {t(`ideaForm.niches.${idea.niche}`, idea.niche)}
+                    </Badge>
+                  </motion.div>
+                )}
+                {/* Position Change Badge - Enhanced Visual with interaction */}
+                <motion.div
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  transition={{ type: "spring", stiffness: 400, damping: 17 }}
+                >
                   <Badge
                     variant="secondary"
-                    className="bg-primary/10 dark:bg-primary/20 text-primary dark:text-primary-300 border border-primary/20 dark:border-primary/30 text-xs px-2 py-1"
-                    data-testid={`niche-badge-list-${idea.id}`}
+                    className={`${positionIndicator.className} flex items-center gap-1.5 text-xs px-3 py-1.5 font-semibold border-2 shadow-sm hover:shadow-md transition-all duration-200 cursor-default`}
                   >
-                    {t(`ideaForm.niches.${idea.niche}`, idea.niche)}
+                    {positionIndicator.icon}
+                    {positionIndicator.text}
                   </Badge>
-                )}
-                {/* Position Change Badge */}
-                <Badge
-                  variant="secondary"
-                  className={`${positionIndicator.className} flex items-center gap-1 text-xs px-2 py-1`}
+                </motion.div>
+                {/* Vote Count - More Prominent with better UX */}
+                <motion.div
+                  className="flex items-center gap-2 bg-gradient-to-r from-pink-100 via-purple-100 to-pink-100 dark:from-pink-900/30 dark:via-purple-900/30 dark:to-pink-900/30 px-3 py-1.5 rounded-none border-2 border-pink-300/60 dark:border-pink-700/60 shadow-sm hover:shadow-md hover:from-pink-200 hover:via-purple-200 hover:to-pink-200 dark:hover:from-pink-900/40 dark:hover:via-purple-900/40 dark:hover:to-pink-900/40 transition-all duration-200 cursor-default"
+                  whileHover={{ scale: 1.05, x: 2 }}
+                  whileTap={{ scale: 0.95 }}
+                  transition={{ type: "spring", stiffness: 400, damping: 17 }}
                 >
-                  {positionIndicator.icon}
-                  {positionIndicator.text}
-                </Badge>
-                {/* Vote Count - Compact */}
-                <div className="flex items-center gap-1.5 bg-gradient-to-r from-pink-50 to-purple-50 dark:from-pink-900/20 dark:to-purple-900/20 px-2 py-1 rounded-none border border-pink-200/50 dark:border-pink-800/50">
-                  <Heart className="w-3.5 h-3.5 text-pink-500" />
-                  <span className="font-semibold text-base text-gray-900 dark:text-white">
+                  <Heart
+                    className="w-4 h-4 text-pink-600 dark:text-pink-400"
+                    fill="currentColor"
+                  />
+                  <span className="font-bold text-base text-gray-900 dark:text-white">
                     {idea.votes}
                   </span>
-                </div>
+                </motion.div>
               </div>
 
               {/* Creator indicator for audience users */}
               {!isCreator && (
-                <Badge variant="outline" className="text-xs mb-2">
-                  <User className="w-3 h-3 mr-1" />
+                <Badge
+                  variant="outline"
+                  className="text-xs mt-2 w-fit border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-800/50"
+                >
+                  <User className="w-3 h-3 mr-1.5" />
                   {t("ideas.byCreator", "Por creador")}
                 </Badge>
               )}
             </div>
 
-            {/* Actions */}
-            <div className="flex-shrink-0 flex items-center gap-2">
-              {/* Vote Button */}
+            {/* Actions - Enhanced UX */}
+            <div className="flex-shrink-0 flex flex-col sm:flex-row items-stretch sm:items-center gap-2 mt-4 sm:mt-0">
+              {/* Vote Button - Enhanced */}
               {!isCreator && (
-                <Button
-                  onClick={handleVote}
-                  disabled={hasVoted || isVoting}
-                  variant={hasVoted ? "secondary" : "default"}
-                  size="sm"
-                  className={`transition-all duration-300 ${
-                    hasVoted
-                      ? "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-300"
-                      : "bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white"
-                  } ${isVoteAnimating ? "scale-110" : ""}`}
+                <motion.div
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  transition={{ type: "spring", stiffness: 400, damping: 17 }}
                 >
-                  {isVoting ? (
-                    <Loader2 className="h-4 w-4 animate-spin" />
-                  ) : (
-                    <>
-                      <ThumbsUp className="h-4 w-4 mr-1" />
-                      {hasVoted
-                        ? t("ideas.voted", "Votado")
-                        : t("ideas.vote", "Votar")}
-                    </>
-                  )}
-                </Button>
+                  <Button
+                    onClick={handleVote}
+                    disabled={hasVoted || isVoting}
+                    variant={hasVoted ? "secondary" : "default"}
+                    size="sm"
+                    className={`transition-all duration-300 font-semibold shadow-sm hover:shadow-md ${
+                      hasVoted
+                        ? "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-300 border-2 border-green-300 dark:border-green-700 hover:bg-green-200 dark:hover:bg-green-900/40 cursor-not-allowed"
+                        : "bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white border-0 hover:shadow-lg"
+                    } ${isVoteAnimating ? "scale-110 ring-2 ring-green-400" : ""}`}
+                    aria-label={
+                      hasVoted
+                        ? t("ideas.alreadyVoted", "Ya votaste")
+                        : t("ideas.vote", "Votar")
+                    }
+                  >
+                    {isVoting ? (
+                      <Loader2 className="h-4 w-4 animate-spin" />
+                    ) : (
+                      <>
+                        <ThumbsUp
+                          className={`h-4 w-4 mr-1.5 ${hasVoted ? "fill-current" : ""}`}
+                        />
+                        <span className="hidden xs:inline">
+                          {hasVoted
+                            ? t("ideas.voted", "Votado")
+                            : t("ideas.vote", "Votar")}
+                        </span>
+                      </>
+                    )}
+                  </Button>
+                </motion.div>
               )}
 
-              {/* Template Button (for creators) */}
+              {/* Template Button (for creators) - Enhanced */}
               {isCreator && onOpenTemplate && (
-                <Button
-                  onClick={() => onOpenTemplate(idea)}
-                  variant="outline"
-                  size="sm"
-                  className="border-blue-400 dark:border-blue-500 text-blue-600 dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/20 font-medium"
-                  data-testid={`button-template-list-${idea.id}`}
+                <motion.div
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  transition={{ type: "spring", stiffness: 400, damping: 17 }}
                 >
-                  <FileText className="h-4 w-4" />
-                  <span className="hidden sm:inline ml-1">
-                    {t("ideas.template", "Template")}
-                  </span>
-                </Button>
+                  <Button
+                    onClick={() => onOpenTemplate(idea)}
+                    variant="outline"
+                    size="sm"
+                    className="border-2 border-blue-400 dark:border-blue-500 text-blue-600 dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/20 hover:border-blue-500 dark:hover:border-blue-400 font-semibold shadow-sm hover:shadow-md transition-all duration-200"
+                    data-testid={`button-template-list-${idea.id}`}
+                    aria-label={t("ideas.template", "Template")}
+                  >
+                    <FileText className="h-4 w-4" />
+                    <span className="hidden sm:inline ml-1.5">
+                      {t("ideas.template", "Template")}
+                    </span>
+                  </Button>
+                </motion.div>
               )}
 
-              {/* Edit Button (for creators) */}
+              {/* Edit Button (for creators) - Enhanced */}
               {isCreator && onEdit && (
-                <Button
-                  onClick={() => onEdit(idea)}
-                  variant="outline"
-                  size="sm"
-                  className="border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-800"
+                <motion.div
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  transition={{ type: "spring", stiffness: 400, damping: 17 }}
                 >
-                  <Pencil className="h-4 w-4" />
-                  <span className="hidden sm:inline ml-1">
-                    {t("ideas.edit", "Editar")}
-                  </span>
-                </Button>
+                  <Button
+                    onClick={() => onEdit(idea)}
+                    variant="outline"
+                    size="sm"
+                    className="border-2 border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-800 hover:border-gray-400 dark:hover:border-gray-500 font-semibold shadow-sm hover:shadow-md transition-all duration-200"
+                    aria-label={t("ideas.edit", "Editar")}
+                  >
+                    <Pencil className="h-4 w-4" />
+                    <span className="hidden sm:inline ml-1.5">
+                      {t("ideas.edit", "Editar")}
+                    </span>
+                  </Button>
+                </motion.div>
               )}
 
-              {/* Delete Button (for creators) */}
+              {/* Delete Button (for creators) - Enhanced */}
               {isCreator && onDelete && (
-                <Button
-                  onClick={() => onDelete(idea.id)}
-                  variant="outline"
-                  size="sm"
-                  className="border-red-300 dark:border-red-700 text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 dark:text-red-400"
+                <motion.div
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  transition={{ type: "spring", stiffness: 400, damping: 17 }}
                 >
-                  <Trash2 className="h-4 w-4" />
-                  <span className="hidden sm:inline ml-1">
-                    {t("ideas.delete", "Eliminar")}
-                  </span>
-                </Button>
+                  <Button
+                    onClick={() => onDelete(idea.id)}
+                    variant="outline"
+                    size="sm"
+                    className="border-2 border-red-300 dark:border-red-700 text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 dark:text-red-400 hover:border-red-400 dark:hover:border-red-600 font-semibold shadow-sm hover:shadow-md transition-all duration-200"
+                    aria-label={t("ideas.delete", "Eliminar")}
+                  >
+                    <Trash2 className="h-4 w-4" />
+                    <span className="hidden sm:inline ml-1.5">
+                      {t("ideas.delete", "Eliminar")}
+                    </span>
+                  </Button>
+                </motion.div>
               )}
             </div>
           </div>

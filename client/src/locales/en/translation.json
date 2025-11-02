@@ -397,6 +397,8 @@
       "topNiches": "Top Niches",
       "topNichesDesc": "Most voted category",
       "noNicheData": "No data yet",
+      "pendingRedemptions": "Pending Redemptions",
+      "pendingRedemptionsDesc": "Redemptions awaiting approval",
       "totalPoints": "Total Points",
       "totalPointsDesc": "Available points",
       "votesGiven": "Votes Given",

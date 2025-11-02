@@ -297,7 +297,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Get top niche from persistent stats
       const topNiche = await storage.getTopNiche(req.user.id);
 
-      console.log(`[DASHBOARD-STATS] User ${req.user.id}: ${ideas.length} total ideas, ${publishedIdeas.length} published, ${pendingIdeas.length} pending, ${totalVotes} total votes, top niche: ${topNiche?.name || 'none'} with ${topNiche?.votes || 0} votes`);
+      // Get pending redemptions count
+      const pendingRedemptionsResult = await storage.getStoreRedemptions(req.user.id, 1, 0, 'pending');
+      const pendingRedemptions = pendingRedemptionsResult.total;
+
+      console.log(`[DASHBOARD-STATS] User ${req.user.id}: ${ideas.length} total ideas, ${publishedIdeas.length} published, ${pendingIdeas.length} pending, ${totalVotes} total votes, top niche: ${topNiche?.name || 'none'} with ${topNiche?.votes || 0} votes, ${pendingRedemptions} pending redemptions`);
 
       const stats = {
         totalIdeas: publishedIdeas.length,
@@ -305,6 +309,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         pendingSuggestions: pendingIdeas.length,
         publishedIdeas: publishedIdeas.length,
         topNiche,
+        pendingRedemptions,
       };
 
       res.json(stats);

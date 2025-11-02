@@ -399,6 +399,8 @@
       "topNiches": "Nichos Principales",
       "topNichesDesc": "Categoría más votada",
       "noNicheData": "Sin datos aún",
+      "pendingRedemptions": "Redenciones Pendientes",
+      "pendingRedemptionsDesc": "Redenciones esperando aprobación",
       "totalPoints": "Total Points",
       "totalPointsDesc": "Puntos disponibles",
       "votesGiven": "Votes Given",
