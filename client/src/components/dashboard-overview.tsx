@@ -315,7 +315,7 @@ export function DashboardOverview({ className }: DashboardOverviewProps) {
           variants={containerVariants}
           initial="hidden"
           animate="visible"
-          className="hidden lg:grid lg:grid-cols-2 gap-4"
+          className="hidden lg:grid lg:grid-cols-4 gap-4"
         >
           {creatorMetrics.map((metric, index) => (
             <motion.div key={index} variants={itemVariants}>
@@ -473,7 +473,7 @@ export function DashboardOverview({ className }: DashboardOverviewProps) {
           variants={containerVariants}
           initial="hidden"
           animate="visible"
-          className="hidden lg:grid lg:grid-cols-2 gap-4"
+          className="hidden lg:grid lg:grid-cols-4 gap-4"
         >
           {audienceMetrics.map((metric, index) => (
             <motion.div key={index} variants={itemVariants}>

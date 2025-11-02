@@ -155,42 +155,32 @@ export default function IdeaListView({
                 </p>
               )}
 
-              {/* Badges Row - Two Columns */}
-              <div className="grid grid-cols-2 gap-2 mb-2">
-                {/* Column 1 */}
-                <div className="flex items-center gap-2">
-                  {/* Niche Badge */}
-                  {idea.niche && (
-                    <Badge
-                      variant="secondary"
-                      className="bg-primary/10 dark:bg-primary/20 text-primary dark:text-primary-300 border border-primary/20 dark:border-primary/30 text-xs px-2 py-1"
-                      data-testid={`niche-badge-list-${idea.id}`}
-                    >
-                      {t(`ideaForm.niches.${idea.niche}`, idea.niche)}
-                    </Badge>
-                  )}
-                  {/* Position Change Badge */}
+              {/* Badges Row - Compact Horizontal */}
+              <div className="flex items-center gap-2 flex-wrap mb-2">
+                {/* Niche Badge */}
+                {idea.niche && (
                   <Badge
                     variant="secondary"
-                    className={`${positionIndicator.className} flex items-center gap-1 text-xs px-2 py-1`}
+                    className="bg-primary/10 dark:bg-primary/20 text-primary dark:text-primary-300 border border-primary/20 dark:border-primary/30 text-xs px-2 py-1"
+                    data-testid={`niche-badge-list-${idea.id}`}
                   >
-                    {positionIndicator.icon}
-                    {positionIndicator.text}
+                    {t(`ideaForm.niches.${idea.niche}`, idea.niche)}
                   </Badge>
-                </div>
-
-                {/* Column 2 */}
-                <div className="flex items-center justify-end">
-                  {/* Vote Count - More prominent */}
-                  <div className="flex items-center gap-2 bg-gradient-to-r from-pink-50 to-purple-50 dark:from-pink-900/20 dark:to-purple-900/20 px-3 py-2 rounded-none border border-pink-200/50 dark:border-pink-800/50">
-                    <Heart className="w-4 h-4 text-pink-500" />
-                    <span className="font-bold text-lg text-gray-900 dark:text-white">
-                      {idea.votes}
-                    </span>
-                    <span className="text-sm text-gray-600 dark:text-gray-400">
-                      {t("ideas.votes")}
-                    </span>
-                  </div>
+                )}
+                {/* Position Change Badge */}
+                <Badge
+                  variant="secondary"
+                  className={`${positionIndicator.className} flex items-center gap-1 text-xs px-2 py-1`}
+                >
+                  {positionIndicator.icon}
+                  {positionIndicator.text}
+                </Badge>
+                {/* Vote Count - Compact */}
+                <div className="flex items-center gap-1.5 bg-gradient-to-r from-pink-50 to-purple-50 dark:from-pink-900/20 dark:to-purple-900/20 px-2 py-1 rounded-none border border-pink-200/50 dark:border-pink-800/50">
+                  <Heart className="w-3.5 h-3.5 text-pink-500" />
+                  <span className="font-semibold text-base text-gray-900 dark:text-white">
+                    {idea.votes}
+                  </span>
                 </div>
               </div>
 
