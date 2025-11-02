@@ -227,7 +227,7 @@ export default function IdeaCard({
       </AnimatePresence>
 
       <Card
-        className={`idea-card overflow-hidden ${getCardClass()} h-full flex flex-col rounded-xl shadow-sm hover:shadow-md transition-all duration-300`}
+        className={`idea-card overflow-hidden ${getCardClass()} h-full flex flex-col rounded-md shadow-sm hover:shadow-md transition-all duration-300`}
       >
         <CardContent className="p-6 sm:p-8 flex flex-col h-full min-h-[180px] text-center">
           <div className="mb-3 sm:mb-4">
