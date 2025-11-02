@@ -12,7 +12,7 @@ export default function BillingToggle({ value, onChange }: BillingToggleProps) {
   const { t } = useTranslation();
   
   return (
-    <div className="inline-flex items-center rounded-md border p-1 bg-background">
+    <div className="inline-flex items-center rounded-sm border p-1 bg-background">
       <Button
         variant={value === "monthly" ? "default" : "ghost"}
         size="sm"

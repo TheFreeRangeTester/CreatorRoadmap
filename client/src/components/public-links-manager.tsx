@@ -259,7 +259,7 @@ export default function PublicLinksManager() {
                 </div>
               </CardHeader>
               <CardContent>
-                <div className="flex items-center gap-2 bg-muted p-2 rounded-md overflow-hidden">
+                <div className="flex items-center gap-2 bg-muted p-2 rounded-sm overflow-hidden">
                   <p className="text-sm truncate flex-1">{link.url}</p>
                   <Button variant="ghost" size="icon" onClick={() => handleCopyLink(link.url)}>
                     <Copy className="h-4 w-4" />

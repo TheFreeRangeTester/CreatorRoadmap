@@ -187,7 +187,7 @@ export default function SuggestIdeaDialog({ username, refetch, fullWidth = false
           <div className="grid gap-4 py-4">
             {/* Mensaje de error */}
             {error && (
-              <div className="p-3 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-md text-red-600 dark:text-red-400 text-sm">
+              <div className="p-3 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-sm text-red-600 dark:text-red-400 text-sm">
                 {error}
               </div>
             )}

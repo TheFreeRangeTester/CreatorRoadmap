@@ -167,7 +167,7 @@ function SocialLink({
       href={formattedUrl}
       target="_blank"
       rel="noopener noreferrer"
-      className={`text-gray-500 dark:text-gray-400 ${hoverClass} transition-colors bg-gray-100 dark:bg-gray-700/50 rounded-md p-1.5`}
+      className={`text-gray-500 dark:text-gray-400 ${hoverClass} transition-colors bg-gray-100 dark:bg-gray-700/50 rounded-sm p-1.5`}
       whileHover={{ scale: 1.1 }}
       whileTap={{ scale: 0.95 }}
       title={name}
