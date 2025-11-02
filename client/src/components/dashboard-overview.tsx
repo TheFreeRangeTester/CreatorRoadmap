@@ -168,7 +168,7 @@ export function DashboardOverview({ className }: DashboardOverviewProps) {
         </div>
 
         {/* Desktop Grid */}
-        <div className="hidden lg:grid lg:grid-cols-2 gap-4">
+        <div className="hidden lg:grid lg:grid-cols-3 gap-4">
           {Array.from({ length: 5 }).map((_, index) => (
             <Card
               key={index}
@@ -327,59 +327,72 @@ export function DashboardOverview({ className }: DashboardOverviewProps) {
           ))}
         </div>
 
-        {/* Desktop Grid */}
+        {/* Desktop Grid - Clean 3-column layout with balanced distribution */}
         <motion.div
           variants={containerVariants}
           initial="hidden"
           animate="visible"
-          className="hidden lg:grid lg:grid-cols-4 gap-4"
+          className="hidden lg:grid lg:grid-cols-3 gap-5"
         >
-          {creatorMetrics.map((metric, index) => (
-            <motion.div key={index} variants={itemVariants}>
-              <Card className="bg-white/90 dark:bg-gray-900/90 backdrop-blur-sm border border-gray-200/50 dark:border-gray-700/50 hover:shadow-lg transition-all duration-300">
-                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3">
-                  <CardTitle className="text-sm font-medium text-gray-600 dark:text-gray-400">
-                    {metric.title}
-                  </CardTitle>
-                  <div className={`p-2 rounded-md ${metric.bgColor}`}>
-                    <metric.icon className={`h-4 w-4 ${metric.color}`} />
-                  </div>
-                </CardHeader>
-                <CardContent className="pt-0">
-                  <div className="flex items-center space-x-2">
-                    <div className="text-2xl font-bold text-gray-900 dark:text-white">
-                      {(metric as any).isText ? (
-                        <div className="flex flex-col">
-                          <span className="text-xl capitalize">
-                            {metric.value}
-                          </span>
-                          {(metric as any).votes !== undefined && (
-                            <span className="text-sm font-normal text-gray-500 dark:text-gray-400">
-                              {(metric as any).votes}{" "}
-                              {t("ideas.votes", "votes")}
-                            </span>
+          {creatorMetrics.map((metric, index) => {
+            return (
+              <motion.div
+                key={index}
+                variants={itemVariants}
+                className="col-span-1"
+              >
+                <Card className="bg-white/90 dark:bg-gray-900/90 backdrop-blur-sm border border-gray-200/50 dark:border-gray-700/50 hover:shadow-xl hover:border-gray-300 dark:hover:border-gray-600 transition-all duration-300 h-full flex flex-col">
+                  <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2.5 flex-shrink-0">
+                    <CardTitle className="text-xs font-semibold text-gray-700 dark:text-gray-300 leading-tight">
+                      {metric.title}
+                    </CardTitle>
+                    <div
+                      className={`p-1.5 rounded-md ${metric.bgColor} flex-shrink-0`}
+                    >
+                      <metric.icon className={`h-4 w-4 ${metric.color}`} />
+                    </div>
+                  </CardHeader>
+                  <CardContent className="pt-0 pb-4 flex-1 flex flex-col justify-between">
+                    <div className="space-y-1.5">
+                      <div className="flex items-baseline gap-2 flex-wrap">
+                        <div className="text-2xl font-bold text-gray-900 dark:text-white leading-tight">
+                          {(metric as any).isText ? (
+                            <div className="flex flex-col gap-0.5">
+                              <span className="text-xl capitalize leading-tight">
+                                {metric.value}
+                              </span>
+                              {(metric as any).votes !== undefined && (
+                                <span className="text-xs font-medium text-gray-500 dark:text-gray-400">
+                                  {(metric as any).votes}{" "}
+                                  {t("ideas.votes", "votes")}
+                                </span>
+                              )}
+                            </div>
+                          ) : (
+                            <>
+                              {(metric.value as number).toLocaleString()}
+                              {(metric as any).suffix}
+                            </>
                           )}
                         </div>
-                      ) : (
-                        <>
-                          {(metric.value as number).toLocaleString()}
-                          {(metric as any).suffix}
-                        </>
-                      )}
+                        {(metric as any).badge === "attention" && (
+                          <Badge
+                            variant="destructive"
+                            className="text-[10px] px-1.5 py-0.5 h-fit"
+                          >
+                            {t("common.attention", "Attention")}
+                          </Badge>
+                        )}
+                      </div>
+                      <p className="text-[11px] text-gray-500 dark:text-gray-400 leading-snug">
+                        {metric.description}
+                      </p>
                     </div>
-                    {(metric as any).badge === "attention" && (
-                      <Badge variant="destructive" className="text-xs">
-                        {t("common.attention", "Attention")}
-                      </Badge>
-                    )}
-                  </div>
-                  <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                    {metric.description}
-                  </p>
-                </CardContent>
-              </Card>
-            </motion.div>
-          ))}
+                  </CardContent>
+                </Card>
+              </motion.div>
+            );
+          })}
         </motion.div>
 
         <CarouselIndicators
