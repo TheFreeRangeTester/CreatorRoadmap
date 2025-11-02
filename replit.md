@@ -5,6 +5,14 @@ Fanlist is a web application designed to empower content creators by enabling th
 
 ## Recent Changes
 
+### November 2, 2025 - Persistent Top Niche Statistics
+- **Database**: Created `niche_stats` table to track historical vote counts by niche and creator.
+- **Persistent Tracking**: Top Niche metric now shows all-time statistics instead of only current published ideas.
+- **Vote Integration**: All voting endpoints now increment niche statistics automatically.
+- **Dashboard Update**: Dashboard stats endpoint uses persistent niche data from `niche_stats` table.
+- **Data Migration**: Populated initial niche stats from existing ideas during deployment.
+- **Behavior Change**: Deleting ideas no longer affects Top Niche display - historical vote data is preserved.
+
 ### November 2, 2025 - Video Planning Templates
 - **New Feature**: Added video planning template system for creators to plan content before production.
 - **Database**: Created `video_templates` table with JSONB fields storing items with completion status {text, completed}.
