@@ -404,3 +404,42 @@ export type StoreItemResponse = z.infer<typeof storeItemResponseSchema>;
 export type StoreRedemption = typeof storeRedemptions.$inferSelect;
 export type InsertStoreRedemption = z.infer<typeof insertStoreRedemptionSchema>;
 export type StoreRedemptionResponse = z.infer<typeof storeRedemptionResponseSchema>;
+
+// Video planning template table
+export const videoTemplates = pgTable("video_templates", {
+  id: serial("id").primaryKey(),
+  ideaId: integer("idea_id").notNull().references(() => ideas.id, { onDelete: 'cascade' }).unique(),
+  pointsToCover: text("points_to_cover").array().notNull().default([]),
+  visualsNeeded: text("visuals_needed").array().notNull().default([]),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+  updatedAt: timestamp("updated_at").notNull().defaultNow(),
+});
+
+// Video template schemas
+export const insertVideoTemplateSchema = createInsertSchema(videoTemplates).pick({
+  ideaId: true,
+  pointsToCover: true,
+  visualsNeeded: true,
+}).extend({
+  pointsToCover: z.array(z.string()).default([]),
+  visualsNeeded: z.array(z.string()).default([]),
+});
+
+export const updateVideoTemplateSchema = z.object({
+  pointsToCover: z.array(z.string()),
+  visualsNeeded: z.array(z.string()),
+});
+
+export const videoTemplateResponseSchema = z.object({
+  id: z.number(),
+  ideaId: z.number(),
+  pointsToCover: z.array(z.string()),
+  visualsNeeded: z.array(z.string()),
+  createdAt: z.date(),
+  updatedAt: z.date(),
+});
+
+export type VideoTemplate = typeof videoTemplates.$inferSelect;
+export type InsertVideoTemplate = z.infer<typeof insertVideoTemplateSchema>;
+export type UpdateVideoTemplate = z.infer<typeof updateVideoTemplateSchema>;
+export type VideoTemplateResponse = z.infer<typeof videoTemplateResponseSchema>;

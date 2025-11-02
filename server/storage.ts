@@ -4,7 +4,8 @@ import {
   type Vote, type InsertVote, type PublicLink, type InsertPublicLink, type PublicLinkResponse,
   type UpdateProfile, type UpdateSubscription, type UserPointsResponse, type InsertPointTransaction,
   type PointTransactionResponse, type StoreItem, type InsertStoreItem, type UpdateStoreItem,
-  type StoreItemResponse, type StoreRedemption, type InsertStoreRedemption, type StoreRedemptionResponse
+  type StoreItemResponse, type StoreRedemption, type InsertStoreRedemption, type StoreRedemptionResponse,
+  type VideoTemplate, type InsertVideoTemplate, type UpdateVideoTemplate, type VideoTemplateResponse
 } from "@shared/schema";
 import session from "express-session";
 import createMemoryStore from "memorystore";
@@ -79,6 +80,12 @@ export interface IStorage {
   createStoreRedemption(redemption: InsertStoreRedemption, userId: number): Promise<StoreRedemptionResponse>;
   updateRedemptionStatus(id: number, status: 'pending' | 'completed'): Promise<StoreRedemptionResponse | undefined>;
 
+  // Video template operations
+  getVideoTemplate(ideaId: number): Promise<VideoTemplateResponse | undefined>;
+  createVideoTemplate(template: InsertVideoTemplate): Promise<VideoTemplateResponse>;
+  updateVideoTemplate(ideaId: number, template: UpdateVideoTemplate): Promise<VideoTemplateResponse | undefined>;
+  deleteVideoTemplate(ideaId: number): Promise<void>;
+
   // Session store
   sessionStore: any;
 }
@@ -111,6 +118,7 @@ export class MemStorage implements IStorage {
   private pointTransactionsMap: Map<number, PointTransactionResponse>;
   private storeItems: Map<number, StoreItem>;
   private storeRedemptions: Map<number, StoreRedemption>;
+  private videoTemplates: Map<number, VideoTemplate>;
   private audienceStatsMap: Map<number, { votesGiven: number; ideasSuggested: number; ideasApproved: number }>;
   currentUserId: number;
   currentIdeaId: number;
@@ -119,6 +127,7 @@ export class MemStorage implements IStorage {
   currentPointTransactionId: number;
   currentStoreItemId: number;
   currentStoreRedemptionId: number;
+  currentVideoTemplateId: number;
   sessionStore: any;
 
   constructor() {
@@ -130,6 +139,7 @@ export class MemStorage implements IStorage {
     this.pointTransactionsMap = new Map();
     this.storeItems = new Map();
     this.storeRedemptions = new Map();
+    this.videoTemplates = new Map();
     this.audienceStatsMap = new Map();
     this.currentUserId = 1;
     this.currentIdeaId = 1;
@@ -138,6 +148,7 @@ export class MemStorage implements IStorage {
     this.currentPointTransactionId = 1;
     this.currentStoreItemId = 1;
     this.currentStoreRedemptionId = 1;
+    this.currentVideoTemplateId = 1;
     this.sessionStore = new MemoryStore({
       checkPeriod: 86400000, // Prune expired entries every 24h
     });
@@ -838,6 +849,76 @@ export class MemStorage implements IStorage {
       storeItemTitle: storeItem?.title || 'Unknown',
       storeItemDescription: storeItem?.description || 'Unknown',
     };
+  }
+
+  // Video template methods
+  async getVideoTemplate(ideaId: number): Promise<VideoTemplateResponse | undefined> {
+    const template = Array.from(this.videoTemplates.values()).find(t => t.ideaId === ideaId);
+    if (!template) return undefined;
+
+    return {
+      id: template.id,
+      ideaId: template.ideaId,
+      pointsToCover: template.pointsToCover || [],
+      visualsNeeded: template.visualsNeeded || [],
+      createdAt: template.createdAt,
+      updatedAt: template.updatedAt,
+    };
+  }
+
+  async createVideoTemplate(insertTemplate: InsertVideoTemplate): Promise<VideoTemplateResponse> {
+    const id = this.currentVideoTemplateId++;
+    const now = new Date();
+
+    const template: VideoTemplate = {
+      id,
+      ideaId: insertTemplate.ideaId,
+      pointsToCover: insertTemplate.pointsToCover || [],
+      visualsNeeded: insertTemplate.visualsNeeded || [],
+      createdAt: now,
+      updatedAt: now,
+    };
+
+    this.videoTemplates.set(id, template);
+
+    return {
+      id: template.id,
+      ideaId: template.ideaId,
+      pointsToCover: template.pointsToCover,
+      visualsNeeded: template.visualsNeeded,
+      createdAt: template.createdAt,
+      updatedAt: template.updatedAt,
+    };
+  }
+
+  async updateVideoTemplate(ideaId: number, updateData: UpdateVideoTemplate): Promise<VideoTemplateResponse | undefined> {
+    const template = Array.from(this.videoTemplates.values()).find(t => t.ideaId === ideaId);
+    if (!template) return undefined;
+
+    const updatedTemplate: VideoTemplate = {
+      ...template,
+      pointsToCover: updateData.pointsToCover,
+      visualsNeeded: updateData.visualsNeeded,
+      updatedAt: new Date(),
+    };
+
+    this.videoTemplates.set(template.id, updatedTemplate);
+
+    return {
+      id: updatedTemplate.id,
+      ideaId: updatedTemplate.ideaId,
+      pointsToCover: updatedTemplate.pointsToCover,
+      visualsNeeded: updatedTemplate.visualsNeeded,
+      createdAt: updatedTemplate.createdAt,
+      updatedAt: updatedTemplate.updatedAt,
+    };
+  }
+
+  async deleteVideoTemplate(ideaId: number): Promise<void> {
+    const template = Array.from(this.videoTemplates.values()).find(t => t.ideaId === ideaId);
+    if (template) {
+      this.videoTemplates.delete(template.id);
+    }
   }
 
   // Initialize demo data for testing

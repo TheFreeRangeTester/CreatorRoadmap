@@ -14,9 +14,10 @@ import { useTranslation } from "react-i18next";
 
 interface IdeasTabViewProps {
   mode: "published" | "suggested";
+  onOpenTemplate?: (idea: IdeaResponse) => void;
 }
 
-export function IdeasTabView({ mode = "published" }: IdeasTabViewProps) {
+export function IdeasTabView({ mode = "published", onOpenTemplate }: IdeasTabViewProps) {
   const { user } = useAuth();
   const { toast } = useToast();
   const { t } = useTranslation();
@@ -335,6 +336,9 @@ export function IdeasTabView({ mode = "published" }: IdeasTabViewProps) {
                 user && idea.creatorId === user.id
                   ? handleDeleteIdea
                   : undefined
+              }
+              onOpenTemplate={
+                user && idea.creatorId === user.id ? onOpenTemplate : undefined
               }
               isVoting={votingIdeaIds.has(idea.id)}
             />

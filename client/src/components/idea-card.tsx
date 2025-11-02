@@ -12,6 +12,7 @@ import {
   User,
   Heart,
   TrendingUp,
+  FileText,
 } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { IdeaResponse } from "@shared/schema";
@@ -24,6 +25,7 @@ interface IdeaCardProps {
   onVote: (ideaId: number) => void;
   onEdit?: (idea: IdeaResponse) => void;
   onDelete?: (ideaId: number) => void;
+  onOpenTemplate?: (idea: IdeaResponse) => void;
   isVoting: boolean;
 }
 
@@ -32,6 +34,7 @@ export default function IdeaCard({
   onVote,
   onEdit,
   onDelete,
+  onOpenTemplate,
   isVoting,
 }: IdeaCardProps) {
   // Check if user has already voted for this idea
@@ -361,9 +364,21 @@ export default function IdeaCard({
               </motion.span>
             </div>
 
-            {/* Edit and Delete actions for creators */}
-            {(onEdit || onDelete) && (
+            {/* Edit, Delete, and Template actions for creators */}
+            {(onEdit || onDelete || onOpenTemplate) && (
               <div className="flex space-x-2 justify-center">
+                {onOpenTemplate && (
+                  <motion.button
+                    whileHover={{ scale: 1.1, rotate: 5 }}
+                    whileTap={{ scale: 0.9 }}
+                    onClick={() => onOpenTemplate(idea)}
+                    className="p-2 text-neutral-400 hover:text-primary dark:text-neutral-400 dark:hover:text-primary-300 rounded-md hover:bg-neutral-100 dark:hover:bg-gray-700 transition-all duration-200"
+                    aria-label="Open video template"
+                    data-testid={`button-template-${idea.id}`}
+                  >
+                    <FileText className="w-4 h-4 sm:w-5 sm:h-5" />
+                  </motion.button>
+                )}
                 {onEdit && (
                   <motion.button
                     whileHover={{ scale: 1.1, rotate: 5 }}

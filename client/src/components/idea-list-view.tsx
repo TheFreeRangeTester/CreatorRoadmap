@@ -11,6 +11,7 @@ import {
   User,
   TrendingUp,
   Heart,
+  FileText,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -24,6 +25,7 @@ interface IdeaListViewProps {
   onVote: (ideaId: number) => void;
   onEdit?: (idea: IdeaResponse) => void;
   onDelete?: (ideaId: number) => void;
+  onOpenTemplate?: (idea: IdeaResponse) => void;
   isVoting: boolean;
 }
 
@@ -33,6 +35,7 @@ export default function IdeaListView({
   onVote,
   onEdit,
   onDelete,
+  onOpenTemplate,
   isVoting,
 }: IdeaListViewProps) {
   const [hasVoted, setHasVoted] = useState(false);
@@ -208,6 +211,20 @@ export default function IdeaListView({
                       {hasVoted ? t("ideas.voted", "Votado") : t("ideas.vote", "Votar")}
                     </>
                   )}
+                </Button>
+              )}
+
+              {/* Template Button (for creators) */}
+              {isCreator && onOpenTemplate && (
+                <Button
+                  onClick={() => onOpenTemplate(idea)}
+                  variant="outline"
+                  size="sm"
+                  className="border-primary/30 dark:border-primary/50 text-primary hover:bg-primary/10 dark:hover:bg-primary/20"
+                  data-testid={`button-template-list-${idea.id}`}
+                >
+                  <FileText className="h-4 w-4" />
+                  <span className="hidden sm:inline ml-1">{t("ideas.template", "Template")}</span>
                 </Button>
               )}
 

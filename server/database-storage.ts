@@ -1,10 +1,11 @@
 import {
-  ideas, users, votes, publicLinks, userPoints, pointTransactions, storeItems, storeRedemptions,
+  ideas, users, votes, publicLinks, userPoints, pointTransactions, storeItems, storeRedemptions, videoTemplates,
   type User, type InsertUser, type Idea, type InsertIdea, type UpdateIdea, type SuggestIdea,
   type Vote, type InsertVote, type PublicLink, type InsertPublicLink, type PublicLinkResponse,
   type UpdateProfile, type UpdateSubscription, type UserPointsResponse, type InsertPointTransaction,
   type PointTransactionResponse, type StoreItem, type InsertStoreItem, type UpdateStoreItem,
-  type StoreItemResponse, type StoreRedemption, type InsertStoreRedemption, type StoreRedemptionResponse
+  type StoreItemResponse, type StoreRedemption, type InsertStoreRedemption, type StoreRedemptionResponse,
+  type VideoTemplate, type InsertVideoTemplate, type UpdateVideoTemplate, type VideoTemplateResponse
 } from "@shared/schema";
 import session from "express-session";
 import connectPg from "connect-pg-simple";
@@ -814,5 +815,42 @@ export class DatabaseStorage implements IStorage {
       storeItemTitle: redemptionData?.storeItemTitle || 'Unknown',
       storeItemDescription: redemptionData?.storeItemDescription || 'Unknown',
     };
+  }
+
+  // Video template methods
+  async getVideoTemplate(ideaId: number): Promise<VideoTemplateResponse | undefined> {
+    const [template] = await db
+      .select()
+      .from(videoTemplates)
+      .where(eq(videoTemplates.ideaId, ideaId));
+
+    return template;
+  }
+
+  async createVideoTemplate(insertTemplate: InsertVideoTemplate): Promise<VideoTemplateResponse> {
+    const [template] = await db
+      .insert(videoTemplates)
+      .values(insertTemplate)
+      .returning();
+
+    return template;
+  }
+
+  async updateVideoTemplate(ideaId: number, updateData: UpdateVideoTemplate): Promise<VideoTemplateResponse | undefined> {
+    const [template] = await db
+      .update(videoTemplates)
+      .set({
+        pointsToCover: updateData.pointsToCover,
+        visualsNeeded: updateData.visualsNeeded,
+        updatedAt: new Date(),
+      })
+      .where(eq(videoTemplates.ideaId, ideaId))
+      .returning();
+
+    return template;
+  }
+
+  async deleteVideoTemplate(ideaId: number): Promise<void> {
+    await db.delete(videoTemplates).where(eq(videoTemplates.ideaId, ideaId));
   }
 }
