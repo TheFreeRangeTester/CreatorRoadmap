@@ -30,10 +30,10 @@ interface CreatorStats {
   totalVotes: number;
   pendingSuggestions: number;
   publishedIdeas: number;
-  topNiche?: {
+  topNiches?: {
     name: string;
     votes: number;
-  } | null;
+  }[];
   pendingRedemptions?: number;
 }
 
@@ -252,16 +252,17 @@ export function DashboardOverview({ className }: DashboardOverviewProps) {
         icon: TrendingUp,
         title: t("dashboard.overview.topNiches", "Top Niches"),
         value:
-          stats.topNiche?.name ||
-          t("dashboard.overview.noNicheData", "No data yet"),
+          stats.topNiches && stats.topNiches.length > 0
+            ? stats.topNiches.map((n) => n.name).join(", ")
+            : t("dashboard.overview.noNicheData", "No data yet"),
         description: t(
           "dashboard.overview.topNichesDesc",
-          "Most voted category"
+          "Most voted categories"
         ),
         color: "text-purple-600",
         bgColor: "bg-purple-50 dark:bg-purple-900/20",
         isText: true,
-        votes: stats.topNiche?.votes,
+        topNiches: stats.topNiches || [],
       },
     ];
 
@@ -292,16 +293,41 @@ export function DashboardOverview({ className }: DashboardOverviewProps) {
                 </CardHeader>
                 <CardContent className="pt-0 text-center">
                   <div className="flex flex-col items-center justify-center mb-2">
-                    <div className="text-4xl font-bold text-gray-900 dark:text-white mb-1">
+                    <div className="text-4xl font-bold text-gray-900 dark:text-white mb-1 w-full">
                       {(metric as any).isText ? (
-                        <div className="flex flex-col items-center">
-                          <span className="text-2xl capitalize">
-                            {metric.value}
-                          </span>
-                          {(metric as any).votes !== undefined && (
-                            <span className="text-sm font-normal text-gray-500 dark:text-gray-400 mt-1">
-                              {(metric as any).votes}{" "}
-                              {t("ideas.votes", "votes")}
+                        <div className="flex flex-col items-center gap-2 w-full">
+                          {(metric as any).topNiches &&
+                          (metric as any).topNiches.length > 0 ? (
+                            // Display top 2 niches with votes for mobile
+                            (metric as any).topNiches.map(
+                              (
+                                niche: { name: string; votes: number },
+                                idx: number
+                              ) => (
+                                <div
+                                  key={idx}
+                                  className="flex items-center justify-between gap-2 w-full px-2"
+                                >
+                                  <div className="flex items-center gap-2 flex-1 min-w-0">
+                                    <span className="text-xs font-semibold text-purple-600 dark:text-purple-400 bg-purple-100 dark:bg-purple-900/30 px-2 py-0.5 rounded-none">
+                                      #{idx + 1}
+                                    </span>
+                                    <span className="text-lg font-bold text-gray-900 dark:text-white capitalize truncate">
+                                      {niche.name}
+                                    </span>
+                                  </div>
+                                  <span className="text-sm font-medium text-gray-600 dark:text-gray-400 whitespace-nowrap">
+                                    {niche.votes}{" "}
+                                    {niche.votes === 1
+                                      ? t("ideas.vote", "vote")
+                                      : t("ideas.votes", "votes")}
+                                  </span>
+                                </div>
+                              )
+                            )
+                          ) : (
+                            <span className="text-2xl capitalize text-gray-500 dark:text-gray-400">
+                              {metric.value}
                             </span>
                           )}
                         </div>
@@ -346,17 +372,42 @@ export function DashboardOverview({ className }: DashboardOverviewProps) {
                   </div>
                 </CardHeader>
                 <CardContent className="pt-0">
-                  <div className="flex items-center space-x-2">
-                    <div className="text-2xl font-bold text-gray-900 dark:text-white">
+                  <div className="flex items-start space-x-2">
+                    <div className="text-2xl font-bold text-gray-900 dark:text-white flex-1 min-w-0">
                       {(metric as any).isText ? (
-                        <div className="flex flex-col">
-                          <span className="text-xl capitalize">
-                            {metric.value}
-                          </span>
-                          {(metric as any).votes !== undefined && (
-                            <span className="text-sm font-normal text-gray-500 dark:text-gray-400">
-                              {(metric as any).votes}{" "}
-                              {t("ideas.votes", "votes")}
+                        <div className="flex flex-col gap-1.5">
+                          {(metric as any).topNiches &&
+                          (metric as any).topNiches.length > 0 ? (
+                            // Display top 2 niches with votes for desktop
+                            (metric as any).topNiches.map(
+                              (
+                                niche: { name: string; votes: number },
+                                idx: number
+                              ) => (
+                                <div
+                                  key={idx}
+                                  className="flex items-center justify-between gap-2"
+                                >
+                                  <div className="flex items-center gap-1.5 flex-1 min-w-0">
+                                    <span className="text-[10px] font-semibold text-purple-600 dark:text-purple-400 bg-purple-100 dark:bg-purple-900/30 px-1.5 py-0.5 rounded-none">
+                                      #{idx + 1}
+                                    </span>
+                                    <span className="text-sm font-bold text-gray-900 dark:text-white capitalize truncate">
+                                      {niche.name}
+                                    </span>
+                                  </div>
+                                  <span className="text-xs font-medium text-gray-600 dark:text-gray-400 whitespace-nowrap">
+                                    {niche.votes}{" "}
+                                    {niche.votes === 1
+                                      ? t("ideas.vote", "vote")
+                                      : t("ideas.votes", "votes")}
+                                  </span>
+                                </div>
+                              )
+                            )
+                          ) : (
+                            <span className="text-xl capitalize text-gray-500 dark:text-gray-400">
+                              {metric.value}
                             </span>
                           )}
                         </div>
@@ -368,12 +419,15 @@ export function DashboardOverview({ className }: DashboardOverviewProps) {
                       )}
                     </div>
                     {(metric as any).badge === "attention" && (
-                      <Badge variant="destructive" className="text-xs">
+                      <Badge
+                        variant="destructive"
+                        className="text-xs flex-shrink-0"
+                      >
                         {t("common.attention", "Attention")}
                       </Badge>
                     )}
                   </div>
-                  <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                  <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">
                     {metric.description}
                   </p>
                 </CardContent>

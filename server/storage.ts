@@ -89,7 +89,7 @@ export interface IStorage {
 
   // Niche stats operations
   incrementNicheStats(creatorId: number, niche: string, votes: number): Promise<void>;
-  getTopNiche(creatorId: number): Promise<{ name: string; votes: number } | null>;
+  getTopNiches(creatorId: number, limit?: number): Promise<{ name: string; votes: number }[]>;
 
   // Session store
   sessionStore: any;
@@ -1103,22 +1103,22 @@ export class MemStorage implements IStorage {
     }
   }
 
-  async getTopNiche(creatorId: number): Promise<{ name: string; votes: number } | null> {
+  async getTopNiches(creatorId: number, limit: number = 2): Promise<{ name: string; votes: number }[]> {
     const creatorNiches = Array.from(this.nicheStatsMap.values())
       .filter(stat => stat.creatorId === creatorId);
     
     if (creatorNiches.length === 0) {
-      return null;
+      return [];
     }
 
-    const topNiche = creatorNiches.reduce((max, stat) => 
-      stat.totalVotes > max.totalVotes ? stat : max
-    );
+    const sortedNiches = creatorNiches
+      .sort((a, b) => b.totalVotes - a.totalVotes)
+      .slice(0, limit);
 
-    return {
-      name: topNiche.niche,
-      votes: topNiche.totalVotes,
-    };
+    return sortedNiches.map(stat => ({
+      name: stat.niche,
+      votes: stat.totalVotes,
+    }));
   }
 }
 
