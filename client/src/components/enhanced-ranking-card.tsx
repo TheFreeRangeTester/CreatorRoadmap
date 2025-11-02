@@ -2,7 +2,14 @@ import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { gsap } from "gsap";
 import { Card } from "@/components/ui/card";
-import { ChevronUp, Loader2, ThumbsUp, TrendingUp, TrendingDown, Minus } from "lucide-react";
+import {
+  ChevronUp,
+  Loader2,
+  ThumbsUp,
+  TrendingUp,
+  TrendingDown,
+  Minus,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { useTranslation } from "react-i18next";
@@ -62,9 +69,14 @@ export default function EnhancedRankingCard({
       case 1:
         return {
           emoji: "🏆",
-          gradient: "bg-gradient-to-r from-yellow-400 via-amber-500 to-yellow-600",
-          shadow: isTopThree ? "shadow-2xl shadow-yellow-500/70" : "shadow-yellow-500/50",
-          glow: isTopThree ? "shadow-2xl shadow-yellow-400/60 ring-4 ring-yellow-400/30" : "shadow-2xl shadow-yellow-400/30",
+          gradient:
+            "bg-gradient-to-r from-yellow-400 via-amber-500 to-yellow-600",
+          shadow: isTopThree
+            ? "shadow-2xl shadow-yellow-500/70"
+            : "shadow-yellow-500/50",
+          glow: isTopThree
+            ? "shadow-2xl shadow-yellow-400/60 ring-4 ring-yellow-400/30"
+            : "shadow-2xl shadow-yellow-400/30",
           textColor: "text-yellow-900",
           bgColor: "bg-yellow-50 dark:bg-yellow-900/20",
           border: isTopThree ? "border-4 border-yellow-400/60" : "",
@@ -73,8 +85,12 @@ export default function EnhancedRankingCard({
         return {
           emoji: "🥈",
           gradient: "bg-gradient-to-r from-gray-300 via-gray-400 to-gray-500",
-          shadow: isTopThree ? "shadow-2xl shadow-gray-500/70" : "shadow-gray-400/50",
-          glow: isTopThree ? "shadow-2xl shadow-gray-400/60 ring-4 ring-gray-400/30" : "shadow-2xl shadow-gray-400/30",
+          shadow: isTopThree
+            ? "shadow-2xl shadow-gray-500/70"
+            : "shadow-gray-400/50",
+          glow: isTopThree
+            ? "shadow-2xl shadow-gray-400/60 ring-4 ring-gray-400/30"
+            : "shadow-2xl shadow-gray-400/30",
           textColor: "text-gray-800",
           bgColor: "bg-gray-50 dark:bg-gray-800/20",
           border: isTopThree ? "border-4 border-gray-400/60" : "",
@@ -82,9 +98,14 @@ export default function EnhancedRankingCard({
       case 3:
         return {
           emoji: "🥉",
-          gradient: "bg-gradient-to-r from-amber-600 via-orange-500 to-amber-700",
-          shadow: isTopThree ? "shadow-2xl shadow-orange-500/70" : "shadow-orange-500/50",
-          glow: isTopThree ? "shadow-2xl shadow-orange-400/60 ring-4 ring-orange-400/30" : "shadow-2xl shadow-orange-400/30",
+          gradient:
+            "bg-gradient-to-r from-amber-600 via-orange-500 to-amber-700",
+          shadow: isTopThree
+            ? "shadow-2xl shadow-orange-500/70"
+            : "shadow-orange-500/50",
+          glow: isTopThree
+            ? "shadow-2xl shadow-orange-400/60 ring-4 ring-orange-400/30"
+            : "shadow-2xl shadow-orange-400/30",
           textColor: "text-orange-900",
           bgColor: "bg-orange-50 dark:bg-orange-900/20",
           border: isTopThree ? "border-4 border-orange-400/60" : "",
@@ -119,7 +140,7 @@ export default function EnhancedRankingCard({
   const getTrendIcon = () => {
     if (!idea.position) return null;
     const { change } = idea.position;
-    
+
     if (change === null || change === 0) {
       return (
         <div className="bg-gray-500/20 rounded-full p-1.5">
@@ -170,10 +191,10 @@ export default function EnhancedRankingCard({
         delay: rank * 0.05,
         ease: [0.25, 0.1, 0.25, 1.0],
       }}
-      whileHover={{ 
-        scale: isTopThree ? 1.05 : 1.02, 
+      whileHover={{
+        scale: isTopThree ? 1.05 : 1.02,
         y: isTopThree ? -4 : -2,
-        rotateY: isTopThree ? 2 : 0 
+        rotateY: isTopThree ? 2 : 0,
       }}
       className="will-change-transform relative"
       onMouseEnter={handleMouseEnter}
@@ -224,49 +245,63 @@ export default function EnhancedRankingCard({
         )}
       </AnimatePresence>
 
-      <Card className={`overflow-hidden ${medalInfo.border || 'border-0'} ${medalInfo.shadow} hover:${medalInfo.glow} transition-all duration-500 ${medalInfo.bgColor} rounded-md glass-card ${
-        isTopThree ? 'transform-gpu relative animate-pulse-subtle' : ''
-      } ${isTopThree ? 'before:absolute before:inset-0 before:rounded-md before:p-1 before:bg-gradient-to-r before:from-white/20 before:via-transparent before:to-white/20 before:-z-10' : ''}`}>
+      <Card
+        className={`overflow-hidden ${medalInfo.border || "border-0"} ${medalInfo.shadow} hover:${medalInfo.glow} transition-all duration-500 ${medalInfo.bgColor} rounded-md glass-card ${
+          isTopThree ? "transform-gpu relative animate-pulse-subtle" : ""
+        } ${isTopThree ? "before:absolute before:inset-0 before:rounded-md before:p-1 before:bg-gradient-to-r before:from-white/20 before:via-transparent before:to-white/20 before:-z-10" : ""}`}
+      >
         <div className="flex flex-col">
           {/* Contenido principal centrado */}
-          <div className={`flex-1 ${isTopThree ? 'p-8' : 'p-6'} text-center`}>
+          <div className={`flex-1 ${isTopThree ? "p-8" : "p-6"} text-center`}>
             {/* Indicador de posición con medallas en la parte superior */}
-            <motion.div 
+            <motion.div
               className={`inline-flex items-center justify-center ${
-                isTopThree ? 'w-20 h-20 md:w-24 md:h-24' : 'w-16 h-16 md:w-18 md:h-18'
+                isTopThree
+                  ? "w-20 h-20 md:w-24 md:h-24"
+                  : "w-16 h-16 md:w-18 md:h-18"
               } text-white font-bold relative ${medalInfo.gradient} rounded-full mb-4 mx-auto ${
-                isTopThree ? 'ring-2 ring-white/30 ring-offset-2 ring-offset-transparent' : ''
+                isTopThree
+                  ? "ring-2 ring-white/30 ring-offset-2 ring-offset-transparent"
+                  : ""
               }`}
-              whileHover={{ 
+              whileHover={{
                 scale: isTopThree ? 1.15 : 1.1,
                 rotate: isTopThree ? [0, -5, 5, 0] : 0,
-                transition: { duration: 0.3 }
+                transition: { duration: 0.3 },
               }}
-              animate={isTopThree && isHovered ? {
-                boxShadow: [
-                  "0 0 20px rgba(255, 255, 255, 0.3)",
-                  "0 0 40px rgba(255, 255, 255, 0.5)",
-                  "0 0 20px rgba(255, 255, 255, 0.3)"
-                ]
-              } : {}}
+              animate={
+                isTopThree && isHovered
+                  ? {
+                      boxShadow: [
+                        "0 0 20px rgba(255, 255, 255, 0.3)",
+                        "0 0 40px rgba(255, 255, 255, 0.5)",
+                        "0 0 20px rgba(255, 255, 255, 0.3)",
+                      ],
+                    }
+                  : {}
+              }
             >
               {/* Número de ranking */}
-              <motion.span 
-                className={`${isTopThree ? 'text-xl md:text-2xl' : 'text-lg md:text-xl'} font-black`}
+              <motion.span
+                className={`${isTopThree ? "text-xl md:text-2xl" : "text-lg md:text-xl"} font-black`}
                 animate={isHovered ? { scale: 1.1 } : { scale: 1 }}
                 transition={{ duration: 0.2 }}
               >
                 #{rank}
               </motion.span>
-              
+
               {/* Medalla para top 3 - positioned absolutely */}
               {medalInfo.emoji && (
-                <motion.span 
-                  className={`absolute -top-2 -right-2 ${isTopThree ? 'text-2xl md:text-3xl' : 'text-xl md:text-2xl'}`}
-                  animate={isSuccessVote ? { 
-                    scale: [1, 1.3, 1], 
-                    rotate: [0, 15, -15, 0] 
-                  } : {}}
+                <motion.span
+                  className={`absolute -top-2 -right-2 ${isTopThree ? "text-2xl md:text-3xl" : "text-xl md:text-2xl"}`}
+                  animate={
+                    isSuccessVote
+                      ? {
+                          scale: [1, 1.3, 1],
+                          rotate: [0, 15, -15, 0],
+                        }
+                      : {}
+                  }
                   transition={{ duration: 0.6 }}
                 >
                   {medalInfo.emoji}
@@ -278,31 +313,34 @@ export default function EnhancedRankingCard({
             <div className="flex justify-center gap-2 mb-4 flex-wrap">
               {/* Badge de nicho */}
               {idea.niche && (
-                <Badge 
-                  variant="secondary" 
+                <Badge
+                  variant="secondary"
                   className="text-xs bg-primary/10 text-primary dark:bg-primary/20 dark:text-primary-300 border border-primary/20"
                 >
                   {t(`ideaForm.niches.${idea.niche}`, idea.niche)}
                 </Badge>
               )}
-              
+
               {recentVotes24h > 0 && (
-                <Badge 
-                  variant="secondary" 
+                <Badge
+                  variant="secondary"
                   className="text-xs bg-green-100 text-green-800 dark:bg-green-900/50 dark:text-green-300"
                 >
-                  🔥 {t("common.recentVotesToday", "+{{count}} hoy", { count: recentVotes24h })}
+                  🔥{" "}
+                  {t("common.recentVotesToday", "+{{count}} hoy", {
+                    count: recentVotes24h,
+                  })}
                 </Badge>
               )}
-              
+
               {/* Badge de cambio de posición */}
               {getTrendIcon()}
-              
+
               {showVotePreview && votesToNextRank > 0 && (
                 <motion.div
                   initial={{ opacity: 0, scale: 0.8 }}
                   animate={{ opacity: 1, scale: 1 }}
-                  className="text-xs bg-primary/10 text-primary px-2 py-1 rounded-full"
+                  className="text-xs bg-primary/10 text-primary px-2 py-1 rounded-md"
                 >
                   {votesToNextRank} {t("common.votesToNextRank")}
                 </motion.div>
@@ -310,16 +348,20 @@ export default function EnhancedRankingCard({
             </div>
 
             {/* Título centrado */}
-            <h3 className={`${
-              isTopThree ? 'text-base md:text-lg' : 'text-sm md:text-base'
-            } font-heading font-bold dark:text-white line-clamp-2 mb-3 contained-text leading-tight`}>
+            <h3
+              className={`${
+                isTopThree ? "text-base md:text-lg" : "text-sm md:text-base"
+              } font-heading font-bold dark:text-white line-clamp-2 mb-3 contained-text leading-tight`}
+            >
               {idea.title}
             </h3>
-            
+
             {/* Descripción centrada */}
-            <p className={`${
-              isTopThree ? 'text-sm md:text-base' : 'text-xs md:text-sm'
-            } text-gray-600 dark:text-gray-300 line-clamp-2 mb-4 leading-relaxed contained-text`}>
+            <p
+              className={`${
+                isTopThree ? "text-sm md:text-base" : "text-xs md:text-sm"
+              } text-gray-600 dark:text-gray-300 line-clamp-2 mb-4 leading-relaxed contained-text`}
+            >
               {idea.description}
             </p>
 
@@ -335,7 +377,7 @@ export default function EnhancedRankingCard({
             {isLoggedIn ? (
               isVoted ? (
                 <motion.div className="mb-4">
-                  <Button 
+                  <Button
                     disabled
                     className="rounded-full w-12 h-12 text-white bg-green-500 hover:bg-green-500"
                     aria-label={t("common.voted", "Ya votado")}
@@ -353,8 +395,8 @@ export default function EnhancedRankingCard({
                       onClick={handleVoteClick}
                       disabled={isVoting || isSuccessVote}
                       className={`rounded-full w-12 h-12 text-white transition-all duration-300 ${
-                        isSuccessVote 
-                          ? "bg-green-500 hover:bg-green-500" 
+                        isSuccessVote
+                          ? "bg-green-500 hover:bg-green-500"
                           : `${medalInfo.gradient} hover:shadow-lg`
                       }`}
                       aria-label={t("common.vote", "Votar")}
@@ -388,10 +430,16 @@ export default function EnhancedRankingCard({
                 >
                   <Button
                     className={`rounded-full w-12 h-12 text-white ${medalInfo.gradient} hover:shadow-lg`}
-                    aria-label={t("common.loginToVote", "Inicia sesión para votar")}
+                    aria-label={t(
+                      "common.loginToVote",
+                      "Inicia sesión para votar"
+                    )}
                     onClick={() => {
-                      localStorage.setItem('redirectAfterAuth', window.location.href);
-                      window.location.href = '/auth';
+                      localStorage.setItem(
+                        "redirectAfterAuth",
+                        window.location.href
+                      );
+                      window.location.href = "/auth";
                     }}
                   >
                     <ChevronUp className="h-5 w-5" />
@@ -400,8 +448,6 @@ export default function EnhancedRankingCard({
               </motion.div>
             )}
           </div>
-
-
         </div>
       </Card>
     </motion.div>

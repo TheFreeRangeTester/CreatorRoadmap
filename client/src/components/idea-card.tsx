@@ -242,7 +242,7 @@ export default function IdeaCard({
           {/* Mostrar nicho si existe */}
           {idea.niche && (
             <div className="mb-3 flex justify-center" data-testid={`niche-badge-${idea.id}`}>
-              <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-primary/10 dark:bg-primary/20 text-primary dark:text-primary-300 border border-primary/20 dark:border-primary/30">
+              <span className="inline-flex items-center px-3 py-1 rounded-md text-xs font-medium bg-primary/10 dark:bg-primary/20 text-primary dark:text-primary-300 border border-primary/20 dark:border-primary/30">
                 {t(`ideaForm.niches.${idea.niche}`, idea.niche)}
               </span>
             </div>
@@ -251,7 +251,7 @@ export default function IdeaCard({
           {/* Mostrar badge si la idea fue sugerida por otro usuario */}
           {idea.suggestedByUsername && (
             <div className="text-xs text-gray-500 dark:text-gray-400 mb-3 flex justify-center">
-              <div className="inline-flex items-center gap-1 bg-gray-100 dark:bg-gray-700 px-2 py-1 rounded-full">
+              <div className="inline-flex items-center gap-1 bg-gray-100 dark:bg-gray-700 px-2 py-1 rounded-md">
                 <User className="h-3 w-3" />
                 {t("ideas.suggestedBy")}:{" "}
                 <span className="font-medium">{idea.suggestedByUsername}</span>
@@ -410,7 +410,7 @@ export default function IdeaCard({
             <div className="flex justify-center">
               <motion.span
                 variants={positionBadgeVariants}
-                className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-semibold ${position.className}`}
+                className={`inline-flex items-center px-2 py-1 rounded-md text-xs font-semibold ${position.className}`}
               >
                 {position.icon}
                 {position.text}
