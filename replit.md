@@ -7,11 +7,12 @@ Fanlist is a web application designed to empower content creators by enabling th
 
 ### November 2, 2025 - Video Planning Templates
 - **New Feature**: Added video planning template system for creators to plan content before production.
-- **Database**: Created `video_templates` table with fields for idea_id, points_to_cover, visuals_needed.
+- **Database**: Created `video_templates` table with JSONB fields storing items with completion status {text, completed}.
 - **VideoTemplateModal Component**: Modal UI with collapsible sections for organizing video planning (points to cover, visuals needed).
+- **Completion Tracking**: Each point and visual has a checkbox to mark as done. Completed items shown with strikethrough styling.
 - **API Routes**: Full CRUD endpoints (`/api/video-templates`) with authentication ensuring only idea owners can manage their templates.
 - **UI Integration**: Template button (FileText icon) added to IdeaCard and IdeaListView, visible only to creators.
-- **Export Feature**: Markdown export functionality to use templates in external editors.
+- **Export Feature**: Markdown export functionality with completed items marked with strikethrough and checkmarks.
 - **Styling**: Blue-themed buttons with improved contrast for better visibility.
 
 ### October 12, 2025
@@ -48,7 +49,7 @@ Preferred communication style: Simple, everyday language.
 
 ### Feature Specifications
 - **Idea Management**: CRUD operations, community suggestion system with approval workflow, dynamic leaderboards, vote tracking, and anti-spam measures.
-- **Video Planning Templates**: Creators can create planning templates for each idea with points to cover and visuals needed. Features include collapsible sections, markdown export, and template persistence per idea.
+- **Video Planning Templates**: Creators can create planning templates for each idea with points to cover and visuals needed. Features include completion tracking with checkboxes, collapsible sections, markdown export, and template persistence per idea.
 - **Subscription Management**: Freemium model, Stripe integration, premium feature access control.
 - **User Authentication**: Session-based auth, role-based access (creator/audience), password reset.
 - **Points System**: Users earn points by voting, spend points on suggestions, and receive rewards for approved suggestions. Real-time UI updates for point transactions.
