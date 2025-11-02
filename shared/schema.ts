@@ -1,4 +1,4 @@
-import { pgTable, text, serial, integer, timestamp, boolean, unique } from "drizzle-orm/pg-core";
+import { pgTable, text, serial, integer, timestamp, boolean, unique, jsonb } from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
 
@@ -405,12 +405,17 @@ export type StoreRedemption = typeof storeRedemptions.$inferSelect;
 export type InsertStoreRedemption = z.infer<typeof insertStoreRedemptionSchema>;
 export type StoreRedemptionResponse = z.infer<typeof storeRedemptionResponseSchema>;
 
-// Video planning template table
+// Video planning template table - items with completion status
+export const templateItemSchema = z.object({
+  text: z.string(),
+  completed: z.boolean().default(false),
+});
+
 export const videoTemplates = pgTable("video_templates", {
   id: serial("id").primaryKey(),
   ideaId: integer("idea_id").notNull().references(() => ideas.id, { onDelete: 'cascade' }).unique(),
-  pointsToCover: text("points_to_cover").array().notNull().default([]),
-  visualsNeeded: text("visuals_needed").array().notNull().default([]),
+  pointsToCover: jsonb("points_to_cover").notNull().default([]),
+  visualsNeeded: jsonb("visuals_needed").notNull().default([]),
   createdAt: timestamp("created_at").notNull().defaultNow(),
   updatedAt: timestamp("updated_at").notNull().defaultNow(),
 });
@@ -421,20 +426,20 @@ export const insertVideoTemplateSchema = createInsertSchema(videoTemplates).pick
   pointsToCover: true,
   visualsNeeded: true,
 }).extend({
-  pointsToCover: z.array(z.string()).default([]),
-  visualsNeeded: z.array(z.string()).default([]),
+  pointsToCover: z.array(templateItemSchema).default([]),
+  visualsNeeded: z.array(templateItemSchema).default([]),
 });
 
 export const updateVideoTemplateSchema = z.object({
-  pointsToCover: z.array(z.string()),
-  visualsNeeded: z.array(z.string()),
+  pointsToCover: z.array(templateItemSchema),
+  visualsNeeded: z.array(templateItemSchema),
 });
 
 export const videoTemplateResponseSchema = z.object({
   id: z.number(),
   ideaId: z.number(),
-  pointsToCover: z.array(z.string()),
-  visualsNeeded: z.array(z.string()),
+  pointsToCover: z.array(templateItemSchema),
+  visualsNeeded: z.array(templateItemSchema),
   createdAt: z.date(),
   updatedAt: z.date(),
 });
