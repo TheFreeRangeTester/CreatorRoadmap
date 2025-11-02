@@ -81,7 +81,8 @@ export default function IdeaListView({
 
     if (previous === null) {
       return {
-        className: "bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300",
+        className:
+          "bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300",
         icon: <Plus className="w-3 h-3" />,
         text: t("badges.new", "Nuevo"),
       };
@@ -89,7 +90,8 @@ export default function IdeaListView({
 
     if (change !== null && change > 0) {
       return {
-        className: "bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300",
+        className:
+          "bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300",
         icon: <ArrowUp className="w-3 h-3" />,
         text: `+${change}`,
       };
@@ -97,14 +99,16 @@ export default function IdeaListView({
 
     if (change !== null && change < 0) {
       return {
-        className: "bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-300",
+        className:
+          "bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-300",
         icon: <ArrowDown className="w-3 h-3" />,
         text: `${change}`,
       };
     }
 
     return {
-      className: "bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400",
+      className:
+        "bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400",
       icon: <TrendingUp className="w-3 h-3" />,
       text: t("badges.stable", "="),
     };
@@ -130,7 +134,9 @@ export default function IdeaListView({
       <div className="flex items-start gap-4">
         {/* Position Ranking */}
         <div className="flex-shrink-0 flex flex-col items-center">
-          <div className={`text-2xl font-bold ${getRankingStyle(position)} min-w-[2rem] text-center`}>
+          <div
+            className={`text-2xl font-bold ${getRankingStyle(position)} min-w-[2rem] text-center`}
+          >
             #{position}
           </div>
         </div>
@@ -148,44 +154,53 @@ export default function IdeaListView({
                   {idea.description}
                 </p>
               )}
-              
-              {/* Badges Row */}
-              <div className="flex items-center gap-3 flex-wrap">
-                {/* Niche Badge */}
-                {idea.niche && (
-                  <Badge 
+
+              {/* Badges Row - Two Columns */}
+              <div className="grid grid-cols-2 gap-2 mb-2">
+                {/* Column 1 */}
+                <div className="flex items-center gap-2">
+                  {/* Niche Badge */}
+                  {idea.niche && (
+                    <Badge
+                      variant="secondary"
+                      className="bg-primary/10 dark:bg-primary/20 text-primary dark:text-primary-300 border border-primary/20 dark:border-primary/30 text-xs px-2 py-1"
+                      data-testid={`niche-badge-list-${idea.id}`}
+                    >
+                      {t(`ideaForm.niches.${idea.niche}`, idea.niche)}
+                    </Badge>
+                  )}
+                  {/* Position Change Badge */}
+                  <Badge
                     variant="secondary"
-                    className="bg-primary/10 dark:bg-primary/20 text-primary dark:text-primary-300 border border-primary/20 dark:border-primary/30 text-xs px-2 py-1"
-                    data-testid={`niche-badge-list-${idea.id}`}
+                    className={`${positionIndicator.className} flex items-center gap-1 text-xs px-2 py-1`}
                   >
-                    {t(`ideaForm.niches.${idea.niche}`, idea.niche)}
+                    {positionIndicator.icon}
+                    {positionIndicator.text}
                   </Badge>
-                )}
-
-                {/* Position Change Badge */}
-                <Badge 
-                  variant="secondary" 
-                  className={`${positionIndicator.className} flex items-center gap-1 text-xs px-2 py-1`}
-                >
-                  {positionIndicator.icon}
-                  {positionIndicator.text}
-                </Badge>
-
-                {/* Vote Count - More prominent */}
-                <div className="flex items-center gap-2 bg-gradient-to-r from-pink-50 to-purple-50 dark:from-pink-900/20 dark:to-purple-900/20 px-3 py-2 rounded-md border border-pink-200/50 dark:border-pink-800/50">
-                  <Heart className="w-4 h-4 text-pink-500" />
-                  <span className="font-bold text-lg text-gray-900 dark:text-white">{idea.votes}</span>
-                  <span className="text-sm text-gray-600 dark:text-gray-400">{t("ideas.votes")}</span>
                 </div>
 
-                {/* Creator indicator for audience users */}
-                {!isCreator && (
-                  <Badge variant="outline" className="text-xs">
-                    <User className="w-3 h-3 mr-1" />
-                    {t("ideas.byCreator", "Por creador")}
-                  </Badge>
-                )}
+                {/* Column 2 */}
+                <div className="flex items-center justify-end">
+                  {/* Vote Count - More prominent */}
+                  <div className="flex items-center gap-2 bg-gradient-to-r from-pink-50 to-purple-50 dark:from-pink-900/20 dark:to-purple-900/20 px-3 py-2 rounded-none border border-pink-200/50 dark:border-pink-800/50">
+                    <Heart className="w-4 h-4 text-pink-500" />
+                    <span className="font-bold text-lg text-gray-900 dark:text-white">
+                      {idea.votes}
+                    </span>
+                    <span className="text-sm text-gray-600 dark:text-gray-400">
+                      {t("ideas.votes")}
+                    </span>
+                  </div>
+                </div>
               </div>
+
+              {/* Creator indicator for audience users */}
+              {!isCreator && (
+                <Badge variant="outline" className="text-xs mb-2">
+                  <User className="w-3 h-3 mr-1" />
+                  {t("ideas.byCreator", "Por creador")}
+                </Badge>
+              )}
             </div>
 
             {/* Actions */}
@@ -208,7 +223,9 @@ export default function IdeaListView({
                   ) : (
                     <>
                       <ThumbsUp className="h-4 w-4 mr-1" />
-                      {hasVoted ? t("ideas.voted", "Votado") : t("ideas.vote", "Votar")}
+                      {hasVoted
+                        ? t("ideas.voted", "Votado")
+                        : t("ideas.vote", "Votar")}
                     </>
                   )}
                 </Button>
@@ -224,7 +241,9 @@ export default function IdeaListView({
                   data-testid={`button-template-list-${idea.id}`}
                 >
                   <FileText className="h-4 w-4" />
-                  <span className="hidden sm:inline ml-1">{t("ideas.template", "Template")}</span>
+                  <span className="hidden sm:inline ml-1">
+                    {t("ideas.template", "Template")}
+                  </span>
                 </Button>
               )}
 
@@ -237,7 +256,9 @@ export default function IdeaListView({
                   className="border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-800"
                 >
                   <Pencil className="h-4 w-4" />
-                  <span className="hidden sm:inline ml-1">{t("ideas.edit", "Editar")}</span>
+                  <span className="hidden sm:inline ml-1">
+                    {t("ideas.edit", "Editar")}
+                  </span>
                 </Button>
               )}
 
@@ -250,7 +271,9 @@ export default function IdeaListView({
                   className="border-red-300 dark:border-red-700 text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 dark:text-red-400"
                 >
                   <Trash2 className="h-4 w-4" />
-                  <span className="hidden sm:inline ml-1">{t("ideas.delete", "Eliminar")}</span>
+                  <span className="hidden sm:inline ml-1">
+                    {t("ideas.delete", "Eliminar")}
+                  </span>
                 </Button>
               )}
             </div>

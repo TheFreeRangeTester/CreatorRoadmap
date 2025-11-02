@@ -166,7 +166,7 @@ export function DashboardOverview({ className }: DashboardOverviewProps) {
         </div>
 
         {/* Desktop Grid */}
-        <div className="hidden lg:grid lg:grid-cols-4 gap-4">
+        <div className="hidden lg:grid lg:grid-cols-2 gap-4">
           {Array.from({ length: 4 }).map((_, index) => (
             <Card
               key={index}
@@ -315,7 +315,7 @@ export function DashboardOverview({ className }: DashboardOverviewProps) {
           variants={containerVariants}
           initial="hidden"
           animate="visible"
-          className="hidden lg:grid lg:grid-cols-4 gap-4"
+          className="hidden lg:grid lg:grid-cols-2 gap-4"
         >
           {creatorMetrics.map((metric, index) => (
             <motion.div key={index} variants={itemVariants}>
@@ -414,10 +414,11 @@ export function DashboardOverview({ className }: DashboardOverviewProps) {
       {
         icon: TrendingUp,
         title: t("dashboard.overview.approvalRate", "Approval Rate"),
-        value:
-          stats?.ideasSuggested > 0
-            ? Math.round((stats.ideasApproved / stats.ideasSuggested) * 100)
-            : 0,
+        value: (() => {
+          const suggested = stats?.ideasSuggested || 0;
+          const approved = stats?.ideasApproved || 0;
+          return suggested > 0 ? Math.round((approved / suggested) * 100) : 0;
+        })(),
         description: t(
           "dashboard.overview.approvalRateDesc",
           "Ideas aprobadas"
@@ -472,7 +473,7 @@ export function DashboardOverview({ className }: DashboardOverviewProps) {
           variants={containerVariants}
           initial="hidden"
           animate="visible"
-          className="hidden lg:grid lg:grid-cols-4 gap-4"
+          className="hidden lg:grid lg:grid-cols-2 gap-4"
         >
           {audienceMetrics.map((metric, index) => (
             <motion.div key={index} variants={itemVariants}>

@@ -340,7 +340,7 @@ export default function EnhancedRankingCard({
                 <motion.div
                   initial={{ opacity: 0, scale: 0.8 }}
                   animate={{ opacity: 1, scale: 1 }}
-                  className="text-xs bg-primary/10 text-primary px-2 py-1 rounded-md"
+                  className="text-xs bg-primary/10 text-primary px-2 py-1 rounded-none"
                 >
                   {votesToNextRank} {t("common.votesToNextRank")}
                 </motion.div>
