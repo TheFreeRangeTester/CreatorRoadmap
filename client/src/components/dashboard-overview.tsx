@@ -9,6 +9,7 @@ import {
   Star,
   Clock,
   AlertCircle,
+  Gift,
 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -33,6 +34,11 @@ interface CreatorStats {
     name: string;
     votes: number;
   } | null;
+  topNiches?: {
+    name: string;
+    votes: number;
+  }[];
+  pendingRedemptions?: number;
 }
 
 interface AudienceStats {
@@ -149,10 +155,10 @@ export function DashboardOverview({ className }: DashboardOverviewProps) {
           className="lg:hidden flex gap-4 overflow-x-auto snap-x snap-mandatory scrollbar-hide px-4 -mx-4"
           style={{ scrollbarWidth: "none" }}
         >
-          {Array.from({ length: 4 }).map((_, index) => (
+          {Array.from({ length: 5 }).map((_, index) => (
             <Card
               key={index}
-              className="bg-white/90 dark:bg-gray-900/90 backdrop-blur-sm border border-gray-200/50 dark:border-gray-700/50 min-w-[85%] snap-center"
+              className="rounded-none bg-white/90 dark:bg-gray-900/90 backdrop-blur-sm border border-gray-200/50 dark:border-gray-700/50 min-w-[85%] snap-center"
             >
               <CardHeader className="pb-3">
                 <Skeleton className="h-4 w-24" />
@@ -166,11 +172,11 @@ export function DashboardOverview({ className }: DashboardOverviewProps) {
         </div>
 
         {/* Desktop Grid */}
-        <div className="hidden lg:grid lg:grid-cols-4 gap-4">
-          {Array.from({ length: 4 }).map((_, index) => (
+        <div className="hidden lg:grid lg:grid-cols-3 gap-4">
+          {Array.from({ length: 5 }).map((_, index) => (
             <Card
               key={index}
-              className="bg-white/90 dark:bg-gray-900/90 backdrop-blur-sm border border-gray-200/50 dark:border-gray-700/50"
+              className="rounded-none bg-white/90 dark:bg-gray-900/90 backdrop-blur-sm border border-gray-200/50 dark:border-gray-700/50"
             >
               <CardHeader className="pb-3">
                 <Skeleton className="h-4 w-24" />
@@ -183,7 +189,7 @@ export function DashboardOverview({ className }: DashboardOverviewProps) {
           ))}
         </div>
 
-        <CarouselIndicators total={4} active={0} />
+        <CarouselIndicators total={5} active={0} />
       </div>
     );
   }
@@ -199,7 +205,9 @@ export function DashboardOverview({ className }: DashboardOverviewProps) {
 
     console.log("[DASHBOARD-OVERVIEW] Creator stats being used:", stats);
 
-    const creatorMetrics = [
+    // Split metrics into regular cards and the Top Niche card
+    // Order: Total Ideas, Total Votes, Pending Redemptions, Pending Suggestions
+    const regularMetrics = [
       {
         icon: Lightbulb,
         title: t("dashboard.overview.totalIdeas", "Total Ideas"),
@@ -217,6 +225,21 @@ export function DashboardOverview({ className }: DashboardOverviewProps) {
         bgColor: "bg-green-50 dark:bg-green-900/20",
       },
       {
+        icon: Gift,
+        title: t(
+          "dashboard.overview.pendingRedemptions",
+          "Pending Redemptions"
+        ),
+        value: stats.pendingRedemptions || 0,
+        description: t(
+          "dashboard.overview.pendingRedemptionsDesc",
+          "Redemptions awaiting approval"
+        ),
+        color: "text-amber-600",
+        bgColor: "bg-amber-50 dark:bg-amber-900/20",
+        badge: (stats.pendingRedemptions || 0) > 0 ? "attention" : undefined,
+      },
+      {
         icon: Clock,
         title: t(
           "dashboard.overview.pendingSuggestions",
@@ -231,22 +254,27 @@ export function DashboardOverview({ className }: DashboardOverviewProps) {
         bgColor: "bg-orange-50 dark:bg-orange-900/20",
         badge: stats.pendingSuggestions > 0 ? "attention" : undefined,
       },
-      {
-        icon: TrendingUp,
-        title: t("dashboard.overview.topNiches", "Top Niches"),
-        value:
-          stats.topNiche?.name ||
-          t("dashboard.overview.noNicheData", "No data yet"),
-        description: t(
-          "dashboard.overview.topNichesDesc",
-          "Most voted category"
-        ),
-        color: "text-purple-600",
-        bgColor: "bg-purple-50 dark:bg-purple-900/20",
-        isText: true,
-        votes: stats.topNiche?.votes,
-      },
     ];
+
+    const topNichesMetric = {
+      icon: TrendingUp,
+      title: t("dashboard.overview.topNiche", "Top Niche"),
+      value:
+        stats.topNiche?.name ||
+        t("dashboard.overview.noNicheData", "No data yet"),
+      description: t(
+        "dashboard.overview.topNicheDesc",
+        "Most voted categories"
+      ),
+      color: "text-purple-600",
+      bgColor: "bg-purple-50 dark:bg-purple-900/20",
+      isText: true,
+      votes: stats.topNiche?.votes,
+      topNiches: stats.topNiches,
+      isDoubleHeight: true,
+    };
+
+    const creatorMetrics = [...regularMetrics, topNichesMetric];
 
     return (
       <div className={className}>
@@ -264,7 +292,7 @@ export function DashboardOverview({ className }: DashboardOverviewProps) {
               transition={{ delay: index * 0.1 }}
               className="min-w-[85%] snap-center"
             >
-              <Card className="bg-white/90 dark:bg-gray-900/90 backdrop-blur-sm border border-gray-200/50 dark:border-gray-700/50 shadow-lg h-full">
+              <Card className="rounded-none bg-white/90 dark:bg-gray-900/90 backdrop-blur-sm border border-gray-200/50 dark:border-gray-700/50 shadow-lg h-full">
                 <CardHeader className="flex flex-col items-center justify-center space-y-3 pb-4">
                   <div className={`p-3 rounded-md ${metric.bgColor}`}>
                     <metric.icon className={`h-7 w-7 ${metric.color}`} />
@@ -277,14 +305,25 @@ export function DashboardOverview({ className }: DashboardOverviewProps) {
                   <div className="flex flex-col items-center justify-center mb-2">
                     <div className="text-4xl font-bold text-gray-900 dark:text-white mb-1">
                       {(metric as any).isText ? (
-                        <div className="flex flex-col items-center">
-                          <span className="text-2xl capitalize">
-                            {metric.value}
-                          </span>
-                          {(metric as any).votes !== undefined && (
-                            <span className="text-sm font-normal text-gray-500 dark:text-gray-400 mt-1">
-                              {(metric as any).votes}{" "}
-                              {t("ideas.votes", "votes")}
+                        <div className="flex flex-col items-center space-y-3 w-full">
+                          {(metric as any).topNiches &&
+                          (metric as any).topNiches.length > 0 ? (
+                            (metric as any).topNiches.map((niche: any, idx: number) => (
+                              <div
+                                key={idx}
+                                className="flex flex-col items-center space-y-1"
+                              >
+                                <span className="text-2xl capitalize">
+                                  {niche.name}
+                                </span>
+                                <span className="text-sm font-normal text-gray-500 dark:text-gray-400">
+                                  {niche.votes} {t("ideas.votes", "votes")}
+                                </span>
+                              </div>
+                            ))
+                          ) : (
+                            <span className="text-2xl capitalize">
+                              {metric.value}
                             </span>
                           )}
                         </div>
@@ -310,59 +349,222 @@ export function DashboardOverview({ className }: DashboardOverviewProps) {
           ))}
         </div>
 
-        {/* Desktop Grid */}
+        {/* Desktop Grid - 3-column layout with Top Niche taking 2 rows */}
         <motion.div
           variants={containerVariants}
           initial="hidden"
           animate="visible"
-          className="hidden lg:grid lg:grid-cols-4 gap-4"
+          className="hidden lg:grid lg:grid-cols-3 gap-5 auto-rows-fr"
         >
-          {creatorMetrics.map((metric, index) => (
-            <motion.div key={index} variants={itemVariants}>
-              <Card className="bg-white/90 dark:bg-gray-900/90 backdrop-blur-sm border border-gray-200/50 dark:border-gray-700/50 hover:shadow-lg transition-all duration-300">
-                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3">
-                  <CardTitle className="text-sm font-medium text-gray-600 dark:text-gray-400">
-                    {metric.title}
-                  </CardTitle>
-                  <div className={`p-2 rounded-md ${metric.bgColor}`}>
-                    <metric.icon className={`h-4 w-4 ${metric.color}`} />
-                  </div>
-                </CardHeader>
-                <CardContent className="pt-0">
-                  <div className="flex items-center space-x-2">
-                    <div className="text-2xl font-bold text-gray-900 dark:text-white">
-                      {(metric as any).isText ? (
-                        <div className="flex flex-col">
-                          <span className="text-xl capitalize">
-                            {metric.value}
-                          </span>
-                          {(metric as any).votes !== undefined && (
-                            <span className="text-sm font-normal text-gray-500 dark:text-gray-400">
-                              {(metric as any).votes}{" "}
-                              {t("ideas.votes", "votes")}
-                            </span>
-                          )}
-                        </div>
-                      ) : (
-                        <>
-                          {(metric.value as number).toLocaleString()}
-                          {(metric as any).suffix}
-                        </>
-                      )}
+          {/* Column 1 - Total Ideas */}
+          <motion.div
+            variants={itemVariants}
+            className="col-start-1 row-start-1"
+          >
+            <Card className="rounded-none bg-white/90 dark:bg-gray-900/90 backdrop-blur-sm border border-gray-200/50 dark:border-gray-700/50 hover:shadow-xl hover:border-gray-300 dark:hover:border-gray-600 transition-all duration-300 h-full flex flex-col">
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2.5 flex-shrink-0">
+                <CardTitle className="text-xs font-semibold text-gray-700 dark:text-gray-300 leading-tight">
+                  {regularMetrics[0].title}
+                </CardTitle>
+                <div
+                  className={`p-1.5 rounded-md ${regularMetrics[0].bgColor} flex-shrink-0`}
+                >
+                  {(() => {
+                    const Icon = regularMetrics[0].icon;
+                    return (
+                      <Icon className={`h-4 w-4 ${regularMetrics[0].color}`} />
+                    );
+                  })()}
+                </div>
+              </CardHeader>
+              <CardContent className="pt-0 pb-4 flex-1 flex flex-col justify-between">
+                <div className="space-y-1.5">
+                  <div className="flex items-baseline gap-2 flex-wrap">
+                    <div className="text-2xl font-bold text-gray-900 dark:text-white leading-tight">
+                      {regularMetrics[0].value.toLocaleString()}
                     </div>
-                    {(metric as any).badge === "attention" && (
-                      <Badge variant="destructive" className="text-xs">
+                  </div>
+                  <p className="text-[11px] text-gray-500 dark:text-gray-400 leading-snug">
+                    {regularMetrics[0].description}
+                  </p>
+                </div>
+              </CardContent>
+            </Card>
+          </motion.div>
+
+          {/* Column 1 - Total Votes */}
+          <motion.div
+            variants={itemVariants}
+            className="col-start-1 row-start-2"
+          >
+            <Card className="rounded-none bg-white/90 dark:bg-gray-900/90 backdrop-blur-sm border border-gray-200/50 dark:border-gray-700/50 hover:shadow-xl hover:border-gray-300 dark:hover:border-gray-600 transition-all duration-300 h-full flex flex-col">
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2.5 flex-shrink-0">
+                <CardTitle className="text-xs font-semibold text-gray-700 dark:text-gray-300 leading-tight">
+                  {regularMetrics[1].title}
+                </CardTitle>
+                <div
+                  className={`p-1.5 rounded-md ${regularMetrics[1].bgColor} flex-shrink-0`}
+                >
+                  {(() => {
+                    const Icon = regularMetrics[1].icon;
+                    return (
+                      <Icon className={`h-4 w-4 ${regularMetrics[1].color}`} />
+                    );
+                  })()}
+                </div>
+              </CardHeader>
+              <CardContent className="pt-0 pb-4 flex-1 flex flex-col justify-between">
+                <div className="space-y-1.5">
+                  <div className="flex items-baseline gap-2 flex-wrap">
+                    <div className="text-2xl font-bold text-gray-900 dark:text-white leading-tight">
+                      {regularMetrics[1].value.toLocaleString()}
+                    </div>
+                  </div>
+                  <p className="text-[11px] text-gray-500 dark:text-gray-400 leading-snug">
+                    {regularMetrics[1].description}
+                  </p>
+                </div>
+              </CardContent>
+            </Card>
+          </motion.div>
+
+          {/* Column 2 - Pending Redemptions */}
+          <motion.div
+            variants={itemVariants}
+            className="col-start-2 row-start-1"
+          >
+            <Card className="rounded-none bg-white/90 dark:bg-gray-900/90 backdrop-blur-sm border border-gray-200/50 dark:border-gray-700/50 hover:shadow-xl hover:border-gray-300 dark:hover:border-gray-600 transition-all duration-300 h-full flex flex-col">
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2.5 flex-shrink-0">
+                <CardTitle className="text-xs font-semibold text-gray-700 dark:text-gray-300 leading-tight">
+                  {regularMetrics[2].title}
+                </CardTitle>
+                <div
+                  className={`p-1.5 rounded-md ${regularMetrics[2].bgColor} flex-shrink-0`}
+                >
+                  {(() => {
+                    const Icon = regularMetrics[2].icon;
+                    return (
+                      <Icon className={`h-4 w-4 ${regularMetrics[2].color}`} />
+                    );
+                  })()}
+                </div>
+              </CardHeader>
+              <CardContent className="pt-0 pb-4 flex-1 flex flex-col justify-between">
+                <div className="space-y-1.5">
+                  <div className="flex items-baseline gap-2 flex-wrap">
+                    <div className="text-2xl font-bold text-gray-900 dark:text-white leading-tight">
+                      {regularMetrics[2].value.toLocaleString()}
+                    </div>
+                    {regularMetrics[2].badge === "attention" && (
+                      <Badge
+                        variant="destructive"
+                        className="text-[10px] px-1.5 py-0.5 h-fit"
+                      >
                         {t("common.attention", "Attention")}
                       </Badge>
                     )}
                   </div>
-                  <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                    {metric.description}
+                  <p className="text-[11px] text-gray-500 dark:text-gray-400 leading-snug">
+                    {regularMetrics[2].description}
                   </p>
-                </CardContent>
-              </Card>
-            </motion.div>
-          ))}
+                </div>
+              </CardContent>
+            </Card>
+          </motion.div>
+
+          {/* Column 2 - Pending Suggestions */}
+          <motion.div
+            variants={itemVariants}
+            className="col-start-2 row-start-2"
+          >
+            <Card className="rounded-none bg-white/90 dark:bg-gray-900/90 backdrop-blur-sm border border-gray-200/50 dark:border-gray-700/50 hover:shadow-xl hover:border-gray-300 dark:hover:border-gray-600 transition-all duration-300 h-full flex flex-col">
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2.5 flex-shrink-0">
+                <CardTitle className="text-xs font-semibold text-gray-700 dark:text-gray-300 leading-tight">
+                  {regularMetrics[3].title}
+                </CardTitle>
+                <div
+                  className={`p-1.5 rounded-md ${regularMetrics[3].bgColor} flex-shrink-0`}
+                >
+                  {(() => {
+                    const Icon = regularMetrics[3].icon;
+                    return (
+                      <Icon className={`h-4 w-4 ${regularMetrics[3].color}`} />
+                    );
+                  })()}
+                </div>
+              </CardHeader>
+              <CardContent className="pt-0 pb-4 flex-1 flex flex-col justify-between">
+                <div className="space-y-1.5">
+                  <div className="flex items-baseline gap-2 flex-wrap">
+                    <div className="text-2xl font-bold text-gray-900 dark:text-white leading-tight">
+                      {regularMetrics[3].value.toLocaleString()}
+                    </div>
+                    {regularMetrics[3].badge === "attention" && (
+                      <Badge
+                        variant="destructive"
+                        className="text-[10px] px-1.5 py-0.5 h-fit"
+                      >
+                        {t("common.attention", "Attention")}
+                      </Badge>
+                    )}
+                  </div>
+                  <p className="text-[11px] text-gray-500 dark:text-gray-400 leading-snug">
+                    {regularMetrics[3].description}
+                  </p>
+                </div>
+              </CardContent>
+            </Card>
+          </motion.div>
+
+          {/* Column 3 - Top Niches Card - Double height */}
+          <motion.div
+            variants={itemVariants}
+            className="col-start-3 row-start-1 row-span-2"
+          >
+            <Card className="rounded-none bg-white/90 dark:bg-gray-900/90 backdrop-blur-sm border border-gray-200/50 dark:border-gray-700/50 hover:shadow-xl hover:border-gray-300 dark:hover:border-gray-600 transition-all duration-300 h-full flex flex-col">
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3 flex-shrink-0">
+                <CardTitle className="text-sm font-semibold text-gray-700 dark:text-gray-300 leading-tight">
+                  {topNichesMetric.title}
+                </CardTitle>
+                <div
+                  className={`p-2 rounded-md ${topNichesMetric.bgColor} flex-shrink-0`}
+                >
+                  <topNichesMetric.icon
+                    className={`h-5 w-5 ${topNichesMetric.color}`}
+                  />
+                </div>
+              </CardHeader>
+              <CardContent className="pt-0 pb-4 flex-1 flex flex-col justify-between">
+                <div className="space-y-4">
+                  {topNichesMetric.topNiches &&
+                  topNichesMetric.topNiches.length > 0 ? (
+                    topNichesMetric.topNiches.map((niche, idx) => (
+                      <div
+                        key={idx}
+                        className="flex flex-col space-y-1 border-b border-gray-200 dark:border-gray-700 pb-3 last:border-b-0 last:pb-0"
+                      >
+                        <div className="text-lg font-bold text-gray-900 dark:text-white capitalize">
+                          {niche.name}
+                        </div>
+                        <div className="text-xs text-gray-500 dark:text-gray-400">
+                          {niche.votes} {t("ideas.votes", "votes")}
+                        </div>
+                      </div>
+                    ))
+                  ) : (
+                    <div className="flex flex-col space-y-1">
+                      <div className="text-lg font-bold text-gray-400 dark:text-gray-500">
+                        {t("dashboard.overview.noNicheData", "No data yet")}
+                      </div>
+                    </div>
+                  )}
+                </div>
+                <p className="text-xs text-gray-500 dark:text-gray-400 leading-snug mt-4">
+                  {topNichesMetric.description}
+                </p>
+              </CardContent>
+            </Card>
+          </motion.div>
         </motion.div>
 
         <CarouselIndicators
@@ -414,10 +616,11 @@ export function DashboardOverview({ className }: DashboardOverviewProps) {
       {
         icon: TrendingUp,
         title: t("dashboard.overview.approvalRate", "Approval Rate"),
-        value:
-          stats?.ideasSuggested > 0
-            ? Math.round((stats.ideasApproved / stats.ideasSuggested) * 100)
-            : 0,
+        value: (() => {
+          const suggested = stats?.ideasSuggested || 0;
+          const approved = stats?.ideasApproved || 0;
+          return suggested > 0 ? Math.round((approved / suggested) * 100) : 0;
+        })(),
         description: t(
           "dashboard.overview.approvalRateDesc",
           "Ideas aprobadas"
@@ -444,7 +647,7 @@ export function DashboardOverview({ className }: DashboardOverviewProps) {
               transition={{ delay: index * 0.1 }}
               className="min-w-[85%] snap-center"
             >
-              <Card className="bg-white/90 dark:bg-gray-900/90 backdrop-blur-sm border border-gray-200/50 dark:border-gray-700/50 shadow-lg h-full">
+              <Card className="rounded-none bg-white/90 dark:bg-gray-900/90 backdrop-blur-sm border border-gray-200/50 dark:border-gray-700/50 shadow-lg h-full">
                 <CardHeader className="flex flex-col items-center justify-center space-y-3 pb-4">
                   <div className={`p-3 rounded-md ${metric.bgColor}`}>
                     <metric.icon className={`h-7 w-7 ${metric.color}`} />
@@ -476,7 +679,7 @@ export function DashboardOverview({ className }: DashboardOverviewProps) {
         >
           {audienceMetrics.map((metric, index) => (
             <motion.div key={index} variants={itemVariants}>
-              <Card className="bg-white/90 dark:bg-gray-900/90 backdrop-blur-sm border border-gray-200/50 dark:border-gray-700/50 hover:shadow-lg transition-all duration-300">
+              <Card className="rounded-none bg-white/90 dark:bg-gray-900/90 backdrop-blur-sm border border-gray-200/50 dark:border-gray-700/50 hover:shadow-lg transition-all duration-300">
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3">
                   <CardTitle className="text-sm font-medium text-gray-600 dark:text-gray-400">
                     {metric.title}

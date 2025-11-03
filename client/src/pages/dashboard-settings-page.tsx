@@ -96,7 +96,7 @@ export default function DashboardSettingsPage() {
           <ProfileEditor />
 
           {/* Creator-specific settings */}
-          <div className="mt-8 bg-white dark:bg-gray-800 rounded-xl shadow-sm border dark:border-gray-700 p-6">
+          <div className="mt-8 bg-white dark:bg-gray-800 rounded-md shadow-sm border dark:border-gray-700 p-6">
             <h2 className="text-xl font-semibold mb-4 flex items-center gap-2">
               <Settings className="h-5 w-5 text-primary" />
               {t("dashboard.leaderboardPreferences")}
@@ -106,7 +106,7 @@ export default function DashboardSettingsPage() {
             </p>
             
             {/* Add more creator-specific settings here */}
-            <div className="bg-blue-50 dark:bg-blue-900/20 rounded-lg p-4 border border-blue-200 dark:border-blue-800">
+            <div className="bg-blue-50 dark:bg-blue-900/20 rounded-md p-4 border border-blue-200 dark:border-blue-800">
               <p className="text-sm text-blue-700 dark:text-blue-300">
                 {t("dashboard.moreSettingsComing")}
               </p>

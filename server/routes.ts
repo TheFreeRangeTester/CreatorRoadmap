@@ -294,10 +294,16 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const pendingIdeas = ideas.filter(idea => idea.status === 'pending');
       const totalVotes = publishedIdeas.reduce((sum, idea) => sum + idea.votes, 0);
 
-      // Get top niche from persistent stats
-      const topNiche = await storage.getTopNiche(req.user.id);
+      // Get top niches from persistent stats
+      const topNiches = await storage.getTopNiches(req.user.id, 2);
+      const topNiche = topNiches[0] || null;
 
-      console.log(`[DASHBOARD-STATS] User ${req.user.id}: ${ideas.length} total ideas, ${publishedIdeas.length} published, ${pendingIdeas.length} pending, ${totalVotes} total votes, top niche: ${topNiche?.name || 'none'} with ${topNiche?.votes || 0} votes`);
+      // Get pending redemptions count
+      const pendingRedemptionsResult = await storage.getStoreRedemptions(req.user.id, 1, 0, 'pending');
+      const pendingRedemptions = pendingRedemptionsResult.total;
+
+      console.log(`[DASHBOARD-STATS] User ${req.user.id}: ${ideas.length} total ideas, ${publishedIdeas.length} published, ${pendingIdeas.length} pending, ${totalVotes} total votes, top niche: ${topNiche?.name || 'none'} with ${topNiche?.votes || 0} votes, ${pendingRedemptions} pending redemptions`);
+      console.log(`[DASHBOARD-STATS] Top Niches received:`, topNiches);
 
       const stats = {
         totalIdeas: publishedIdeas.length,
@@ -305,8 +311,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
         pendingSuggestions: pendingIdeas.length,
         publishedIdeas: publishedIdeas.length,
         topNiche,
+        topNiches,
+        pendingRedemptions,
       };
 
+      console.log(`[DASHBOARD-STATS] Sending stats to frontend:`, JSON.stringify(stats, null, 2));
       res.json(stats);
     } catch (error) {
       console.error("Error fetching dashboard stats:", error);

@@ -895,4 +895,20 @@ export class DatabaseStorage implements IStorage {
       votes: topNiche.totalVotes,
     };
   }
+
+  async getTopNiches(creatorId: number, limit: number = 2): Promise<{ name: string; votes: number }[]> {
+    const topNiches = await db
+      .select()
+      .from(nicheStats)
+      .where(eq(nicheStats.creatorId, creatorId))
+      .orderBy(desc(nicheStats.totalVotes))
+      .limit(limit);
+
+    console.log(`[GET-TOP-NICHES] Found ${topNiches.length} niches for creator ${creatorId}:`, topNiches);
+
+    return topNiches.map(niche => ({
+      name: niche.niche,
+      votes: niche.totalVotes,
+    }));
+  }
 }
