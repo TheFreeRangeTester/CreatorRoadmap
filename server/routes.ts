@@ -294,8 +294,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const pendingIdeas = ideas.filter(idea => idea.status === 'pending');
       const totalVotes = publishedIdeas.reduce((sum, idea) => sum + idea.votes, 0);
 
-      // Get top niche from persistent stats
-      const topNiche = await storage.getTopNiche(req.user.id);
+      // Get top niches from persistent stats
+      const topNiches = await storage.getTopNiches(req.user.id, 2);
+      const topNiche = topNiches[0] || null;
 
       // Get pending redemptions count
       const pendingRedemptionsResult = await storage.getStoreRedemptions(req.user.id, 1, 0, 'pending');
@@ -309,6 +310,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         pendingSuggestions: pendingIdeas.length,
         publishedIdeas: publishedIdeas.length,
         topNiche,
+        topNiches,
         pendingRedemptions,
       };
 
