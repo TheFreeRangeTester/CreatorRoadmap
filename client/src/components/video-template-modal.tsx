@@ -186,13 +186,14 @@ export default function VideoTemplateModal({
         });
       }
     },
-    onSuccess: () => {
+    onSuccess: async () => {
       toast({
         title: t("videoScript.saveSuccess"),
         description: t("videoScript.saveSuccessDesc"),
       });
-      queryClient.invalidateQueries({ queryKey: [`/api/video-templates/${idea.id}`] });
-      onClose();
+      // Invalidate and refetch the query to ensure fresh data
+      await queryClient.invalidateQueries({ queryKey: [`/api/video-templates/${idea.id}`] });
+      await queryClient.refetchQueries({ queryKey: [`/api/video-templates/${idea.id}`] });
     },
     onError: (error: Error) => {
       toast({
