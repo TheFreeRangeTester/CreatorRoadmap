@@ -255,7 +255,7 @@ export default function ModernPublicProfile() {
       className="space-y-6"
     >
       {/* Creator Info Card */}
-      <div className="bg-white/90 dark:bg-gray-900/90 backdrop-blur-xl rounded-3xl border border-gray-200/50 dark:border-gray-700/50 overflow-hidden shadow-xl shadow-gray-200/50 dark:shadow-gray-800/50">
+      <div className="bg-white/90 dark:bg-gray-900/90 backdrop-blur-xl rounded-md border border-gray-200/50 dark:border-gray-700/50 overflow-hidden shadow-xl shadow-gray-200/50 dark:shadow-gray-800/50">
         <div className="p-8">
           <div className="flex flex-col lg:flex-row lg:items-center gap-6">
             {/* Avatar */}
@@ -291,7 +291,7 @@ export default function ModernPublicProfile() {
                       href={formatSocialUrl(link.url!, link.platform)}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="flex items-center gap-2 px-3 py-1.5 bg-gray-100 dark:bg-gray-800 rounded-lg text-sm text-gray-600 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
+                      className="flex items-center gap-2 px-3 py-1.5 bg-gray-100 dark:bg-gray-800 rounded-md text-sm text-gray-600 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
                       whileHover={{ scale: 1.05 }}
                       whileTap={{ scale: 0.95 }}
                     >
@@ -338,7 +338,7 @@ export default function ModernPublicProfile() {
       className="space-y-6"
     >
       {/* Creator Profile Info */}
-      <div className="bg-white/90 dark:bg-gray-900/90 backdrop-blur-xl rounded-3xl border border-gray-200/50 dark:border-gray-700/50 overflow-hidden shadow-xl shadow-gray-200/50 dark:shadow-gray-800/50">
+      <div className="bg-white/90 dark:bg-gray-900/90 backdrop-blur-xl rounded-md border border-gray-200/50 dark:border-gray-700/50 overflow-hidden shadow-xl shadow-gray-200/50 dark:shadow-gray-800/50">
         <div className="p-6">
           <div className="flex flex-col sm:flex-row sm:items-center gap-4">
             {/* Avatar */}
@@ -374,7 +374,7 @@ export default function ModernPublicProfile() {
                       href={formatSocialUrl(link.url!, link.platform)}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="flex items-center gap-1.5 px-2.5 py-1 bg-gray-100 dark:bg-gray-800 rounded-lg text-xs text-gray-600 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
+                      className="flex items-center gap-1.5 px-2.5 py-1 bg-gray-100 dark:bg-gray-800 rounded-md text-xs text-gray-600 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
                       whileHover={{ scale: 1.05 }}
                       whileTap={{ scale: 0.95 }}
                     >

@@ -83,7 +83,7 @@ export default function ProfilePage() {
 
               {/* Sección para convertirse en creator (solo si es audience) */}
               {user?.userRole === "audience" && (
-                <div className="mt-8 bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-950/50 dark:to-indigo-950/50 rounded-xl shadow-sm border border-blue-200 dark:border-indigo-900/50 p-6">
+                <div className="mt-8 bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-950/50 dark:to-indigo-950/50 rounded-md shadow-sm border border-blue-200 dark:border-indigo-900/50 p-6">
                   <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                     <div>
                       <h2 className="text-xl font-semibold text-blue-700 dark:text-blue-300 mb-2">
