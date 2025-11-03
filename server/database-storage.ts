@@ -904,6 +904,8 @@ export class DatabaseStorage implements IStorage {
       .orderBy(desc(nicheStats.totalVotes))
       .limit(limit);
 
+    console.log(`[GET-TOP-NICHES] Found ${topNiches.length} niches for creator ${creatorId}:`, topNiches);
+
     return topNiches.map(niche => ({
       name: niche.niche,
       votes: niche.totalVotes,
