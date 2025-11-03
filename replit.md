@@ -28,6 +28,21 @@ Fanlist is a web application designed to empower content creators by enabling th
 - **Data Migration**: Populated initial niche stats from existing ideas during deployment.
 - **Behavior Change**: Deleting ideas no longer affects Top Niche display - historical vote data is preserved.
 
+### November 3, 2025 - Extended Video Planning Templates
+- **Extended Structure**: Enhanced video template system with comprehensive script planning sections.
+- **New Fields**: Added text fields for video title and thumbnail notes.
+- **New Sections**: Added structured collapsible sections for complete script planning:
+  - HOOK: Opening elements to capture attention
+  - TEASER: Content preview and anticipation building
+  - VALOR PARA AUDIENCIA: Explicit value proposition for viewers
+  - PUNTOS A CUBRIR: Main content points (existing, maintained)
+  - VISUALES NECESARIOS: Required visual assets (existing, maintained)
+  - BONUS / EXTRA: Additional content or downloadable resources
+  - OUTRO / CTA: Closing and call-to-action elements
+- **Database**: Extended `video_templates` table with new JSONB columns (hook, teaser, valorAudiencia, bonus, outro) and text columns (videoTitle, thumbnailNotes).
+- **Component Update**: VideoTemplateModal now shows all sections in organized, collapsible format with consistent UI.
+- **Export Enhancement**: Markdown export includes all new sections with proper formatting.
+
 ### November 2, 2025 - Video Planning Templates
 - **New Feature**: Added video planning template system for creators to plan content before production.
 - **Database**: Created `video_templates` table with JSONB fields storing items with completion status {text, completed}.

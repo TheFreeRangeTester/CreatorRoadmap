@@ -10,6 +10,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
 import {
   Collapsible,
   CollapsibleContent,
@@ -30,6 +31,8 @@ import {
   Loader2,
   FileText,
   Eye,
+  Video,
+  Image,
 } from "lucide-react";
 
 // Template item type
@@ -44,6 +47,24 @@ interface VideoTemplateModalProps {
   idea: IdeaResponse;
 }
 
+// Section configuration for reusable collapsible sections
+interface Section {
+  key: string;
+  label: string;
+  icon: typeof Eye;
+  placeholder: string;
+}
+
+const sections: Section[] = [
+  { key: "hook", label: "HOOK", icon: Eye, placeholder: "Ej: pregunta intrigante, dato sorprendente..." },
+  { key: "teaser", label: "TEASER", icon: Eye, placeholder: "Ej: adelanto del contenido principal..." },
+  { key: "valorAudiencia", label: "VALOR PARA AUDIENCIA", icon: Eye, placeholder: "Ej: aprenderán a..., les ayudará con..." },
+  { key: "pointsToCover", label: "PUNTOS A CUBRIR", icon: Eye, placeholder: "Agregar punto a cubrir..." },
+  { key: "visualsNeeded", label: "VISUALES NECESARIOS", icon: Eye, placeholder: "Ej: captura de pantalla, demo del feature..." },
+  { key: "bonus", label: "BONUS / EXTRA", icon: Eye, placeholder: "Ej: tip adicional, recurso descargable..." },
+  { key: "outro", label: "OUTRO / CTA", icon: Eye, placeholder: "Ej: llamado a la acción, invitación a suscribirse..." },
+];
+
 export default function VideoTemplateModal({
   isOpen,
   onClose,
@@ -52,12 +73,40 @@ export default function VideoTemplateModal({
   const { toast } = useToast();
   const queryClient = useQueryClient();
 
+  // Text fields
+  const [videoTitle, setVideoTitle] = useState("");
+  const [thumbnailNotes, setThumbnailNotes] = useState("");
+
+  // All sections state
+  const [hook, setHook] = useState<TemplateItem[]>([]);
+  const [teaser, setTeaser] = useState<TemplateItem[]>([]);
+  const [valorAudiencia, setValorAudiencia] = useState<TemplateItem[]>([]);
   const [pointsToCover, setPointsToCover] = useState<TemplateItem[]>([]);
   const [visualsNeeded, setVisualsNeeded] = useState<TemplateItem[]>([]);
-  const [newPoint, setNewPoint] = useState("");
-  const [newVisual, setNewVisual] = useState("");
-  const [isPointsOpen, setIsPointsOpen] = useState(true);
-  const [isVisualsOpen, setIsVisualsOpen] = useState(true);
+  const [bonus, setBonus] = useState<TemplateItem[]>([]);
+  const [outro, setOutro] = useState<TemplateItem[]>([]);
+
+  // New item inputs for each section
+  const [newInputs, setNewInputs] = useState<Record<string, string>>({
+    hook: "",
+    teaser: "",
+    valorAudiencia: "",
+    pointsToCover: "",
+    visualsNeeded: "",
+    bonus: "",
+    outro: "",
+  });
+
+  // Collapsible state for each section
+  const [openSections, setOpenSections] = useState<Record<string, boolean>>({
+    hook: true,
+    teaser: true,
+    valorAudiencia: true,
+    pointsToCover: true,
+    visualsNeeded: true,
+    bonus: true,
+    outro: true,
+  });
 
   // Fetch existing template
   const { data: template, isLoading } = useQuery<VideoTemplateResponse>({
@@ -68,21 +117,56 @@ export default function VideoTemplateModal({
   // Load template data when it's fetched
   useEffect(() => {
     if (template) {
+      setVideoTitle(template.videoTitle || "");
+      setThumbnailNotes(template.thumbnailNotes || "");
+      setHook(template.hook || []);
+      setTeaser(template.teaser || []);
+      setValorAudiencia(template.valorAudiencia || []);
       setPointsToCover(template.pointsToCover || []);
       setVisualsNeeded(template.visualsNeeded || []);
+      setBonus(template.bonus || []);
+      setOutro(template.outro || []);
     } else {
+      setVideoTitle("");
+      setThumbnailNotes("");
+      setHook([]);
+      setTeaser([]);
+      setValorAudiencia([]);
       setPointsToCover([]);
       setVisualsNeeded([]);
+      setBonus([]);
+      setOutro([]);
     }
   }, [template]);
+
+  // Map section keys to their state and setters
+  const getSectionData = (key: string): [TemplateItem[], (items: TemplateItem[]) => void] => {
+    const map: Record<string, [TemplateItem[], (items: TemplateItem[]) => void]> = {
+      hook: [hook, setHook],
+      teaser: [teaser, setTeaser],
+      valorAudiencia: [valorAudiencia, setValorAudiencia],
+      pointsToCover: [pointsToCover, setPointsToCover],
+      visualsNeeded: [visualsNeeded, setVisualsNeeded],
+      bonus: [bonus, setBonus],
+      outro: [outro, setOutro],
+    };
+    return map[key] || [[], () => {}];
+  };
 
   // Create or update template mutation
   const saveMutation = useMutation({
     mutationFn: async () => {
       const data = {
         ideaId: idea.id,
+        videoTitle,
+        thumbnailNotes,
+        hook,
+        teaser,
+        valorAudiencia,
         pointsToCover,
         visualsNeeded,
+        bonus,
+        outro,
       };
 
       if (template) {
@@ -116,36 +200,23 @@ export default function VideoTemplateModal({
     },
   });
 
-  const handleAddPoint = () => {
-    if (newPoint.trim()) {
-      setPointsToCover([...pointsToCover, { text: newPoint.trim(), completed: false }]);
-      setNewPoint("");
+  const handleAddItem = (sectionKey: string) => {
+    const input = newInputs[sectionKey];
+    if (input.trim()) {
+      const [items, setItems] = getSectionData(sectionKey);
+      setItems([...items, { text: input.trim(), completed: false }]);
+      setNewInputs({ ...newInputs, [sectionKey]: "" });
     }
   };
 
-  const handleRemovePoint = (index: number) => {
-    setPointsToCover(pointsToCover.filter((_, i) => i !== index));
+  const handleRemoveItem = (sectionKey: string, index: number) => {
+    const [items, setItems] = getSectionData(sectionKey);
+    setItems(items.filter((_, i) => i !== index));
   };
 
-  const handleTogglePoint = (index: number) => {
-    setPointsToCover(pointsToCover.map((item, i) => 
-      i === index ? { ...item, completed: !item.completed } : item
-    ));
-  };
-
-  const handleAddVisual = () => {
-    if (newVisual.trim()) {
-      setVisualsNeeded([...visualsNeeded, { text: newVisual.trim(), completed: false }]);
-      setNewVisual("");
-    }
-  };
-
-  const handleRemoveVisual = (index: number) => {
-    setVisualsNeeded(visualsNeeded.filter((_, i) => i !== index));
-  };
-
-  const handleToggleVisual = (index: number) => {
-    setVisualsNeeded(visualsNeeded.map((item, i) => 
+  const handleToggleItem = (sectionKey: string, index: number) => {
+    const [items, setItems] = getSectionData(sectionKey);
+    setItems(items.map((item, i) => 
       i === index ? { ...item, completed: !item.completed } : item
     ));
   };
@@ -155,23 +226,34 @@ export default function VideoTemplateModal({
   };
 
   const handleExportMarkdown = () => {
-    const markdown = `# ${idea.title}
+    const formatItems = (items: TemplateItem[], prefix: string = "-") => {
+      return items.map((item, i) => 
+        `${prefix} ${item.completed ? '~~' + item.text + '~~' : item.text} ${item.completed ? '✓' : ''}`
+      ).join("\n");
+    };
 
-## Descripción
+    const markdown = `# ${videoTitle || idea.title}
+
+## Idea original
+${idea.title}
 ${idea.description}
 
-## Puntos a cubrir
-${pointsToCover.map((point, i) => `${i + 1}. ${point.completed ? '~~' + point.text + '~~' : point.text} ${point.completed ? '✓' : ''}`).join("\n")}
-
-## Visuales necesarios
-${visualsNeeded.map((visual, i) => `- ${visual.completed ? '~~' + visual.text + '~~' : visual.text} ${visual.completed ? '✓' : ''}`).join("\n")}
+${videoTitle ? `## Título del video\n${videoTitle}\n` : ''}
+${thumbnailNotes ? `## Miniatura\n${thumbnailNotes}\n` : ''}
+${hook.length > 0 ? `## HOOK\n${formatItems(hook)}\n` : ''}
+${teaser.length > 0 ? `## TEASER\n${formatItems(teaser)}\n` : ''}
+${valorAudiencia.length > 0 ? `## VALOR PARA AUDIENCIA\n${formatItems(valorAudiencia)}\n` : ''}
+${pointsToCover.length > 0 ? `## PUNTOS A CUBRIR\n${formatItems(pointsToCover.map((p, i) => ({ ...p, text: `${i + 1}. ${p.text}` })))}\n` : ''}
+${visualsNeeded.length > 0 ? `## VISUALES NECESARIOS\n${formatItems(visualsNeeded)}\n` : ''}
+${bonus.length > 0 ? `## BONUS / EXTRA\n${formatItems(bonus)}\n` : ''}
+${outro.length > 0 ? `## OUTRO / CTA\n${formatItems(outro)}\n` : ''}
 `;
 
     const blob = new Blob([markdown], { type: "text/markdown" });
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
-    a.download = `${idea.title.replace(/[^a-z0-9]/gi, "_")}_template.md`;
+    a.download = `${(videoTitle || idea.title).replace(/[^a-z0-9]/gi, "_")}_template.md`;
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
@@ -183,16 +265,105 @@ ${visualsNeeded.map((visual, i) => `- ${visual.completed ? '~~' + visual.text + 
     });
   };
 
+  const renderSection = (section: Section) => {
+    const [items] = getSectionData(section.key);
+    const isOpen = openSections[section.key];
+    const Icon = section.icon;
+
+    return (
+      <Collapsible 
+        key={section.key}
+        open={isOpen} 
+        onOpenChange={(open) => setOpenSections({ ...openSections, [section.key]: open })}
+      >
+        <CollapsibleTrigger asChild>
+          <Button
+            variant="outline"
+            className="w-full flex items-center justify-between p-4 hover:bg-gray-50 dark:hover:bg-gray-800"
+            data-testid={`toggle-${section.key}`}
+          >
+            <span className="font-semibold flex items-center gap-2">
+              <Icon className="w-4 h-4" />
+              {section.label} ({items.length})
+            </span>
+            {isOpen ? (
+              <ChevronUp className="w-4 h-4" />
+            ) : (
+              <ChevronDown className="w-4 h-4" />
+            )}
+          </Button>
+        </CollapsibleTrigger>
+        <CollapsibleContent className="mt-4 space-y-3">
+          <div className="space-y-2">
+            {items.map((item, index) => (
+              <motion.div
+                key={index}
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -10 }}
+                className="flex items-center gap-3 p-3 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-md group"
+                data-testid={`${section.key}-${index}`}
+              >
+                <Checkbox
+                  checked={item.completed}
+                  onCheckedChange={() => handleToggleItem(section.key, index)}
+                  className="mt-0.5"
+                  data-testid={`checkbox-${section.key}-${index}`}
+                />
+                <span className={`flex-1 text-sm ${
+                  item.completed 
+                    ? 'line-through text-gray-400 dark:text-gray-500' 
+                    : 'text-gray-700 dark:text-gray-300'
+                }`}>
+                  {section.key === 'pointsToCover' ? `${index + 1}. ` : '• '}{item.text}
+                </span>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => handleRemoveItem(section.key, index)}
+                  className="opacity-0 group-hover:opacity-100 transition-opacity"
+                  data-testid={`remove-${section.key}-${index}`}
+                >
+                  <X className="w-4 h-4 text-red-500" />
+                </Button>
+              </motion.div>
+            ))}
+          </div>
+
+          <div className="flex gap-2">
+            <Input
+              value={newInputs[section.key]}
+              onChange={(e) => setNewInputs({ ...newInputs, [section.key]: e.target.value })}
+              placeholder={section.placeholder}
+              onKeyPress={(e) => e.key === "Enter" && handleAddItem(section.key)}
+              className="flex-1"
+              data-testid={`input-new-${section.key}`}
+            />
+            <Button
+              onClick={() => handleAddItem(section.key)}
+              size="sm"
+              variant="outline"
+              data-testid={`button-add-${section.key}`}
+            >
+              <Plus className="w-4 h-4 mr-1" />
+              Agregar
+            </Button>
+          </div>
+        </CollapsibleContent>
+      </Collapsible>
+    );
+  };
+
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+      <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2 text-2xl">
             <FileText className="w-6 h-6 text-primary" />
-            Planificación de Video
+            Guión Completo de Video
           </DialogTitle>
           <DialogDescription>
-            Organiza los detalles de tu video antes de producirlo
+            Planifica todos los detalles de tu video antes de producirlo
           </DialogDescription>
         </DialogHeader>
 
@@ -217,161 +388,46 @@ ${visualsNeeded.map((visual, i) => `- ${visual.completed ? '~~' + visual.text + 
               </div>
             </div>
 
-            {/* Puntos a cubrir */}
-            <Collapsible open={isPointsOpen} onOpenChange={setIsPointsOpen}>
-              <CollapsibleTrigger asChild>
-                <Button
-                  variant="outline"
-                  className="w-full flex items-center justify-between p-4 hover:bg-gray-50 dark:hover:bg-gray-800"
-                  data-testid="toggle-points"
-                >
-                  <span className="font-semibold flex items-center gap-2">
-                    <Eye className="w-4 h-4" />
-                    Puntos a cubrir ({pointsToCover.length})
-                  </span>
-                  {isPointsOpen ? (
-                    <ChevronUp className="w-4 h-4" />
-                  ) : (
-                    <ChevronDown className="w-4 h-4" />
-                  )}
-                </Button>
-              </CollapsibleTrigger>
-              <CollapsibleContent className="mt-4 space-y-3">
-                <div className="space-y-2">
-                  {pointsToCover.map((point, index) => (
-                    <motion.div
-                      key={index}
-                      initial={{ opacity: 0, y: -10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: -10 }}
-                      className="flex items-center gap-3 p-3 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-md group"
-                      data-testid={`point-${index}`}
-                    >
-                      <Checkbox
-                        checked={point.completed}
-                        onCheckedChange={() => handleTogglePoint(index)}
-                        className="mt-0.5"
-                        data-testid={`checkbox-point-${index}`}
-                      />
-                      <span className={`flex-1 text-sm ${
-                        point.completed 
-                          ? 'line-through text-gray-400 dark:text-gray-500' 
-                          : 'text-gray-700 dark:text-gray-300'
-                      }`}>
-                        {index + 1}. {point.text}
-                      </span>
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => handleRemovePoint(index)}
-                        className="opacity-0 group-hover:opacity-100 transition-opacity"
-                        data-testid={`remove-point-${index}`}
-                      >
-                        <X className="w-4 h-4 text-red-500" />
-                      </Button>
-                    </motion.div>
-                  ))}
-                </div>
+            {/* Video Title */}
+            <div className="space-y-2">
+              <Label htmlFor="video-title" className="text-sm font-semibold text-gray-700 dark:text-gray-300 flex items-center gap-2">
+                <Video className="w-4 h-4" />
+                Título del video
+              </Label>
+              <Input
+                id="video-title"
+                value={videoTitle}
+                onChange={(e) => setVideoTitle(e.target.value)}
+                placeholder="Ej: Cómo crear una IA en 10 minutos | Tutorial completo"
+                className="w-full"
+                data-testid="input-video-title"
+              />
+            </div>
 
-                <div className="flex gap-2">
-                  <Input
-                    value={newPoint}
-                    onChange={(e) => setNewPoint(e.target.value)}
-                    placeholder="Agregar punto a cubrir..."
-                    onKeyPress={(e) => e.key === "Enter" && handleAddPoint()}
-                    className="flex-1"
-                    data-testid="input-new-point"
-                  />
-                  <Button
-                    onClick={handleAddPoint}
-                    size="sm"
-                    variant="outline"
-                    data-testid="button-add-point"
-                  >
-                    <Plus className="w-4 h-4 mr-1" />
-                    Agregar
-                  </Button>
-                </div>
-              </CollapsibleContent>
-            </Collapsible>
+            {/* Thumbnail Notes */}
+            <div className="space-y-2">
+              <Label htmlFor="thumbnail-notes" className="text-sm font-semibold text-gray-700 dark:text-gray-300 flex items-center gap-2">
+                <Image className="w-4 h-4" />
+                Miniatura (qué debería tener)
+              </Label>
+              <Textarea
+                id="thumbnail-notes"
+                value={thumbnailNotes}
+                onChange={(e) => setThumbnailNotes(e.target.value)}
+                placeholder="Ej: Fondo con gradiente azul-morado, texto grande 'IA EN 10 MIN', mi foto con expresión sorprendida..."
+                className="w-full min-h-[80px]"
+                data-testid="input-thumbnail-notes"
+              />
+            </div>
 
-            {/* Visuales necesarios */}
-            <Collapsible open={isVisualsOpen} onOpenChange={setIsVisualsOpen}>
-              <CollapsibleTrigger asChild>
-                <Button
-                  variant="outline"
-                  className="w-full flex items-center justify-between p-4 hover:bg-gray-50 dark:hover:bg-gray-800"
-                  data-testid="toggle-visuals"
-                >
-                  <span className="font-semibold flex items-center gap-2">
-                    <Eye className="w-4 h-4" />
-                    Visuales necesarios ({visualsNeeded.length})
-                  </span>
-                  {isVisualsOpen ? (
-                    <ChevronUp className="w-4 h-4" />
-                  ) : (
-                    <ChevronDown className="w-4 h-4" />
-                  )}
-                </Button>
-              </CollapsibleTrigger>
-              <CollapsibleContent className="mt-4 space-y-3">
-                <div className="space-y-2">
-                  {visualsNeeded.map((visual, index) => (
-                    <motion.div
-                      key={index}
-                      initial={{ opacity: 0, y: -10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: -10 }}
-                      className="flex items-center gap-3 p-3 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-md group"
-                      data-testid={`visual-${index}`}
-                    >
-                      <Checkbox
-                        checked={visual.completed}
-                        onCheckedChange={() => handleToggleVisual(index)}
-                        className="mt-0.5"
-                        data-testid={`checkbox-visual-${index}`}
-                      />
-                      <span className={`flex-1 text-sm ${
-                        visual.completed 
-                          ? 'line-through text-gray-400 dark:text-gray-500' 
-                          : 'text-gray-700 dark:text-gray-300'
-                      }`}>
-                        • {visual.text}
-                      </span>
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => handleRemoveVisual(index)}
-                        className="opacity-0 group-hover:opacity-100 transition-opacity"
-                        data-testid={`remove-visual-${index}`}
-                      >
-                        <X className="w-4 h-4 text-red-500" />
-                      </Button>
-                    </motion.div>
-                  ))}
-                </div>
-
-                <div className="flex gap-2">
-                  <Input
-                    value={newVisual}
-                    onChange={(e) => setNewVisual(e.target.value)}
-                    placeholder="Ej: captura de pantalla, demo del feature..."
-                    onKeyPress={(e) => e.key === "Enter" && handleAddVisual()}
-                    className="flex-1"
-                    data-testid="input-new-visual"
-                  />
-                  <Button
-                    onClick={handleAddVisual}
-                    size="sm"
-                    variant="outline"
-                    data-testid="button-add-visual"
-                  >
-                    <Plus className="w-4 h-4 mr-1" />
-                    Agregar
-                  </Button>
-                </div>
-              </CollapsibleContent>
-            </Collapsible>
+            <div className="border-t border-gray-200 dark:border-gray-700 pt-4">
+              <h3 className="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-4">
+                Estructura del guión
+              </h3>
+              <div className="space-y-4">
+                {sections.map(renderSection)}
+              </div>
+            </div>
 
             {/* Action buttons */}
             <div className="flex gap-3 pt-4 border-t border-gray-200 dark:border-gray-700">

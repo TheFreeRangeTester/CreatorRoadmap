@@ -867,8 +867,15 @@ export class MemStorage implements IStorage {
     return {
       id: template.id,
       ideaId: template.ideaId,
-      pointsToCover: template.pointsToCover || [],
-      visualsNeeded: template.visualsNeeded || [],
+      videoTitle: template.videoTitle || '',
+      thumbnailNotes: template.thumbnailNotes || '',
+      hook: (template.hook as any) || [],
+      teaser: (template.teaser as any) || [],
+      valorAudiencia: (template.valorAudiencia as any) || [],
+      pointsToCover: (template.pointsToCover as any) || [],
+      visualsNeeded: (template.visualsNeeded as any) || [],
+      bonus: (template.bonus as any) || [],
+      outro: (template.outro as any) || [],
       createdAt: template.createdAt,
       updatedAt: template.updatedAt,
     };
@@ -881,8 +888,15 @@ export class MemStorage implements IStorage {
     const template: VideoTemplate = {
       id,
       ideaId: insertTemplate.ideaId,
+      videoTitle: insertTemplate.videoTitle || '',
+      thumbnailNotes: insertTemplate.thumbnailNotes || '',
+      hook: insertTemplate.hook || [],
+      teaser: insertTemplate.teaser || [],
+      valorAudiencia: insertTemplate.valorAudiencia || [],
       pointsToCover: insertTemplate.pointsToCover || [],
       visualsNeeded: insertTemplate.visualsNeeded || [],
+      bonus: insertTemplate.bonus || [],
+      outro: insertTemplate.outro || [],
       createdAt: now,
       updatedAt: now,
     };
@@ -892,8 +906,15 @@ export class MemStorage implements IStorage {
     return {
       id: template.id,
       ideaId: template.ideaId,
-      pointsToCover: template.pointsToCover,
-      visualsNeeded: template.visualsNeeded,
+      videoTitle: template.videoTitle || '',
+      thumbnailNotes: template.thumbnailNotes || '',
+      hook: (template.hook as any) || [],
+      teaser: (template.teaser as any) || [],
+      valorAudiencia: (template.valorAudiencia as any) || [],
+      pointsToCover: (template.pointsToCover as any) || [],
+      visualsNeeded: (template.visualsNeeded as any) || [],
+      bonus: (template.bonus as any) || [],
+      outro: (template.outro as any) || [],
       createdAt: template.createdAt,
       updatedAt: template.updatedAt,
     };
@@ -905,8 +926,15 @@ export class MemStorage implements IStorage {
 
     const updatedTemplate: VideoTemplate = {
       ...template,
-      pointsToCover: updateData.pointsToCover,
-      visualsNeeded: updateData.visualsNeeded,
+      videoTitle: updateData.videoTitle !== undefined ? updateData.videoTitle : template.videoTitle,
+      thumbnailNotes: updateData.thumbnailNotes !== undefined ? updateData.thumbnailNotes : template.thumbnailNotes,
+      hook: updateData.hook !== undefined ? updateData.hook : template.hook,
+      teaser: updateData.teaser !== undefined ? updateData.teaser : template.teaser,
+      valorAudiencia: updateData.valorAudiencia !== undefined ? updateData.valorAudiencia : template.valorAudiencia,
+      pointsToCover: updateData.pointsToCover !== undefined ? updateData.pointsToCover : template.pointsToCover,
+      visualsNeeded: updateData.visualsNeeded !== undefined ? updateData.visualsNeeded : template.visualsNeeded,
+      bonus: updateData.bonus !== undefined ? updateData.bonus : template.bonus,
+      outro: updateData.outro !== undefined ? updateData.outro : template.outro,
       updatedAt: new Date(),
     };
 
@@ -915,8 +943,15 @@ export class MemStorage implements IStorage {
     return {
       id: updatedTemplate.id,
       ideaId: updatedTemplate.ideaId,
-      pointsToCover: updatedTemplate.pointsToCover,
-      visualsNeeded: updatedTemplate.visualsNeeded,
+      videoTitle: updatedTemplate.videoTitle || '',
+      thumbnailNotes: updatedTemplate.thumbnailNotes || '',
+      hook: (updatedTemplate.hook as any) || [],
+      teaser: (updatedTemplate.teaser as any) || [],
+      valorAudiencia: (updatedTemplate.valorAudiencia as any) || [],
+      pointsToCover: (updatedTemplate.pointsToCover as any) || [],
+      visualsNeeded: (updatedTemplate.visualsNeeded as any) || [],
+      bonus: (updatedTemplate.bonus as any) || [],
+      outro: (updatedTemplate.outro as any) || [],
       createdAt: updatedTemplate.createdAt,
       updatedAt: updatedTemplate.updatedAt,
     };
