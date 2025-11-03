@@ -374,7 +374,9 @@
     "createFailed": "Failed to create idea",
     "updated": "Idea updated",
     "updateFailed": "Failed to update idea",
-    "votes": "votes"
+    "votes": "votes",
+    "script": "Script",
+    "openScript": "Open video script"
   },
   "dashboard": {
     "welcome": "Hello",

@@ -273,7 +273,7 @@ export default function IdeaListView({
                 </motion.div>
               )}
 
-              {/* Template Button (for creators) - Enhanced */}
+              {/* Script Button (for creators) - Enhanced */}
               {isCreator && onOpenTemplate && (
                 <motion.div
                   whileHover={{ scale: 1.02 }}
@@ -286,11 +286,11 @@ export default function IdeaListView({
                     size="sm"
                     className="border-2 border-blue-400 dark:border-blue-500 text-blue-600 dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/20 hover:border-blue-500 dark:hover:border-blue-400 font-semibold shadow-sm hover:shadow-md transition-all duration-200"
                     data-testid={`button-template-list-${idea.id}`}
-                    aria-label={t("ideas.template", "Template")}
+                    aria-label={t("ideas.openScript")}
                   >
                     <FileText className="h-4 w-4" />
                     <span className="hidden sm:inline ml-1.5">
-                      {t("ideas.template", "Template")}
+                      {t("ideas.script")}
                     </span>
                   </Button>
                 </motion.div>
