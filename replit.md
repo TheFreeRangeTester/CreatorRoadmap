@@ -10,11 +10,13 @@ Fanlist is a web application designed to empower content creators by enabling th
 - **Multi-Niche Display**: Dashboard shows both top niches in mobile carousel and desktop grid layouts.
 - **Translations**: Updated English and Spanish to reflect plural form ("Top Niches" / "Nichos Principales").
 - **Border Radius Consistency**: Standardized all UI elements to use rounded-md (6px):
+  - Fixed theme.json radius from 8 to 0.375 (which controls global --radius CSS variable)
   - Updated modals from rounded-sm to rounded-md
   - Updated profile pages (profile-page.tsx, dashboard-settings-page.tsx, modern-public-profile.tsx) from rounded-xl/lg to rounded-md
   - Updated idea cards in public profile (idea-card.tsx) from rounded-lg to rounded-md for internal buttons
   - Updated compact idea cards (compact-idea-card.tsx) trend indicator from rounded-lg to rounded-md
   - Buttons already use rounded-md by default
+  - Note: theme.json radius value propagates to all rounded-md classes via CSS variable --radius
 - **Modal Overflow**: Added max-h-[90vh] overflow-y-auto to all major modals for proper scrolling.
 - **Vote Display**: Vote counts already visible in IdeaListView for all ideas in creator dashboard.
 
