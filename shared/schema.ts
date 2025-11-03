@@ -425,8 +425,15 @@ export const templateItemSchema = z.object({
 export const videoTemplates = pgTable("video_templates", {
   id: serial("id").primaryKey(),
   ideaId: integer("idea_id").notNull().references(() => ideas.id, { onDelete: 'cascade' }).unique(),
+  videoTitle: text("video_title").default(''),
+  thumbnailNotes: text("thumbnail_notes").default(''),
+  hook: jsonb("hook").notNull().default([]),
+  teaser: jsonb("teaser").notNull().default([]),
+  valorAudiencia: jsonb("valor_audiencia").notNull().default([]),
   pointsToCover: jsonb("points_to_cover").notNull().default([]),
   visualsNeeded: jsonb("visuals_needed").notNull().default([]),
+  bonus: jsonb("bonus").notNull().default([]),
+  outro: jsonb("outro").notNull().default([]),
   createdAt: timestamp("created_at").notNull().defaultNow(),
   updatedAt: timestamp("updated_at").notNull().defaultNow(),
 });
@@ -434,23 +441,51 @@ export const videoTemplates = pgTable("video_templates", {
 // Video template schemas
 export const insertVideoTemplateSchema = createInsertSchema(videoTemplates).pick({
   ideaId: true,
+  videoTitle: true,
+  thumbnailNotes: true,
+  hook: true,
+  teaser: true,
+  valorAudiencia: true,
   pointsToCover: true,
   visualsNeeded: true,
+  bonus: true,
+  outro: true,
 }).extend({
+  videoTitle: z.string().default(''),
+  thumbnailNotes: z.string().default(''),
+  hook: z.array(templateItemSchema).default([]),
+  teaser: z.array(templateItemSchema).default([]),
+  valorAudiencia: z.array(templateItemSchema).default([]),
   pointsToCover: z.array(templateItemSchema).default([]),
   visualsNeeded: z.array(templateItemSchema).default([]),
+  bonus: z.array(templateItemSchema).default([]),
+  outro: z.array(templateItemSchema).default([]),
 });
 
 export const updateVideoTemplateSchema = z.object({
-  pointsToCover: z.array(templateItemSchema),
-  visualsNeeded: z.array(templateItemSchema),
+  videoTitle: z.string().optional(),
+  thumbnailNotes: z.string().optional(),
+  hook: z.array(templateItemSchema).optional(),
+  teaser: z.array(templateItemSchema).optional(),
+  valorAudiencia: z.array(templateItemSchema).optional(),
+  pointsToCover: z.array(templateItemSchema).optional(),
+  visualsNeeded: z.array(templateItemSchema).optional(),
+  bonus: z.array(templateItemSchema).optional(),
+  outro: z.array(templateItemSchema).optional(),
 });
 
 export const videoTemplateResponseSchema = z.object({
   id: z.number(),
   ideaId: z.number(),
+  videoTitle: z.string(),
+  thumbnailNotes: z.string(),
+  hook: z.array(templateItemSchema),
+  teaser: z.array(templateItemSchema),
+  valorAudiencia: z.array(templateItemSchema),
   pointsToCover: z.array(templateItemSchema),
   visualsNeeded: z.array(templateItemSchema),
+  bonus: z.array(templateItemSchema),
+  outro: z.array(templateItemSchema),
   createdAt: z.date(),
   updatedAt: z.date(),
 });
