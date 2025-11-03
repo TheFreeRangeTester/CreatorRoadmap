@@ -5,13 +5,16 @@ Fanlist is a web application designed to empower content creators by enabling th
 
 ## Recent Changes
 
-### November 3, 2025 - Top Niches Display Enhancement
-- **UI Update**: Changed "Top Niche" to "Top Niches" (plural) throughout the application.
-- **Multi-Niche Display**: Dashboard now displays the top 2 niches with most votes instead of only one.
-- **Mobile Support**: Both mobile carousel and desktop grid layouts updated to show both top niches.
-- **Translations**: Updated English and Spanish translations to reflect plural form ("Top Niches" / "Nichos Principales").
-- **Consistent Styling**: Updated modal border radius from rounded-sm to rounded-md (6px) for subtly softer edges throughout the app.
-- **Improved Overflow**: Added max-h-[90vh] overflow-y-auto to all major modals for better scrolling without content cutoff.
+### November 3, 2025 - UI Consistency and Border Radius Updates
+- **Top Niches Display**: Changed "Top Niche" to "Top Niches" (plural) with top 2 niches shown in dashboard.
+- **Multi-Niche Display**: Dashboard shows both top niches in mobile carousel and desktop grid layouts.
+- **Translations**: Updated English and Spanish to reflect plural form ("Top Niches" / "Nichos Principales").
+- **Border Radius Consistency**: Standardized all UI elements to use rounded-md (6px):
+  - Updated modals from rounded-sm to rounded-md
+  - Updated profile pages (profile-page.tsx, dashboard-settings-page.tsx, modern-public-profile.tsx) from rounded-xl/lg to rounded-md
+  - Buttons already use rounded-md by default
+- **Modal Overflow**: Added max-h-[90vh] overflow-y-auto to all major modals for proper scrolling.
+- **Vote Display**: Vote counts already visible in IdeaListView for all ideas in creator dashboard.
 
 ### November 2, 2025 - Persistent Top Niche Statistics
 - **Database**: Created `niche_stats` table to track historical vote counts by niche and creator.
