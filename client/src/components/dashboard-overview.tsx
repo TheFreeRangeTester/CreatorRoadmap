@@ -206,6 +206,7 @@ export function DashboardOverview({ className }: DashboardOverviewProps) {
     console.log("[DASHBOARD-OVERVIEW] Creator stats being used:", stats);
 
     // Split metrics into regular cards and the Top Niche card
+    // Order: Total Ideas, Total Votes, Pending Redemptions, Pending Suggestions
     const regularMetrics = [
       {
         icon: Lightbulb,
@@ -224,21 +225,6 @@ export function DashboardOverview({ className }: DashboardOverviewProps) {
         bgColor: "bg-green-50 dark:bg-green-900/20",
       },
       {
-        icon: Clock,
-        title: t(
-          "dashboard.overview.pendingSuggestions",
-          "Pending Suggestions"
-        ),
-        value: stats.pendingSuggestions,
-        description: t(
-          "dashboard.overview.pendingSuggestionsDesc",
-          "Esperando aprobación"
-        ),
-        color: "text-orange-600",
-        bgColor: "bg-orange-50 dark:bg-orange-900/20",
-        badge: stats.pendingSuggestions > 0 ? "attention" : undefined,
-      },
-      {
         icon: Gift,
         title: t(
           "dashboard.overview.pendingRedemptions",
@@ -252,6 +238,21 @@ export function DashboardOverview({ className }: DashboardOverviewProps) {
         color: "text-amber-600",
         bgColor: "bg-amber-50 dark:bg-amber-900/20",
         badge: (stats.pendingRedemptions || 0) > 0 ? "attention" : undefined,
+      },
+      {
+        icon: Clock,
+        title: t(
+          "dashboard.overview.pendingSuggestions",
+          "Pending Suggestions"
+        ),
+        value: stats.pendingSuggestions,
+        description: t(
+          "dashboard.overview.pendingSuggestionsDesc",
+          "Esperando aprobación"
+        ),
+        color: "text-orange-600",
+        bgColor: "bg-orange-50 dark:bg-orange-900/20",
+        badge: stats.pendingSuggestions > 0 ? "attention" : undefined,
       },
     ];
 
@@ -342,54 +343,173 @@ export function DashboardOverview({ className }: DashboardOverviewProps) {
           variants={containerVariants}
           initial="hidden"
           animate="visible"
-          className="hidden lg:grid lg:grid-cols-3 lg:grid-rows-2 gap-5"
+          className="hidden lg:grid lg:grid-cols-3 gap-5 auto-rows-fr"
         >
-          {regularMetrics.map((metric, index) => {
-            return (
-              <motion.div
-                key={index}
-                variants={itemVariants}
-                className="col-span-1"
-              >
-                <Card className="bg-white/90 dark:bg-gray-900/90 backdrop-blur-sm border border-gray-200/50 dark:border-gray-700/50 hover:shadow-xl hover:border-gray-300 dark:hover:border-gray-600 transition-all duration-300 h-full flex flex-col">
-                  <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2.5 flex-shrink-0">
-                    <CardTitle className="text-xs font-semibold text-gray-700 dark:text-gray-300 leading-tight">
-                      {metric.title}
-                    </CardTitle>
-                    <div
-                      className={`p-1.5 rounded-md ${metric.bgColor} flex-shrink-0`}
-                    >
-                      <metric.icon className={`h-4 w-4 ${metric.color}`} />
+          {/* Column 1 - Total Ideas */}
+          <motion.div
+            variants={itemVariants}
+            className="col-start-1 row-start-1"
+          >
+            <Card className="bg-white/90 dark:bg-gray-900/90 backdrop-blur-sm border border-gray-200/50 dark:border-gray-700/50 hover:shadow-xl hover:border-gray-300 dark:hover:border-gray-600 transition-all duration-300 h-full flex flex-col">
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2.5 flex-shrink-0">
+                <CardTitle className="text-xs font-semibold text-gray-700 dark:text-gray-300 leading-tight">
+                  {regularMetrics[0].title}
+                </CardTitle>
+                <div
+                  className={`p-1.5 rounded-md ${regularMetrics[0].bgColor} flex-shrink-0`}
+                >
+                  {(() => {
+                    const Icon = regularMetrics[0].icon;
+                    return (
+                      <Icon className={`h-4 w-4 ${regularMetrics[0].color}`} />
+                    );
+                  })()}
+                </div>
+              </CardHeader>
+              <CardContent className="pt-0 pb-4 flex-1 flex flex-col justify-between">
+                <div className="space-y-1.5">
+                  <div className="flex items-baseline gap-2 flex-wrap">
+                    <div className="text-2xl font-bold text-gray-900 dark:text-white leading-tight">
+                      {regularMetrics[0].value.toLocaleString()}
                     </div>
-                  </CardHeader>
-                  <CardContent className="pt-0 pb-4 flex-1 flex flex-col justify-between">
-                    <div className="space-y-1.5">
-                      <div className="flex items-baseline gap-2 flex-wrap">
-                        <div className="text-2xl font-bold text-gray-900 dark:text-white leading-tight">
-                          {(metric.value as number).toLocaleString()}
-                          {(metric as any).suffix}
-                        </div>
-                        {metric.badge === "attention" && (
-                          <Badge
-                            variant="destructive"
-                            className="text-[10px] px-1.5 py-0.5 h-fit"
-                          >
-                            {t("common.attention", "Attention")}
-                          </Badge>
-                        )}
-                      </div>
-                      <p className="text-[11px] text-gray-500 dark:text-gray-400 leading-snug">
-                        {metric.description}
-                      </p>
-                    </div>
-                  </CardContent>
-                </Card>
-              </motion.div>
-            );
-          })}
+                  </div>
+                  <p className="text-[11px] text-gray-500 dark:text-gray-400 leading-snug">
+                    {regularMetrics[0].description}
+                  </p>
+                </div>
+              </CardContent>
+            </Card>
+          </motion.div>
 
-          {/* Top Niches Card - Double height */}
-          <motion.div variants={itemVariants} className="col-span-1 row-span-2">
+          {/* Column 1 - Total Votes */}
+          <motion.div
+            variants={itemVariants}
+            className="col-start-1 row-start-2"
+          >
+            <Card className="bg-white/90 dark:bg-gray-900/90 backdrop-blur-sm border border-gray-200/50 dark:border-gray-700/50 hover:shadow-xl hover:border-gray-300 dark:hover:border-gray-600 transition-all duration-300 h-full flex flex-col">
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2.5 flex-shrink-0">
+                <CardTitle className="text-xs font-semibold text-gray-700 dark:text-gray-300 leading-tight">
+                  {regularMetrics[1].title}
+                </CardTitle>
+                <div
+                  className={`p-1.5 rounded-md ${regularMetrics[1].bgColor} flex-shrink-0`}
+                >
+                  {(() => {
+                    const Icon = regularMetrics[1].icon;
+                    return (
+                      <Icon className={`h-4 w-4 ${regularMetrics[1].color}`} />
+                    );
+                  })()}
+                </div>
+              </CardHeader>
+              <CardContent className="pt-0 pb-4 flex-1 flex flex-col justify-between">
+                <div className="space-y-1.5">
+                  <div className="flex items-baseline gap-2 flex-wrap">
+                    <div className="text-2xl font-bold text-gray-900 dark:text-white leading-tight">
+                      {regularMetrics[1].value.toLocaleString()}
+                    </div>
+                  </div>
+                  <p className="text-[11px] text-gray-500 dark:text-gray-400 leading-snug">
+                    {regularMetrics[1].description}
+                  </p>
+                </div>
+              </CardContent>
+            </Card>
+          </motion.div>
+
+          {/* Column 2 - Pending Redemptions */}
+          <motion.div
+            variants={itemVariants}
+            className="col-start-2 row-start-1"
+          >
+            <Card className="bg-white/90 dark:bg-gray-900/90 backdrop-blur-sm border border-gray-200/50 dark:border-gray-700/50 hover:shadow-xl hover:border-gray-300 dark:hover:border-gray-600 transition-all duration-300 h-full flex flex-col">
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2.5 flex-shrink-0">
+                <CardTitle className="text-xs font-semibold text-gray-700 dark:text-gray-300 leading-tight">
+                  {regularMetrics[2].title}
+                </CardTitle>
+                <div
+                  className={`p-1.5 rounded-md ${regularMetrics[2].bgColor} flex-shrink-0`}
+                >
+                  {(() => {
+                    const Icon = regularMetrics[2].icon;
+                    return (
+                      <Icon className={`h-4 w-4 ${regularMetrics[2].color}`} />
+                    );
+                  })()}
+                </div>
+              </CardHeader>
+              <CardContent className="pt-0 pb-4 flex-1 flex flex-col justify-between">
+                <div className="space-y-1.5">
+                  <div className="flex items-baseline gap-2 flex-wrap">
+                    <div className="text-2xl font-bold text-gray-900 dark:text-white leading-tight">
+                      {regularMetrics[2].value.toLocaleString()}
+                    </div>
+                    {regularMetrics[2].badge === "attention" && (
+                      <Badge
+                        variant="destructive"
+                        className="text-[10px] px-1.5 py-0.5 h-fit"
+                      >
+                        {t("common.attention", "Attention")}
+                      </Badge>
+                    )}
+                  </div>
+                  <p className="text-[11px] text-gray-500 dark:text-gray-400 leading-snug">
+                    {regularMetrics[2].description}
+                  </p>
+                </div>
+              </CardContent>
+            </Card>
+          </motion.div>
+
+          {/* Column 2 - Pending Suggestions */}
+          <motion.div
+            variants={itemVariants}
+            className="col-start-2 row-start-2"
+          >
+            <Card className="bg-white/90 dark:bg-gray-900/90 backdrop-blur-sm border border-gray-200/50 dark:border-gray-700/50 hover:shadow-xl hover:border-gray-300 dark:hover:border-gray-600 transition-all duration-300 h-full flex flex-col">
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2.5 flex-shrink-0">
+                <CardTitle className="text-xs font-semibold text-gray-700 dark:text-gray-300 leading-tight">
+                  {regularMetrics[3].title}
+                </CardTitle>
+                <div
+                  className={`p-1.5 rounded-md ${regularMetrics[3].bgColor} flex-shrink-0`}
+                >
+                  {(() => {
+                    const Icon = regularMetrics[3].icon;
+                    return (
+                      <Icon className={`h-4 w-4 ${regularMetrics[3].color}`} />
+                    );
+                  })()}
+                </div>
+              </CardHeader>
+              <CardContent className="pt-0 pb-4 flex-1 flex flex-col justify-between">
+                <div className="space-y-1.5">
+                  <div className="flex items-baseline gap-2 flex-wrap">
+                    <div className="text-2xl font-bold text-gray-900 dark:text-white leading-tight">
+                      {regularMetrics[3].value.toLocaleString()}
+                    </div>
+                    {regularMetrics[3].badge === "attention" && (
+                      <Badge
+                        variant="destructive"
+                        className="text-[10px] px-1.5 py-0.5 h-fit"
+                      >
+                        {t("common.attention", "Attention")}
+                      </Badge>
+                    )}
+                  </div>
+                  <p className="text-[11px] text-gray-500 dark:text-gray-400 leading-snug">
+                    {regularMetrics[3].description}
+                  </p>
+                </div>
+              </CardContent>
+            </Card>
+          </motion.div>
+
+          {/* Column 3 - Top Niches Card - Double height */}
+          <motion.div
+            variants={itemVariants}
+            className="col-start-3 row-start-1 row-span-2"
+          >
             <Card className="bg-white/90 dark:bg-gray-900/90 backdrop-blur-sm border border-gray-200/50 dark:border-gray-700/50 hover:shadow-xl hover:border-gray-300 dark:hover:border-gray-600 transition-all duration-300 h-full flex flex-col">
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3 flex-shrink-0">
                 <CardTitle className="text-sm font-semibold text-gray-700 dark:text-gray-300 leading-tight">
