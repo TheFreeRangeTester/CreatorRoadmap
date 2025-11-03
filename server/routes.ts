@@ -303,6 +303,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const pendingRedemptions = pendingRedemptionsResult.total;
 
       console.log(`[DASHBOARD-STATS] User ${req.user.id}: ${ideas.length} total ideas, ${publishedIdeas.length} published, ${pendingIdeas.length} pending, ${totalVotes} total votes, top niche: ${topNiche?.name || 'none'} with ${topNiche?.votes || 0} votes, ${pendingRedemptions} pending redemptions`);
+      console.log(`[DASHBOARD-STATS] Top Niches received:`, topNiches);
 
       const stats = {
         totalIdeas: publishedIdeas.length,

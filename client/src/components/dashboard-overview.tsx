@@ -158,7 +158,7 @@ export function DashboardOverview({ className }: DashboardOverviewProps) {
           {Array.from({ length: 5 }).map((_, index) => (
             <Card
               key={index}
-              className="bg-white/90 dark:bg-gray-900/90 backdrop-blur-sm border border-gray-200/50 dark:border-gray-700/50 min-w-[85%] snap-center"
+              className="rounded-none bg-white/90 dark:bg-gray-900/90 backdrop-blur-sm border border-gray-200/50 dark:border-gray-700/50 min-w-[85%] snap-center"
             >
               <CardHeader className="pb-3">
                 <Skeleton className="h-4 w-24" />
@@ -176,7 +176,7 @@ export function DashboardOverview({ className }: DashboardOverviewProps) {
           {Array.from({ length: 5 }).map((_, index) => (
             <Card
               key={index}
-              className="bg-white/90 dark:bg-gray-900/90 backdrop-blur-sm border border-gray-200/50 dark:border-gray-700/50"
+              className="rounded-none bg-white/90 dark:bg-gray-900/90 backdrop-blur-sm border border-gray-200/50 dark:border-gray-700/50"
             >
               <CardHeader className="pb-3">
                 <Skeleton className="h-4 w-24" />
@@ -292,7 +292,7 @@ export function DashboardOverview({ className }: DashboardOverviewProps) {
               transition={{ delay: index * 0.1 }}
               className="min-w-[85%] snap-center"
             >
-              <Card className="bg-white/90 dark:bg-gray-900/90 backdrop-blur-sm border border-gray-200/50 dark:border-gray-700/50 shadow-lg h-full">
+              <Card className="rounded-none bg-white/90 dark:bg-gray-900/90 backdrop-blur-sm border border-gray-200/50 dark:border-gray-700/50 shadow-lg h-full">
                 <CardHeader className="flex flex-col items-center justify-center space-y-3 pb-4">
                   <div className={`p-3 rounded-md ${metric.bgColor}`}>
                     <metric.icon className={`h-7 w-7 ${metric.color}`} />
@@ -350,7 +350,7 @@ export function DashboardOverview({ className }: DashboardOverviewProps) {
             variants={itemVariants}
             className="col-start-1 row-start-1"
           >
-            <Card className="bg-white/90 dark:bg-gray-900/90 backdrop-blur-sm border border-gray-200/50 dark:border-gray-700/50 hover:shadow-xl hover:border-gray-300 dark:hover:border-gray-600 transition-all duration-300 h-full flex flex-col">
+            <Card className="rounded-none bg-white/90 dark:bg-gray-900/90 backdrop-blur-sm border border-gray-200/50 dark:border-gray-700/50 hover:shadow-xl hover:border-gray-300 dark:hover:border-gray-600 transition-all duration-300 h-full flex flex-col">
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2.5 flex-shrink-0">
                 <CardTitle className="text-xs font-semibold text-gray-700 dark:text-gray-300 leading-tight">
                   {regularMetrics[0].title}
@@ -386,7 +386,7 @@ export function DashboardOverview({ className }: DashboardOverviewProps) {
             variants={itemVariants}
             className="col-start-1 row-start-2"
           >
-            <Card className="bg-white/90 dark:bg-gray-900/90 backdrop-blur-sm border border-gray-200/50 dark:border-gray-700/50 hover:shadow-xl hover:border-gray-300 dark:hover:border-gray-600 transition-all duration-300 h-full flex flex-col">
+            <Card className="rounded-none bg-white/90 dark:bg-gray-900/90 backdrop-blur-sm border border-gray-200/50 dark:border-gray-700/50 hover:shadow-xl hover:border-gray-300 dark:hover:border-gray-600 transition-all duration-300 h-full flex flex-col">
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2.5 flex-shrink-0">
                 <CardTitle className="text-xs font-semibold text-gray-700 dark:text-gray-300 leading-tight">
                   {regularMetrics[1].title}
@@ -422,7 +422,7 @@ export function DashboardOverview({ className }: DashboardOverviewProps) {
             variants={itemVariants}
             className="col-start-2 row-start-1"
           >
-            <Card className="bg-white/90 dark:bg-gray-900/90 backdrop-blur-sm border border-gray-200/50 dark:border-gray-700/50 hover:shadow-xl hover:border-gray-300 dark:hover:border-gray-600 transition-all duration-300 h-full flex flex-col">
+            <Card className="rounded-none bg-white/90 dark:bg-gray-900/90 backdrop-blur-sm border border-gray-200/50 dark:border-gray-700/50 hover:shadow-xl hover:border-gray-300 dark:hover:border-gray-600 transition-all duration-300 h-full flex flex-col">
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2.5 flex-shrink-0">
                 <CardTitle className="text-xs font-semibold text-gray-700 dark:text-gray-300 leading-tight">
                   {regularMetrics[2].title}
@@ -466,7 +466,7 @@ export function DashboardOverview({ className }: DashboardOverviewProps) {
             variants={itemVariants}
             className="col-start-2 row-start-2"
           >
-            <Card className="bg-white/90 dark:bg-gray-900/90 backdrop-blur-sm border border-gray-200/50 dark:border-gray-700/50 hover:shadow-xl hover:border-gray-300 dark:hover:border-gray-600 transition-all duration-300 h-full flex flex-col">
+            <Card className="rounded-none bg-white/90 dark:bg-gray-900/90 backdrop-blur-sm border border-gray-200/50 dark:border-gray-700/50 hover:shadow-xl hover:border-gray-300 dark:hover:border-gray-600 transition-all duration-300 h-full flex flex-col">
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2.5 flex-shrink-0">
                 <CardTitle className="text-xs font-semibold text-gray-700 dark:text-gray-300 leading-tight">
                   {regularMetrics[3].title}
@@ -510,7 +510,7 @@ export function DashboardOverview({ className }: DashboardOverviewProps) {
             variants={itemVariants}
             className="col-start-3 row-start-1 row-span-2"
           >
-            <Card className="bg-white/90 dark:bg-gray-900/90 backdrop-blur-sm border border-gray-200/50 dark:border-gray-700/50 hover:shadow-xl hover:border-gray-300 dark:hover:border-gray-600 transition-all duration-300 h-full flex flex-col">
+            <Card className="rounded-none bg-white/90 dark:bg-gray-900/90 backdrop-blur-sm border border-gray-200/50 dark:border-gray-700/50 hover:shadow-xl hover:border-gray-300 dark:hover:border-gray-600 transition-all duration-300 h-full flex flex-col">
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3 flex-shrink-0">
                 <CardTitle className="text-sm font-semibold text-gray-700 dark:text-gray-300 leading-tight">
                   {topNichesMetric.title}
@@ -636,7 +636,7 @@ export function DashboardOverview({ className }: DashboardOverviewProps) {
               transition={{ delay: index * 0.1 }}
               className="min-w-[85%] snap-center"
             >
-              <Card className="bg-white/90 dark:bg-gray-900/90 backdrop-blur-sm border border-gray-200/50 dark:border-gray-700/50 shadow-lg h-full">
+              <Card className="rounded-none bg-white/90 dark:bg-gray-900/90 backdrop-blur-sm border border-gray-200/50 dark:border-gray-700/50 shadow-lg h-full">
                 <CardHeader className="flex flex-col items-center justify-center space-y-3 pb-4">
                   <div className={`p-3 rounded-md ${metric.bgColor}`}>
                     <metric.icon className={`h-7 w-7 ${metric.color}`} />
@@ -668,7 +668,7 @@ export function DashboardOverview({ className }: DashboardOverviewProps) {
         >
           {audienceMetrics.map((metric, index) => (
             <motion.div key={index} variants={itemVariants}>
-              <Card className="bg-white/90 dark:bg-gray-900/90 backdrop-blur-sm border border-gray-200/50 dark:border-gray-700/50 hover:shadow-lg transition-all duration-300">
+              <Card className="rounded-none bg-white/90 dark:bg-gray-900/90 backdrop-blur-sm border border-gray-200/50 dark:border-gray-700/50 hover:shadow-lg transition-all duration-300">
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3">
                   <CardTitle className="text-sm font-medium text-gray-600 dark:text-gray-400">
                     {metric.title}
