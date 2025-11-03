@@ -159,7 +159,7 @@ export function CompactIdeaCard({
 
             {/* Trend indicator */}
             <motion.div
-              className="flex items-center justify-center w-6 h-6 rounded-lg bg-gray-100 dark:bg-gray-800"
+              className="flex items-center justify-center w-6 h-6 rounded-md bg-gray-100 dark:bg-gray-800"
               whileHover={{ scale: 1.1 }}
             >
               {getTrendIcon()}

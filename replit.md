@@ -13,6 +13,7 @@ Fanlist is a web application designed to empower content creators by enabling th
   - Updated modals from rounded-sm to rounded-md
   - Updated profile pages (profile-page.tsx, dashboard-settings-page.tsx, modern-public-profile.tsx) from rounded-xl/lg to rounded-md
   - Updated idea cards in public profile (idea-card.tsx) from rounded-lg to rounded-md for internal buttons
+  - Updated compact idea cards (compact-idea-card.tsx) trend indicator from rounded-lg to rounded-md
   - Buttons already use rounded-md by default
 - **Modal Overflow**: Added max-h-[90vh] overflow-y-auto to all major modals for proper scrolling.
 - **Vote Display**: Vote counts already visible in IdeaListView for all ideas in creator dashboard.
