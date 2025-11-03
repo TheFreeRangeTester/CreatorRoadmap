@@ -5,6 +5,14 @@ Fanlist is a web application designed to empower content creators by enabling th
 
 ## Recent Changes
 
+### November 3, 2025 - Top Niches Display Enhancement
+- **UI Update**: Changed "Top Niche" to "Top Niches" (plural) throughout the application.
+- **Multi-Niche Display**: Dashboard now displays the top 2 niches with most votes instead of only one.
+- **Mobile Support**: Both mobile carousel and desktop grid layouts updated to show both top niches.
+- **Translations**: Updated English and Spanish translations to reflect plural form ("Top Niches" / "Nichos Principales").
+- **Consistent Styling**: Updated modal border radius from rounded-sm to rounded-md (6px) for subtly softer edges throughout the app.
+- **Improved Overflow**: Added max-h-[90vh] overflow-y-auto to all major modals for better scrolling without content cutoff.
+
 ### November 2, 2025 - Persistent Top Niche Statistics
 - **Database**: Created `niche_stats` table to track historical vote counts by niche and creator.
 - **Persistent Tracking**: Top Niche metric now shows all-time statistics instead of only current published ideas.

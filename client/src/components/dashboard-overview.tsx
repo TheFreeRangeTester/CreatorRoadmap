@@ -305,14 +305,25 @@ export function DashboardOverview({ className }: DashboardOverviewProps) {
                   <div className="flex flex-col items-center justify-center mb-2">
                     <div className="text-4xl font-bold text-gray-900 dark:text-white mb-1">
                       {(metric as any).isText ? (
-                        <div className="flex flex-col items-center">
-                          <span className="text-2xl capitalize">
-                            {metric.value}
-                          </span>
-                          {(metric as any).votes !== undefined && (
-                            <span className="text-sm font-normal text-gray-500 dark:text-gray-400 mt-1">
-                              {(metric as any).votes}{" "}
-                              {t("ideas.votes", "votes")}
+                        <div className="flex flex-col items-center space-y-3 w-full">
+                          {(metric as any).topNiches &&
+                          (metric as any).topNiches.length > 0 ? (
+                            (metric as any).topNiches.map((niche: any, idx: number) => (
+                              <div
+                                key={idx}
+                                className="flex flex-col items-center space-y-1"
+                              >
+                                <span className="text-2xl capitalize">
+                                  {niche.name}
+                                </span>
+                                <span className="text-sm font-normal text-gray-500 dark:text-gray-400">
+                                  {niche.votes} {t("ideas.votes", "votes")}
+                                </span>
+                              </div>
+                            ))
+                          ) : (
+                            <span className="text-2xl capitalize">
+                              {metric.value}
                             </span>
                           )}
                         </div>
