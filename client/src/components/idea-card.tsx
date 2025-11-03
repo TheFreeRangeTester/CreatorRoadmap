@@ -273,7 +273,7 @@ export default function IdeaCard({
                     variants={buttonVariants}
                     whileHover="hover"
                     whileTap="tap"
-                    className={`flex items-center px-4 py-2 rounded-lg border transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:ring-offset-1 dark:focus:ring-offset-gray-800 min-w-[80px] text-xs sm:text-sm font-medium ${
+                    className={`flex items-center px-4 py-2 rounded-md border transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:ring-offset-1 dark:focus:ring-offset-gray-800 min-w-[80px] text-xs sm:text-sm font-medium ${
                       hasVoted
                         ? "bg-gray-100 dark:bg-gray-700 border-gray-300 dark:border-gray-600 text-gray-500 dark:text-gray-400 cursor-not-allowed"
                         : "bg-blue-50 dark:bg-blue-900/20 border-blue-200 dark:border-blue-800 text-blue-700 dark:text-blue-300 hover:bg-blue-100 dark:hover:bg-blue-900/30 hover:border-blue-300 dark:hover:border-blue-700"
@@ -317,7 +317,7 @@ export default function IdeaCard({
                     variants={buttonVariants}
                     whileHover="hover"
                     whileTap="tap"
-                    className="flex items-center px-4 py-2 rounded-lg border border-blue-200 dark:border-blue-800 bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-300 hover:bg-blue-100 dark:hover:bg-blue-900/30 hover:border-blue-300 dark:hover:border-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:ring-offset-1 dark:focus:ring-offset-gray-800 min-w-[100px] text-xs sm:text-sm font-medium transition-all duration-200"
+                    className="flex items-center px-4 py-2 rounded-md border border-blue-200 dark:border-blue-800 bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-300 hover:bg-blue-100 dark:hover:bg-blue-900/30 hover:border-blue-300 dark:hover:border-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:ring-offset-1 dark:focus:ring-offset-gray-800 min-w-[100px] text-xs sm:text-sm font-medium transition-all duration-200"
                     onClick={() => {
                       // Store the current page for redirect after login
                       localStorage.setItem(
