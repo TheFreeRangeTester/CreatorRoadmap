@@ -374,7 +374,9 @@
     "createFailed": "Failed to create idea",
     "updated": "Idea updated",
     "updateFailed": "Failed to update idea",
-    "votes": "votes"
+    "votes": "votes",
+    "script": "Script",
+    "openScript": "Open video script"
   },
   "dashboard": {
     "welcome": "Hello",
@@ -717,6 +719,43 @@
     "needPointsToSuggest": "You need 3 points to suggest an idea. Vote for ideas to earn points!",
     "needMorePoints": "Need 3 points",
     "availableForSuggestions": "Available for suggestions"
+  },
+  "videoScript": {
+    "title": "Complete Video Script",
+    "description": "Plan all the details of your video before producing it",
+    "videoIdea": "Video idea",
+    "videoTitle": "Video title",
+    "videoTitlePlaceholder": "E.g: How to create an AI in 10 minutes | Complete tutorial",
+    "thumbnailNotes": "Thumbnail (what it should have)",
+    "thumbnailNotesPlaceholder": "E.g: Blue-purple gradient background, large text 'AI IN 10 MIN', my photo with surprised expression...",
+    "scriptStructure": "Script structure",
+    "sections": {
+      "hook": "HOOK",
+      "hookPlaceholder": "E.g: intriguing question, surprising fact...",
+      "teaser": "TEASER",
+      "teaserPlaceholder": "E.g: preview of main content...",
+      "valueForAudience": "VALUE FOR AUDIENCE",
+      "valueForAudiencePlaceholder": "E.g: they will learn to..., it will help them with...",
+      "pointsToCover": "POINTS TO COVER",
+      "pointsToCoverPlaceholder": "Add point to cover...",
+      "visualsNeeded": "VISUALS NEEDED",
+      "visualsNeededPlaceholder": "E.g: screenshot, feature demo...",
+      "bonus": "BONUS / EXTRA",
+      "bonusPlaceholder": "E.g: additional tip, downloadable resource...",
+      "outro": "OUTRO / CTA",
+      "outroPlaceholder": "E.g: call to action, invitation to subscribe..."
+    },
+    "add": "Add",
+    "save": "Save",
+    "saving": "Saving...",
+    "exportMD": "Export MD",
+    "close": "Close",
+    "saveSuccess": "Script saved",
+    "saveSuccessDesc": "Your planning script has been saved successfully.",
+    "saveError": "Error",
+    "saveErrorDesc": "Could not save the script.",
+    "exportSuccess": "Exported",
+    "exportSuccessDesc": "Script exported as Markdown."
   },
   "suggestionForm": {
     "title": "Suggest Idea",

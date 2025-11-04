@@ -5,6 +5,12 @@ Fanlist is a web application designed to empower content creators by enabling th
 
 ## Recent Changes
 
+### November 4, 2025 - Video Script Persistence and i18n
+- **Critical Bug Fix**: Fixed `updateVideoTemplate` in database-storage.ts to persist ALL video script fields. Previously only saved pointsToCover and visualsNeeded, causing data loss for videoTitle, thumbnailNotes, hook, teaser, valorAudiencia, bonus, and outro.
+- **Internationalization**: Added comprehensive i18n support for video script modal in English and Spanish.
+- **Terminology Update**: Changed all references from "template" to "script" (English) and "guión" (Spanish) throughout the UI for clearer user communication.
+- **UX Improvement**: Video script modal no longer auto-closes after saving, allowing creators to continue editing.
+
 ### November 3, 2025 - UI Consistency and Border Radius Updates
 - **Top Niches Display**: Changed "Top Niche" to "Top Niches" (plural) with top 2 niches shown in dashboard.
 - **Multi-Niche Display**: Dashboard shows both top niches in mobile carousel and desktop grid layouts.

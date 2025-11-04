@@ -376,7 +376,9 @@
     "createFailed": "Error al crear idea",
     "updated": "Idea actualizada",
     "updateFailed": "Error al actualizar idea",
-    "votes": "votos"
+    "votes": "votos",
+    "script": "Guión",
+    "openScript": "Abrir guión de video"
   },
   "dashboard": {
     "welcome": "Hola",
@@ -704,6 +706,43 @@
     "title": "Límite de ideas alcanzado",
     "description": "Tienes {{count}} ideas creadas. El límite para usuarios gratuitos es de {{limit}} ideas. ¡Actualiza a premium para crear ideas ilimitadas!",
     "upgradeButton": "Actualizar a Premium"
+  },
+  "videoScript": {
+    "title": "Guión Completo de Video",
+    "description": "Planifica todos los detalles de tu video antes de producirlo",
+    "videoIdea": "Idea del video",
+    "videoTitle": "Título del video",
+    "videoTitlePlaceholder": "Ej: Cómo crear una IA en 10 minutos | Tutorial completo",
+    "thumbnailNotes": "Miniatura (qué debería tener)",
+    "thumbnailNotesPlaceholder": "Ej: Fondo con gradiente azul-morado, texto grande 'IA EN 10 MIN', mi foto con expresión sorprendida...",
+    "scriptStructure": "Estructura del guión",
+    "sections": {
+      "hook": "HOOK",
+      "hookPlaceholder": "Ej: pregunta intrigante, dato sorprendente...",
+      "teaser": "TEASER",
+      "teaserPlaceholder": "Ej: adelanto del contenido principal...",
+      "valueForAudience": "VALOR PARA AUDIENCIA",
+      "valueForAudiencePlaceholder": "Ej: aprenderán a..., les ayudará con...",
+      "pointsToCover": "PUNTOS A CUBRIR",
+      "pointsToCoverPlaceholder": "Agregar punto a cubrir...",
+      "visualsNeeded": "VISUALES NECESARIOS",
+      "visualsNeededPlaceholder": "Ej: captura de pantalla, demo del feature...",
+      "bonus": "BONUS / EXTRA",
+      "bonusPlaceholder": "Ej: tip adicional, recurso descargable...",
+      "outro": "OUTRO / CTA",
+      "outroPlaceholder": "Ej: llamado a la acción, invitación a suscribirse..."
+    },
+    "add": "Agregar",
+    "save": "Guardar",
+    "saving": "Guardando...",
+    "exportMD": "Exportar MD",
+    "close": "Cerrar",
+    "saveSuccess": "Guión guardado",
+    "saveSuccessDesc": "Tu guión de planificación ha sido guardado exitosamente.",
+    "saveError": "Error",
+    "saveErrorDesc": "No se pudo guardar el guión.",
+    "exportSuccess": "Exportado",
+    "exportSuccessDesc": "Guión exportado como Markdown."
   },
   "points": {
     "title": "Puntos",

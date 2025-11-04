@@ -367,7 +367,7 @@ export default function IdeaCard({
               </motion.span>
             </div>
 
-            {/* Edit, Delete, and Template actions for creators */}
+            {/* Edit, Delete, and Script actions for creators */}
             {(onEdit || onDelete || onOpenTemplate) && (
               <div className="flex space-x-2 justify-center">
                 {onOpenTemplate && (
@@ -376,7 +376,7 @@ export default function IdeaCard({
                     whileTap={{ scale: 0.9 }}
                     onClick={() => onOpenTemplate(idea)}
                     className="p-2 text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 rounded-md hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-all duration-200"
-                    aria-label="Open video template"
+                    aria-label={t("ideas.openScript")}
                     data-testid={`button-template-${idea.id}`}
                   >
                     <FileText className="w-4 h-4 sm:w-5 sm:h-5" />

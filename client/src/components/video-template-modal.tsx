@@ -34,6 +34,7 @@ import {
   Video,
   Image,
 } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 // Template item type
 type TemplateItem = {
@@ -50,20 +51,10 @@ interface VideoTemplateModalProps {
 // Section configuration for reusable collapsible sections
 interface Section {
   key: string;
-  label: string;
+  labelKey: string;
+  placeholderKey: string;
   icon: typeof Eye;
-  placeholder: string;
 }
-
-const sections: Section[] = [
-  { key: "hook", label: "HOOK", icon: Eye, placeholder: "Ej: pregunta intrigante, dato sorprendente..." },
-  { key: "teaser", label: "TEASER", icon: Eye, placeholder: "Ej: adelanto del contenido principal..." },
-  { key: "valorAudiencia", label: "VALOR PARA AUDIENCIA", icon: Eye, placeholder: "Ej: aprenderán a..., les ayudará con..." },
-  { key: "pointsToCover", label: "PUNTOS A CUBRIR", icon: Eye, placeholder: "Agregar punto a cubrir..." },
-  { key: "visualsNeeded", label: "VISUALES NECESARIOS", icon: Eye, placeholder: "Ej: captura de pantalla, demo del feature..." },
-  { key: "bonus", label: "BONUS / EXTRA", icon: Eye, placeholder: "Ej: tip adicional, recurso descargable..." },
-  { key: "outro", label: "OUTRO / CTA", icon: Eye, placeholder: "Ej: llamado a la acción, invitación a suscribirse..." },
-];
 
 export default function VideoTemplateModal({
   isOpen,
@@ -72,6 +63,18 @@ export default function VideoTemplateModal({
 }: VideoTemplateModalProps) {
   const { toast } = useToast();
   const queryClient = useQueryClient();
+  const { t } = useTranslation();
+
+  // Define sections with translation keys
+  const sections: Section[] = [
+    { key: "hook", labelKey: "videoScript.sections.hook", placeholderKey: "videoScript.sections.hookPlaceholder", icon: Eye },
+    { key: "teaser", labelKey: "videoScript.sections.teaser", placeholderKey: "videoScript.sections.teaserPlaceholder", icon: Eye },
+    { key: "valorAudiencia", labelKey: "videoScript.sections.valueForAudience", placeholderKey: "videoScript.sections.valueForAudiencePlaceholder", icon: Eye },
+    { key: "pointsToCover", labelKey: "videoScript.sections.pointsToCover", placeholderKey: "videoScript.sections.pointsToCoverPlaceholder", icon: Eye },
+    { key: "visualsNeeded", labelKey: "videoScript.sections.visualsNeeded", placeholderKey: "videoScript.sections.visualsNeededPlaceholder", icon: Eye },
+    { key: "bonus", labelKey: "videoScript.sections.bonus", placeholderKey: "videoScript.sections.bonusPlaceholder", icon: Eye },
+    { key: "outro", labelKey: "videoScript.sections.outro", placeholderKey: "videoScript.sections.outroPlaceholder", icon: Eye },
+  ];
 
   // Text fields
   const [videoTitle, setVideoTitle] = useState("");
@@ -183,18 +186,19 @@ export default function VideoTemplateModal({
         });
       }
     },
-    onSuccess: () => {
+    onSuccess: async () => {
       toast({
-        title: "Template guardado",
-        description: "Tu plantilla de planificación ha sido guardada exitosamente.",
+        title: t("videoScript.saveSuccess"),
+        description: t("videoScript.saveSuccessDesc"),
       });
-      queryClient.invalidateQueries({ queryKey: [`/api/video-templates/${idea.id}`] });
-      onClose();
+      // Invalidate and refetch the query to ensure fresh data
+      await queryClient.invalidateQueries({ queryKey: [`/api/video-templates/${idea.id}`] });
+      await queryClient.refetchQueries({ queryKey: [`/api/video-templates/${idea.id}`] });
     },
     onError: (error: Error) => {
       toast({
-        title: "Error",
-        description: error.message || "No se pudo guardar el template.",
+        title: t("videoScript.saveError"),
+        description: error.message || t("videoScript.saveErrorDesc"),
         variant: "destructive",
       });
     },
@@ -260,8 +264,8 @@ ${outro.length > 0 ? `## OUTRO / CTA\n${formatItems(outro)}\n` : ''}
     URL.revokeObjectURL(url);
 
     toast({
-      title: "Exportado",
-      description: "Template exportado como Markdown.",
+      title: t("videoScript.exportSuccess"),
+      description: t("videoScript.exportSuccessDesc"),
     });
   };
 
@@ -284,7 +288,7 @@ ${outro.length > 0 ? `## OUTRO / CTA\n${formatItems(outro)}\n` : ''}
           >
             <span className="font-semibold flex items-center gap-2">
               <Icon className="w-4 h-4" />
-              {section.label} ({items.length})
+              {t(section.labelKey)} ({items.length})
             </span>
             {isOpen ? (
               <ChevronUp className="w-4 h-4" />
@@ -334,7 +338,7 @@ ${outro.length > 0 ? `## OUTRO / CTA\n${formatItems(outro)}\n` : ''}
             <Input
               value={newInputs[section.key]}
               onChange={(e) => setNewInputs({ ...newInputs, [section.key]: e.target.value })}
-              placeholder={section.placeholder}
+              placeholder={t(section.placeholderKey)}
               onKeyPress={(e) => e.key === "Enter" && handleAddItem(section.key)}
               className="flex-1"
               data-testid={`input-new-${section.key}`}
@@ -346,7 +350,7 @@ ${outro.length > 0 ? `## OUTRO / CTA\n${formatItems(outro)}\n` : ''}
               data-testid={`button-add-${section.key}`}
             >
               <Plus className="w-4 h-4 mr-1" />
-              Agregar
+              {t("videoScript.add")}
             </Button>
           </div>
         </CollapsibleContent>
@@ -360,10 +364,10 @@ ${outro.length > 0 ? `## OUTRO / CTA\n${formatItems(outro)}\n` : ''}
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2 text-2xl">
             <FileText className="w-6 h-6 text-primary" />
-            Guión Completo de Video
+            {t("videoScript.title")}
           </DialogTitle>
           <DialogDescription>
-            Planifica todos los detalles de tu video antes de producirlo
+            {t("videoScript.description")}
           </DialogDescription>
         </DialogHeader>
 
@@ -376,7 +380,7 @@ ${outro.length > 0 ? `## OUTRO / CTA\n${formatItems(outro)}\n` : ''}
             {/* Idea del video (prellenado) */}
             <div className="space-y-2">
               <Label className="text-sm font-semibold text-gray-700 dark:text-gray-300">
-                Idea del video
+                {t("videoScript.videoIdea")}
               </Label>
               <div className="p-4 bg-gray-50 dark:bg-gray-800 rounded-md border border-gray-200 dark:border-gray-700">
                 <h3 className="font-semibold text-lg text-gray-900 dark:text-white mb-2">
@@ -392,13 +396,13 @@ ${outro.length > 0 ? `## OUTRO / CTA\n${formatItems(outro)}\n` : ''}
             <div className="space-y-2">
               <Label htmlFor="video-title" className="text-sm font-semibold text-gray-700 dark:text-gray-300 flex items-center gap-2">
                 <Video className="w-4 h-4" />
-                Título del video
+                {t("videoScript.videoTitle")}
               </Label>
               <Input
                 id="video-title"
                 value={videoTitle}
                 onChange={(e) => setVideoTitle(e.target.value)}
-                placeholder="Ej: Cómo crear una IA en 10 minutos | Tutorial completo"
+                placeholder={t("videoScript.videoTitlePlaceholder")}
                 className="w-full"
                 data-testid="input-video-title"
               />
@@ -408,13 +412,13 @@ ${outro.length > 0 ? `## OUTRO / CTA\n${formatItems(outro)}\n` : ''}
             <div className="space-y-2">
               <Label htmlFor="thumbnail-notes" className="text-sm font-semibold text-gray-700 dark:text-gray-300 flex items-center gap-2">
                 <Image className="w-4 h-4" />
-                Miniatura (qué debería tener)
+                {t("videoScript.thumbnailNotes")}
               </Label>
               <Textarea
                 id="thumbnail-notes"
                 value={thumbnailNotes}
                 onChange={(e) => setThumbnailNotes(e.target.value)}
-                placeholder="Ej: Fondo con gradiente azul-morado, texto grande 'IA EN 10 MIN', mi foto con expresión sorprendida..."
+                placeholder={t("videoScript.thumbnailNotesPlaceholder")}
                 className="w-full min-h-[80px]"
                 data-testid="input-thumbnail-notes"
               />
@@ -422,7 +426,7 @@ ${outro.length > 0 ? `## OUTRO / CTA\n${formatItems(outro)}\n` : ''}
 
             <div className="border-t border-gray-200 dark:border-gray-700 pt-4">
               <h3 className="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-4">
-                Estructura del guión
+                {t("videoScript.scriptStructure")}
               </h3>
               <div className="space-y-4">
                 {sections.map(renderSection)}
@@ -440,12 +444,12 @@ ${outro.length > 0 ? `## OUTRO / CTA\n${formatItems(outro)}\n` : ''}
                 {saveMutation.isPending ? (
                   <>
                     <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                    Guardando...
+                    {t("videoScript.saving")}
                   </>
                 ) : (
                   <>
                     <Save className="w-4 h-4 mr-2" />
-                    Guardar
+                    {t("videoScript.save")}
                   </>
                 )}
               </Button>
@@ -455,14 +459,14 @@ ${outro.length > 0 ? `## OUTRO / CTA\n${formatItems(outro)}\n` : ''}
                 data-testid="button-export-template"
               >
                 <Download className="w-4 h-4 mr-2" />
-                Exportar MD
+                {t("videoScript.exportMD")}
               </Button>
               <Button
                 onClick={onClose}
                 variant="outline"
                 data-testid="button-close-template"
               >
-                Cerrar
+                {t("videoScript.close")}
               </Button>
             </div>
           </div>
