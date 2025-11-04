@@ -841,8 +841,15 @@ export class DatabaseStorage implements IStorage {
     const [template] = await db
       .update(videoTemplates)
       .set({
+        videoTitle: updateData.videoTitle,
+        thumbnailNotes: updateData.thumbnailNotes,
+        hook: updateData.hook,
+        teaser: updateData.teaser,
+        valorAudiencia: updateData.valorAudiencia,
         pointsToCover: updateData.pointsToCover,
         visualsNeeded: updateData.visualsNeeded,
+        bonus: updateData.bonus,
+        outro: updateData.outro,
         updatedAt: new Date(),
       })
       .where(eq(videoTemplates.ideaId, ideaId))
