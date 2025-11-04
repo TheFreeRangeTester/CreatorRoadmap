@@ -231,7 +231,7 @@ export default function IdeaListView({
             </div>
 
             {/* Actions - Enhanced UX */}
-            <div className="flex-shrink-0 flex flex-col sm:flex-row items-stretch sm:items-center gap-2 mt-4 sm:mt-0">
+            <div className="flex-shrink-0 flex flex-row items-center gap-2 mt-4 sm:mt-0">
               {/* Vote Button - Enhanced */}
               {!isCreator && (
                 <motion.div
