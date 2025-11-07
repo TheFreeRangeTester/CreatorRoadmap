@@ -31,7 +31,7 @@ interface ReactiveStats {
   spendPoints: (amount: number, type: 'suggestion' | 'store') => void;
 }
 
-export function useReactiveStats(): ReactiveStats {
+export function useReactiveStats(creatorId?: number): ReactiveStats {
   const { user } = useAuth();
   const queryClient = useQueryClient();
   
@@ -39,9 +39,12 @@ export function useReactiveStats(): ReactiveStats {
   const [localPoints, setLocalPoints] = useState<UserPointsData | null>(null);
   const [localStats, setLocalStats] = useState<NormalizedStatsData | null>(null);
   
+  // Build the points endpoint based on whether we have a creatorId
+  const pointsEndpoint = creatorId ? `/api/user/points/${creatorId}` : '/api/user/points';
+  
   // Query for points data
   const { data: pointsData, isLoading: pointsLoading } = useQuery<UserPointsData>({
-    queryKey: ['/api/user/points'],
+    queryKey: [pointsEndpoint],
     enabled: !!user,
     refetchOnWindowFocus: false,
   });
@@ -113,10 +116,10 @@ export function useReactiveStats(): ReactiveStats {
     
     // Invalidate cache to sync with server
     setTimeout(() => {
-      queryClient.invalidateQueries({ queryKey: ['/api/user/points'] });
+      queryClient.invalidateQueries({ queryKey: [pointsEndpoint] });
       queryClient.invalidateQueries({ queryKey: ['/api/user/audience-stats'] });
     }, 100);
-  }, [queryClient]);
+  }, [queryClient, pointsEndpoint]);
   
   // Function to handle spending points
   const spendPoints = useCallback((amount: number, type: 'suggestion' | 'store') => {
@@ -146,10 +149,10 @@ export function useReactiveStats(): ReactiveStats {
     
     // Invalidate cache to sync with server
     setTimeout(() => {
-      queryClient.invalidateQueries({ queryKey: ['/api/user/points'] });
+      queryClient.invalidateQueries({ queryKey: [pointsEndpoint] });
       queryClient.invalidateQueries({ queryKey: ['/api/user/audience-stats'] });
     }, 100);
-  }, [queryClient]);
+  }, [queryClient, pointsEndpoint]);
   
   return {
     points: localPoints || pointsData || null,

@@ -442,10 +442,13 @@ export class DatabaseStorage implements IStorage {
   }
 
   async getUserAudienceStats(userId: number): Promise<{ votesGiven: number; ideasSuggested: number; ideasApproved: number; }> {
-    // Count votes given by user
+    // Count votes given by user from point_transactions (persistent even after idea deletion)
     const votesResult = await db.select({ count: sql<number>`count(*)` })
-      .from(votes)
-      .where(eq(votes.userId, userId));
+      .from(pointTransactions)
+      .where(and(
+        eq(pointTransactions.userId, userId),
+        eq(pointTransactions.reason, 'vote_given')
+      ));
 
     // Count ideas suggested by user
     const suggestedResult = await db.select({ count: sql<number>`count(*)` })
@@ -825,7 +828,20 @@ export class DatabaseStorage implements IStorage {
       .from(videoTemplates)
       .where(eq(videoTemplates.ideaId, ideaId));
 
-    return template;
+    if (!template) return undefined;
+
+    return {
+      ...template,
+      videoTitle: template.videoTitle || '',
+      thumbnailNotes: template.thumbnailNotes || '',
+      hook: template.hook as any,
+      teaser: template.teaser as any,
+      valorAudiencia: template.valorAudiencia as any,
+      pointsToCover: template.pointsToCover as any,
+      visualsNeeded: template.visualsNeeded as any,
+      bonus: template.bonus as any,
+      outro: template.outro as any,
+    };
   }
 
   async createVideoTemplate(insertTemplate: InsertVideoTemplate): Promise<VideoTemplateResponse> {
@@ -834,7 +850,18 @@ export class DatabaseStorage implements IStorage {
       .values(insertTemplate)
       .returning();
 
-    return template;
+    return {
+      ...template,
+      videoTitle: template.videoTitle || '',
+      thumbnailNotes: template.thumbnailNotes || '',
+      hook: template.hook as any,
+      teaser: template.teaser as any,
+      valorAudiencia: template.valorAudiencia as any,
+      pointsToCover: template.pointsToCover as any,
+      visualsNeeded: template.visualsNeeded as any,
+      bonus: template.bonus as any,
+      outro: template.outro as any,
+    };
   }
 
   async updateVideoTemplate(ideaId: number, updateData: UpdateVideoTemplate): Promise<VideoTemplateResponse | undefined> {
@@ -855,7 +882,20 @@ export class DatabaseStorage implements IStorage {
       .where(eq(videoTemplates.ideaId, ideaId))
       .returning();
 
-    return template;
+    if (!template) return undefined;
+
+    return {
+      ...template,
+      videoTitle: template.videoTitle || '',
+      thumbnailNotes: template.thumbnailNotes || '',
+      hook: template.hook as any,
+      teaser: template.teaser as any,
+      valorAudiencia: template.valorAudiencia as any,
+      pointsToCover: template.pointsToCover as any,
+      visualsNeeded: template.visualsNeeded as any,
+      bonus: template.bonus as any,
+      outro: template.outro as any,
+    };
   }
 
   async deleteVideoTemplate(ideaId: number): Promise<void> {

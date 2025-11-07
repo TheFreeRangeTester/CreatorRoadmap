@@ -9,12 +9,13 @@ import { useReactiveStats } from "@/hooks/use-reactive-stats";
 
 interface AudienceStatsProps {
   isVisible: boolean;
+  creatorId?: number;
 }
 
-export default function AudienceStats({ isVisible }: AudienceStatsProps) {
+export default function AudienceStats({ isVisible, creatorId }: AudienceStatsProps) {
   const { t } = useTranslation();
   const { user } = useAuth();
-  const { points: pointsData, stats, isLoading } = useReactiveStats();
+  const { points: pointsData, stats, isLoading } = useReactiveStats(creatorId);
 
   // Log data when it changes (only log when data actually exists to avoid spam)
   if (stats) {

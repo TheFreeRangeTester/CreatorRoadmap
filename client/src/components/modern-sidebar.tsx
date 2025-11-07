@@ -179,6 +179,7 @@ export function ModernSidebar({
             <div className="space-y-2">
               <Button
                 onClick={() => {
+                  localStorage.setItem("redirectAfterAuth", window.location.pathname);
                   window.location.href = "/auth";
                 }}
                 className="w-full bg-gradient-to-r from-blue-500 to-purple-500 text-white hover:from-blue-600 hover:to-purple-600 shadow-lg border-0 rounded-xl h-11"
@@ -188,6 +189,7 @@ export function ModernSidebar({
               </Button>
               <Button
                 onClick={() => {
+                  localStorage.setItem("redirectAfterAuth", window.location.pathname);
                   window.location.href = "/auth?register=true";
                 }}
                 variant="outline"
@@ -201,6 +203,7 @@ export function ModernSidebar({
             <div className="space-y-2">
               <Button
                 onClick={() => {
+                  localStorage.setItem("redirectAfterAuth", window.location.pathname);
                   window.location.href = "/auth";
                 }}
                 size="icon"

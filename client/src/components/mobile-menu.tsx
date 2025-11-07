@@ -180,6 +180,7 @@ export const MobileMenu = ({
                           variant="outline"
                           className="w-full justify-center gap-3 h-14 text-base font-medium border-2 border-gray-300 dark:border-gray-600 hover:border-blue-500 dark:hover:border-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/20"
                           onClick={() => {
+                            localStorage.setItem('redirectAfterAuth', location);
                             localStorage.setItem('attemptingCreatorLogin', 'true');
                             toggleMenu();
                           }}
@@ -191,7 +192,10 @@ export const MobileMenu = ({
                       <Link href={`/auth?direct=true&register=true&returnTo=${encodeURIComponent(location)}`} className="w-full">
                         <Button
                           className="w-full justify-center gap-3 h-14 text-base font-medium bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white border-0 shadow-lg"
-                          onClick={toggleMenu}
+                          onClick={() => {
+                            localStorage.setItem('redirectAfterAuth', location);
+                            toggleMenu();
+                          }}
                         >
                           <User className="h-5 w-5" />
                           {t("landing.cta.register")}

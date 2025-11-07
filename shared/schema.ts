@@ -40,7 +40,7 @@ export const ideas = pgTable("ideas", {
   lastPositionUpdate: timestamp("last_position_update").notNull().defaultNow(),
   currentPosition: integer("current_position"),
   previousPosition: integer("previous_position"),
-  status: text("status").notNull().default('approved'), // 'approved', 'pending'
+  status: text("status").notNull().default('approved'), // 'approved', 'pending', 'completed'
   suggestedBy: integer("suggested_by").references(() => users.id), // ID del usuario que sugirió la idea
   niche: text("niche"), // Content niche/category (e.g., "unboxing", "review", "tutorial")
 });
@@ -198,7 +198,9 @@ export const suggestIdeaSchema = z.object({
   creatorId: z.number(), // ID del creador a quien se sugiere la idea
 });
 
-export const updateIdeaSchema = insertIdeaSchema;
+export const updateIdeaSchema = insertIdeaSchema.extend({
+  status: z.enum(['approved', 'pending', 'completed']).optional(),
+}).partial();
 
 export const ideaResponseSchema = z.object({
   id: z.number(),
@@ -214,7 +216,7 @@ export const ideaResponseSchema = z.object({
     previous: z.number().nullable(),
     change: z.number().nullable(),
   }),
-  status: z.enum(['approved', 'pending']).default('approved'),
+  status: z.enum(['approved', 'pending', 'completed']).default('approved'),
   suggestedBy: z.number().nullable(),
   suggestedByUsername: z.string().optional(), // Nombre del usuario que sugirió la idea (para mostrar en la UI)
 });

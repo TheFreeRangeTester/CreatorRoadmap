@@ -491,6 +491,42 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Mark idea as completed
+  app.patch("/api/ideas/:id/complete", async (req: Request, res: Response) => {
+    try {
+      if (!req.isAuthenticated()) {
+        return res.status(401).json({ message: "Authentication required to complete ideas" });
+      }
+
+      const id = Number(req.params.id);
+      if (isNaN(id)) {
+        return res.status(400).json({ message: "Invalid idea ID" });
+      }
+
+      // Check if the idea exists
+      const existingIdea = await storage.getIdea(id);
+      if (!existingIdea) {
+        return res.status(404).json({ message: "Idea not found" });
+      }
+
+      // Only the creator can mark their own ideas as completed
+      if (req.user.userRole !== 'creator' || existingIdea.creatorId !== req.user!.id) {
+        return res.status(403).json({ message: "You can only complete your own ideas" });
+      }
+
+      // Update idea status to completed
+      const updatedIdea = await storage.updateIdea(id, { status: 'completed' });
+      if (!updatedIdea) {
+        return res.status(404).json({ message: "Failed to complete idea" });
+      }
+
+      res.json(updatedIdea);
+    } catch (error) {
+      console.error("Error completing idea:", error);
+      res.status(500).json({ message: "Failed to complete idea" });
+    }
+  });
+
   // Delete idea
   app.delete("/api/ideas/:id", async (req: Request, res: Response) => {
     try {

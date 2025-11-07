@@ -477,7 +477,7 @@ export default function ModernPublicProfile() {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
     >
-      <AudienceStats isVisible={!!user} />
+      <AudienceStats isVisible={!!user} creatorId={data?.creator?.id} />
     </motion.div>
   );
 
