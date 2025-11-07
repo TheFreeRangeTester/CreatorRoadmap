@@ -40,7 +40,7 @@ export const ideas = pgTable("ideas", {
   lastPositionUpdate: timestamp("last_position_update").notNull().defaultNow(),
   currentPosition: integer("current_position"),
   previousPosition: integer("previous_position"),
-  status: text("status").notNull().default('approved'), // 'approved', 'pending'
+  status: text("status").notNull().default('approved'), // 'approved', 'pending', 'completed'
   suggestedBy: integer("suggested_by").references(() => users.id), // ID del usuario que sugirió la idea
   niche: text("niche"), // Content niche/category (e.g., "unboxing", "review", "tutorial")
 });
