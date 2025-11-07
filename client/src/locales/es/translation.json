@@ -388,7 +388,11 @@
     "script": "Guión",
     "openScript": "Abrir guión de video",
     "showActive": "Activas",
-    "showCompleted": "Finalizadas"
+    "showCompleted": "Finalizadas",
+    "noActiveIdeas": "No hay ideas activas",
+    "noActiveIdeasDesc": "Todas tus ideas están finalizadas. Cambia a la pestaña de finalizadas para verlas.",
+    "noCompletedIdeas": "Aún no hay ideas finalizadas",
+    "noCompletedIdeasDesc": "Las ideas que marques como finalizadas aparecerán aquí."
   },
   "dashboard": {
     "welcome": "Hola",

@@ -24,6 +24,7 @@ export function IdeasTabView({ mode = "published", onOpenTemplate }: IdeasTabVie
   const [processingIdea, setProcessingIdea] = useState<number | null>(null);
   const [isIdeaFormOpen, setIsIdeaFormOpen] = useState(false);
   const [currentIdea, setCurrentIdea] = useState<IdeaResponse | null>(null);
+  const [showCompleted, setShowCompleted] = useState(false);
 
   // Fetch published ideas with forced refresh
   const {
@@ -306,7 +307,14 @@ export function IdeasTabView({ mode = "published", onOpenTemplate }: IdeasTabVie
 
   const isLoading = mode === "published" ? isLoadingIdeas : isLoadingPending;
   const isError = mode === "published" ? isErrorIdeas : isErrorPending;
-  const displayedIdeas = mode === "published" ? ideas : pendingIdeas;
+  const allIdeas = mode === "published" ? ideas : pendingIdeas;
+  
+  // Filter ideas based on completion status (only for published ideas)
+  const displayedIdeas = mode === "published" && allIdeas
+    ? allIdeas.filter(idea => 
+        showCompleted ? idea.status === 'completed' : idea.status !== 'completed'
+      )
+    : allIdeas;
 
   // Render loading state
   if (isLoading) {
@@ -326,8 +334,8 @@ export function IdeasTabView({ mode = "published", onOpenTemplate }: IdeasTabVie
     );
   }
 
-  // Render empty state
-  if (!displayedIdeas || displayedIdeas.length === 0) {
+  // Render truly empty state (no ideas at all)
+  if (!allIdeas || allIdeas.length === 0) {
     return (
       <div className="text-center py-8 px-4">
         <p className="text-lg font-medium text-gray-700 dark:text-gray-300 mb-2">
@@ -347,37 +355,74 @@ export function IdeasTabView({ mode = "published", onOpenTemplate }: IdeasTabVie
   // Render published ideas
   if (mode === "published") {
     // Sort ideas by vote count (descending) - most voted first
-    const sortedIdeas = [...displayedIdeas].sort((a, b) => b.votes - a.votes);
+    const sortedIdeas = displayedIdeas ? [...displayedIdeas].sort((a, b) => b.votes - a.votes) : [];
     
     return (
       <>
-        <div className="space-y-4">
-          {sortedIdeas.map((idea, index) => (
-            <IdeaListView
-              key={idea.id}
-              idea={idea}
-              position={index + 1} // 1-based position
-              onVote={handleVote}
-              onEdit={
-                user && idea.creatorId === user.id ? handleEditIdea : undefined
-              }
-              onComplete={
-                user && idea.creatorId === user.id
-                  ? handleCompleteIdea
-                  : undefined
-              }
-              onDelete={
-                user && idea.creatorId === user.id
-                  ? handleDeleteIdea
-                  : undefined
-              }
-              onOpenTemplate={
-                user && idea.creatorId === user.id ? onOpenTemplate : undefined
-              }
-              isVoting={votingIdeaIds.has(idea.id)}
-            />
-          ))}
-        </div>
+        {/* Filter Toggle - Show when there are ideas */}
+        {allIdeas && allIdeas.length > 0 && (
+          <div className="flex gap-2 mb-4">
+            <Button
+              onClick={() => setShowCompleted(false)}
+              variant={!showCompleted ? "default" : "outline"}
+              size="sm"
+              className="font-semibold"
+            >
+              {t("ideas.showActive")}
+            </Button>
+            <Button
+              onClick={() => setShowCompleted(true)}
+              variant={showCompleted ? "default" : "outline"}
+              size="sm"
+              className="font-semibold"
+            >
+              {t("ideas.showCompleted")}
+            </Button>
+          </div>
+        )}
+
+        {sortedIdeas.length > 0 ? (
+          <div className="space-y-4">
+            {sortedIdeas.map((idea, index) => (
+              <IdeaListView
+                key={idea.id}
+                idea={idea}
+                position={index + 1} // 1-based position
+                onVote={handleVote}
+                onEdit={
+                  user && idea.creatorId === user.id ? handleEditIdea : undefined
+                }
+                onComplete={
+                  user && idea.creatorId === user.id
+                    ? handleCompleteIdea
+                    : undefined
+                }
+                onDelete={
+                  user && idea.creatorId === user.id
+                    ? handleDeleteIdea
+                    : undefined
+                }
+                onOpenTemplate={
+                  user && idea.creatorId === user.id ? onOpenTemplate : undefined
+                }
+                isVoting={votingIdeaIds.has(idea.id)}
+              />
+            ))}
+          </div>
+        ) : (
+          <div className="text-center py-8 px-4">
+            <p className="text-lg font-medium text-gray-700 dark:text-gray-300 mb-2">
+              {showCompleted
+                ? t("ideas.noCompletedIdeas")
+                : t("ideas.noActiveIdeas")}
+            </p>
+            <p className="text-muted-foreground text-sm">
+              {showCompleted
+                ? t("ideas.noCompletedIdeasDesc")
+                : t("ideas.noActiveIdeasDesc")}
+            </p>
+          </div>
+        )}
 
         {/* Idea Form Modal */}
         <IdeaForm
@@ -393,7 +438,7 @@ export function IdeasTabView({ mode = "published", onOpenTemplate }: IdeasTabVie
   return (
     <>
       <div className="space-y-4">
-        {displayedIdeas.map((idea, index) => (
+        {displayedIdeas && displayedIdeas.map((idea, index) => (
           <div
             key={idea.id}
             className="group bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm border border-gray-200/50 dark:border-gray-700/50 rounded-2xl p-4 hover:bg-white/90 dark:hover:bg-gray-900/90 hover:shadow-lg transition-all duration-300 hover:border-gray-300/60 dark:hover:border-gray-600/60"

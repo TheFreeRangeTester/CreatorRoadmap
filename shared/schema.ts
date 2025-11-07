@@ -216,7 +216,7 @@ export const ideaResponseSchema = z.object({
     previous: z.number().nullable(),
     change: z.number().nullable(),
   }),
-  status: z.enum(['approved', 'pending']).default('approved'),
+  status: z.enum(['approved', 'pending', 'completed']).default('approved'),
   suggestedBy: z.number().nullable(),
   suggestedByUsername: z.string().optional(), // Nombre del usuario que sugirió la idea (para mostrar en la UI)
 });

@@ -386,7 +386,11 @@
     "script": "Script",
     "openScript": "Open video script",
     "showActive": "Active",
-    "showCompleted": "Completed"
+    "showCompleted": "Completed",
+    "noActiveIdeas": "No active ideas",
+    "noActiveIdeasDesc": "All your ideas are completed. Switch to the completed tab to see them.",
+    "noCompletedIdeas": "No completed ideas yet",
+    "noCompletedIdeasDesc": "Ideas you mark as completed will appear here."
   },
   "dashboard": {
     "welcome": "Hello",
