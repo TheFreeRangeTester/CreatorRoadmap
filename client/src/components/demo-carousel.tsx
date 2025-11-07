@@ -5,9 +5,9 @@ import { useTranslation } from "react-i18next";
 
 // Import carousel images
 // Orden correcto: 23 (ideas) -> 25 (audiencia) -> 26 (streaming)
-import image1 from "@assets/carousel-ideas.png"; // Imagen 23 - Ideas y conceptos (PRIMERA)
-import image2 from "@assets/carousel-engagement.png"; // Imagen 25 - Audiencia votando (SEGUNDA)
-import image3 from "@assets/carousel-streaming.png"; // Imagen 26 - Streaming en vivo (TERCERA)
+import image1 from "@assets/carousel/carousel-ideas.png"; // Imagen 23 - Ideas y conceptos (PRIMERA)
+import image2 from "@assets/carousel/carousel-engagement.png"; // Imagen 25 - Audiencia votando (SEGUNDA)
+import image3 from "@assets/carousel/carousel-streaming.png"; // Imagen 26 - Streaming en vivo (TERCERA)
 
 // Las traducciones se manejan dinámicamente en el componente
 const imageData = [
