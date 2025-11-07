@@ -352,7 +352,15 @@
     "addIdea": "Add New Idea",
     "deleteTitle": "Delete idea",
     "confirmDelete": "Are you sure you want to delete this idea? This action cannot be undone and all votes will be lost.",
+    "confirmComplete": "Mark this idea as completed? You'll be able to view it in the completed ideas section.",
     "delete": "Delete",
+    "complete": "Complete",
+    "completed": "Idea completed",
+    "completedDesc": "The idea has been marked as completed successfully.",
+    "completeError": "Error completing",
+    "deleted": "Idea deleted",
+    "deletedDesc": "The idea has been deleted successfully.",
+    "deleteError": "Error deleting",
     "noPublishedIdeas": "No published ideas yet",
     "createFirstIdea": "Create your first idea to get started",
     "suggestedIdeasWillAppear": "Suggested ideas from your audience will appear here",
@@ -376,7 +384,9 @@
     "updateFailed": "Failed to update idea",
     "votes": "votes",
     "script": "Script",
-    "openScript": "Open video script"
+    "openScript": "Open video script",
+    "showActive": "Active",
+    "showCompleted": "Completed"
   },
   "dashboard": {
     "welcome": "Hello",
