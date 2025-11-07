@@ -12,6 +12,7 @@ import {
   TrendingUp,
   Heart,
   FileText,
+  CheckCircle2,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -25,6 +26,7 @@ interface IdeaListViewProps {
   onVote: (ideaId: number) => void;
   onEdit?: (idea: IdeaResponse) => void;
   onDelete?: (ideaId: number) => void;
+  onComplete?: (ideaId: number) => void;
   onOpenTemplate?: (idea: IdeaResponse) => void;
   isVoting: boolean;
 }
@@ -35,6 +37,7 @@ export default function IdeaListView({
   onVote,
   onEdit,
   onDelete,
+  onComplete,
   onOpenTemplate,
   isVoting,
 }: IdeaListViewProps) {
@@ -318,6 +321,29 @@ export default function IdeaListView({
                 </motion.div>
               )}
 
+              {/* Complete Button (for creators) - Enhanced */}
+              {isCreator && onComplete && (
+                <motion.div
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  transition={{ type: "spring", stiffness: 400, damping: 17 }}
+                >
+                  <Button
+                    onClick={() => onComplete(idea.id)}
+                    variant="outline"
+                    size="sm"
+                    className="border-2 border-green-400 dark:border-green-500 text-green-600 dark:text-green-400 hover:bg-green-50 dark:hover:bg-green-900/20 hover:border-green-500 dark:hover:border-green-400 font-semibold shadow-sm hover:shadow-md transition-all duration-200"
+                    data-testid={`button-complete-${idea.id}`}
+                    aria-label={t("ideas.complete", "Completar")}
+                  >
+                    <CheckCircle2 className="h-4 w-4" />
+                    <span className="hidden sm:inline ml-1.5">
+                      {t("ideas.complete", "Completar")}
+                    </span>
+                  </Button>
+                </motion.div>
+              )}
+
               {/* Delete Button (for creators) - Enhanced */}
               {isCreator && onDelete && (
                 <motion.div
@@ -330,6 +356,7 @@ export default function IdeaListView({
                     variant="outline"
                     size="sm"
                     className="border-2 border-red-300 dark:border-red-700 text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 dark:text-red-400 hover:border-red-400 dark:hover:border-red-600 font-semibold shadow-sm hover:shadow-md transition-all duration-200"
+                    data-testid={`button-delete-${idea.id}`}
                     aria-label={t("ideas.delete", "Eliminar")}
                   >
                     <Trash2 className="h-4 w-4" />

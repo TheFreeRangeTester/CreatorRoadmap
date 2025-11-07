@@ -119,6 +119,29 @@ export function IdeasTabView({ mode = "published", onOpenTemplate }: IdeasTabVie
     },
   });
 
+  // Complete mutation
+  const completeMutation = useMutation({
+    mutationFn: async (ideaId: number) => {
+      await apiRequest(`/api/ideas/${ideaId}/complete`, {
+        method: "PATCH"
+      });
+    },
+    onSuccess: async () => {
+      await refetchIdeas();
+      toast({
+        title: t("ideas.completed"),
+        description: t("ideas.completedDesc"),
+      });
+    },
+    onError: (error) => {
+      toast({
+        title: t("ideas.completeError"),
+        description: error.message,
+        variant: "destructive",
+      });
+    },
+  });
+
   // Delete mutation
   const deleteMutation = useMutation({
     mutationFn: async (ideaId: number) => {
@@ -129,13 +152,13 @@ export function IdeasTabView({ mode = "published", onOpenTemplate }: IdeasTabVie
     onSuccess: async () => {
       await refetchIdeas();
       toast({
-        title: "Idea eliminada",
-        description: "La idea ha sido eliminada correctamente.",
+        title: t("ideas.deleted"),
+        description: t("ideas.deletedDesc"),
       });
     },
     onError: (error) => {
       toast({
-        title: "Error al eliminar",
+        title: t("ideas.deleteError"),
         description: error.message,
         variant: "destructive",
       });
@@ -256,6 +279,12 @@ export function IdeasTabView({ mode = "published", onOpenTemplate }: IdeasTabVie
     voteMutation.mutate(ideaId);
   };
 
+  const handleCompleteIdea = (ideaId: number) => {
+    if (window.confirm(t("ideas.confirmComplete"))) {
+      completeMutation.mutate(ideaId);
+    }
+  };
+
   const handleDeleteIdea = (ideaId: number) => {
     if (window.confirm(t("ideas.confirmDelete"))) {
       deleteMutation.mutate(ideaId);
@@ -331,6 +360,11 @@ export function IdeasTabView({ mode = "published", onOpenTemplate }: IdeasTabVie
               onVote={handleVote}
               onEdit={
                 user && idea.creatorId === user.id ? handleEditIdea : undefined
+              }
+              onComplete={
+                user && idea.creatorId === user.id
+                  ? handleCompleteIdea
+                  : undefined
               }
               onDelete={
                 user && idea.creatorId === user.id

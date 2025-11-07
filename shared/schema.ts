@@ -198,7 +198,9 @@ export const suggestIdeaSchema = z.object({
   creatorId: z.number(), // ID del creador a quien se sugiere la idea
 });
 
-export const updateIdeaSchema = insertIdeaSchema;
+export const updateIdeaSchema = insertIdeaSchema.extend({
+  status: z.enum(['approved', 'pending', 'completed']).optional(),
+}).partial();
 
 export const ideaResponseSchema = z.object({
   id: z.number(),
