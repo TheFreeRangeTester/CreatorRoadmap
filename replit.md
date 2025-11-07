@@ -5,6 +5,15 @@ Fanlist is a web application designed to empower content creators by enabling th
 
 ## Recent Changes
 
+### November 7, 2025 - Idea Completion and Archival System
+- **Dual-Action Management**: Implemented both "Complete" and "Delete" actions for ideas, allowing creators to archive finished ideas separately from permanent deletion.
+- **Schema Enhancement**: Added 'completed' status to ideas alongside existing 'approved' and 'pending' statuses.
+- **API Endpoint**: Created PATCH `/api/ideas/:id/complete` to mark ideas as completed, with authentication ensuring only idea owners can complete their ideas.
+- **Filter Toggle**: Added active/completed filter toggle in dashboard, accessible to all users (authenticated and unauthenticated) to view archived ideas.
+- **Empty State Handling**: Improved UX with contextual messages for "no active ideas" vs "no completed ideas", ensuring toggle remains visible when ideas exist in either state.
+- **Internationalization**: Added comprehensive i18n support with English and Spanish translations for showActive, showCompleted, complete, completed, confirmComplete, noActiveIdeas, noCompletedIdeas.
+- **Universal Access**: Toggle visibility not gated by authentication, allowing audience members to explore creator's completed ideas archive.
+
 ### November 7, 2025 - TypeScript Video Template Type Safety
 - **Type Safety Fix**: Enhanced video template methods (getVideoTemplate, createVideoTemplate, updateVideoTemplate) to properly transform database responses.
 - **Null Handling**: Added normalization to convert null values from database to empty strings for videoTitle and thumbnailNotes fields.
