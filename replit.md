@@ -5,6 +5,12 @@ Fanlist is a web application designed to empower content creators by enabling th
 
 ## Recent Changes
 
+### November 7, 2025 - TypeScript Video Template Type Safety
+- **Type Safety Fix**: Enhanced video template methods (getVideoTemplate, createVideoTemplate, updateVideoTemplate) to properly transform database responses.
+- **Null Handling**: Added normalization to convert null values from database to empty strings for videoTitle and thumbnailNotes fields.
+- **JSONB Type Casting**: Added proper type assertions for JSONB fields (hook, teaser, valorAudiencia, pointsToCover, visualsNeeded, bonus, outro) to match VideoTemplateResponse type.
+- **Database Consistency**: All three methods now consistently return VideoTemplateResponse with properly typed fields instead of raw database types with potential null values.
+
 ### November 4, 2025 - Video Script Persistence and i18n
 - **Critical Bug Fix**: Fixed `updateVideoTemplate` in database-storage.ts to persist ALL video script fields. Previously only saved pointsToCover and visualsNeeded, causing data loss for videoTitle, thumbnailNotes, hook, teaser, valorAudiencia, bonus, and outro.
 - **Internationalization**: Added comprehensive i18n support for video script modal in English and Spanish.
