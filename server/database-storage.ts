@@ -442,10 +442,13 @@ export class DatabaseStorage implements IStorage {
   }
 
   async getUserAudienceStats(userId: number): Promise<{ votesGiven: number; ideasSuggested: number; ideasApproved: number; }> {
-    // Count votes given by user
+    // Count votes given by user from point_transactions (persistent even after idea deletion)
     const votesResult = await db.select({ count: sql<number>`count(*)` })
-      .from(votes)
-      .where(eq(votes.userId, userId));
+      .from(pointTransactions)
+      .where(and(
+        eq(pointTransactions.userId, userId),
+        eq(pointTransactions.reason, 'vote_given')
+      ));
 
     // Count ideas suggested by user
     const suggestedResult = await db.select({ count: sql<number>`count(*)` })
