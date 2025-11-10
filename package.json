@@ -99,7 +99,7 @@
     "recharts": "^2.13.0",
     "resend": "^4.5.1",
     "stripe": "^18.1.1",
-    "supertest": "^7.1.1",
+    "supertest": "^7.1.4",
     "tailwind-merge": "^2.5.4",
     "tailwindcss-animate": "^1.0.7",
     "ts-jest": "^29.4.0",
