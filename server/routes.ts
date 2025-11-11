@@ -335,10 +335,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Si el usuario está autenticado, filtramos según su rol
       if (req.isAuthenticated()) {
         if (req.user.userRole === 'creator') {
-          // Para creadores: mostrar solo sus propias ideas
+          // Para creadores: mostrar sus propias ideas aprobadas y completadas
           ideas = allIdeas.filter(idea =>
             idea.creatorId === req.user.id &&
-            idea.status === 'approved'
+            (idea.status === 'approved' || idea.status === 'completed')
           );
         } else {
           // Para usuarios 'audience': mostrar solo ideas aprobadas
