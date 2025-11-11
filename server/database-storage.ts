@@ -189,13 +189,16 @@ export class DatabaseStorage implements IStorage {
   }
 
   async updateIdea(id: number, updateData: UpdateIdea): Promise<Idea | undefined> {
+    const updateFields: any = {};
+    
+    if (updateData.title !== undefined) updateFields.title = updateData.title;
+    if (updateData.description !== undefined) updateFields.description = updateData.description;
+    if (updateData.niche !== undefined) updateFields.niche = updateData.niche;
+    if (updateData.status !== undefined) updateFields.status = updateData.status;
+
     const [idea] = await db
       .update(ideas)
-      .set({
-        title: updateData.title,
-        description: updateData.description,
-        niche: updateData.niche,
-      })
+      .set(updateFields)
       .where(eq(ideas.id, id))
       .returning();
 
