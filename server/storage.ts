@@ -300,9 +300,10 @@ export class MemStorage implements IStorage {
 
     const updatedIdea: Idea = {
       ...idea,
-      title: updateData.title,
-      description: updateData.description,
-      niche: updateData.niche || null,
+      title: updateData.title !== undefined ? updateData.title : idea.title,
+      description: updateData.description !== undefined ? updateData.description : idea.description,
+      niche: updateData.niche !== undefined ? updateData.niche || null : idea.niche,
+      status: updateData.status !== undefined ? updateData.status : idea.status,
     };
 
     this.ideas.set(id, updatedIdea);
