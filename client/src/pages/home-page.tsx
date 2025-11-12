@@ -9,6 +9,7 @@ import {
   Menu,
   X,
   BarChart3,
+  Plus,
 } from "lucide-react";
 import { useAuth } from "@/hooks/use-auth";
 import { useToast } from "@/hooks/use-toast";
@@ -52,6 +53,7 @@ export default function HomePage() {
   const [activeTab, setActiveTab] = useState("published");
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isMetricsDialogOpen, setIsMetricsDialogOpen] = useState(false);
+  const [isCreatorActionsOpen, setIsCreatorActionsOpen] = useState(false);
   const [isTemplateModalOpen, setIsTemplateModalOpen] = useState(false);
   const [currentTemplateIdea, setCurrentTemplateIdea] =
     useState<IdeaResponse | null>(null);
@@ -171,9 +173,35 @@ export default function HomePage() {
       className="bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-700 shadow-sm"
     >
       <div className="p-6">
-        <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">
-          {t("dashboard.topIdeas")}
-        </h2>
+        <div className="flex flex-wrap items-center justify-between gap-3 mb-6">
+          <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
+            {t("dashboard.topIdeas")}
+          </h2>
+          <div className="flex items-center gap-2">
+            <Button
+              variant="outline"
+              size="sm"
+              className="lg:hidden gap-2 border-dashed"
+              onClick={() => setIsMetricsDialogOpen(true)}
+            >
+              <BarChart3 className="h-4 w-4" />
+              <span className="text-sm font-medium">
+                {t("dashboard.viewDetails")}
+              </span>
+            </Button>
+            {user?.userRole === "creator" && (
+              <Button
+                variant="default"
+                size="icon"
+                className="lg:hidden h-10 w-10 rounded-full shadow-lg"
+                onClick={() => setIsCreatorActionsOpen(true)}
+                aria-label={t("ideas.addIdea")}
+              >
+                <Plus className="h-5 w-5" />
+              </Button>
+            )}
+          </div>
+        </div>
 
         {user?.userRole === "creator" ? (
           <Tabs
@@ -388,23 +416,6 @@ export default function HomePage() {
             </p>
           </motion.div>
 
-          {/* Botón de métricas rápidas para mobile */}
-          <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.1 }}
-            className="lg:hidden mb-6"
-          >
-            <Button
-              variant="outline"
-              className="w-full justify-center gap-2 border-dashed"
-              onClick={() => setIsMetricsDialogOpen(true)}
-            >
-              <BarChart3 className="h-4 w-4" />
-              {t("dashboard.viewDetails")}
-            </Button>
-          </motion.div>
-
           <Dialog
             open={isMetricsDialogOpen}
             onOpenChange={setIsMetricsDialogOpen}
@@ -429,17 +440,31 @@ export default function HomePage() {
             </DialogContent>
           </Dialog>
 
+          <Dialog
+            open={isCreatorActionsOpen}
+            onOpenChange={setIsCreatorActionsOpen}
+          >
+            <DialogContent className="lg:hidden max-w-md w-[calc(100%-1.5rem)] border-none bg-white/95 dark:bg-gray-900/95 p-0 rounded-3xl shadow-[0_25px_60px_-20px_rgba(79,70,229,0.45)]">
+              <CreatorControls
+                onAddIdea={() => {
+                  setIsCreatorActionsOpen(false);
+                  handleAddIdea();
+                }}
+              />
+            </DialogContent>
+          </Dialog>
+
           {user?.userRole === "creator" ? (
             <div className="lg:grid lg:grid-cols-[minmax(0,1fr)_320px] lg:gap-8 lg:items-start">
               <div className="space-y-6 lg:space-y-8">
+                {ideasSection}
                 <motion.div
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
-                  className="bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-700 shadow-sm"
+                  className="hidden lg:block bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-700 shadow-sm"
                 >
                   <CreatorControls onAddIdea={handleAddIdea} />
                 </motion.div>
-                {ideasSection}
               </div>
               <aside className="hidden lg:block">
                 <DashboardOverview
