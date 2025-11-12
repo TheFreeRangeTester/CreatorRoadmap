@@ -131,7 +131,7 @@ export default function DemoCarousel() {
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.3 }}
-                  className="text-xl md:text-2xl font-bold mb-2"
+                  className="text-xl md:text-2xl font-bold mb-2 text-white"
                 >
                   {t(imageData[current].titleKey)}
                 </motion.h3>
@@ -139,7 +139,7 @@ export default function DemoCarousel() {
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.4 }}
-                  className="text-sm md:text-base opacity-90"
+                  className="text-sm md:text-base text-white/90"
                 >
                   {t(imageData[current].descriptionKey)}
                 </motion.p>

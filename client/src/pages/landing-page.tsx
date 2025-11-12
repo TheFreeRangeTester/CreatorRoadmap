@@ -278,6 +278,7 @@ export default function LandingPage() {
         {/* Background decorative elements */}
         <div className="absolute top-10 right-10 w-32 h-32 bg-gradient-to-r from-yellow-300 to-orange-400 rounded-full opacity-10 blur-2xl"></div>
         <div className="absolute bottom-10 left-10 w-24 h-24 bg-gradient-to-r from-green-300 to-blue-400 rounded-full opacity-10 blur-2xl"></div>
+        <div className="absolute inset-x-10 top-1/2 h-40 bg-gradient-to-r from-purple-200/40 via-indigo-200/30 to-transparent dark:from-purple-500/10 dark:via-indigo-600/5 rounded-full blur-3xl"></div>
 
         <div className="container mx-auto px-4 max-w-7xl relative z-10">
           <motion.div
@@ -287,6 +288,15 @@ export default function LandingPage() {
             variants={staggerContainer}
             className="text-center mb-16"
           >
+            <motion.div
+              variants={fadeIn}
+              className="inline-flex items-center gap-2 px-4 py-2 mb-6 rounded-full bg-white/70 dark:bg-gray-900/70 shadow-sm backdrop-blur-md border border-white/40 dark:border-white/10"
+            >
+              <Sparkles className="h-4 w-4 text-purple-600 dark:text-purple-300" />
+              <span className="text-xs font-semibold uppercase tracking-[0.25em] text-purple-600 dark:text-purple-300">
+                {t("landing.stats.engagement")}
+              </span>
+            </motion.div>
             <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 dark:text-white mb-5 tracking-tight">
               {t("landing.howItWorks.title")}
             </h2>
@@ -322,21 +332,35 @@ export default function LandingPage() {
               <motion.div
                 key={step}
                 variants={fadeIn}
-                whileHover={{ y: -5, scale: 1.02 }}
-                className={`text-center p-4 sm:p-6 rounded-2xl bg-gradient-to-br ${bgGradient} ${darkBg} backdrop-blur-sm border border-white/20 dark:border-gray-700/30 shadow-lg hover:shadow-xl transition-all duration-300`}
+                whileHover={{ y: -8 }}
+                className={`relative group flex flex-col gap-5 p-6 sm:p-8 pt-10 rounded-3xl bg-gradient-to-br ${bgGradient} ${darkBg} border border-white/30 dark:border-gray-800/40 shadow-[0_30px_60px_-20px_rgba(79,70,229,0.45)] hover:shadow-[0_35px_70px_-25px_rgba(79,70,229,0.6)] transition-all duration-500 overflow-hidden backdrop-blur-xl`}
               >
+                <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 bg-gradient-to-br from-purple-500/20 via-indigo-500/10 to-transparent"></div>
+                <motion.span
+                  className="absolute -top-5 left-6 inline-flex items-center justify-center w-12 h-12 rounded-2xl bg-white/90 dark:bg-gray-900/90 text-purple-600 dark:text-purple-300 font-heading text-base shadow-xl"
+                  initial={{ opacity: 0, y: 10 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                >
+                  {`0${step}`}
+                </motion.span>
                 <motion.div
-                  className={`w-16 h-16 bg-gradient-to-br ${gradient} text-white rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg`}
+                  className={`w-14 h-14 sm:w-16 sm:h-16 bg-gradient-to-br ${gradient} text-white rounded-2xl flex items-center justify-center shadow-lg`}
+                  whileHover={{ rotate: 2, scale: 1.05 }}
                   animate={pulseAnimation}
                 >
-                  <Icon className="h-8 w-8" />
+                  <Icon className="h-7 w-7" />
                 </motion.div>
-                <h3 className="text-xl sm:text-2xl font-heading font-semibold text-gray-900 dark:text-white mb-3 sm:mb-4 tracking-tight">
+                <h3 className="text-xl sm:text-2xl font-heading font-semibold text-gray-900 dark:text-white tracking-tight">
                   {t(`landing.howItWorks.step${step}.title`)}
                 </h3>
                 <p className="text-base sm:text-lg text-gray-600 dark:text-gray-300 leading-relaxed">
                   {t(`landing.howItWorks.step${step}.description`)}
                 </p>
+                <div className="mt-auto flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.3em] text-purple-600 dark:text-purple-300">
+                  <Sparkles className="h-4 w-4" />
+                  <span>{t("landing.stats.activeCreators")}</span>
+                </div>
               </motion.div>
             ))}
           </div>
@@ -348,6 +372,7 @@ export default function LandingPage() {
         {/* Background decorative elements */}
         <div className="absolute top-0 left-1/4 w-40 h-40 bg-gradient-to-r from-emerald-300 to-teal-400 rounded-full opacity-10 blur-3xl"></div>
         <div className="absolute bottom-0 right-1/4 w-32 h-32 bg-gradient-to-r from-green-300 to-blue-400 rounded-full opacity-10 blur-3xl"></div>
+        <div className="absolute inset-x-0 bottom-10 h-44 bg-gradient-to-r from-emerald-200/40 via-teal-200/30 to-transparent dark:from-emerald-500/10 dark:via-teal-600/5 rounded-full blur-3xl"></div>
 
         <div className="container mx-auto px-4 max-w-7xl relative z-10">
           <motion.div
@@ -357,6 +382,15 @@ export default function LandingPage() {
             variants={staggerContainer}
             className="text-center mb-16"
           >
+            <motion.div
+              variants={fadeIn}
+              className="inline-flex items-center gap-2 px-4 py-2 mb-6 rounded-full bg-white/70 dark:bg-gray-900/70 shadow-sm backdrop-blur-md border border-white/40 dark:border-white/10"
+            >
+              <TrendingUp className="h-4 w-4 text-emerald-600 dark:text-emerald-300" />
+              <span className="text-xs font-semibold uppercase tracking-[0.25em] text-emerald-600 dark:text-emerald-300">
+                {t("landing.stats.satisfaction")}
+              </span>
+            </motion.div>
             <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 dark:text-white mb-5 tracking-tight">
               {t("landing.benefits.title")}
             </h2>
@@ -399,24 +433,28 @@ export default function LandingPage() {
               <motion.div
                 key={benefit}
                 variants={fadeIn}
-                whileHover={{ y: -5, scale: 1.02 }}
-                className={`bg-gradient-to-br ${bgGradient} ${darkBg} p-4 sm:p-6 rounded-2xl shadow-lg border border-white/20 dark:border-gray-700/30 backdrop-blur-sm hover:shadow-xl transition-all duration-300`}
+                whileHover={{ y: -6 }}
+                className={`relative group flex flex-col gap-5 p-6 sm:p-8 rounded-3xl bg-gradient-to-br ${bgGradient} ${darkBg} border border-white/30 dark:border-gray-800/40 shadow-[0_30px_60px_-20px_rgba(5,150,105,0.35)] hover:shadow-[0_30px_70px_-25px_rgba(5,150,105,0.55)] transition-all duration-500 overflow-hidden backdrop-blur-xl`}
               >
-                <div className="flex items-start gap-4">
-                  <motion.div
-                    className={`w-12 h-12 bg-gradient-to-br ${gradient} rounded-xl flex items-center justify-center flex-shrink-0 shadow-lg`}
-                    animate={pulseAnimation}
-                  >
-                    <Icon className="h-6 w-6 text-white" />
-                  </motion.div>
-                  <div>
-                    <h3 className="text-xl font-heading font-semibold text-gray-900 dark:text-white mb-3 tracking-tight">
-                      {t(`landing.benefits.benefit${benefit}.title`)}
-                    </h3>
-                    <p className="text-base sm:text-lg text-gray-600 dark:text-gray-300 leading-relaxed">
-                      {t(`landing.benefits.benefit${benefit}.description`)}
-                    </p>
-                  </div>
+                <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 bg-gradient-to-br from-emerald-400/15 via-teal-400/10 to-transparent"></div>
+                <motion.div
+                  className={`w-12 h-12 sm:w-14 sm:h-14 bg-gradient-to-br ${gradient} rounded-2xl flex items-center justify-center shadow-lg`}
+                  whileHover={{ rotate: -3, scale: 1.05 }}
+                  animate={pulseAnimation}
+                >
+                  <Icon className="h-6 w-6 text-white" />
+                </motion.div>
+                <div className="space-y-3">
+                  <h3 className="text-xl font-heading font-semibold text-gray-900 dark:text-white tracking-tight">
+                    {t(`landing.benefits.benefit${benefit}.title`)}
+                  </h3>
+                  <p className="text-base sm:text-lg text-gray-600 dark:text-gray-300 leading-relaxed">
+                    {t(`landing.benefits.benefit${benefit}.description`)}
+                  </p>
+                </div>
+                <div className="mt-auto flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.3em] text-emerald-600 dark:text-emerald-300">
+                  <TrendingUp className="h-4 w-4" />
+                  <span>{t("landing.stats.engagement")}</span>
                 </div>
               </motion.div>
             ))}
