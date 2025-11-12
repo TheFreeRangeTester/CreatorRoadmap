@@ -337,8 +337,8 @@ export default function LandingPage() {
               >
                 <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 bg-gradient-to-br from-purple-500/20 via-indigo-500/10 to-transparent"></div>
                 <motion.span
-                  className="absolute -top-5 left-6 inline-flex items-center justify-center w-12 h-12 rounded-2xl bg-white/90 dark:bg-gray-900/90 text-purple-600 dark:text-purple-300 font-heading text-base shadow-xl"
-                  initial={{ opacity: 0, y: 10 }}
+                  className="absolute top-6 right-6 inline-flex items-center justify-center w-12 h-12 rounded-2xl bg-white/90 dark:bg-gray-900/90 text-purple-600 dark:text-purple-300 font-heading text-base shadow-xl"
+                  initial={{ opacity: 0, y: -10 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                 >
