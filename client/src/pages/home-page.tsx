@@ -401,7 +401,7 @@ export default function HomePage() {
               onClick={() => setIsMetricsDialogOpen(true)}
             >
               <BarChart3 className="h-4 w-4" />
-              {t("dashboard.viewDetails", "Ver detalles")}
+              {t("dashboard.viewDetails")}
             </Button>
           </motion.div>
 
@@ -418,13 +418,10 @@ export default function HomePage() {
               >
                 <div className="space-y-1 text-left">
                   <DialogTitle className="text-2xl font-bold text-gray-900 dark:text-white">
-                    {t("dashboard.quickMetricsTitle", "Métricas")}
+                    {t("dashboard.quickMetricsTitle")}
                   </DialogTitle>
                   <DialogDescription className="text-sm text-gray-500 dark:text-gray-400">
-                    {t(
-                      "dashboard.quickMetricsSubtitle",
-                      "Consulta tus indicadores sin salir de esta vista."
-                    )}
+                    {t("dashboard.quickMetricsSubtitle")}
                   </DialogDescription>
                 </div>
                 <DashboardOverview variant="modal" />
