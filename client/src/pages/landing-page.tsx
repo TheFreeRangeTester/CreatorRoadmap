@@ -147,22 +147,28 @@ export default function LandingPage() {
   useEffect(() => {
     gsap.registerPlugin(SplitText);
 
-    if (titleRef.current) {
-      const splitTitle = new SplitText(titleRef.current, {
-        type: "chars,words",
-        charsClass: "char",
-        wordsClass: "word",
-      });
+    if (!titleRef.current) return;
 
-      gsap.from(splitTitle.chars, {
-        opacity: 0,
-        y: 50,
-        duration: 0.5,
-        stagger: 0.02,
-        ease: "back.out(1.7)",
-        delay: 0.2,
-      });
-    }
+    const splitTitle = new SplitText(titleRef.current, {
+      type: "chars,words",
+      charsClass: "char",
+      wordsClass: "word",
+    });
+
+    const animation = gsap.from(splitTitle.chars, {
+      opacity: 0,
+      y: 50,
+      duration: 0.5,
+      stagger: 0.02,
+      ease: "back.out(1.7)",
+      delay: 0.2,
+      onComplete: () => splitTitle.revert(),
+    });
+
+    return () => {
+      animation.kill();
+      splitTitle.revert();
+    };
   }, []);
 
   return (
