@@ -408,8 +408,8 @@ export default function HomePage() {
 
           <Sheet open={isMetricsSheetOpen} onOpenChange={setIsMetricsSheetOpen}>
             <SheetContent
-              side="bottom"
-              className="lg:hidden h-[80vh] overflow-y-auto rounded-t-2xl px-6 pb-8"
+              side="top"
+              className="lg:hidden inset-x-0 top-0 h-[100vh] max-h-[100vh] overflow-y-auto rounded-none px-6 pb-10 pt-16"
             >
               <SheetHeader className="text-left">
                 <SheetTitle>
