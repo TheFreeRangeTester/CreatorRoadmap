@@ -21,9 +21,32 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { IdeaResponse } from "@shared/schema";
 import { cn } from "@/lib/utils";
 
+const modalContainerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.08,
+      delayChildren: 0.05,
+    },
+  },
+};
+
+const modalItemVariants = {
+  hidden: { opacity: 0, scale: 0.9 },
+  visible: {
+    opacity: 1,
+    scale: 1,
+    transition: {
+      duration: 0.25,
+      ease: "easeOut",
+    },
+  },
+};
+
 interface DashboardOverviewProps {
   className?: string;
-  variant?: "default" | "sidebar";
+  variant?: "default" | "sidebar" | "modal";
 }
 
 interface CreatorStats {
@@ -97,6 +120,7 @@ export function DashboardOverview({
     return () => container.removeEventListener("scroll", handleScroll);
   }, []);
   const isSidebar = variant === "sidebar";
+  const isModal = variant === "modal";
   const { t } = useTranslation();
   const { user } = useAuth();
   const { points: pointsData, stats } = useReactiveStats();
@@ -153,6 +177,31 @@ export function DashboardOverview({
   };
 
   if (isLoading) {
+    if (isModal) {
+      const placeholderCount = user?.userRole === "creator" ? 5 : 4;
+      return (
+        <motion.div
+          variants={modalContainerVariants}
+          initial="hidden"
+          animate="visible"
+          className={cn("grid grid-cols-2 gap-3 sm:gap-4 w-full", className)}
+        >
+          {Array.from({ length: placeholderCount }).map((_, index) => (
+            <motion.div
+              key={index}
+              variants={modalItemVariants}
+              className="rounded-2xl bg-white/60 dark:bg-gray-900/60 border border-gray-200/50 dark:border-gray-700/50 px-4 py-4 shadow-inner flex flex-col gap-3"
+            >
+              <Skeleton className="h-6 w-12 rounded-full" />
+              <Skeleton className="h-4 w-24" />
+              <Skeleton className="h-6 w-16" />
+              <Skeleton className="h-3 w-28" />
+            </motion.div>
+          ))}
+        </motion.div>
+      );
+    }
+
     return (
       <div className={className}>
         {/* Mobile Carousel */}
@@ -280,6 +329,103 @@ export function DashboardOverview({
     };
 
     const creatorMetrics = [...regularMetrics, topNichesMetric];
+
+    if (isModal) {
+      const topNicheItems =
+        topNichesMetric.topNiches && topNichesMetric.topNiches.length > 0
+          ? topNichesMetric.topNiches.slice(0, 3)
+          : null;
+
+      return (
+        <motion.div
+          variants={modalContainerVariants}
+          initial="hidden"
+          animate="visible"
+          className={cn("grid grid-cols-2 gap-3 sm:gap-4 w-full", className)}
+        >
+          {regularMetrics.map((metric, index) => (
+            <motion.div
+              key={`${metric.title}-${index}`}
+              variants={modalItemVariants}
+              className="rounded-2xl bg-white/95 dark:bg-gray-900/95 border border-gray-200/60 dark:border-gray-700/50 px-4 py-4 shadow-md flex flex-col gap-2"
+            >
+              <div className="flex items-center justify-between gap-2">
+                <div
+                  className={cn(
+                    "p-2 rounded-lg flex items-center justify-center",
+                    metric.bgColor
+                  )}
+                >
+                  <metric.icon className={cn(metric.color, "h-4 w-4")} />
+                </div>
+                {metric.badge === "attention" && (
+                  <Badge
+                    variant="destructive"
+                    className="text-[10px] px-1.5 py-0.5 h-fit"
+                  >
+                    {t("common.attention", "Attention")}
+                  </Badge>
+                )}
+              </div>
+              <div className="text-xs font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wide">
+                {metric.title}
+              </div>
+              <div className="text-2xl font-bold text-gray-900 dark:text-white leading-tight">
+                {metric.value.toLocaleString()}
+              </div>
+              <p className="text-[11px] text-gray-500 dark:text-gray-400 leading-snug">
+                {metric.description}
+              </p>
+            </motion.div>
+          ))}
+          <motion.div
+            key="top-niches-modal"
+            variants={modalItemVariants}
+            className="col-span-2 rounded-2xl bg-gradient-to-br from-purple-500/10 via-indigo-500/10 to-blue-500/10 dark:from-purple-500/15 dark:via-indigo-500/15 dark:to-blue-500/15 border border-purple-200/40 dark:border-purple-500/25 px-4 py-4 shadow-md flex flex-col gap-3"
+          >
+            <div className="flex items-center gap-2">
+              <div
+                className={cn(
+                  "p-2 rounded-lg flex items-center justify-center",
+                  topNichesMetric.bgColor
+                )}
+              >
+                <topNichesMetric.icon
+                  className={cn(topNichesMetric.color, "h-4 w-4")}
+                />
+              </div>
+              <div className="text-sm font-semibold text-purple-700 dark:text-purple-200 uppercase tracking-wide">
+                {topNichesMetric.title}
+              </div>
+            </div>
+            {topNicheItems ? (
+              <div className="flex flex-col gap-2">
+                {topNicheItems.map((niche, idx) => (
+                  <div
+                    key={`${niche.name}-${idx}`}
+                    className="flex items-center justify-between gap-4 rounded-xl bg-white/70 dark:bg-gray-900/70 border border-white/40 dark:border-gray-700/50 px-3 py-2 shadow-sm"
+                  >
+                    <span className="text-sm font-medium text-gray-800 dark:text-gray-100 capitalize">
+                      {niche.name}
+                    </span>
+                    <span className="text-xs font-semibold text-purple-600 dark:text-purple-300">
+                      {niche.votes} {t("ideas.votes", "votes")}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div className="text-sm font-medium text-gray-500 dark:text-gray-400">
+                {t("dashboard.overview.noNicheData", "No data yet")}
+              </div>
+            )}
+            <p className="text-xs text-gray-500 dark:text-gray-400 leading-snug">
+              {topNichesMetric.description}
+            </p>
+          </motion.div>
+        </motion.div>
+      );
+    }
 
     const gridPlacement = [
       "col-start-1 row-start-1",
@@ -570,7 +716,7 @@ export function DashboardOverview({
           </motion.div>
         )}
 
-        {!isSidebar && (
+        {!isSidebar && !isModal && (
           <CarouselIndicators
             total={creatorMetrics.length}
             active={activeSlide}

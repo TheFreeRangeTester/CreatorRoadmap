@@ -34,12 +34,11 @@ import AudienceStats from "@/components/audience-stats";
 import { DashboardOverview } from "@/components/dashboard-overview";
 import { MobileBottomNavigation } from "@/components/mobile-bottom-navigation";
 import {
-  Sheet,
-  SheetContent,
-  SheetDescription,
-  SheetHeader,
-  SheetTitle,
-} from "@/components/ui/sheet";
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogTitle,
+} from "@/components/ui/dialog";
 
 export default function HomePage() {
   const { user, logoutMutation } = useAuth();
@@ -52,7 +51,7 @@ export default function HomePage() {
   const [ideaToDelete] = useState<number | null>(null);
   const [activeTab, setActiveTab] = useState("published");
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [isMetricsSheetOpen, setIsMetricsSheetOpen] = useState(false);
+  const [isMetricsDialogOpen, setIsMetricsDialogOpen] = useState(false);
   const [isTemplateModalOpen, setIsTemplateModalOpen] = useState(false);
   const [currentTemplateIdea, setCurrentTemplateIdea] =
     useState<IdeaResponse | null>(null);
@@ -399,34 +398,39 @@ export default function HomePage() {
             <Button
               variant="outline"
               className="w-full justify-center gap-2 border-dashed"
-              onClick={() => setIsMetricsSheetOpen(true)}
+              onClick={() => setIsMetricsDialogOpen(true)}
             >
               <BarChart3 className="h-4 w-4" />
-              {t("dashboard.quickMetrics", "Resumen rápido")}
+              {t("dashboard.viewDetails", "Ver detalles")}
             </Button>
           </motion.div>
 
-          <Sheet open={isMetricsSheetOpen} onOpenChange={setIsMetricsSheetOpen}>
-            <SheetContent
-              side="top"
-              className="lg:hidden inset-x-0 top-0 h-[100vh] max-h-[100vh] overflow-y-auto rounded-none px-6 pb-10 pt-16"
-            >
-              <SheetHeader className="text-left">
-                <SheetTitle>
-                  {t("dashboard.quickMetricsTitle", "Métricas")}
-                </SheetTitle>
-                <SheetDescription>
-                  {t(
-                    "dashboard.quickMetricsSubtitle",
-                    "Consulta tus indicadores sin salir de esta vista."
-                  )}
-                </SheetDescription>
-              </SheetHeader>
-              <div className="mt-6">
-                <DashboardOverview />
-              </div>
-            </SheetContent>
-          </Sheet>
+          <Dialog
+            open={isMetricsDialogOpen}
+            onOpenChange={setIsMetricsDialogOpen}
+          >
+            <DialogContent className="lg:hidden max-w-md w-[calc(100%-2rem)] border-none bg-white/95 dark:bg-gray-900/95 p-6 pb-7 rounded-3xl shadow-[0_25px_60px_-20px_rgba(79,70,229,0.45)]">
+              <motion.div
+                initial={{ opacity: 0, scale: 0.92 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.25, ease: "easeOut" }}
+                className="space-y-6"
+              >
+                <div className="space-y-1 text-left">
+                  <DialogTitle className="text-2xl font-bold text-gray-900 dark:text-white">
+                    {t("dashboard.quickMetricsTitle", "Métricas")}
+                  </DialogTitle>
+                  <DialogDescription className="text-sm text-gray-500 dark:text-gray-400">
+                    {t(
+                      "dashboard.quickMetricsSubtitle",
+                      "Consulta tus indicadores sin salir de esta vista."
+                    )}
+                  </DialogDescription>
+                </div>
+                <DashboardOverview variant="modal" />
+              </motion.div>
+            </DialogContent>
+          </Dialog>
 
           {user?.userRole === "creator" ? (
             <div className="lg:grid lg:grid-cols-[minmax(0,1fr)_320px] lg:gap-8 lg:items-start">
