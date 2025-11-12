@@ -1,7 +1,16 @@
 import { useState } from "react";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { motion } from "framer-motion";
-import { Grid3x3, Store, Package, User, Menu, X } from "lucide-react";
+import {
+  Grid3x3,
+  Store,
+  Package,
+  User,
+  Menu,
+  X,
+  BarChart3,
+  Plus,
+} from "lucide-react";
 import { useAuth } from "@/hooks/use-auth";
 import { useToast } from "@/hooks/use-toast";
 import { useReactiveStats } from "@/hooks/use-reactive-stats";
@@ -25,6 +34,12 @@ import { Link } from "wouter";
 import AudienceStats from "@/components/audience-stats";
 import { DashboardOverview } from "@/components/dashboard-overview";
 import { MobileBottomNavigation } from "@/components/mobile-bottom-navigation";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogTitle,
+} from "@/components/ui/dialog";
 
 export default function HomePage() {
   const { user, logoutMutation } = useAuth();
@@ -37,8 +52,11 @@ export default function HomePage() {
   const [ideaToDelete] = useState<number | null>(null);
   const [activeTab, setActiveTab] = useState("published");
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isMetricsDialogOpen, setIsMetricsDialogOpen] = useState(false);
+  const [isCreatorActionsOpen, setIsCreatorActionsOpen] = useState(false);
   const [isTemplateModalOpen, setIsTemplateModalOpen] = useState(false);
-  const [currentTemplateIdea, setCurrentTemplateIdea] = useState<IdeaResponse | null>(null);
+  const [currentTemplateIdea, setCurrentTemplateIdea] =
+    useState<IdeaResponse | null>(null);
 
   // Fetch ideas
   const {
@@ -146,6 +164,124 @@ export default function HomePage() {
   const handleLogout = () => {
     logoutMutation.mutate();
   };
+
+  const ideasSection = (
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ delay: 0.1 }}
+      className="bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-700 shadow-sm"
+    >
+      <div className="p-6">
+        <div className="flex flex-wrap items-center justify-between gap-3 mb-6">
+          <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
+            {t("dashboard.topIdeas")}
+          </h2>
+          <div className="flex items-center gap-2">
+            <Button
+              variant="outline"
+              size="sm"
+              className="lg:hidden gap-2 border-dashed"
+              onClick={() => setIsMetricsDialogOpen(true)}
+            >
+              <BarChart3 className="h-4 w-4" />
+              <span className="text-sm font-medium">
+                {t("dashboard.viewDetails")}
+              </span>
+            </Button>
+            {user?.userRole === "creator" && (
+              <Button
+                variant="default"
+                size="icon"
+                className="lg:hidden h-10 w-10 rounded-full shadow-lg"
+                onClick={() => setIsCreatorActionsOpen(true)}
+                aria-label={t("ideas.addIdea")}
+              >
+                <Plus className="h-5 w-5" />
+              </Button>
+            )}
+          </div>
+        </div>
+
+        {user?.userRole === "creator" ? (
+          <Tabs
+            value={activeTab}
+            onValueChange={setActiveTab}
+            className="w-full"
+          >
+            <TabsList className="hidden md:grid w-full grid-cols-4 bg-gray-100 dark:bg-gray-800 rounded-lg">
+              <TabsTrigger
+                value="published"
+                className="data-[state=active]:bg-white dark:data-[state=active]:bg-gray-700 rounded-md transition-all"
+              >
+                <Grid3x3 className="h-4 w-4 mr-2" />
+                <span className="hidden sm:inline">{t("ideas.published")}</span>
+                <span className="sm:hidden">{t("ideas.short")}</span>
+              </TabsTrigger>
+              <TabsTrigger
+                value="suggested"
+                className="data-[state=active]:bg-white dark:data-[state=active]:bg-gray-700 rounded-xl transition-all relative"
+              >
+                <User className="h-4 w-4 mr-2" />
+                <span className="hidden sm:inline">{t("ideas.suggested")}</span>
+                <span className="sm:hidden">{t("ideas.suggestedShort")}</span>
+                {pendingIdeas && pendingIdeas.length > 0 && (
+                  <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+                    {pendingIdeas.length}
+                  </span>
+                )}
+              </TabsTrigger>
+              <TabsTrigger
+                value="store"
+                className="data-[state=active]:bg-white dark:data-[state=active]:bg-gray-700 rounded-md transition-all"
+              >
+                <Store className="h-4 w-4 mr-2" />
+                <span className="hidden sm:inline">{t("store.title")}</span>
+                <span className="sm:hidden">{t("store.short")}</span>
+              </TabsTrigger>
+              <TabsTrigger
+                value="redemptions"
+                className="data-[state=active]:bg-white dark:data-[state=active]:bg-gray-700 rounded-md transition-all"
+              >
+                <Package className="h-4 w-4 mr-2" />
+                <span className="hidden sm:inline">
+                  {t("redemptions.title")}
+                </span>
+                <span className="sm:hidden">{t("redemptions.short")}</span>
+              </TabsTrigger>
+            </TabsList>
+
+            <TabsContent value="published" className="mt-6">
+              <IdeasTabView
+                mode="published"
+                onOpenTemplate={handleOpenTemplate}
+              />
+            </TabsContent>
+
+            <TabsContent value="suggested" className="mt-6">
+              <IdeasTabView mode="suggested" />
+            </TabsContent>
+
+            <TabsContent value="store" className="mt-6">
+              <StoreManagement />
+            </TabsContent>
+
+            <TabsContent value="redemptions" className="mt-6">
+              <RedemptionManagement />
+            </TabsContent>
+          </Tabs>
+        ) : (
+          // Audience view - just show published ideas and their stats
+          <div className="space-y-6">
+            <IdeasTabView mode="published" />
+            <div className="border-t border-gray-200/50 dark:border-gray-700/50 pt-6">
+              <AudienceStats isVisible={true} />
+            </div>
+          </div>
+        )}
+      </div>
+    </motion.div>
+  );
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
@@ -280,124 +416,76 @@ export default function HomePage() {
             </p>
           </motion.div>
 
-          {/* Dashboard Overview */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.1 }}
-            className="mb-8"
+          <Dialog
+            open={isMetricsDialogOpen}
+            onOpenChange={setIsMetricsDialogOpen}
           >
-            <DashboardOverview />
-          </motion.div>
-
-          {/* Creator Controls */}
-          {user?.userRole === "creator" && (
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-700 shadow-sm mb-6"
-            >
-              <CreatorControls onAddIdea={handleAddIdea} />
-            </motion.div>
-          )}
-
-          {/* Main Ideas Section */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.1 }}
-            className="bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-700 shadow-sm"
-          >
-            <div className="p-6">
-              <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">
-                {t("dashboard.topIdeas")}
-              </h2>
-
-              {user?.userRole === "creator" ? (
-                <Tabs
-                  value={activeTab}
-                  onValueChange={setActiveTab}
-                  className="w-full"
-                >
-                  <TabsList className="hidden md:grid w-full grid-cols-4 bg-gray-100 dark:bg-gray-800 rounded-lg">
-                    <TabsTrigger
-                      value="published"
-                      className="data-[state=active]:bg-white dark:data-[state=active]:bg-gray-700 rounded-md transition-all"
-                    >
-                      <Grid3x3 className="h-4 w-4 mr-2" />
-                      <span className="hidden sm:inline">
-                        {t("ideas.published")}
-                      </span>
-                      <span className="sm:hidden">{t("ideas.short")}</span>
-                    </TabsTrigger>
-                    <TabsTrigger
-                      value="suggested"
-                      className="data-[state=active]:bg-white dark:data-[state=active]:bg-gray-700 rounded-xl transition-all relative"
-                    >
-                      <User className="h-4 w-4 mr-2" />
-                      <span className="hidden sm:inline">
-                        {t("ideas.suggested")}
-                      </span>
-                      <span className="sm:hidden">
-                        {t("ideas.suggestedShort")}
-                      </span>
-                      {pendingIdeas && pendingIdeas.length > 0 && (
-                        <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
-                          {pendingIdeas.length}
-                        </span>
-                      )}
-                    </TabsTrigger>
-                    <TabsTrigger
-                      value="store"
-                      className="data-[state=active]:bg-white dark:data-[state=active]:bg-gray-700 rounded-md transition-all"
-                    >
-                      <Store className="h-4 w-4 mr-2" />
-                      <span className="hidden sm:inline">
-                        {t("store.title")}
-                      </span>
-                      <span className="sm:hidden">{t("store.short")}</span>
-                    </TabsTrigger>
-                    <TabsTrigger
-                      value="redemptions"
-                      className="data-[state=active]:bg-white dark:data-[state=active]:bg-gray-700 rounded-md transition-all"
-                    >
-                      <Package className="h-4 w-4 mr-2" />
-                      <span className="hidden sm:inline">
-                        {t("redemptions.title")}
-                      </span>
-                      <span className="sm:hidden">
-                        {t("redemptions.short")}
-                      </span>
-                    </TabsTrigger>
-                  </TabsList>
-
-                  <TabsContent value="published" className="mt-6">
-                    <IdeasTabView mode="published" onOpenTemplate={handleOpenTemplate} />
-                  </TabsContent>
-
-                  <TabsContent value="suggested" className="mt-6">
-                    <IdeasTabView mode="suggested" />
-                  </TabsContent>
-
-                  <TabsContent value="store" className="mt-6">
-                    <StoreManagement />
-                  </TabsContent>
-
-                  <TabsContent value="redemptions" className="mt-6">
-                    <RedemptionManagement />
-                  </TabsContent>
-                </Tabs>
-              ) : (
-                // Audience view - just show published ideas and their stats
-                <div className="space-y-6">
-                  <IdeasTabView mode="published" />
-                  <div className="border-t border-gray-200/50 dark:border-gray-700/50 pt-6">
-                    <AudienceStats isVisible={true} />
-                  </div>
+            <DialogContent className="lg:hidden max-w-md w-[calc(100%-2rem)] border-none bg-white/95 dark:bg-gray-900/95 p-6 pb-7 rounded-3xl shadow-[0_25px_60px_-20px_rgba(79,70,229,0.45)]">
+              <motion.div
+                initial={{ opacity: 0, scale: 0.92 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.25, ease: "easeOut" }}
+                className="space-y-6"
+              >
+                <div className="space-y-1 text-left">
+                  <DialogTitle className="text-2xl font-bold text-gray-900 dark:text-white">
+                    {t("dashboard.quickMetricsTitle")}
+                  </DialogTitle>
+                  <DialogDescription className="text-sm text-gray-500 dark:text-gray-400">
+                    {t("dashboard.quickMetricsSubtitle")}
+                  </DialogDescription>
                 </div>
-              )}
+                <DashboardOverview variant="modal" />
+              </motion.div>
+            </DialogContent>
+          </Dialog>
+
+          <Dialog
+            open={isCreatorActionsOpen}
+            onOpenChange={setIsCreatorActionsOpen}
+          >
+            <DialogContent className="lg:hidden max-w-md w-[calc(100%-1.5rem)] border-none bg-white/95 dark:bg-gray-900/95 p-0 rounded-3xl shadow-[0_25px_60px_-20px_rgba(79,70,229,0.45)]">
+              <CreatorControls
+                onAddIdea={() => {
+                  setIsCreatorActionsOpen(false);
+                  handleAddIdea();
+                }}
+              />
+            </DialogContent>
+          </Dialog>
+
+          {user?.userRole === "creator" ? (
+            <div className="lg:grid lg:grid-cols-[minmax(0,1fr)_320px] lg:gap-8 lg:items-start">
+              <div className="space-y-6 lg:space-y-8">
+                {ideasSection}
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="hidden lg:block bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-700 shadow-sm"
+                >
+                  <CreatorControls onAddIdea={handleAddIdea} />
+                </motion.div>
+              </div>
+              <aside className="hidden lg:block">
+                <DashboardOverview
+                  variant="sidebar"
+                  className="sticky top-28"
+                />
+              </aside>
             </div>
-          </motion.div>
+          ) : (
+            <>
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.1 }}
+                className="hidden lg:block mb-8"
+              >
+                <DashboardOverview />
+              </motion.div>
+              {ideasSection}
+            </>
+          )}
         </div>
       </div>
 

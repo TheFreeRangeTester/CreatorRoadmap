@@ -449,7 +449,10 @@
     "creatorSettingsDesc": "Manage your creator profile, leaderboard preferences, and public appearance",
     "leaderboardPreferences": "Leaderboard Preferences",
     "leaderboardPreferencesDesc": "Configure how your public leaderboard appears to your audience",
-    "moreSettingsComing": "More leaderboard customization options coming soon!"
+    "moreSettingsComing": "More leaderboard customization options coming soon!",
+    "viewDetails": "View details",
+    "quickMetricsTitle": "Metrics",
+    "quickMetricsSubtitle": "Check your key indicators without leaving this view."
   },
   "store": {
     "title": "Store",

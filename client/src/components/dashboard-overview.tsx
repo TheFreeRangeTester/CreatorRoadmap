@@ -21,8 +21,32 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { IdeaResponse } from "@shared/schema";
 import { cn } from "@/lib/utils";
 
+const modalContainerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.08,
+      delayChildren: 0.05,
+    },
+  },
+};
+
+const modalItemVariants = {
+  hidden: { opacity: 0, scale: 0.9 },
+  visible: {
+    opacity: 1,
+    scale: 1,
+    transition: {
+      duration: 0.25,
+      ease: "easeOut",
+    },
+  },
+};
+
 interface DashboardOverviewProps {
   className?: string;
+  variant?: "default" | "sidebar" | "modal";
 }
 
 interface CreatorStats {
@@ -73,7 +97,10 @@ function CarouselIndicators({
   );
 }
 
-export function DashboardOverview({ className }: DashboardOverviewProps) {
+export function DashboardOverview({
+  className,
+  variant = "default",
+}: DashboardOverviewProps) {
   const [activeSlide, setActiveSlide] = useState(0);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
 
@@ -92,6 +119,8 @@ export function DashboardOverview({ className }: DashboardOverviewProps) {
     container.addEventListener("scroll", handleScroll);
     return () => container.removeEventListener("scroll", handleScroll);
   }, []);
+  const isSidebar = variant === "sidebar";
+  const isModal = variant === "modal";
   const { t } = useTranslation();
   const { user } = useAuth();
   const { points: pointsData, stats } = useReactiveStats();
@@ -148,6 +177,31 @@ export function DashboardOverview({ className }: DashboardOverviewProps) {
   };
 
   if (isLoading) {
+    if (isModal) {
+      const placeholderCount = user?.userRole === "creator" ? 5 : 4;
+      return (
+        <motion.div
+          variants={modalContainerVariants}
+          initial="hidden"
+          animate="visible"
+          className={cn("grid grid-cols-2 gap-3 sm:gap-4 w-full", className)}
+        >
+          {Array.from({ length: placeholderCount }).map((_, index) => (
+            <motion.div
+              key={index}
+              variants={modalItemVariants}
+              className="rounded-2xl bg-white/60 dark:bg-gray-900/60 border border-gray-200/50 dark:border-gray-700/50 px-4 py-4 shadow-inner flex flex-col gap-3"
+            >
+              <Skeleton className="h-6 w-12 rounded-full" />
+              <Skeleton className="h-4 w-24" />
+              <Skeleton className="h-6 w-16" />
+              <Skeleton className="h-3 w-28" />
+            </motion.div>
+          ))}
+        </motion.div>
+      );
+    }
+
     return (
       <div className={className}>
         {/* Mobile Carousel */}
@@ -276,6 +330,288 @@ export function DashboardOverview({ className }: DashboardOverviewProps) {
 
     const creatorMetrics = [...regularMetrics, topNichesMetric];
 
+    if (isModal) {
+      const topNicheItems =
+        topNichesMetric.topNiches && topNichesMetric.topNiches.length > 0
+          ? topNichesMetric.topNiches.slice(0, 3)
+          : null;
+
+      return (
+        <motion.div
+          variants={modalContainerVariants}
+          initial="hidden"
+          animate="visible"
+          className={cn("grid grid-cols-2 gap-3 sm:gap-4 w-full", className)}
+        >
+          {regularMetrics.map((metric, index) => (
+            <motion.div
+              key={`${metric.title}-${index}`}
+              variants={modalItemVariants}
+              className="rounded-2xl bg-white/95 dark:bg-gray-900/95 border border-gray-200/60 dark:border-gray-700/50 px-4 py-4 shadow-md flex flex-col gap-2"
+            >
+              <div className="flex items-center justify-between gap-2">
+                <div
+                  className={cn(
+                    "p-2 rounded-lg flex items-center justify-center",
+                    metric.bgColor
+                  )}
+                >
+                  <metric.icon className={cn(metric.color, "h-4 w-4")} />
+                </div>
+                {metric.badge === "attention" && (
+                  <Badge
+                    variant="destructive"
+                    className="text-[10px] px-1.5 py-0.5 h-fit"
+                  >
+                    {t("common.attention", "Attention")}
+                  </Badge>
+                )}
+              </div>
+              <div className="text-xs font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wide">
+                {metric.title}
+              </div>
+              <div className="text-2xl font-bold text-gray-900 dark:text-white leading-tight">
+                {metric.value.toLocaleString()}
+              </div>
+              <p className="text-[11px] text-gray-500 dark:text-gray-400 leading-snug">
+                {metric.description}
+              </p>
+            </motion.div>
+          ))}
+          <motion.div
+            key="top-niches-modal"
+            variants={modalItemVariants}
+            className="col-span-2 rounded-2xl bg-gradient-to-br from-purple-500/10 via-indigo-500/10 to-blue-500/10 dark:from-purple-500/15 dark:via-indigo-500/15 dark:to-blue-500/15 border border-purple-200/40 dark:border-purple-500/25 px-4 py-4 shadow-md flex flex-col gap-3"
+          >
+            <div className="flex items-center gap-2">
+              <div
+                className={cn(
+                  "p-2 rounded-lg flex items-center justify-center",
+                  topNichesMetric.bgColor
+                )}
+              >
+                <topNichesMetric.icon
+                  className={cn(topNichesMetric.color, "h-4 w-4")}
+                />
+              </div>
+              <div className="text-sm font-semibold text-purple-700 dark:text-purple-200 uppercase tracking-wide">
+                {topNichesMetric.title}
+              </div>
+            </div>
+            {topNicheItems ? (
+              <div className="flex flex-col gap-2">
+                {topNicheItems.map((niche, idx) => (
+                  <div
+                    key={`${niche.name}-${idx}`}
+                    className="flex items-center justify-between gap-4 rounded-xl bg-white/70 dark:bg-gray-900/70 border border-white/40 dark:border-gray-700/50 px-3 py-2 shadow-sm"
+                  >
+                    <span className="text-sm font-medium text-gray-800 dark:text-gray-100 capitalize">
+                      {niche.name}
+                    </span>
+                    <span className="text-xs font-semibold text-purple-600 dark:text-purple-300">
+                      {niche.votes} {t("ideas.votes", "votes")}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div className="text-sm font-medium text-gray-500 dark:text-gray-400">
+                {t("dashboard.overview.noNicheData", "No data yet")}
+              </div>
+            )}
+            <p className="text-xs text-gray-500 dark:text-gray-400 leading-snug">
+              {topNichesMetric.description}
+            </p>
+          </motion.div>
+        </motion.div>
+      );
+    }
+
+    const gridPlacement = [
+      "col-start-1 row-start-1",
+      "col-start-1 row-start-2",
+      "col-start-2 row-start-1",
+      "col-start-2 row-start-2",
+    ];
+
+    const renderDesktopMetricCard = (
+      metric: (typeof regularMetrics)[number],
+      index: number
+    ) => (
+      <motion.div
+        key={metric.title}
+        variants={itemVariants}
+        className={cn(!isSidebar && gridPlacement[index])}
+      >
+        <Card
+          className={cn(
+            "bg-white/90 dark:bg-gray-900/90 backdrop-blur-sm border border-gray-200/50 dark:border-gray-700/50 hover:shadow-xl hover:border-gray-300 dark:hover:border-gray-600 transition-all duration-300 flex flex-col",
+            isSidebar ? "rounded-xl" : "rounded-none h-full"
+          )}
+        >
+          <CardHeader
+            className={cn(
+              "flex flex-row items-center justify-between space-y-0 pb-2.5 flex-shrink-0",
+              isSidebar && "pb-3"
+            )}
+          >
+            <CardTitle
+              className={cn(
+                "font-semibold text-gray-700 dark:text-gray-300 leading-tight",
+                isSidebar ? "text-sm" : "text-xs"
+              )}
+            >
+              {metric.title}
+            </CardTitle>
+            <div
+              className={cn(
+                "flex-shrink-0",
+                isSidebar ? "p-2 rounded-lg" : "p-1.5 rounded-md",
+                metric.bgColor
+              )}
+            >
+              {(() => {
+                const Icon = metric.icon;
+                return (
+                  <Icon
+                    className={cn(
+                      metric.color,
+                      isSidebar ? "h-5 w-5" : "h-4 w-4"
+                    )}
+                  />
+                );
+              })()}
+            </div>
+          </CardHeader>
+          <CardContent className="pt-0 pb-4 flex-1 flex flex-col justify-between">
+            <div className="space-y-1.5">
+              <div className="flex items-baseline gap-2 flex-wrap">
+                <div
+                  className={cn(
+                    "font-bold text-gray-900 dark:text-white leading-tight",
+                    isSidebar ? "text-3xl" : "text-2xl"
+                  )}
+                >
+                  {metric.value.toLocaleString()}
+                </div>
+                {metric.badge === "attention" && (
+                  <Badge
+                    variant="destructive"
+                    className={cn(
+                      "text-[10px] px-1.5 py-0.5 h-fit",
+                      isSidebar && "text-xs"
+                    )}
+                  >
+                    {t("common.attention", "Attention")}
+                  </Badge>
+                )}
+              </div>
+              <p
+                className={cn(
+                  "text-gray-500 dark:text-gray-400 leading-snug",
+                  isSidebar ? "text-xs" : "text-[11px]"
+                )}
+              >
+                {metric.description}
+              </p>
+            </div>
+          </CardContent>
+        </Card>
+      </motion.div>
+    );
+
+    const renderTopNichesCard = () => (
+      <motion.div
+        key="top-niches"
+        variants={itemVariants}
+        className={cn(!isSidebar && "col-start-3 row-start-1 row-span-2")}
+      >
+        <Card
+          className={cn(
+            "bg-white/90 dark:bg-gray-900/90 backdrop-blur-sm border border-gray-200/50 dark:border-gray-700/50 hover:shadow-xl hover:border-gray-300 dark:hover:border-gray-600 transition-all duration-300 flex flex-col",
+            isSidebar ? "rounded-xl" : "rounded-none h-full"
+          )}
+        >
+          <CardHeader
+            className={cn(
+              "flex flex-row items-center justify-between space-y-0 pb-3 flex-shrink-0",
+              isSidebar && "pb-4"
+            )}
+          >
+            <CardTitle
+              className={cn(
+                "font-semibold text-gray-700 dark:text-gray-300 leading-tight",
+                isSidebar ? "text-base" : "text-sm"
+              )}
+            >
+              {topNichesMetric.title}
+            </CardTitle>
+            <div
+              className={cn(
+                "flex-shrink-0",
+                isSidebar ? "p-2.5 rounded-xl" : "p-2 rounded-md",
+                topNichesMetric.bgColor
+              )}
+            >
+              <topNichesMetric.icon
+                className={cn(
+                  topNichesMetric.color,
+                  isSidebar ? "h-6 w-6" : "h-5 w-5"
+                )}
+              />
+            </div>
+          </CardHeader>
+          <CardContent className="pt-0 pb-4 flex-1 flex flex-col justify-between">
+            <div className="space-y-4">
+              {topNichesMetric.topNiches &&
+              topNichesMetric.topNiches.length > 0 ? (
+                topNichesMetric.topNiches.map((niche, idx) => (
+                  <div
+                    key={idx}
+                    className={cn(
+                      "flex flex-col space-y-1 border-b border-gray-200 dark:border-gray-700 pb-3 last:border-b-0 last:pb-0",
+                      isSidebar && "pb-4"
+                    )}
+                  >
+                    <div
+                      className={cn(
+                        "font-bold text-gray-900 dark:text-white capitalize",
+                        isSidebar ? "text-lg" : "text-lg"
+                      )}
+                    >
+                      {niche.name}
+                    </div>
+                    <div
+                      className={cn(
+                        "text-gray-500 dark:text-gray-400",
+                        isSidebar ? "text-sm" : "text-xs"
+                      )}
+                    >
+                      {niche.votes} {t("ideas.votes", "votes")}
+                    </div>
+                  </div>
+                ))
+              ) : (
+                <div className="flex flex-col space-y-1">
+                  <div className="text-lg font-bold text-gray-400 dark:text-gray-500">
+                    {t("dashboard.overview.noNicheData", "No data yet")}
+                  </div>
+                </div>
+              )}
+            </div>
+            <p
+              className={cn(
+                "text-gray-500 dark:text-gray-400 leading-snug mt-4",
+                isSidebar ? "text-sm" : "text-xs"
+              )}
+            >
+              {topNichesMetric.description}
+            </p>
+          </CardContent>
+        </Card>
+      </motion.div>
+    );
+
     return (
       <div className={className}>
         {/* Mobile Carousel */}
@@ -308,19 +644,21 @@ export function DashboardOverview({ className }: DashboardOverviewProps) {
                         <div className="flex flex-col items-center space-y-3 w-full">
                           {(metric as any).topNiches &&
                           (metric as any).topNiches.length > 0 ? (
-                            (metric as any).topNiches.map((niche: any, idx: number) => (
-                              <div
-                                key={idx}
-                                className="flex flex-col items-center space-y-1"
-                              >
-                                <span className="text-2xl capitalize">
-                                  {niche.name}
-                                </span>
-                                <span className="text-sm font-normal text-gray-500 dark:text-gray-400">
-                                  {niche.votes} {t("ideas.votes", "votes")}
-                                </span>
-                              </div>
-                            ))
+                            (metric as any).topNiches.map(
+                              (niche: any, idx: number) => (
+                                <div
+                                  key={idx}
+                                  className="flex flex-col items-center space-y-1"
+                                >
+                                  <span className="text-2xl capitalize">
+                                    {niche.name}
+                                  </span>
+                                  <span className="text-sm font-normal text-gray-500 dark:text-gray-400">
+                                    {niche.votes} {t("ideas.votes", "votes")}
+                                  </span>
+                                </div>
+                              )
+                            )
                           ) : (
                             <span className="text-2xl capitalize">
                               {metric.value}
@@ -349,228 +687,41 @@ export function DashboardOverview({ className }: DashboardOverviewProps) {
           ))}
         </div>
 
-        {/* Desktop Grid - 3-column layout with Top Niche taking 2 rows */}
-        <motion.div
-          variants={containerVariants}
-          initial="hidden"
-          animate="visible"
-          className="hidden lg:grid lg:grid-cols-3 gap-5 auto-rows-fr"
-        >
-          {/* Column 1 - Total Ideas */}
+        {/* Desktop display */}
+        {isSidebar ? (
           <motion.div
-            variants={itemVariants}
-            className="col-start-1 row-start-1"
+            variants={containerVariants}
+            initial="hidden"
+            animate="visible"
+            className="hidden lg:flex lg:flex-col gap-4"
           >
-            <Card className="rounded-none bg-white/90 dark:bg-gray-900/90 backdrop-blur-sm border border-gray-200/50 dark:border-gray-700/50 hover:shadow-xl hover:border-gray-300 dark:hover:border-gray-600 transition-all duration-300 h-full flex flex-col">
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2.5 flex-shrink-0">
-                <CardTitle className="text-xs font-semibold text-gray-700 dark:text-gray-300 leading-tight">
-                  {regularMetrics[0].title}
-                </CardTitle>
-                <div
-                  className={`p-1.5 rounded-md ${regularMetrics[0].bgColor} flex-shrink-0`}
-                >
-                  {(() => {
-                    const Icon = regularMetrics[0].icon;
-                    return (
-                      <Icon className={`h-4 w-4 ${regularMetrics[0].color}`} />
-                    );
-                  })()}
-                </div>
-              </CardHeader>
-              <CardContent className="pt-0 pb-4 flex-1 flex flex-col justify-between">
-                <div className="space-y-1.5">
-                  <div className="flex items-baseline gap-2 flex-wrap">
-                    <div className="text-2xl font-bold text-gray-900 dark:text-white leading-tight">
-                      {regularMetrics[0].value.toLocaleString()}
-                    </div>
-                  </div>
-                  <p className="text-[11px] text-gray-500 dark:text-gray-400 leading-snug">
-                    {regularMetrics[0].description}
-                  </p>
-                </div>
-              </CardContent>
-            </Card>
+            <div className="flex flex-col gap-4">
+              {regularMetrics.map((metric, index) =>
+                renderDesktopMetricCard(metric, index)
+              )}
+            </div>
+            {renderTopNichesCard()}
           </motion.div>
-
-          {/* Column 1 - Total Votes */}
+        ) : (
           <motion.div
-            variants={itemVariants}
-            className="col-start-1 row-start-2"
+            variants={containerVariants}
+            initial="hidden"
+            animate="visible"
+            className="hidden lg:grid lg:grid-cols-3 gap-5 auto-rows-fr"
           >
-            <Card className="rounded-none bg-white/90 dark:bg-gray-900/90 backdrop-blur-sm border border-gray-200/50 dark:border-gray-700/50 hover:shadow-xl hover:border-gray-300 dark:hover:border-gray-600 transition-all duration-300 h-full flex flex-col">
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2.5 flex-shrink-0">
-                <CardTitle className="text-xs font-semibold text-gray-700 dark:text-gray-300 leading-tight">
-                  {regularMetrics[1].title}
-                </CardTitle>
-                <div
-                  className={`p-1.5 rounded-md ${regularMetrics[1].bgColor} flex-shrink-0`}
-                >
-                  {(() => {
-                    const Icon = regularMetrics[1].icon;
-                    return (
-                      <Icon className={`h-4 w-4 ${regularMetrics[1].color}`} />
-                    );
-                  })()}
-                </div>
-              </CardHeader>
-              <CardContent className="pt-0 pb-4 flex-1 flex flex-col justify-between">
-                <div className="space-y-1.5">
-                  <div className="flex items-baseline gap-2 flex-wrap">
-                    <div className="text-2xl font-bold text-gray-900 dark:text-white leading-tight">
-                      {regularMetrics[1].value.toLocaleString()}
-                    </div>
-                  </div>
-                  <p className="text-[11px] text-gray-500 dark:text-gray-400 leading-snug">
-                    {regularMetrics[1].description}
-                  </p>
-                </div>
-              </CardContent>
-            </Card>
+            {regularMetrics.map((metric, index) =>
+              renderDesktopMetricCard(metric, index)
+            )}
+            {renderTopNichesCard()}
           </motion.div>
+        )}
 
-          {/* Column 2 - Pending Redemptions */}
-          <motion.div
-            variants={itemVariants}
-            className="col-start-2 row-start-1"
-          >
-            <Card className="rounded-none bg-white/90 dark:bg-gray-900/90 backdrop-blur-sm border border-gray-200/50 dark:border-gray-700/50 hover:shadow-xl hover:border-gray-300 dark:hover:border-gray-600 transition-all duration-300 h-full flex flex-col">
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2.5 flex-shrink-0">
-                <CardTitle className="text-xs font-semibold text-gray-700 dark:text-gray-300 leading-tight">
-                  {regularMetrics[2].title}
-                </CardTitle>
-                <div
-                  className={`p-1.5 rounded-md ${regularMetrics[2].bgColor} flex-shrink-0`}
-                >
-                  {(() => {
-                    const Icon = regularMetrics[2].icon;
-                    return (
-                      <Icon className={`h-4 w-4 ${regularMetrics[2].color}`} />
-                    );
-                  })()}
-                </div>
-              </CardHeader>
-              <CardContent className="pt-0 pb-4 flex-1 flex flex-col justify-between">
-                <div className="space-y-1.5">
-                  <div className="flex items-baseline gap-2 flex-wrap">
-                    <div className="text-2xl font-bold text-gray-900 dark:text-white leading-tight">
-                      {regularMetrics[2].value.toLocaleString()}
-                    </div>
-                    {regularMetrics[2].badge === "attention" && (
-                      <Badge
-                        variant="destructive"
-                        className="text-[10px] px-1.5 py-0.5 h-fit"
-                      >
-                        {t("common.attention", "Attention")}
-                      </Badge>
-                    )}
-                  </div>
-                  <p className="text-[11px] text-gray-500 dark:text-gray-400 leading-snug">
-                    {regularMetrics[2].description}
-                  </p>
-                </div>
-              </CardContent>
-            </Card>
-          </motion.div>
-
-          {/* Column 2 - Pending Suggestions */}
-          <motion.div
-            variants={itemVariants}
-            className="col-start-2 row-start-2"
-          >
-            <Card className="rounded-none bg-white/90 dark:bg-gray-900/90 backdrop-blur-sm border border-gray-200/50 dark:border-gray-700/50 hover:shadow-xl hover:border-gray-300 dark:hover:border-gray-600 transition-all duration-300 h-full flex flex-col">
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2.5 flex-shrink-0">
-                <CardTitle className="text-xs font-semibold text-gray-700 dark:text-gray-300 leading-tight">
-                  {regularMetrics[3].title}
-                </CardTitle>
-                <div
-                  className={`p-1.5 rounded-md ${regularMetrics[3].bgColor} flex-shrink-0`}
-                >
-                  {(() => {
-                    const Icon = regularMetrics[3].icon;
-                    return (
-                      <Icon className={`h-4 w-4 ${regularMetrics[3].color}`} />
-                    );
-                  })()}
-                </div>
-              </CardHeader>
-              <CardContent className="pt-0 pb-4 flex-1 flex flex-col justify-between">
-                <div className="space-y-1.5">
-                  <div className="flex items-baseline gap-2 flex-wrap">
-                    <div className="text-2xl font-bold text-gray-900 dark:text-white leading-tight">
-                      {regularMetrics[3].value.toLocaleString()}
-                    </div>
-                    {regularMetrics[3].badge === "attention" && (
-                      <Badge
-                        variant="destructive"
-                        className="text-[10px] px-1.5 py-0.5 h-fit"
-                      >
-                        {t("common.attention", "Attention")}
-                      </Badge>
-                    )}
-                  </div>
-                  <p className="text-[11px] text-gray-500 dark:text-gray-400 leading-snug">
-                    {regularMetrics[3].description}
-                  </p>
-                </div>
-              </CardContent>
-            </Card>
-          </motion.div>
-
-          {/* Column 3 - Top Niches Card - Double height */}
-          <motion.div
-            variants={itemVariants}
-            className="col-start-3 row-start-1 row-span-2"
-          >
-            <Card className="rounded-none bg-white/90 dark:bg-gray-900/90 backdrop-blur-sm border border-gray-200/50 dark:border-gray-700/50 hover:shadow-xl hover:border-gray-300 dark:hover:border-gray-600 transition-all duration-300 h-full flex flex-col">
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3 flex-shrink-0">
-                <CardTitle className="text-sm font-semibold text-gray-700 dark:text-gray-300 leading-tight">
-                  {topNichesMetric.title}
-                </CardTitle>
-                <div
-                  className={`p-2 rounded-md ${topNichesMetric.bgColor} flex-shrink-0`}
-                >
-                  <topNichesMetric.icon
-                    className={`h-5 w-5 ${topNichesMetric.color}`}
-                  />
-                </div>
-              </CardHeader>
-              <CardContent className="pt-0 pb-4 flex-1 flex flex-col justify-between">
-                <div className="space-y-4">
-                  {topNichesMetric.topNiches &&
-                  topNichesMetric.topNiches.length > 0 ? (
-                    topNichesMetric.topNiches.map((niche, idx) => (
-                      <div
-                        key={idx}
-                        className="flex flex-col space-y-1 border-b border-gray-200 dark:border-gray-700 pb-3 last:border-b-0 last:pb-0"
-                      >
-                        <div className="text-lg font-bold text-gray-900 dark:text-white capitalize">
-                          {niche.name}
-                        </div>
-                        <div className="text-xs text-gray-500 dark:text-gray-400">
-                          {niche.votes} {t("ideas.votes", "votes")}
-                        </div>
-                      </div>
-                    ))
-                  ) : (
-                    <div className="flex flex-col space-y-1">
-                      <div className="text-lg font-bold text-gray-400 dark:text-gray-500">
-                        {t("dashboard.overview.noNicheData", "No data yet")}
-                      </div>
-                    </div>
-                  )}
-                </div>
-                <p className="text-xs text-gray-500 dark:text-gray-400 leading-snug mt-4">
-                  {topNichesMetric.description}
-                </p>
-              </CardContent>
-            </Card>
-          </motion.div>
-        </motion.div>
-
-        <CarouselIndicators
-          total={creatorMetrics.length}
-          active={activeSlide}
-        />
+        {!isSidebar && !isModal && (
+          <CarouselIndicators
+            total={creatorMetrics.length}
+            active={activeSlide}
+          />
+        )}
       </div>
     );
   }
