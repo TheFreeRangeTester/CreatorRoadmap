@@ -357,10 +357,7 @@ export default function LandingPage() {
                 <p className="text-base sm:text-lg text-gray-600 dark:text-gray-300 leading-relaxed">
                   {t(`landing.howItWorks.step${step}.description`)}
                 </p>
-                <div className="mt-auto flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.3em] text-purple-600 dark:text-purple-300">
-                  <Sparkles className="h-4 w-4" />
-                  <span>{t("landing.stats.activeCreators")}</span>
-                </div>
+                <div className="mt-auto h-1 w-16 rounded-full bg-gradient-to-r from-purple-500/60 to-blue-500/60 group-hover:w-20 transition-all duration-500"></div>
               </motion.div>
             ))}
           </div>
@@ -452,10 +449,7 @@ export default function LandingPage() {
                     {t(`landing.benefits.benefit${benefit}.description`)}
                   </p>
                 </div>
-                <div className="mt-auto flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.3em] text-emerald-600 dark:text-emerald-300">
-                  <TrendingUp className="h-4 w-4" />
-                  <span>{t("landing.stats.engagement")}</span>
-                </div>
+                <div className="mt-auto h-1 w-16 rounded-full bg-gradient-to-r from-emerald-500/60 to-teal-500/60 group-hover:w-20 transition-all duration-500"></div>
               </motion.div>
             ))}
           </div>
