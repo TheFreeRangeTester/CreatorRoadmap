@@ -71,6 +71,10 @@ const splitTextStyles = `
     display: inline-block;
     transform-origin: center;
     will-change: transform;
+    background-image: inherit;
+    background-clip: text;
+    -webkit-background-clip: text;
+    color: transparent;
   }
   
   .word {
