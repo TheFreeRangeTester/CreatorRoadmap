@@ -1,7 +1,15 @@
 import { useState } from "react";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { motion } from "framer-motion";
-import { Grid3x3, Store, Package, User, Menu, X } from "lucide-react";
+import {
+  Grid3x3,
+  Store,
+  Package,
+  User,
+  Menu,
+  X,
+  BarChart3,
+} from "lucide-react";
 import { useAuth } from "@/hooks/use-auth";
 import { useToast } from "@/hooks/use-toast";
 import { useReactiveStats } from "@/hooks/use-reactive-stats";
@@ -25,6 +33,13 @@ import { Link } from "wouter";
 import AudienceStats from "@/components/audience-stats";
 import { DashboardOverview } from "@/components/dashboard-overview";
 import { MobileBottomNavigation } from "@/components/mobile-bottom-navigation";
+import {
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetHeader,
+  SheetTitle,
+} from "@/components/ui/sheet";
 
 export default function HomePage() {
   const { user, logoutMutation } = useAuth();
@@ -37,6 +52,7 @@ export default function HomePage() {
   const [ideaToDelete] = useState<number | null>(null);
   const [activeTab, setActiveTab] = useState("published");
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isMetricsSheetOpen, setIsMetricsSheetOpen] = useState(false);
   const [isTemplateModalOpen, setIsTemplateModalOpen] = useState(false);
   const [currentTemplateIdea, setCurrentTemplateIdea] =
     useState<IdeaResponse | null>(null);
@@ -373,15 +389,44 @@ export default function HomePage() {
             </p>
           </motion.div>
 
-          {/* Dashboard Overview - Vista móvil */}
+          {/* Botón de métricas rápidas para mobile */}
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1 }}
-            className="mb-8 lg:hidden"
+            className="lg:hidden mb-6"
           >
-            <DashboardOverview />
+            <Button
+              variant="outline"
+              className="w-full justify-center gap-2 border-dashed"
+              onClick={() => setIsMetricsSheetOpen(true)}
+            >
+              <BarChart3 className="h-4 w-4" />
+              {t("dashboard.quickMetrics", "Resumen rápido")}
+            </Button>
           </motion.div>
+
+          <Sheet open={isMetricsSheetOpen} onOpenChange={setIsMetricsSheetOpen}>
+            <SheetContent
+              side="bottom"
+              className="lg:hidden h-[80vh] overflow-y-auto rounded-t-2xl px-6 pb-8"
+            >
+              <SheetHeader className="text-left">
+                <SheetTitle>
+                  {t("dashboard.quickMetricsTitle", "Métricas")}
+                </SheetTitle>
+                <SheetDescription>
+                  {t(
+                    "dashboard.quickMetricsSubtitle",
+                    "Consulta tus indicadores sin salir de esta vista."
+                  )}
+                </SheetDescription>
+              </SheetHeader>
+              <div className="mt-6">
+                <DashboardOverview />
+              </div>
+            </SheetContent>
+          </Sheet>
 
           {user?.userRole === "creator" ? (
             <div className="lg:grid lg:grid-cols-[minmax(0,1fr)_320px] lg:gap-8 lg:items-start">
