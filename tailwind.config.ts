@@ -6,8 +6,8 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        'sans': ['Inter', 'system-ui', 'sans-serif'],
-        'heading': ['Space Grotesk', 'system-ui', 'sans-serif'],
+        sans: ["Sora", "Inter", "system-ui", "sans-serif"],
+        heading: ["Space Grotesk", "Sora", "system-ui", "sans-serif"],
       },
       screens: {
         'xs': '475px',

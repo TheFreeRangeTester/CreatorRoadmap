@@ -202,12 +202,12 @@ export default function LandingPage() {
             >
               <h1
                 ref={titleRef}
-                className="text-3xl md:text-4xl lg:text-5xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-gray-900 to-gray-700 dark:from-white dark:to-gray-300 mb-4 leading-tight"
+                className="text-4xl md:text-5xl lg:text-6xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-gray-900 via-gray-800 to-gray-600 dark:from-white dark:via-gray-100 dark:to-gray-300 mb-6 leading-tight tracking-tight"
               >
                 {t("landing.hero.title")}
               </h1>
 
-              <p className="text-lg md:text-xl text-gray-600 dark:text-gray-300 mb-8 max-w-2xl">
+              <p className="text-xl md:text-2xl text-gray-600 dark:text-gray-300 mb-10 max-w-2xl">
                 {t("landing.hero.subtitle")}
               </p>
 
@@ -220,14 +220,14 @@ export default function LandingPage() {
                   >
                     <Button
                       size="lg"
-                      className="modern-button font-heading font-semibold text-sm sm:text-base bg-gradient-to-r from-purple-600 via-indigo-600 to-blue-600 hover:from-purple-700 hover:via-indigo-700 hover:to-blue-700 text-white px-6 sm:px-10 py-3 sm:py-4 shadow-2xl hover:shadow-purple-500/25 transition-all duration-500 rounded-xl"
+                      className="modern-button font-heading font-semibold text-base sm:text-lg bg-gradient-to-r from-purple-600 via-indigo-600 to-blue-600 hover:from-purple-700 hover:via-indigo-700 hover:to-blue-700 text-white px-7 sm:px-12 py-4 sm:py-5 shadow-2xl hover:shadow-purple-500/25 transition-all duration-500 rounded-2xl"
                       onClick={() => {
                         localStorage.setItem("attemptingCreatorLogin", "true");
                       }}
                     >
-                      <Sparkles className="h-4 w-4 sm:h-5 sm:w-5 mr-2 sm:mr-3" />
+                      <Sparkles className="h-5 w-5 sm:h-6 sm:w-6 mr-3 sm:mr-4" />
                       {t("landing.cta.startFree")}
-                      <ArrowRight className="h-4 w-4 sm:h-5 sm:w-5 ml-2 sm:ml-3" />
+                      <ArrowRight className="h-5 w-5 sm:h-6 sm:w-6 ml-3 sm:ml-4" />
                     </Button>
                   </motion.div>
                 </Link>
@@ -239,14 +239,14 @@ export default function LandingPage() {
                     onClick={() => setIsDemoOpen(true)}
                     size="lg"
                     variant="outline"
-                    className="glass-card font-heading font-semibold text-sm sm:text-base px-6 sm:px-10 py-3 sm:py-4 border border-purple-200/50 hover:border-purple-400/60 backdrop-blur-xl hover:scale-105 active:scale-95 transition-all duration-300 rounded-xl"
+                    className="glass-card font-heading font-semibold text-base sm:text-lg px-7 sm:px-12 py-4 sm:py-5 border border-purple-200/50 hover:border-purple-400/60 backdrop-blur-xl hover:scale-105 active:scale-95 transition-all duration-300 rounded-2xl"
                   >
                     {t("landing.cta.seeDemo")}
                   </Button>
                 </motion.div>
               </div>
 
-              <p className="text-sm text-gray-500 dark:text-gray-400">
+              <p className="text-sm md:text-base text-gray-500 dark:text-gray-400">
                 {t("landing.hero.noCreditCard")}
               </p>
             </motion.div>
@@ -277,10 +277,10 @@ export default function LandingPage() {
             variants={staggerContainer}
             className="text-center mb-16"
           >
-            <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-gray-900 dark:text-white mb-4">
+            <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 dark:text-white mb-5 tracking-tight">
               {t("landing.howItWorks.title")}
             </h2>
-            <p className="text-lg text-gray-600 dark:text-gray-300">
+            <p className="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
               {t("landing.howItWorks.subtitle")}
             </p>
           </motion.div>
@@ -321,10 +321,10 @@ export default function LandingPage() {
                 >
                   <Icon className="h-8 w-8" />
                 </motion.div>
-                <h3 className="text-lg sm:text-xl font-heading font-semibold text-gray-900 dark:text-white mb-3 sm:mb-4">
+                <h3 className="text-xl sm:text-2xl font-heading font-semibold text-gray-900 dark:text-white mb-3 sm:mb-4 tracking-tight">
                   {t(`landing.howItWorks.step${step}.title`)}
                 </h3>
-                <p className="text-sm sm:text-base text-gray-600 dark:text-gray-300 leading-relaxed">
+                <p className="text-base sm:text-lg text-gray-600 dark:text-gray-300 leading-relaxed">
                   {t(`landing.howItWorks.step${step}.description`)}
                 </p>
               </motion.div>
@@ -347,10 +347,10 @@ export default function LandingPage() {
             variants={staggerContainer}
             className="text-center mb-16"
           >
-            <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-gray-900 dark:text-white mb-4">
+            <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 dark:text-white mb-5 tracking-tight">
               {t("landing.benefits.title")}
             </h2>
-            <p className="text-lg text-gray-600 dark:text-gray-300">
+            <p className="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
               {t("landing.benefits.subtitle")}
             </p>
           </motion.div>
@@ -400,10 +400,10 @@ export default function LandingPage() {
                     <Icon className="h-6 w-6 text-white" />
                   </motion.div>
                   <div>
-                    <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
+                    <h3 className="text-xl font-heading font-semibold text-gray-900 dark:text-white mb-3 tracking-tight">
                       {t(`landing.benefits.benefit${benefit}.title`)}
                     </h3>
-                    <p className="text-gray-600 dark:text-gray-300">
+                    <p className="text-base sm:text-lg text-gray-600 dark:text-gray-300 leading-relaxed">
                       {t(`landing.benefits.benefit${benefit}.description`)}
                     </p>
                   </div>
@@ -424,10 +424,10 @@ export default function LandingPage() {
             variants={staggerContainer}
             className="text-center mb-16"
           >
-            <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-gray-900 to-gray-700 dark:from-white dark:to-gray-300 mb-4">
+            <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-gray-900 via-gray-800 to-gray-600 dark:from-white dark:via-gray-100 dark:to-gray-300 mb-5 tracking-tight">
               {t("landing.testimonials.title")}
             </h2>
-            <p className="text-lg text-gray-600 dark:text-gray-300">
+            <p className="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
               {t("landing.testimonials.subtitle")}
             </p>
           </motion.div>
@@ -476,13 +476,13 @@ export default function LandingPage() {
           >
             <motion.h2
               variants={fadeIn}
-              className="text-2xl md:text-3xl lg:text-4xl font-bold text-gray-900 dark:text-white mb-4"
+              className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 dark:text-white mb-5 tracking-tight"
             >
               {t("landing.cta.title")}
             </motion.h2>
             <motion.p
               variants={fadeIn}
-              className="text-lg text-gray-600 dark:text-gray-300 mb-8 max-w-2xl mx-auto"
+              className="text-xl text-gray-600 dark:text-gray-300 mb-10 max-w-2xl mx-auto"
             >
               {t("landing.cta.subtitle")}
             </motion.p>
