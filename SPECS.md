@@ -55,6 +55,7 @@
 - **Related Components**:
   - **Backend - Orchestration**: `server/routes.ts` — handlers POST/PUT/DELETE `/api/ideas` (creation line ~392, update ~446, deletion ~500)
   - **Backend - Persistence**: `server/database-storage.ts` — methods `createIdea()`, `updateIdea()`, `deleteIdea()`, `getIdeasByCreator()`, `updatePositions()` (lines ~107-133, ~183-220, ~237-257)
+  - **Backend - Ordering**: `server/database-storage.ts` — method `updatePositions()` orders ideas by votes descending (lines ~269-290), `client/src/components/ideas-tab-view.tsx` — frontend sorting by votes (line ~358)
   - **Backend - Validation**: `shared/schema.ts` — schemas `insertIdeaSchema`, `updateIdeaSchema`, `ideas` table (lines ~177-191)
   - **Frontend - UI**: `client/src/components/idea-form.tsx` — create/edit form with Zod validation
   - **Frontend - View**: `client/src/components/ideas-tab-view.tsx` — list and management of creator's ideas
@@ -75,9 +76,12 @@
   - ✅ Votes update in real-time
   - ✅ System prevents duplicate votes per user
 - **Related Components**:
-  - **Backend - Orchestration**: `server/routes.ts` — handlers POST `/api/ideas/:id/vote`, `/api/creators/:username/ideas/:ideaId/vote`, `/api/public/:token/ideas/:ideaId/vote` (lines ~975-1182)
-  - **Backend - Persistence**: `server/database-storage.ts` — methods `createVote()`, `getVoteByUserOrSession()`, `updateUserPoints()` to award +1 point (lines ~293-330, ~548-588)
-  - **Backend - Validation**: `shared/schema.ts` — `votes` table, `pointTransactions` table, duplicate vote validation (lines ~48-55, ~92-102)
+  - **Backend - Orchestration**: `server/routes.ts` — handlers POST `/api/ideas/:id/vote` (lines ~1006-1109), `/api/creators/:username/ideas/:ideaId/vote` (lines ~1112-1235), `/api/public/:token/ideas/:ideaId/vote` — vote endpoints
+  - **Backend - Duplicate Prevention**: `server/routes.ts` — check existing vote before creating (line ~1046), prevent duplicate votes (line ~1047-1050)
+  - **Backend - Self-Vote Prevention**: `server/routes.ts` — validation to prevent creators voting own ideas (lines ~1037-1043, ~1157-1163)
+  - **Backend - Points Award**: `server/routes.ts` — award 1 point per vote via `updateUserPoints()` (lines ~1072, ~1198)
+  - **Backend - Persistence**: `server/database-storage.ts` — methods `createVote()` (lines ~234-254), `getVoteByUserOrSession()` (lines ~220-232), `updateUserPoints()` to award +1 point (lines ~556-596)
+  - **Backend - Validation**: `shared/schema.ts` — `votes` table (lines ~48-55), `pointTransactions` table (lines ~92-102)
   - **Frontend - UI**: `client/src/components/ideas-tab-view.tsx` — vote mutation and UI updates (lines ~72-119)
   - **Frontend - Profiles**: `client/src/pages/creator-profile-unified.tsx`, `client/src/pages/modern-public-profile.tsx` — vote handlers on public profiles
   - **Frontend - State**: `client/src/hooks/use-reactive-stats.tsx` — reactive statistics updates after voting
@@ -95,12 +99,14 @@
   - ✅ Users can suggest ideas to specific creators
   - ✅ Each suggestion costs 3 points
   - ✅ Suggestions require creator approval
-  - ✅ Approved ideas award 5 points to suggester
+  - ✅ Approved ideas award 5 points to suggester (Note: Currently awards 2 points)
   - ✅ Creators can approve/reject suggestions
 - **Related Components**:
-  - **Backend - Orchestration**: `server/routes.ts` — handlers POST `/api/creators/:username/suggest` (suggest, lines ~738-823), PATCH `/api/ideas/:id/approve` (approve, lines ~873-947), GET `/api/pending-ideas` (list pending, lines ~826-870)
-  - **Backend - Persistence**: `server/database-storage.ts` — methods `suggestIdea()` creates idea with status='pending' (lines ~135-156), `approveIdea()` updates to 'approved' and awards +2 points (lines ~158-176), `getPendingIdeas()` (lines ~178-186)
-  - **Backend - Points**: `server/database-storage.ts` — `updateUserPoints()` deduct 3 points when suggesting (line ~787 in routes), award 2 points when approving (line ~930 in routes)
+  - **Backend - Orchestration**: `server/routes.ts` — handlers POST `/api/creators/:username/suggest` (suggest, lines ~769-854), PATCH `/api/ideas/:id/approve` (approve, lines ~904-978), GET `/api/pending-ideas` (list pending, lines ~857-901)
+  - **Backend - Points Deduction**: `server/routes.ts` — check points balance (line ~812), deduct 3 points when suggesting (line ~818)
+  - **Backend - Points Award**: `server/routes.ts` — award 2 points to suggester when approving (lines ~958-962)
+  - **Backend - Persistence**: `server/database-storage.ts` — methods `suggestIdea()` creates idea with status='pending' (lines ~135-156), `approveIdea()` updates to 'approved' (lines ~158-176), `getPendingIdeas()` (lines ~178-186)
+  - **Backend - Points**: `server/database-storage.ts` — `updateUserPoints()` deduct 3 points when suggesting (called from line ~818 in routes), award 2 points when approving (called from line ~961 in routes)
   - **Backend - Validation**: `shared/schema.ts` — schema `suggestIdeaSchema` with creatorId (lines ~184-188), `ideas` table with `suggestedBy` field (line ~44)
   - **Frontend - UI Suggestions**: `client/src/components/suggest-idea-modal.tsx`, `client/src/components/suggest-idea-dialog.tsx` — suggestion forms
   - **Frontend - UI Approval**: `client/src/components/ideas-tab-view.tsx` — approval mutation and pending list (lines ~144-221)
@@ -121,11 +127,14 @@
   - ✅ Transaction system with complete history
   - ✅ Limit of 5 items per creator in store
 - **Related Components**:
-  - **Backend - Orchestration**: `server/routes.ts` — store CRUD handlers: GET/POST `/api/creators/:username/store` (lines ~1883-1931), PUT/DELETE `/api/creators/:username/store/:itemId` (lines ~1934-2012), POST `/api/creators/:username/store/:itemId/redeem` (lines ~2116-2165)
-  - **Backend - Persistence**: `server/database-storage.ts` — methods `getStoreItems()`, `createStoreItem()`, `updateStoreItem()`, `deleteStoreItem()` (lines ~614-672), `createStoreRedemption()`, `getStoreRedemptions()` for redemptions
-  - **Backend - Points**: `server/database-storage.ts` — `updateUserPoints()` deduct points when redeeming (line ~2158 in routes), sufficient balance validation
+  - **Backend - Orchestration**: `server/routes.ts` — store CRUD handlers: GET/POST `/api/creators/:username/store` (lines ~1883-1931), PUT/DELETE `/api/creators/:username/store/:itemId` (lines ~1934-2012), POST `/api/creators/:username/store/:itemId/redeem` (lines ~2180-2229)
+  - **Backend - Redemption**: `server/routes.ts` — redemption endpoint checks points balance (lines ~2211-2216), creates redemption and deducts points (lines ~2219-2222)
+  - **Backend - Item Limit**: `server/routes.ts` — validation for 5-item limit per creator (lines ~1988-1992)
+  - **Backend - Persistence**: `server/database-storage.ts` — methods `getStoreItems()`, `createStoreItem()`, `updateStoreItem()`, `deleteStoreItem()` (lines ~614-672), `createStoreRedemption()` (lines ~735-790), `getStoreRedemptions()` for redemptions
+  - **Backend - Transaction History**: `server/database-storage.ts` — method `getUserPointTransactions()` retrieves complete transaction history (lines ~598-619), `updateUserPoints()` records transactions in `pointTransactions` table (lines ~581-591)
+  - **Backend - Points**: `server/database-storage.ts` — `updateUserPoints()` deduct points when redeeming (called from line ~2222 in routes), sufficient balance validation
   - **Backend - Premium Validation**: `server/premium-middleware.ts` — premium access validation for creating/editing items
-  - **Backend - Validation**: `shared/schema.ts` — tables `storeItems`, `storeRedemptions`, schemas `insertStoreItemSchema`, `updateStoreItemSchema` (lines ~104-128, ~349-407)
+  - **Backend - Validation**: `shared/schema.ts` — tables `storeItems` (lines ~104-116), `storeRedemptions` (lines ~118-128), `pointTransactions` (lines ~92-102), schemas `insertStoreItemSchema`, `updateStoreItemSchema` (lines ~349-407)
   - **Frontend - Management**: `client/src/components/store-management.tsx` — store items CRUD for creators
   - **Frontend - Form**: `client/src/components/store-item-form.tsx` — create/edit item form
   - **Frontend - Redemptions**: `client/src/components/public-store.tsx`, `client/src/pages/modern-public-profile.tsx` — redemption UI for audience
@@ -171,8 +180,10 @@
 - **Related Components**:
   - **Backend - Authentication**: `server/auth.ts` — Passport.js configuration (lines ~36-87), handlers POST `/api/auth/register` (lines ~88-132), POST `/api/auth/login` (lines ~134-169), POST `/api/auth/logout`, POST `/api/auth/forgot-password` (lines ~207-276), POST `/api/auth/reset-password` (lines ~278-318), functions `hashPassword()`, `comparePasswords()` (lines ~23-34)
   - **Backend - Services**: `server/services/emailService.ts` — password recovery email sending, `server/services/tokenService.ts` — recovery token management
-  - **Backend - Persistence**: `server/database-storage.ts` — methods `createUser()`, `getUserByUsername()`, `getUserByEmail()`, `updateUserPassword()`, `updateUserProfile()` for user management
+  - **Backend - Persistence**: `server/database-storage.ts` — methods `createUser()`, `getUserByUsername()`, `getUserByEmail()`, `updateUserPassword()`, `updateUserProfile()` for user management (lines ~51-78 for profile update with social links)
+  - **Backend - Social Links**: `shared/schema.ts` — `users` table with social media fields: `twitterUrl`, `instagramUrl`, `youtubeUrl`, `tiktokUrl`, `threadsUrl`, `websiteUrl` (lines ~12-17)
   - **Backend - Validation**: `shared/schema.ts` — schema `insertUserSchema`, table `passwordResetTokens` (lines ~131-149, ~57-64), `updateProfileSchema` (lines ~249-262)
+  - **Frontend - Profile Editor**: `client/src/components/profile-editor.tsx` — social media links form fields (lines ~407-510), handles Twitter, Instagram, YouTube, TikTok, Threads, Website
   - **Frontend - Hook**: `client/src/hooks/use-auth.tsx` — authentication provider, login/register/logout mutations, user state management (lines ~56-366)
   - **Frontend - UI**: `client/src/pages/auth-page.tsx` — login and registration forms with Zod validation (lines ~33-510)
 - **Use Cases**:
@@ -192,9 +203,11 @@
   - ✅ Profile customization with backgrounds and logos
 - **Related Components**:
   - **Backend - Orchestration**: `server/routes.ts` — handlers GET `/api/creators/:username` (public profile by username, lines ~1185-1217), GET/POST `/api/public/:token` (public leaderboard by token, lines ~1222-1331), POST `/api/public/:token/ideas/:ideaId/vote` (vote on public leaderboard)
-  - **Backend - Persistence**: `server/database-storage.ts` — methods `getPublicLinkByToken()`, `createPublicLink()`, `getUserByUsername()` for profiles, validation of active/expired links
+  - **Backend - Persistence**: `server/database-storage.ts` — methods `getPublicLinkByToken()`, `createPublicLink()`, `getUserByUsername()` for profiles, validation of active/expired links, `updateUserProfile()` handles `logoUrl` and `profileBackground` (lines ~51-78)
+  - **Backend - Profile Customization**: `shared/schema.ts` — `users` table with `logoUrl` (line ~11) and `profileBackground` (line ~18) fields
   - **Backend - Validation**: `shared/schema.ts` — table `publicLinks` (lines ~67-74), schema `insertPublicLinkSchema` (lines ~224-236), unique token validation
   - **Frontend - Public Profile**: `client/src/pages/modern-public-profile.tsx` — public profile view with ideas, voting and suggestions (lines ~57-576)
+  - **Frontend - Profile Editor**: `client/src/components/profile-editor.tsx` — logo upload and background selection UI
   - **Frontend - Public Leaderboard**: `client/src/pages/public-leaderboard-page.tsx` — shared leaderboard view by token (lines ~39-390)
   - **Frontend - Sharing**: `client/src/components/share-profile.tsx` — component to generate and share public links
 - **Use Cases**:
