@@ -215,6 +215,62 @@
   - **CU-020**: User visits creator profile
   - **CU-021**: User votes on public profile
 
+### 📝 FEAT-008: Analytics and Statistics System
+
+- **Description**: Comprehensive analytics and statistics tracking for creators and audience members
+- **Priority**: Medium
+- **Status**: Completed
+- **Acceptance Criteria**:
+  - ✅ Creator dashboard with key metrics (total ideas, total votes, pending suggestions, top niches, pending redemptions)
+  - ✅ Audience statistics tracking (total points, votes given, ideas suggested, ideas approved)
+  - ✅ Persistent niche statistics with vote tracking
+  - ✅ Real-time reactive statistics updates
+  - ✅ Top niches analysis per creator
+  - ✅ Per-creator audience statistics
+- **Related Components**:
+  - **Backend - Orchestration**: `server/routes.ts` — handlers GET `/api/user/dashboard-stats` (creator dashboard stats, lines ~281-324), GET `/api/user/audience-stats` (audience statistics), GET `/api/user/points` (user points data)
+  - **Backend - Niche Statistics**: `server/database-storage.ts` — methods `incrementNicheStats()` tracks votes per niche (lines ~908-929), `getTopNiche()` returns top performing niche (lines ~931-947), `getTopNiches()` returns top N niches (lines ~949-963)
+  - **Backend - Niche Tracking**: `server/routes.ts` — automatic niche stats increment on vote endpoints (lines ~1058-1065, ~1184-1191, ~1344-1351)
+  - **Backend - Persistence**: `shared/schema.ts` — table `nicheStats` with fields creatorId, niche, totalVotes (lines ~130-138)
+  - **Frontend - Dashboard**: `client/src/components/dashboard-overview.tsx` — creator and audience statistics display with cards and carousel (lines ~100-865)
+  - **Frontend - Reactive Stats**: `client/src/hooks/use-reactive-stats.tsx` — hook for real-time statistics updates with optimistic updates (lines ~34-166)
+  - **Frontend - Audience Stats**: `client/src/components/audience-stats.tsx` — component displaying audience member statistics
+- **Use Cases**:
+  - **CU-022**: Creator views dashboard analytics
+  - **CU-023**: System tracks niche performance automatically
+  - **CU-024**: Audience member views personal statistics
+  - **CU-025**: Statistics update in real-time after actions
+
+### 📝 FEAT-009: Comments and Discussion System
+
+- **Description**: Interactive commenting system allowing audience members to discuss and provide feedback on content ideas
+- **Priority**: Low
+- **Status**: Planned
+- **Acceptance Criteria**:
+  - ⏳ Users can comment on published ideas
+  - ⏳ Creators can moderate comments (premium feature)
+  - ⏳ Comment threading with replies support
+  - ⏳ Real-time comment updates via WebSocket
+  - ⏳ Comment reactions (like/dislike) with points integration
+  - ⏳ Comment notifications for creators
+  - ⏳ Spam detection and moderation tools
+- **Related Components**:
+  - **Backend - Orchestration**: `server/routes.ts` — handlers POST `/api/ideas/:id/comments` (create comment), GET `/api/ideas/:id/comments` (list comments), DELETE `/api/comments/:id` (delete comment), POST `/api/comments/:id/reactions` (add reaction)
+  - **Backend - WebSocket**: `server/websocket.ts` — real-time comment broadcasting service
+  - **Backend - Moderation**: `server/services/moderationService.ts` — spam detection and content filtering
+  - **Backend - Persistence**: `server/database-storage.ts` — methods `createComment()`, `getCommentsByIdea()`, `updateComment()`, `deleteComment()`, `moderateComment()`
+  - **Backend - Validation**: `shared/schema.ts` — table `comments` with fields id, ideaId, userId, content, parentCommentId, createdAt, moderatedAt, schema `insertCommentSchema`
+  - **Frontend - Comments UI**: `client/src/components/idea-comments.tsx` — comment thread display component
+  - **Frontend - Comment Form**: `client/src/components/comment-form.tsx` — comment creation and editing form
+  - **Frontend - Moderation Panel**: `client/src/components/comment-moderation.tsx` — moderation interface for creators (premium)
+  - **Frontend - WebSocket Hook**: `client/src/hooks/use-comments-websocket.tsx` — real-time comment updates hook
+- **Use Cases**:
+  - **CU-026**: User comments on creator's idea
+  - **CU-027**: User replies to existing comment
+  - **CU-028**: Creator moderates inappropriate comments
+  - **CU-029**: System detects and flags spam comments
+  - **CU-030**: Real-time comment updates appear instantly
+
 ## 🔧 Technical Capabilities
 
 ### ⚙️ CAP-001: PostgreSQL Database with Drizzle ORM
@@ -324,7 +380,7 @@ Note: API details (routes, contracts, examples) will be documented in Swagger/Op
 
 ### 📊 Functionality Metrics
 
-- **Specification Coverage**: 95% (19/20 main features implemented)
+- **Specification Coverage**: 89% (8/9 main features implemented, 1 planned)
 - **Response Time**: <200ms average for CRUD operations
 - **Availability**: 99.9% uptime target with active monitoring
 
