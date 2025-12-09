@@ -7,6 +7,12 @@
 - **Description**: Allows creators to create, edit and delete content ideas with voting system
 - **Priority**: High
 - **Status**: Completed
+- **Related Components**:
+  - `shared/schema.ts`
+  - `server/routes.ts`
+  - `server/database-storage.ts`
+  - `client/src/components/idea-form.tsx`
+  - `client/src/components/ideas-tab-view.tsx`
 
 #### Acceptance Criteria
 
@@ -47,6 +53,12 @@
 - **Description**: Allows audience to vote on content ideas with points system
 - **Priority**: High
 - **Status**: Completed
+- **Related Components**:
+  - `server/routes.ts`
+  - `server/database-storage.ts`
+  - `shared/schema.ts`
+  - `client/src/hooks/use-reactive-stats.tsx`
+  - `client/src/components/ideas-tab-view.tsx`
 
 #### Acceptance Criteria
 
@@ -85,6 +97,13 @@
 - **Description**: Allows audience to suggest ideas to specific creators with approval system
 - **Priority**: High
 - **Status**: Completed (Note: Awards 2 points instead of 5 for approved suggestions)
+- **Related Components**:
+  - `server/routes.ts`
+  - `server/database-storage.ts`
+  - `shared/schema.ts`
+  - `client/src/components/suggest-idea-modal.tsx`
+  - `client/src/components/suggest-idea-dialog.tsx`
+  - `client/src/components/ideas-tab-view.tsx`
 
 #### Acceptance Criteria
 
@@ -127,6 +146,14 @@
 - **Description**: Gamification system with points for participation and rewards store
 - **Priority**: High
 - **Status**: Completed
+- **Related Components**:
+  - `server/routes.ts`
+  - `server/database-storage.ts`
+  - `shared/schema.ts`
+  - `client/src/components/store-management.tsx`
+  - `client/src/components/store-item-form.tsx`
+  - `client/src/components/public-store.tsx`
+  - `client/src/pages/modern-public-profile.tsx`
 
 #### Acceptance Criteria
 
@@ -172,6 +199,13 @@
 - **Description**: Stripe-based subscription system for premium features
 - **Priority**: High
 - **Status**: Completed
+- **Related Components**:
+  - `server/routes.ts`
+  - `server/database-storage.ts`
+  - `server/premium-middleware.ts`
+  - `shared/schema.ts`
+  - `shared/premium-utils.ts`
+  - `client/src/pages/subscription-page.tsx`
 
 #### Acceptance Criteria
 
@@ -212,6 +246,16 @@
 - **Description**: Complete authentication system with roles and profile management
 - **Priority**: High
 - **Status**: Completed
+- **Related Components**:
+  - `server/auth.ts`
+  - `server/routes.ts`
+  - `server/database-storage.ts`
+  - `server/services/emailService.ts`
+  - `server/services/tokenService.ts`
+  - `shared/schema.ts`
+  - `client/src/pages/auth-page.tsx`
+  - `client/src/hooks/use-auth.tsx`
+  - `client/src/components/profile-editor.tsx`
 
 #### Acceptance Criteria
 
@@ -261,6 +305,15 @@
 - **Description**: Creator public profiles with shareable links
 - **Priority**: Medium
 - **Status**: Completed
+- **Related Components**:
+  - `server/routes.ts`
+  - `server/database-storage.ts`
+  - `shared/schema.ts`
+  - `client/src/pages/modern-public-profile.tsx`
+  - `client/src/pages/public-leaderboard-page.tsx`
+  - `client/src/pages/creator-profile-unified.tsx`
+  - `client/src/components/share-profile.tsx`
+  - `client/src/components/profile-editor.tsx`
 
 #### Acceptance Criteria
 
@@ -299,6 +352,14 @@
 - **Description**: Comprehensive analytics and statistics tracking for creators and audience members
 - **Priority**: Medium
 - **Status**: Completed
+- **Related Components**:
+  - `server/routes.ts`
+  - `server/database-storage.ts`
+  - `shared/schema.ts`
+  - `client/src/components/dashboard-overview.tsx`
+  - `client/src/components/audience-stats.tsx`
+  - `client/src/hooks/use-reactive-stats.tsx`
+  - `client/src/components/ideas-tab-view.tsx`
 
 #### Acceptance Criteria
 
@@ -343,6 +404,17 @@
 - **Description**: Interactive commenting system allowing audience members to discuss and provide feedback on content ideas
 - **Priority**: Low
 - **Status**: Planned
+- **Related Components**:
+  - `server/routes.ts`
+  - `server/database-storage.ts`
+  - `server/premium-middleware.ts`
+  - `server/services/moderationService.ts`
+  - `server/websocket.ts`
+  - `shared/schema.ts`
+  - `client/src/components/idea-comments.tsx`
+  - `client/src/components/comment-form.tsx`
+  - `client/src/components/comment-moderation.tsx`
+  - `client/src/hooks/use-comments-websocket.tsx`
 
 #### Acceptance Criteria
 
@@ -394,6 +466,17 @@
 - **Description**: Real-time push notifications for users about important events and updates
 - **Priority**: Medium
 - **Status**: Planned
+- **Related Components**:
+  - `server/routes.ts`
+  - `server/database-storage.ts`
+  - `server/services/pushNotificationService.ts`
+  - `shared/schema.ts`
+  - `client/public/sw.js`
+  - `client/src/hooks/use-push-notifications.tsx`
+  - `client/src/components/notification-badge.tsx`
+  - `client/src/components/notification-center.tsx`
+  - `client/src/components/notification-settings.tsx`
+  - `client/src/lib/push-platform-adapter.ts`
 
 #### Acceptance Criteria
 
