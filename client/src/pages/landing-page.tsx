@@ -256,9 +256,24 @@ export default function LandingPage() {
                 </motion.div>
               </div>
 
-              <p className="text-sm md:text-base text-gray-500 dark:text-gray-400">
+              <p className="text-sm md:text-base text-gray-500 dark:text-gray-400 mb-6">
                 {t("landing.hero.noCreditCard")}
               </p>
+
+              <a 
+                href="https://www.producthunt.com/products/fanlist?embed=true&utm_source=badge-featured&utm_medium=badge&utm_source=badge-fanlist" 
+                target="_blank"
+                rel="noopener noreferrer"
+                data-testid="link-product-hunt"
+              >
+                <img 
+                  src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=967383&theme=light&t=1765331584967" 
+                  alt="Fanlist - Data-driven decisions for your content | Product Hunt" 
+                  width="250" 
+                  height="54"
+                  className="hover:opacity-90 transition-opacity"
+                />
+              </a>
             </motion.div>
 
             <motion.div
