@@ -599,13 +599,14 @@ export class YouTubeService {
     velocity: number,
     label: string
   ): string {
+    // Return structured key for frontend i18n: key|param1|param2
     if (label === "high") {
-      return `${videoCount} videos en el último mes con ${avgViews.toLocaleString()} views promedio. Tema con alta tracción.`;
+      return `demand.high|${videoCount}|${avgViews}`;
     }
     if (label === "medium") {
-      return `${videoCount} videos recientes con ${avgViews.toLocaleString()} views promedio. Demanda moderada.`;
+      return `demand.medium|${videoCount}|${avgViews}`;
     }
-    return `Pocos videos (${videoCount}) o bajo rendimiento (${avgViews.toLocaleString()} views). Nicho pequeño o tema poco buscado.`;
+    return `demand.low|${videoCount}|${avgViews}`;
   }
 
   private getCompetitionExplanation(
@@ -613,13 +614,14 @@ export class YouTubeService {
     uniqueChannels: number,
     label: string
   ): string {
+    // Return structured key for frontend i18n: key|param1
     if (label === "high") {
-      return `${uniqueChannels} canales compitiendo activamente. Mercado saturado.`;
+      return `competition.high|${uniqueChannels}`;
     }
     if (label === "medium") {
-      return `${uniqueChannels} canales cubriendo el tema. Competencia manejable.`;
+      return `competition.medium|${uniqueChannels}`;
     }
-    return `Solo ${uniqueChannels} canales. Oportunidad de posicionarse primero.`;
+    return `competition.low|${uniqueChannels}`;
   }
 
   private getOpportunityExplanation(
@@ -627,22 +629,23 @@ export class YouTubeService {
     competitionLabel: string,
     opportunityLabel: string
   ): string {
+    // Return structured key for frontend i18n
     if (opportunityLabel === "strong") {
       if (demandLabel === "high" && competitionLabel === "low") {
-        return "Alta demanda con poca competencia. Excelente momento para publicar.";
+        return "opportunity.strongIdeal";
       }
-      return "Buena demanda con competencia manejable. Oportunidad favorable.";
+      return "opportunity.strongGood";
     }
     if (opportunityLabel === "good") {
       if (demandLabel === "high" && competitionLabel === "high") {
-        return "Alta demanda pero también alta competencia. Mercado activo pero competido.";
+        return "opportunity.goodCompetitive";
       }
-      return "Balance razonable entre demanda y competencia. Vale la pena intentar.";
+      return "opportunity.goodBalanced";
     }
     if (demandLabel === "low") {
-      return "Baja demanda en YouTube. Considera si tu audiencia busca este contenido en otras plataformas.";
+      return "opportunity.lowDemand";
     }
-    return "Alta competencia reduce la oportunidad. Considera un ángulo único o diferenciador.";
+    return "opportunity.highCompetition";
   }
 }
 

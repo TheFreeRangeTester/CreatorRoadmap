@@ -967,6 +967,26 @@
       "demandDefault": "Indicates the current interest in this topic on YouTube.",
       "competitionDefault": "Indicates how many channels are covering this topic."
     },
+    "explanations": {
+      "demand": {
+        "high": "{{videoCount}} videos in the last 6 months with {{avgViews}} avg views. High traction topic.",
+        "medium": "{{videoCount}} recent videos with {{avgViews}} avg views. Moderate demand.",
+        "low": "Few videos ({{videoCount}}) or low performance ({{avgViews}} views). Small niche or little-searched topic."
+      },
+      "competition": {
+        "high": "{{channels}} channels actively competing. Saturated market.",
+        "medium": "{{channels}} channels covering the topic. Manageable competition.",
+        "low": "Only {{channels}} channels. Opportunity to position yourself first."
+      },
+      "opportunity": {
+        "strongIdeal": "High demand with low competition. Excellent time to publish.",
+        "strongGood": "Good demand with manageable competition. Favorable opportunity.",
+        "goodCompetitive": "High demand but also high competition. Active but competitive market.",
+        "goodBalanced": "Reasonable balance between demand and competition. Worth trying.",
+        "lowDemand": "Low demand on YouTube. Consider if your audience looks for this content on other platforms.",
+        "highCompetition": "High competition reduces opportunity. Consider a unique or differentiating angle."
+      }
+    },
     "errors": {
       "quotaExceeded": "Daily YouTube API quota exceeded",
       "fetchFailed": "Failed to fetch YouTube data"

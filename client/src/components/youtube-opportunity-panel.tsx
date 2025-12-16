@@ -160,6 +160,33 @@ export default function YouTubeOpportunityPanel({
     return t("youtubeOpportunity.timeAgo.daysAgo", { days: diffDays });
   };
 
+  const parseExplanation = (explanation: string | undefined, defaultKey: string): string => {
+    if (!explanation) return t(defaultKey);
+    
+    const parts = explanation.split("|");
+    const key = parts[0];
+    
+    if (key.startsWith("demand.")) {
+      const level = key.replace("demand.", "");
+      const videoCount = parts[1] || "0";
+      const avgViews = parts[2] ? Number(parts[2]).toLocaleString() : "0";
+      return t(`youtubeOpportunity.explanations.demand.${level}`, { videoCount, avgViews });
+    }
+    
+    if (key.startsWith("competition.")) {
+      const level = key.replace("competition.", "");
+      const channels = parts[1] || "0";
+      return t(`youtubeOpportunity.explanations.competition.${level}`, { channels });
+    }
+    
+    if (key.startsWith("opportunity.")) {
+      const level = key.replace("opportunity.", "");
+      return t(`youtubeOpportunity.explanations.opportunity.${level}`);
+    }
+    
+    return explanation;
+  };
+
   if (!isPremium) {
     return (
       <Card className="relative overflow-hidden border-dashed border-purple-300 dark:border-purple-700">
@@ -392,7 +419,7 @@ export default function YouTubeOpportunityPanel({
                 </div>
               </TooltipTrigger>
               <TooltipContent className="max-w-xs">
-                <p>{score.explanation?.demandReason || t("youtubeOpportunity.tooltips.demandDefault")}</p>
+                <p>{parseExplanation(score.explanation?.demandReason, "youtubeOpportunity.tooltips.demandDefault")}</p>
               </TooltipContent>
             </Tooltip>
           </TooltipProvider>
@@ -423,7 +450,7 @@ export default function YouTubeOpportunityPanel({
                 </div>
               </TooltipTrigger>
               <TooltipContent className="max-w-xs">
-                <p>{score.explanation?.competitionReason || t("youtubeOpportunity.tooltips.competitionDefault")}</p>
+                <p>{parseExplanation(score.explanation?.competitionReason, "youtubeOpportunity.tooltips.competitionDefault")}</p>
               </TooltipContent>
             </Tooltip>
           </TooltipProvider>
@@ -455,7 +482,7 @@ export default function YouTubeOpportunityPanel({
               </TooltipTrigger>
               <TooltipContent className="max-w-sm">
                 <div className="space-y-2">
-                  <p className="font-medium">{score.explanation?.opportunityReason || t("youtubeOpportunity.dataInfo")}</p>
+                  <p className="font-medium">{parseExplanation(score.explanation?.opportunityReason, "youtubeOpportunity.dataInfo")}</p>
                   <div className="text-xs space-y-1 pt-1 border-t border-gray-200 dark:border-gray-700">
                     <p><span className="text-green-500 font-semibold">{t("youtubeOpportunity.labels.strong")}:</span> {t("youtubeOpportunity.opportunityLegend.strong")}</p>
                     <p><span className="text-yellow-500 font-semibold">{t("youtubeOpportunity.labels.good")}:</span> {t("youtubeOpportunity.opportunityLegend.good")}</p>
