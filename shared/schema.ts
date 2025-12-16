@@ -28,6 +28,7 @@ export const users = pgTable("users", {
   subscriptionStartDate: timestamp("subscription_start_date"),
   subscriptionEndDate: timestamp("subscription_end_date"),
   subscriptionCanceledAt: timestamp("subscription_canceled_at"), // Fecha de cancelación
+  priorityWeight: integer("priority_weight").default(55), // Weight for audience votes (30-70), remainder goes to YouTube opportunity
 });
 
 export const ideas = pgTable("ideas", {
