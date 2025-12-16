@@ -35,6 +35,9 @@ import {
   Image,
 } from "lucide-react";
 import { useTranslation } from "react-i18next";
+import { useAuth } from "@/hooks/use-auth";
+import { hasActivePremiumAccess } from "@shared/premium-utils";
+import YouTubeOpportunityPanel from "./youtube-opportunity-panel";
 
 // Template item type
 type TemplateItem = {
@@ -64,6 +67,8 @@ export default function VideoTemplateModal({
   const { toast } = useToast();
   const queryClient = useQueryClient();
   const { t } = useTranslation();
+  const { user } = useAuth();
+  const isPremium = user ? hasActivePremiumAccess(user) : false;
 
   // Define sections with translation keys
   const sections: Section[] = [
@@ -391,6 +396,13 @@ ${outro.length > 0 ? `## OUTRO / CTA\n${formatItems(outro)}\n` : ''}
                 </p>
               </div>
             </div>
+
+            {/* YouTube Opportunity Panel */}
+            <YouTubeOpportunityPanel
+              ideaId={idea.id}
+              isPremium={isPremium}
+              audienceVotes={idea.voteCount ?? 0}
+            />
 
             {/* Video Title */}
             <div className="space-y-2">

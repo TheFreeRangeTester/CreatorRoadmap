@@ -6,7 +6,8 @@ import { insertIdeaSchema, updateIdeaSchema, insertVoteSchema, insertPublicLinkS
 import { ZodError } from "zod";
 import { fromZodError } from "zod-validation-error";
 import Stripe from "stripe";
-import { conditionalPremiumAccess } from "./premium-middleware";
+import { conditionalPremiumAccess, requirePremiumAccess } from "./premium-middleware";
+import { youtubeService } from "./services/youtube";
 
 // Initialize Stripe
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
@@ -2373,6 +2374,179 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       console.error("Error deleting video template:", error);
       res.status(500).json({ message: "Failed to delete video template" });
+    }
+  });
+
+  // ============================================
+  // YouTube Opportunity Scoring (Premium Feature)
+  // ============================================
+
+  // Check if YouTube API is configured
+  app.get("/api/youtube/status", async (req: Request, res: Response) => {
+    try {
+      if (!req.isAuthenticated()) {
+        return res.status(401).json({ message: "Authentication required" });
+      }
+
+      const isConfigured = youtubeService.isConfigured();
+      const quotaUsed = isConfigured ? await youtubeService.getQuotaUsageToday() : 0;
+
+      res.json({
+        isConfigured,
+        quotaUsed,
+        quotaLimit: 9000,
+        quotaRemaining: Math.max(0, 9000 - quotaUsed),
+      });
+    } catch (error) {
+      console.error("Error checking YouTube status:", error);
+      res.status(500).json({ message: "Failed to check YouTube status" });
+    }
+  });
+
+  // Get YouTube score for an idea (Premium only)
+  app.get("/api/youtube/score/:ideaId", requirePremiumAccess, async (req: Request, res: Response) => {
+    try {
+      const ideaId = parseInt(req.params.ideaId);
+      if (isNaN(ideaId)) {
+        return res.status(400).json({ message: "Invalid idea ID" });
+      }
+
+      // Verify the idea exists and belongs to the authenticated user
+      const idea = await storage.getIdea(ideaId);
+      if (!idea) {
+        return res.status(404).json({ message: "Idea not found" });
+      }
+
+      if (idea.creatorId !== req.user!.id) {
+        return res.status(403).json({ message: "Not authorized to view this score" });
+      }
+
+      // Check if YouTube API is configured
+      if (!youtubeService.isConfigured()) {
+        return res.status(503).json({ 
+          message: "YouTube API not configured",
+          needsConfiguration: true 
+        });
+      }
+
+      // Get cached score first
+      const cached = await youtubeService.getCachedScore(ideaId);
+      
+      if (cached.score && cached.snapshot) {
+        res.json({
+          score: {
+            id: cached.score.id,
+            ideaId: cached.score.ideaId,
+            demandScore: cached.score.demandScore,
+            demandLabel: cached.score.demandLabel,
+            competitionScore: cached.score.competitionScore,
+            competitionLabel: cached.score.competitionLabel,
+            opportunityScore: cached.score.opportunityScore,
+            opportunityLabel: cached.score.opportunityLabel,
+            compositeLabel: cached.score.compositeLabel,
+            explanation: cached.score.explanationJson,
+            updatedAt: cached.score.updatedAt,
+          },
+          snapshot: {
+            id: cached.snapshot.id,
+            ideaId: cached.snapshot.ideaId,
+            queryTerm: cached.snapshot.queryTerm,
+            videoCount: cached.snapshot.videoCount,
+            avgViews: cached.snapshot.avgViews,
+            medianViews: cached.snapshot.medianViews,
+            maxViews: cached.snapshot.maxViews,
+            avgViewsPerDay: cached.snapshot.avgViewsPerDay,
+            uniqueChannels: cached.snapshot.uniqueChannels,
+            status: cached.snapshot.status,
+            errorMessage: cached.snapshot.errorMessage,
+            fetchedAt: cached.snapshot.fetchedAt,
+          },
+          isFresh: cached.isFresh,
+        });
+      } else {
+        res.json({
+          score: null,
+          snapshot: null,
+          isFresh: false,
+          message: "No score available. Use POST to fetch.",
+        });
+      }
+    } catch (error) {
+      console.error("Error getting YouTube score:", error);
+      res.status(500).json({ message: "Failed to get YouTube score" });
+    }
+  });
+
+  // Fetch/refresh YouTube score for an idea (Premium only)
+  app.post("/api/youtube/score/:ideaId", requirePremiumAccess, async (req: Request, res: Response) => {
+    try {
+      const ideaId = parseInt(req.params.ideaId);
+      if (isNaN(ideaId)) {
+        return res.status(400).json({ message: "Invalid idea ID" });
+      }
+
+      const forceRefresh = req.body.forceRefresh === true;
+
+      // Verify the idea exists and belongs to the authenticated user
+      const idea = await storage.getIdea(ideaId);
+      if (!idea) {
+        return res.status(404).json({ message: "Idea not found" });
+      }
+
+      if (idea.creatorId !== req.user!.id) {
+        return res.status(403).json({ message: "Not authorized to score this idea" });
+      }
+
+      // Check if YouTube API is configured
+      if (!youtubeService.isConfigured()) {
+        return res.status(503).json({ 
+          message: "YouTube API not configured. Please add YOUTUBE_API_KEY to your secrets.",
+          needsConfiguration: true 
+        });
+      }
+
+      // Fetch and score
+      const result = await youtubeService.fetchAndScore(ideaId, forceRefresh);
+
+      if (!result.success) {
+        return res.status(400).json({ 
+          message: result.error || "Failed to fetch YouTube data" 
+        });
+      }
+
+      res.json({
+        score: {
+          id: result.score!.id,
+          ideaId: result.score!.ideaId,
+          demandScore: result.score!.demandScore,
+          demandLabel: result.score!.demandLabel,
+          competitionScore: result.score!.competitionScore,
+          competitionLabel: result.score!.competitionLabel,
+          opportunityScore: result.score!.opportunityScore,
+          opportunityLabel: result.score!.opportunityLabel,
+          compositeLabel: result.score!.compositeLabel,
+          explanation: result.score!.explanationJson,
+          updatedAt: result.score!.updatedAt,
+        },
+        snapshot: {
+          id: result.snapshot!.id,
+          ideaId: result.snapshot!.ideaId,
+          queryTerm: result.snapshot!.queryTerm,
+          videoCount: result.snapshot!.videoCount,
+          avgViews: result.snapshot!.avgViews,
+          medianViews: result.snapshot!.medianViews,
+          maxViews: result.snapshot!.maxViews,
+          avgViewsPerDay: result.snapshot!.avgViewsPerDay,
+          uniqueChannels: result.snapshot!.uniqueChannels,
+          status: result.snapshot!.status,
+          errorMessage: result.snapshot!.errorMessage,
+          fetchedAt: result.snapshot!.fetchedAt,
+        },
+        isFresh: true,
+      });
+    } catch (error) {
+      console.error("Error fetching YouTube score:", error);
+      res.status(500).json({ message: "Failed to fetch YouTube score" });
     }
   });
 
