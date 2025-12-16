@@ -908,5 +908,69 @@
     },
     "loadingRedemptions": "Loading redemptions...",
     "loadError": "Error loading redemptions"
+  },
+  "youtubeOpportunity": {
+    "title": "YouTube Opportunity",
+    "search": "Search",
+    "analyze": "Analyze on YouTube",
+    "refresh": "Update analysis",
+    "demand": "Demand",
+    "competition": "Competition",
+    "opportunity": "Opportunity",
+    "videos": "videos",
+    "avgViews": "avg. views",
+    "channels": "channels",
+    "dataInfo": "Data based on videos published in the last 6 months on YouTube. Opportunity combines demand (how much it's searched) and competition (how many cover it).",
+    "labels": {
+      "low": "Low",
+      "medium": "Medium",
+      "high": "High",
+      "weak": "Weak",
+      "good": "Good",
+      "strong": "High",
+      "unknown": "Unknown",
+      "balanced": "Balanced",
+      "audienceLed": "Audience-led",
+      "marketLed": "Market-led",
+      "lowPriority": "Low Priority"
+    },
+    "compositeTooltips": {
+      "balanced": "Your audience wants it and the market validates it. Top priority.",
+      "audienceLed": "Your audience wants it but YouTube market is uncertain. Trust your community.",
+      "marketLed": "There's opportunity on YouTube but your audience hasn't asked for it yet. Consider educating on the topic.",
+      "lowPriority": "Low demand from your audience and low opportunity on YouTube. Consider other topics."
+    },
+    "compositeLegend": {
+      "balanced": "Audience votes + good YouTube opportunity.",
+      "audienceLed": "Many votes, moderate YouTube opportunity.",
+      "marketLed": "Good YouTube opportunity, few votes.",
+      "lowPriority": "Few votes and low opportunity."
+    },
+    "opportunityLegend": {
+      "strong": "There's audience searching and little competition. Ideal time to publish.",
+      "good": "Manageable competition or small unexplored niche. Worth trying with good content.",
+      "weak": "High competition or low demand. You'll need a very differentiating angle."
+    },
+    "premiumRequired": {
+      "title": "Premium Feature",
+      "description": "YouTube Opportunity analysis helps you make data-driven decisions about what content to create.",
+      "benefit1": "Analyze demand and competition on YouTube",
+      "benefit2": "Identify content opportunities",
+      "benefit3": "Make smarter content decisions",
+      "cta": "Upgrade to Premium"
+    },
+    "noApiKey": {
+      "title": "API Configuration Required",
+      "description": "Add YOUTUBE_API_KEY to your secrets to enable YouTube analysis."
+    },
+    "errors": {
+      "quotaExceeded": "Daily YouTube API quota exceeded",
+      "fetchFailed": "Failed to fetch YouTube data"
+    },
+    "timeAgo": {
+      "justNow": "Less than 1 hour ago",
+      "hoursAgo": "{{hours}} hours ago",
+      "daysAgo": "{{days}} days ago"
+    }
   }
 }

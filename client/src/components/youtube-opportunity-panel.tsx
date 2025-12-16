@@ -89,18 +89,21 @@ const compositeColors = {
   "low-priority": "bg-gray-100 text-gray-800 dark:bg-gray-900/30 dark:text-gray-300",
 };
 
-const labelTranslations: Record<string, string> = {
-  low: "Baja",
-  medium: "Media",
-  high: "Alta",
-  unknown: "Sin datos",
-  weak: "Baja",
-  good: "Buena",
-  strong: "Alta",
-  "audience-led": "Liderada por Audiencia",
-  "market-led": "Liderada por Mercado",
-  balanced: "Equilibrada",
-  "low-priority": "Baja Prioridad",
+const getLabelKey = (label: string): string => {
+  const keyMap: Record<string, string> = {
+    low: "low",
+    medium: "medium",
+    high: "high",
+    unknown: "unknown",
+    weak: "weak",
+    good: "good",
+    strong: "strong",
+    "audience-led": "audienceLed",
+    "market-led": "marketLed",
+    balanced: "balanced",
+    "low-priority": "lowPriority",
+  };
+  return keyMap[label] || label;
 };
 
 export default function YouTubeOpportunityPanel({
@@ -152,9 +155,9 @@ export default function YouTubeOpportunityPanel({
     const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
     const diffDays = Math.floor(diffHours / 24);
 
-    if (diffHours < 1) return "Hace menos de 1 hora";
-    if (diffHours < 24) return `Hace ${diffHours}h`;
-    return `Hace ${diffDays} día${diffDays > 1 ? "s" : ""}`;
+    if (diffHours < 1) return t("youtubeOpportunity.timeAgo.justNow");
+    if (diffHours < 24) return t("youtubeOpportunity.timeAgo.hoursAgo", { hours: diffHours });
+    return t("youtubeOpportunity.timeAgo.daysAgo", { days: diffDays });
   };
 
   if (!isPremium) {
@@ -163,10 +166,10 @@ export default function YouTubeOpportunityPanel({
         <div className="absolute inset-0 bg-gradient-to-br from-purple-50/80 to-indigo-50/80 dark:from-purple-950/40 dark:to-indigo-950/40 backdrop-blur-sm z-10 flex flex-col items-center justify-center p-6">
           <Lock className="h-8 w-8 text-purple-500 mb-3" />
           <h3 className="font-semibold text-gray-900 dark:text-white mb-2">
-            YouTube Opportunity Score
+            {t("youtubeOpportunity.premiumRequired.title")}
           </h3>
           <p className="text-sm text-gray-600 dark:text-gray-400 text-center mb-4 max-w-xs">
-            Analiza la demanda y competencia en YouTube para tomar mejores decisiones de contenido.
+            {t("youtubeOpportunity.premiumRequired.description")}
           </p>
           <Button
             size="sm"
@@ -175,7 +178,7 @@ export default function YouTubeOpportunityPanel({
             data-testid="button-upgrade-youtube"
           >
             <Zap className="h-4 w-4 mr-2" />
-            Desbloquear con Premium
+            {t("youtubeOpportunity.premiumRequired.cta")}
           </Button>
         </div>
         <CardHeader className="pb-2 filter blur-sm">
@@ -240,7 +243,7 @@ export default function YouTubeOpportunityPanel({
           <div className="flex flex-col items-center justify-center py-4 text-center">
             <AlertCircle className="h-8 w-8 text-amber-500 mb-2" />
             <p className="text-sm text-gray-600 dark:text-gray-400 mb-3">
-              No se pudo cargar el análisis de YouTube.
+              {t("youtubeOpportunity.errors.fetchFailed")}
             </p>
             <Button
               size="sm"
@@ -254,7 +257,7 @@ export default function YouTubeOpportunityPanel({
               ) : (
                 <RefreshCw className="h-4 w-4 mr-2" />
               )}
-              Reintentar
+              {t("common.refresh")}
             </Button>
           </div>
         </CardContent>
@@ -275,7 +278,7 @@ export default function YouTubeOpportunityPanel({
           <div className="flex flex-col items-center justify-center py-4 text-center">
             <BarChart3 className="h-8 w-8 text-purple-500 mb-2" />
             <p className="text-sm text-gray-600 dark:text-gray-400 mb-3">
-              Analiza la demanda de YouTube para esta idea
+              {t("youtubeOpportunity.premiumRequired.benefit1")}
             </p>
             <Button
               size="sm"
@@ -289,7 +292,7 @@ export default function YouTubeOpportunityPanel({
               ) : (
                 <Youtube className="h-4 w-4 mr-2" />
               )}
-              Analizar en YouTube
+              {t("youtubeOpportunity.analyze")}
             </Button>
           </div>
         </CardContent>
@@ -320,23 +323,20 @@ export default function YouTubeOpportunityPanel({
                         )}
                         data-testid="badge-composite-label"
                       >
-                        {labelTranslations[score.compositeLabel]}
+                        {t(`youtubeOpportunity.labels.${getLabelKey(score.compositeLabel)}`)}
                       </Badge>
                     </span>
                   </TooltipTrigger>
                   <TooltipContent className="max-w-sm">
                     <div className="space-y-2">
                       <p className="font-medium">
-                        {score.compositeLabel === "balanced" && "Tu audiencia lo pide y el mercado lo valida. Prioridad máxima."}
-                        {score.compositeLabel === "audience-led" && "Tu audiencia lo quiere pero el mercado de YouTube es incierto. Confía en tu comunidad."}
-                        {score.compositeLabel === "market-led" && "Hay oportunidad en YouTube pero tu audiencia aún no lo pide. Considera educar sobre el tema."}
-                        {score.compositeLabel === "low-priority" && "Poca demanda de tu audiencia y baja oportunidad en YouTube. Considera otros temas."}
+                        {t(`youtubeOpportunity.compositeTooltips.${getLabelKey(score.compositeLabel)}`)}
                       </p>
                       <div className="text-xs space-y-1 pt-1 border-t border-gray-200 dark:border-gray-700">
-                        <p><span className="text-green-500 font-semibold">Equilibrada:</span> Votos de audiencia + buena oportunidad YouTube.</p>
-                        <p><span className="text-purple-500 font-semibold">Liderada por Audiencia:</span> Muchos votos, oportunidad YouTube moderada.</p>
-                        <p><span className="text-blue-500 font-semibold">Liderada por Mercado:</span> Buena oportunidad YouTube, pocos votos.</p>
-                        <p><span className="text-gray-400 font-semibold">Baja Prioridad:</span> Pocos votos y baja oportunidad.</p>
+                        <p><span className="text-green-500 font-semibold">{t("youtubeOpportunity.labels.balanced")}:</span> {t("youtubeOpportunity.compositeLegend.balanced")}</p>
+                        <p><span className="text-purple-500 font-semibold">{t("youtubeOpportunity.labels.audienceLed")}:</span> {t("youtubeOpportunity.compositeLegend.audienceLed")}</p>
+                        <p><span className="text-blue-500 font-semibold">{t("youtubeOpportunity.labels.marketLed")}:</span> {t("youtubeOpportunity.compositeLegend.marketLed")}</p>
+                        <p><span className="text-gray-400 font-semibold">{t("youtubeOpportunity.labels.lowPriority")}:</span> {t("youtubeOpportunity.compositeLegend.lowPriority")}</p>
                       </div>
                     </div>
                   </TooltipContent>
@@ -362,13 +362,13 @@ export default function YouTubeOpportunityPanel({
                     />
                   </Button>
                 </TooltipTrigger>
-                <TooltipContent>Actualizar análisis</TooltipContent>
+                <TooltipContent>{t("youtubeOpportunity.refresh")}</TooltipContent>
               </Tooltip>
             </TooltipProvider>
           </div>
         </div>
         <p className="text-xs text-gray-500 dark:text-gray-400">
-          Búsqueda: "{snapshot.queryTerm}" · {formatTimeAgo(snapshot.fetchedAt)}
+          {t("youtubeOpportunity.search")}: "{snapshot.queryTerm}" · {formatTimeAgo(snapshot.fetchedAt)}
         </p>
       </CardHeader>
       <CardContent className="space-y-4">
@@ -382,12 +382,12 @@ export default function YouTubeOpportunityPanel({
                 >
                   <div className="flex items-center gap-1.5 text-xs text-gray-600 dark:text-gray-400 mb-1">
                     <TrendingUp className="h-3.5 w-3.5" />
-                    Demanda
+                    {t("youtubeOpportunity.demand")}
                   </div>
                   <Badge
                     className={cn("text-sm font-medium", labelColors[score.demandLabel])}
                   >
-                    {labelTranslations[score.demandLabel]}
+                    {t(`youtubeOpportunity.labels.${getLabelKey(score.demandLabel)}`)}
                   </Badge>
                 </div>
               </TooltipTrigger>
@@ -406,7 +406,7 @@ export default function YouTubeOpportunityPanel({
                 >
                   <div className="flex items-center gap-1.5 text-xs text-gray-600 dark:text-gray-400 mb-1">
                     <Users className="h-3.5 w-3.5" />
-                    Competencia
+                    {t("youtubeOpportunity.competition")}
                   </div>
                   <Badge
                     className={cn(
@@ -418,7 +418,7 @@ export default function YouTubeOpportunityPanel({
                         : labelColors[score.competitionLabel]
                     )}
                   >
-                    {labelTranslations[score.competitionLabel]}
+                    {t(`youtubeOpportunity.labels.${getLabelKey(score.competitionLabel)}`)}
                   </Badge>
                 </div>
               </TooltipTrigger>
@@ -437,7 +437,7 @@ export default function YouTubeOpportunityPanel({
                 >
                   <div className="flex items-center gap-1.5 text-xs text-purple-600 dark:text-purple-400 mb-1">
                     <Target className="h-3.5 w-3.5" />
-                    Oportunidad
+                    {t("youtubeOpportunity.opportunity")}
                   </div>
                   <Badge
                     className={cn(
@@ -449,17 +449,17 @@ export default function YouTubeOpportunityPanel({
                         : "bg-gradient-to-r from-gray-400 to-gray-500 text-white"
                     )}
                   >
-                    {labelTranslations[score.opportunityLabel]}
+                    {t(`youtubeOpportunity.labels.${getLabelKey(score.opportunityLabel)}`)}
                   </Badge>
                 </div>
               </TooltipTrigger>
               <TooltipContent className="max-w-sm">
                 <div className="space-y-2">
-                  <p className="font-medium">{score.explanation?.opportunityReason || "Balance entre demanda y competencia."}</p>
+                  <p className="font-medium">{score.explanation?.opportunityReason || t("youtubeOpportunity.dataInfo")}</p>
                   <div className="text-xs space-y-1 pt-1 border-t border-gray-200 dark:border-gray-700">
-                    <p><span className="text-green-500 font-semibold">Alta:</span> Hay audiencia buscando y poca competencia. Momento ideal para publicar.</p>
-                    <p><span className="text-yellow-500 font-semibold">Buena:</span> Competencia manejable o nicho pequeño sin explotar. Vale la pena con buen contenido.</p>
-                    <p><span className="text-gray-400 font-semibold">Débil:</span> Alta competencia o baja demanda. Necesitarás un ángulo muy diferenciador.</p>
+                    <p><span className="text-green-500 font-semibold">{t("youtubeOpportunity.labels.strong")}:</span> {t("youtubeOpportunity.opportunityLegend.strong")}</p>
+                    <p><span className="text-yellow-500 font-semibold">{t("youtubeOpportunity.labels.good")}:</span> {t("youtubeOpportunity.opportunityLegend.good")}</p>
+                    <p><span className="text-gray-400 font-semibold">{t("youtubeOpportunity.labels.weak")}:</span> {t("youtubeOpportunity.opportunityLegend.weak")}</p>
                   </div>
                 </div>
               </TooltipContent>
@@ -470,13 +470,13 @@ export default function YouTubeOpportunityPanel({
         <div className="flex items-center justify-between pt-2 border-t border-gray-100 dark:border-gray-800">
           <div className="flex gap-4 text-xs text-gray-500 dark:text-gray-400">
             <span>
-              <strong className="text-gray-700 dark:text-gray-300">{snapshot.videoCount}</strong> videos
+              <strong className="text-gray-700 dark:text-gray-300">{snapshot.videoCount}</strong> {t("youtubeOpportunity.videos")}
             </span>
             <span>
-              <strong className="text-gray-700 dark:text-gray-300">{formatNumber(snapshot.avgViews)}</strong> views prom.
+              <strong className="text-gray-700 dark:text-gray-300">{formatNumber(snapshot.avgViews)}</strong> {t("youtubeOpportunity.avgViews")}
             </span>
             <span>
-              <strong className="text-gray-700 dark:text-gray-300">{snapshot.uniqueChannels}</strong> canales
+              <strong className="text-gray-700 dark:text-gray-300">{snapshot.uniqueChannels}</strong> {t("youtubeOpportunity.channels")}
             </span>
           </div>
           <TooltipProvider>
@@ -486,7 +486,7 @@ export default function YouTubeOpportunityPanel({
               </TooltipTrigger>
               <TooltipContent className="max-w-xs">
                 <p>
-                  Datos basados en videos publicados en los últimos 6 meses en YouTube. La oportunidad combina demanda (cuánto se busca) y competencia (cuántos lo cubren).
+                  {t("youtubeOpportunity.dataInfo")}
                 </p>
               </TooltipContent>
             </Tooltip>
