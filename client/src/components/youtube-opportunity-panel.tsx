@@ -392,7 +392,7 @@ export default function YouTubeOpportunityPanel({
                 </div>
               </TooltipTrigger>
               <TooltipContent className="max-w-xs">
-                <p>{score.explanation?.demandReason || "Indica el interés actual en este tema en YouTube."}</p>
+                <p>{score.explanation?.demandReason || t("youtubeOpportunity.tooltips.demandDefault")}</p>
               </TooltipContent>
             </Tooltip>
           </TooltipProvider>
@@ -423,7 +423,7 @@ export default function YouTubeOpportunityPanel({
                 </div>
               </TooltipTrigger>
               <TooltipContent className="max-w-xs">
-                <p>{score.explanation?.competitionReason || "Indica cuántos canales están cubriendo este tema."}</p>
+                <p>{score.explanation?.competitionReason || t("youtubeOpportunity.tooltips.competitionDefault")}</p>
               </TooltipContent>
             </Tooltip>
           </TooltipProvider>

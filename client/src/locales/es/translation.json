@@ -972,6 +972,10 @@
       "title": "Configuración de API Requerida",
       "description": "Agrega YOUTUBE_API_KEY a tus secretos para habilitar el análisis de YouTube."
     },
+    "tooltips": {
+      "demandDefault": "Indica el interés actual en este tema en YouTube.",
+      "competitionDefault": "Indica cuántos canales están cubriendo este tema."
+    },
     "errors": {
       "quotaExceeded": "Cuota diaria de YouTube API excedida",
       "fetchFailed": "Error al obtener datos de YouTube"
