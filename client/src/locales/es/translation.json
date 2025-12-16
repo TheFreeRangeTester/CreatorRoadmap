@@ -392,7 +392,15 @@
     "noActiveIdeas": "No hay ideas activas",
     "noActiveIdeasDesc": "Todas tus ideas están finalizadas. Cambia a la pestaña de finalizadas para verlas.",
     "noCompletedIdeas": "Aún no hay ideas finalizadas",
-    "noCompletedIdeasDesc": "Las ideas que marques como finalizadas aparecerán aquí."
+    "noCompletedIdeasDesc": "Las ideas que marques como finalizadas aparecerán aquí.",
+    "sortBy": "Ordenar por",
+    "sortByVotes": "Votos",
+    "sortByPriority": "Prioridad",
+    "loadError": "Error al cargar ideas"
+  },
+  "priority": {
+    "hybridScore": "Puntuación de prioridad (combina votos + oportunidad YouTube)",
+    "votesOnly": "Puntuación de prioridad (solo votos - sin datos de YouTube)"
   },
   "dashboard": {
     "welcome": "Hola",

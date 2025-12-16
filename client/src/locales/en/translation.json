@@ -390,7 +390,15 @@
     "noActiveIdeas": "No active ideas",
     "noActiveIdeasDesc": "All your ideas are completed. Switch to the completed tab to see them.",
     "noCompletedIdeas": "No completed ideas yet",
-    "noCompletedIdeasDesc": "Ideas you mark as completed will appear here."
+    "noCompletedIdeasDesc": "Ideas you mark as completed will appear here.",
+    "sortBy": "Sort by",
+    "sortByVotes": "Votes",
+    "sortByPriority": "Priority",
+    "loadError": "Failed to load ideas"
+  },
+  "priority": {
+    "hybridScore": "Priority score (combines votes + YouTube opportunity)",
+    "votesOnly": "Priority score (votes only - no YouTube data yet)"
   },
   "dashboard": {
     "welcome": "Hello",

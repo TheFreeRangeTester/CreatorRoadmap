@@ -8,6 +8,7 @@ import { fromZodError } from "zod-validation-error";
 import Stripe from "stripe";
 import { conditionalPremiumAccess, requirePremiumAccess } from "./premium-middleware";
 import { youtubeService } from "./services/youtube";
+import { priorityService } from "./services/priority";
 
 // Initialize Stripe
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
@@ -2547,6 +2548,89 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       console.error("Error fetching YouTube score:", error);
       res.status(500).json({ message: "Failed to fetch YouTube score" });
+    }
+  });
+
+  // Priority Ranking Endpoints
+  // Get ideas with priority scores (Premium only for full functionality)
+  app.get("/api/ideas/priority", requirePremiumAccess, async (req: Request, res: Response) => {
+    try {
+      if (!req.isAuthenticated()) {
+        return res.status(401).json({ message: "Authentication required" });
+      }
+
+      if (req.user!.userRole !== 'creator') {
+        return res.status(403).json({ message: "Only creators can access priority rankings" });
+      }
+
+      const statusFilter = req.query.status === 'completed' ? 'completed' : 'approved';
+      const ideasWithPriority = await priorityService.getIdeasWithPriority(req.user!.id, statusFilter);
+
+      res.json({
+        ideas: ideasWithPriority.map(({ idea, priority, youtubeScore }) => ({
+          ...idea,
+          priority: {
+            voteScore: priority.voteScore,
+            opportunityScore: priority.opportunityScore,
+            effectiveOpportunityScore: priority.effectiveOpportunityScore,
+            priorityScore: priority.priorityScore,
+            hasYouTubeData: priority.hasYouTubeData,
+            isStale: priority.isStale,
+          },
+          youtubeScore: youtubeScore ? {
+            demandScore: youtubeScore.demandScore,
+            demandLabel: youtubeScore.demandLabel,
+            competitionScore: youtubeScore.competitionScore,
+            competitionLabel: youtubeScore.competitionLabel,
+            opportunityScore: youtubeScore.opportunityScore,
+            opportunityLabel: youtubeScore.opportunityLabel,
+          } : null,
+        })),
+        priorityWeight: await priorityService.getCreatorPriorityWeight(req.user!.id),
+      });
+    } catch (error) {
+      console.error("Error fetching ideas with priority:", error);
+      res.status(500).json({ message: "Failed to fetch priority rankings" });
+    }
+  });
+
+  // Update priority weight preference
+  app.patch("/api/user/priority-weight", async (req: Request, res: Response) => {
+    try {
+      if (!req.isAuthenticated()) {
+        return res.status(401).json({ message: "Authentication required" });
+      }
+
+      if (req.user!.userRole !== 'creator') {
+        return res.status(403).json({ message: "Only creators can update priority weight" });
+      }
+
+      const { weight } = req.body;
+      if (typeof weight !== 'number' || weight < 30 || weight > 70) {
+        return res.status(400).json({ message: "Weight must be a number between 30 and 70" });
+      }
+
+      await priorityService.updateCreatorPriorityWeight(req.user!.id, weight);
+
+      res.json({ success: true, priorityWeight: weight });
+    } catch (error) {
+      console.error("Error updating priority weight:", error);
+      res.status(500).json({ message: "Failed to update priority weight" });
+    }
+  });
+
+  // Get priority weight preference
+  app.get("/api/user/priority-weight", async (req: Request, res: Response) => {
+    try {
+      if (!req.isAuthenticated()) {
+        return res.status(401).json({ message: "Authentication required" });
+      }
+
+      const priorityWeight = await priorityService.getCreatorPriorityWeight(req.user!.id);
+      res.json({ priorityWeight });
+    } catch (error) {
+      console.error("Error getting priority weight:", error);
+      res.status(500).json({ message: "Failed to get priority weight" });
     }
   });
 

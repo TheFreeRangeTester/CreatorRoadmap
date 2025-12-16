@@ -29,6 +29,8 @@ interface IdeaListViewProps {
   onComplete?: (ideaId: number) => void;
   onOpenTemplate?: (idea: IdeaResponse) => void;
   isVoting: boolean;
+  priorityScore?: number;
+  hasYouTubeData?: boolean;
 }
 
 export default function IdeaListView({
@@ -40,6 +42,8 @@ export default function IdeaListView({
   onComplete,
   onOpenTemplate,
   isVoting,
+  priorityScore,
+  hasYouTubeData,
 }: IdeaListViewProps) {
   const [hasVoted, setHasVoted] = useState(false);
   const { t } = useTranslation();
@@ -219,6 +223,27 @@ export default function IdeaListView({
                     {idea.votes}
                   </span>
                 </motion.div>
+                {/* Priority Score Badge (Premium only) */}
+                {priorityScore !== undefined && (
+                  <motion.div
+                    className={`flex items-center gap-2 px-3 py-1.5 rounded-none border-2 shadow-sm transition-all duration-200 cursor-default ${
+                      hasYouTubeData 
+                        ? "bg-gradient-to-r from-emerald-100 via-teal-100 to-emerald-100 dark:from-emerald-900/30 dark:via-teal-900/30 dark:to-emerald-900/30 border-emerald-300/60 dark:border-emerald-700/60"
+                        : "bg-gradient-to-r from-gray-100 via-slate-100 to-gray-100 dark:from-gray-800/30 dark:via-slate-800/30 dark:to-gray-800/30 border-gray-300/60 dark:border-gray-600/60"
+                    }`}
+                    whileHover={{ scale: 1.05, x: 2 }}
+                    whileTap={{ scale: 0.95 }}
+                    transition={{ type: "spring", stiffness: 400, damping: 17 }}
+                    title={hasYouTubeData ? t("priority.hybridScore") : t("priority.votesOnly")}
+                  >
+                    <TrendingUp
+                      className={`w-4 h-4 ${hasYouTubeData ? "text-emerald-600 dark:text-emerald-400" : "text-gray-500 dark:text-gray-400"}`}
+                    />
+                    <span className="font-bold text-base text-gray-900 dark:text-white">
+                      {priorityScore}
+                    </span>
+                  </motion.div>
+                )}
               </div>
 
               {/* Creator indicator for audience users */}
