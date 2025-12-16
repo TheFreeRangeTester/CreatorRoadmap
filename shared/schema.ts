@@ -499,3 +499,89 @@ export type VideoTemplateResponse = z.infer<typeof videoTemplateResponseSchema>;
 
 // Niche stats types
 export type NicheStat = typeof nicheStats.$inferSelect;
+
+// ============================================
+// YouTube Opportunity Scoring (Premium Feature)
+// ============================================
+
+// YouTube API snapshots - raw data from YouTube API
+export const youtubeSnapshots = pgTable("youtube_snapshots", {
+  id: serial("id").primaryKey(),
+  ideaId: integer("idea_id").notNull().references(() => ideas.id, { onDelete: 'cascade' }),
+  queryTerm: text("query_term").notNull(),
+  videoCount: integer("video_count").default(0),
+  avgViews: integer("avg_views").default(0),
+  medianViews: integer("median_views").default(0),
+  maxViews: integer("max_views").default(0),
+  avgViewsPerDay: integer("avg_views_per_day").default(0), // velocity
+  uniqueChannels: integer("unique_channels").default(0),
+  topChannelsJson: jsonb("top_channels_json").default([]),
+  rawResponseJson: jsonb("raw_response_json").default({}),
+  status: text("status").notNull().default('pending'), // 'pending', 'success', 'error', 'partial'
+  errorMessage: text("error_message"),
+  fetchedAt: timestamp("fetched_at").notNull().defaultNow(),
+});
+
+// YouTube scores - calculated from snapshots
+export const youtubeScores = pgTable("youtube_scores", {
+  id: serial("id").primaryKey(),
+  ideaId: integer("idea_id").notNull().references(() => ideas.id, { onDelete: 'cascade' }).unique(),
+  snapshotId: integer("snapshot_id").references(() => youtubeSnapshots.id),
+  demandScore: integer("demand_score").default(0), // 0-100
+  demandLabel: text("demand_label").default('unknown'), // 'low', 'medium', 'high'
+  competitionScore: integer("competition_score").default(0), // 0-100
+  competitionLabel: text("competition_label").default('unknown'), // 'low', 'medium', 'high'
+  opportunityScore: integer("opportunity_score").default(0), // 0-100
+  opportunityLabel: text("opportunity_label").default('unknown'), // 'weak', 'good', 'strong'
+  compositeLabel: text("composite_label"), // 'audience-led', 'market-led', 'balanced', 'low-priority'
+  explanationJson: jsonb("explanation_json").default({}),
+  updatedAt: timestamp("updated_at").notNull().defaultNow(),
+});
+
+// YouTube API usage tracking
+export const youtubeApiUsage = pgTable("youtube_api_usage", {
+  id: serial("id").primaryKey(),
+  date: timestamp("date").notNull().defaultNow(),
+  unitsUsed: integer("units_used").notNull().default(0),
+  requestCount: integer("request_count").notNull().default(0),
+});
+
+// YouTube schemas
+export const youtubeSnapshotResponseSchema = z.object({
+  id: z.number(),
+  ideaId: z.number(),
+  queryTerm: z.string(),
+  videoCount: z.number(),
+  avgViews: z.number(),
+  medianViews: z.number(),
+  maxViews: z.number(),
+  avgViewsPerDay: z.number(),
+  uniqueChannels: z.number(),
+  status: z.enum(['pending', 'success', 'error', 'partial']),
+  errorMessage: z.string().nullable(),
+  fetchedAt: z.date(),
+});
+
+export const youtubeScoreResponseSchema = z.object({
+  id: z.number(),
+  ideaId: z.number(),
+  demandScore: z.number(),
+  demandLabel: z.enum(['low', 'medium', 'high', 'unknown']),
+  competitionScore: z.number(),
+  competitionLabel: z.enum(['low', 'medium', 'high', 'unknown']),
+  opportunityScore: z.number(),
+  opportunityLabel: z.enum(['weak', 'good', 'strong', 'unknown']),
+  compositeLabel: z.enum(['audience-led', 'market-led', 'balanced', 'low-priority']).nullable(),
+  explanation: z.object({
+    demandReason: z.string().optional(),
+    competitionReason: z.string().optional(),
+    opportunityReason: z.string().optional(),
+  }).optional(),
+  updatedAt: z.date(),
+  snapshot: youtubeSnapshotResponseSchema.optional(),
+});
+
+export type YoutubeSnapshot = typeof youtubeSnapshots.$inferSelect;
+export type YoutubeScore = typeof youtubeScores.$inferSelect;
+export type YoutubeApiUsage = typeof youtubeApiUsage.$inferSelect;
+export type YoutubeScoreResponse = z.infer<typeof youtubeScoreResponseSchema>;
