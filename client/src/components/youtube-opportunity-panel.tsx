@@ -312,15 +312,17 @@ export default function YouTubeOpportunityPanel({
               <TooltipProvider>
                 <Tooltip>
                   <TooltipTrigger asChild>
-                    <Badge
-                      className={cn(
-                        "text-xs cursor-help",
-                        compositeColors[score.compositeLabel]
-                      )}
-                      data-testid="badge-composite-label"
-                    >
-                      {labelTranslations[score.compositeLabel]}
-                    </Badge>
+                    <span className="cursor-help">
+                      <Badge
+                        className={cn(
+                          "text-xs",
+                          compositeColors[score.compositeLabel]
+                        )}
+                        data-testid="badge-composite-label"
+                      >
+                        {labelTranslations[score.compositeLabel]}
+                      </Badge>
+                    </span>
                   </TooltipTrigger>
                   <TooltipContent className="max-w-sm">
                     <div className="space-y-2">
