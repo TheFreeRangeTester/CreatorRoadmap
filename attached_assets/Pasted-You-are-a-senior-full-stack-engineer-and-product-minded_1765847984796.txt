@@ -1,0 +1,92 @@
+You are a senior full-stack engineer and product-minded architect working inside this repository.
+
+Goal:
+Design and plan the implementation of a Premium feature: a YouTube Opportunity Scoring system that enriches existing Fanlist ideas with YouTube market demand signals.
+
+Product intent:
+Fanlist already captures what the audience wants (votes on ideas).
+This Premium feature adds the “market side” by using public YouTube data to help creators decide which ideas are likely to perform well in terms of reach and organic discovery.
+
+This is NOT about predicting virality or using opaque AI models.
+This is about pragmatic, explainable signals based on YouTube Data API v3.
+
+Important:
+- This is a Premium-only feature
+- The repository already contains logic to differentiate Free vs Premium features
+- Your plan must explicitly integrate with that existing Premium gating logic (backend + UI)
+
+Before answering:
+- Inspect the repository structure
+- Identify existing models, API routes, background jobs and Premium gating mechanisms
+- Reuse existing conventions instead of inventing parallel systems
+
+What to produce:
+A concrete, step-by-step implementation plan to add YouTube data ingestion, scoring, storage and UI surfacing for Premium users only.
+
+The plan must include:
+
+1. YouTube data sources
+- Which YouTube Data API v3 endpoints to use
+- What fields are realistically available and useful
+- Explicitly list what data cannot be obtained and must not be implied in UX
+
+2. Data ingestion & lifecycle (Premium-aware)
+- When YouTube data should be fetched (idea creation, async job, scheduled refresh, manual re-sync)
+- How to prevent unnecessary API calls for Free users
+- How to implement this using existing backend patterns in the repo
+- Caching strategy and snapshotting
+- Handling API quotas, retries and partial failures
+
+3. Scoring model (core of the feature)
+- Define a deterministic, explainable scoring model
+- Suggested inputs:
+  - Number of recent videos matching the idea keyword
+  - Average and median views
+  - Views per day (velocity)
+  - Channel size normalization (views vs subscribers)
+- Outputs must be human-friendly labels, not raw numbers:
+  - YouTube Demand: Low / Medium / High
+  - Competition: Low / Medium / High
+  - Overall Opportunity: Weak / Good / Strong
+- Provide example formulas or pseudocode
+- Explain why each signal matters
+- Scores should only be computed and stored for Premium users
+
+4. Combining Fanlist signals with YouTube signals
+- How to combine existing Fanlist votes with YouTube opportunity scores
+- Suggested composite classifications, e.g.:
+  - Audience-Led
+  - Market-Led
+  - Balanced Opportunity
+- How these composites are exposed only to Premium users
+
+5. Database changes
+- Tables or columns needed to store YouTube snapshots and scores
+- How to associate stored data with Premium access (user, workspace or subscription)
+- How often data should be refreshed
+- How historical snapshots could be reused later (trend detection, alerts)
+
+6. UI / UX surfacing (Premium UX)
+- What information should appear on an idea card or idea detail page for Premium users
+- How Free users should see this feature (locked state, teaser, upsell)
+- Suggested copy for locked states, tooltips and disclaimers
+- Visual hierarchy: what matters most for creator decisions
+
+7. MVP vs future iterations
+- Clearly define what is required for a Premium MVP
+- Explicitly list what should be deferred to Phase 2+ (trend alerts, idea suggestions, notifications, benchmarking, etc.)
+
+Constraints:
+- Respect YouTube API quota limits
+- Avoid ML unless strictly necessary
+- Prefer deterministic logic over “AI magic”
+- Assume a small team / solo maintainer
+- Optimize for maintainability and cost control
+
+Output format:
+- Clear sections
+- Concrete technical decisions
+- Actionable steps that can be converted into tickets
+- No marketing fluff or generic explanations
+
+Think like someone who has to build, ship, gate, and maintain this Premium feature in production.
