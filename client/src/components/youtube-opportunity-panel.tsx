@@ -429,8 +429,15 @@ export default function YouTubeOpportunityPanel({
                   </Badge>
                 </div>
               </TooltipTrigger>
-              <TooltipContent className="max-w-xs">
-                <p>{score.explanation?.opportunityReason || "Balance entre demanda y competencia."}</p>
+              <TooltipContent className="max-w-sm">
+                <div className="space-y-2">
+                  <p className="font-medium">{score.explanation?.opportunityReason || "Balance entre demanda y competencia."}</p>
+                  <div className="text-xs space-y-1 pt-1 border-t border-gray-200 dark:border-gray-700">
+                    <p><span className="text-green-500 font-semibold">Alta:</span> Hay audiencia buscando y poca competencia. Momento ideal para publicar.</p>
+                    <p><span className="text-yellow-500 font-semibold">Buena:</span> Competencia manejable o nicho pequeño sin explotar. Vale la pena con buen contenido.</p>
+                    <p><span className="text-gray-400 font-semibold">Débil:</span> Alta competencia o baja demanda. Necesitarás un ángulo muy diferenciador.</p>
+                  </div>
+                </div>
               </TooltipContent>
             </Tooltip>
           </TooltipProvider>
@@ -455,7 +462,7 @@ export default function YouTubeOpportunityPanel({
               </TooltipTrigger>
               <TooltipContent className="max-w-xs">
                 <p>
-                  Datos basados en videos publicados en el último mes. La demanda alta con competencia baja indica una buena oportunidad de contenido.
+                  Datos basados en videos publicados en los últimos 6 meses en YouTube. La oportunidad combina demanda (cuánto se busca) y competencia (cuántos lo cubren).
                 </p>
               </TooltipContent>
             </Tooltip>
