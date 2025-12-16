@@ -561,9 +561,12 @@ export class YouTubeService {
     competitionScore: number
   ): number {
     // High demand + low competition = high opportunity
-    // Formula: demand - (competition * weight)
-    const score = demandScore - competitionScore * 0.7;
-    return Math.round(Math.max(0, Math.min(100, score + 50))); // Shift to 0-100 range
+    // Opportunity = Demand weighted by inverse of competition
+    // When competition is high (100), opportunity is reduced significantly
+    // When competition is low (0), opportunity reflects demand directly
+    const competitionPenalty = competitionScore / 100; // 0 to 1
+    const score = demandScore * (1 - competitionPenalty * 0.7);
+    return Math.round(Math.max(0, Math.min(100, score)));
   }
 
   private scoreToLabel(score: number): string {
@@ -625,12 +628,21 @@ export class YouTubeService {
     opportunityLabel: string
   ): string {
     if (opportunityLabel === "strong") {
-      return "Alta demanda con competencia baja/media. Excelente momento para publicar.";
+      if (demandLabel === "high" && competitionLabel === "low") {
+        return "Alta demanda con poca competencia. Excelente momento para publicar.";
+      }
+      return "Buena demanda con competencia manejable. Oportunidad favorable.";
     }
     if (opportunityLabel === "good") {
+      if (demandLabel === "high" && competitionLabel === "high") {
+        return "Alta demanda pero también alta competencia. Mercado activo pero competido.";
+      }
       return "Balance razonable entre demanda y competencia. Vale la pena intentar.";
     }
-    return "Baja demanda o alta competencia. Considera ajustar el enfoque del contenido.";
+    if (demandLabel === "low") {
+      return "Baja demanda en YouTube. Considera si tu audiencia busca este contenido en otras plataformas.";
+    }
+    return "Alta competencia reduce la oportunidad. Considera un ángulo único o diferenciador.";
   }
 }
 
