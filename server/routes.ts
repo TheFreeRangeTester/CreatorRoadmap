@@ -365,6 +365,49 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Priority Ranking - Get ideas with priority scores (Premium only)
+  // NOTE: This route MUST be defined before /api/ideas/:id to avoid route conflict
+  app.get("/api/ideas/priority", requirePremiumAccess, async (req: Request, res: Response) => {
+    try {
+      if (!req.isAuthenticated()) {
+        return res.status(401).json({ message: "Authentication required" });
+      }
+
+      if (req.user!.userRole !== 'creator') {
+        return res.status(403).json({ message: "Only creators can access priority rankings" });
+      }
+
+      const statusFilter = req.query.status === 'completed' ? 'completed' : 'approved';
+      const ideasWithPriority = await priorityService.getIdeasWithPriority(req.user!.id, statusFilter);
+
+      res.json({
+        ideas: ideasWithPriority.map(({ idea, priority, youtubeScore }) => ({
+          ...idea,
+          priority: {
+            voteScore: priority.voteScore,
+            opportunityScore: priority.opportunityScore,
+            effectiveOpportunityScore: priority.effectiveOpportunityScore,
+            priorityScore: priority.priorityScore,
+            hasYouTubeData: priority.hasYouTubeData,
+            isStale: priority.isStale,
+          },
+          youtubeScore: youtubeScore ? {
+            demandScore: youtubeScore.demandScore,
+            demandLabel: youtubeScore.demandLabel,
+            competitionScore: youtubeScore.competitionScore,
+            competitionLabel: youtubeScore.competitionLabel,
+            opportunityScore: youtubeScore.opportunityScore,
+            opportunityLabel: youtubeScore.opportunityLabel,
+          } : null,
+        })),
+        priorityWeight: await priorityService.getCreatorPriorityWeight(req.user!.id),
+      });
+    } catch (error) {
+      console.error("Error fetching ideas with priority:", error);
+      res.status(500).json({ message: "Failed to fetch priority rankings" });
+    }
+  });
+
   // Get single idea
   app.get("/api/ideas/:id", async (req: Request, res: Response) => {
     try {
@@ -2548,49 +2591,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       console.error("Error fetching YouTube score:", error);
       res.status(500).json({ message: "Failed to fetch YouTube score" });
-    }
-  });
-
-  // Priority Ranking Endpoints
-  // Get ideas with priority scores (Premium only for full functionality)
-  app.get("/api/ideas/priority", requirePremiumAccess, async (req: Request, res: Response) => {
-    try {
-      if (!req.isAuthenticated()) {
-        return res.status(401).json({ message: "Authentication required" });
-      }
-
-      if (req.user!.userRole !== 'creator') {
-        return res.status(403).json({ message: "Only creators can access priority rankings" });
-      }
-
-      const statusFilter = req.query.status === 'completed' ? 'completed' : 'approved';
-      const ideasWithPriority = await priorityService.getIdeasWithPriority(req.user!.id, statusFilter);
-
-      res.json({
-        ideas: ideasWithPriority.map(({ idea, priority, youtubeScore }) => ({
-          ...idea,
-          priority: {
-            voteScore: priority.voteScore,
-            opportunityScore: priority.opportunityScore,
-            effectiveOpportunityScore: priority.effectiveOpportunityScore,
-            priorityScore: priority.priorityScore,
-            hasYouTubeData: priority.hasYouTubeData,
-            isStale: priority.isStale,
-          },
-          youtubeScore: youtubeScore ? {
-            demandScore: youtubeScore.demandScore,
-            demandLabel: youtubeScore.demandLabel,
-            competitionScore: youtubeScore.competitionScore,
-            competitionLabel: youtubeScore.competitionLabel,
-            opportunityScore: youtubeScore.opportunityScore,
-            opportunityLabel: youtubeScore.opportunityLabel,
-          } : null,
-        })),
-        priorityWeight: await priorityService.getCreatorPriorityWeight(req.user!.id),
-      });
-    } catch (error) {
-      console.error("Error fetching ideas with priority:", error);
-      res.status(500).json({ message: "Failed to fetch priority rankings" });
     }
   });
 
