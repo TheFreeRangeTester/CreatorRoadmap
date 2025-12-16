@@ -260,19 +260,25 @@ export class YouTubeService {
       q: query,
       part: "snippet",
       type: "video",
-      order: "date",
+      order: "relevance",
       maxResults: "50",
-      publishedAfter: this.getDateMonthsAgo(1).toISOString(),
+      publishedAfter: this.getDateMonthsAgo(6).toISOString(),
     });
 
+    console.log(`[YouTube] Searching for: "${query}"`);
+    console.log(`[YouTube] URL: ${YOUTUBE_API_BASE}/search?q=${encodeURIComponent(query)}&...`);
+    
     const response = await fetch(`${YOUTUBE_API_BASE}/search?${params}`);
     
     if (!response.ok) {
       const error = await response.json();
+      console.error(`[YouTube] API Error:`, JSON.stringify(error, null, 2));
       throw new Error(error.error?.message || "YouTube API error");
     }
 
-    return response.json();
+    const data = await response.json();
+    console.log(`[YouTube] Found ${data.items?.length || 0} videos (totalResults: ${data.pageInfo?.totalResults})`);
+    return data;
   }
 
   private async getVideoStats(videoIds: string[]): Promise<YouTubeVideoStats> {
