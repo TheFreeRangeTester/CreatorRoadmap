@@ -309,15 +309,37 @@ export default function YouTubeOpportunityPanel({
           </CardTitle>
           <div className="flex items-center gap-2">
             {score.compositeLabel && (
-              <Badge
-                className={cn(
-                  "text-xs",
-                  compositeColors[score.compositeLabel]
-                )}
-                data-testid="badge-composite-label"
-              >
-                {labelTranslations[score.compositeLabel]}
-              </Badge>
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Badge
+                      className={cn(
+                        "text-xs cursor-help",
+                        compositeColors[score.compositeLabel]
+                      )}
+                      data-testid="badge-composite-label"
+                    >
+                      {labelTranslations[score.compositeLabel]}
+                    </Badge>
+                  </TooltipTrigger>
+                  <TooltipContent className="max-w-sm">
+                    <div className="space-y-2">
+                      <p className="font-medium">
+                        {score.compositeLabel === "balanced" && "Tu audiencia lo pide y el mercado lo valida. Prioridad máxima."}
+                        {score.compositeLabel === "audience-led" && "Tu audiencia lo quiere pero el mercado de YouTube es incierto. Confía en tu comunidad."}
+                        {score.compositeLabel === "market-led" && "Hay oportunidad en YouTube pero tu audiencia aún no lo pide. Considera educar sobre el tema."}
+                        {score.compositeLabel === "low-priority" && "Poca demanda de tu audiencia y baja oportunidad en YouTube. Considera otros temas."}
+                      </p>
+                      <div className="text-xs space-y-1 pt-1 border-t border-gray-200 dark:border-gray-700">
+                        <p><span className="text-green-500 font-semibold">Equilibrada:</span> Votos de audiencia + buena oportunidad YouTube.</p>
+                        <p><span className="text-purple-500 font-semibold">Liderada por Audiencia:</span> Muchos votos, oportunidad YouTube moderada.</p>
+                        <p><span className="text-blue-500 font-semibold">Liderada por Mercado:</span> Buena oportunidad YouTube, pocos votos.</p>
+                        <p><span className="text-gray-400 font-semibold">Baja Prioridad:</span> Pocos votos y baja oportunidad.</p>
+                      </div>
+                    </div>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
             )}
             <TooltipProvider>
               <Tooltip>
