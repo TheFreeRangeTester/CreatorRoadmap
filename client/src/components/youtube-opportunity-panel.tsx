@@ -113,7 +113,7 @@ export default function YouTubeOpportunityPanel({
   const [isRefreshing, setIsRefreshing] = useState(false);
 
   const { data: scoreData, isLoading, error } = useQuery<YouTubeScoreResponse>({
-    queryKey: ["/api/youtube/score", ideaId],
+    queryKey: [`/api/youtube/score/${ideaId}`],
     enabled: isPremium,
   });
 
@@ -126,7 +126,7 @@ export default function YouTubeOpportunityPanel({
       return res.json();
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["/api/youtube/score", ideaId] });
+      queryClient.invalidateQueries({ queryKey: [`/api/youtube/score/${ideaId}`] });
       setIsRefreshing(false);
     },
     onError: () => {
