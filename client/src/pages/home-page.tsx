@@ -416,49 +416,63 @@ export default function HomePage() {
         </div>
       </motion.header>
 
-      {/* Main Content */}
+      {/* Main Content - Two Column Layout */}
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6">
-        <div className="max-w-5xl mx-auto">
+        <div className="flex gap-8 max-w-6xl mx-auto">
+          {/* Main Content Area */}
+          <div className="flex-1 min-w-0">
+            <Dialog
+              open={isMetricsDialogOpen}
+              onOpenChange={setIsMetricsDialogOpen}
+            >
+              <DialogContent className="lg:hidden max-w-md w-[calc(100%-2rem)] border-none bg-white/95 dark:bg-gray-900/95 p-6 pb-7 rounded-3xl shadow-[0_25px_60px_-20px_rgba(79,70,229,0.45)]">
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.92 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ duration: 0.25, ease: "easeOut" }}
+                  className="space-y-6"
+                >
+                  <div className="space-y-1 text-left">
+                    <DialogTitle className="text-2xl font-bold text-gray-900 dark:text-white">
+                      {t("dashboard.quickMetricsTitle")}
+                    </DialogTitle>
+                    <DialogDescription className="text-sm text-gray-500 dark:text-gray-400">
+                      {t("dashboard.quickMetricsSubtitle")}
+                    </DialogDescription>
+                  </div>
+                  <DashboardOverview variant="modal" />
+                </motion.div>
+              </DialogContent>
+            </Dialog>
 
-          <Dialog
-            open={isMetricsDialogOpen}
-            onOpenChange={setIsMetricsDialogOpen}
-          >
-            <DialogContent className="lg:hidden max-w-md w-[calc(100%-2rem)] border-none bg-white/95 dark:bg-gray-900/95 p-6 pb-7 rounded-3xl shadow-[0_25px_60px_-20px_rgba(79,70,229,0.45)]">
-              <motion.div
-                initial={{ opacity: 0, scale: 0.92 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.25, ease: "easeOut" }}
-                className="space-y-6"
-              >
-                <div className="space-y-1 text-left">
-                  <DialogTitle className="text-2xl font-bold text-gray-900 dark:text-white">
-                    {t("dashboard.quickMetricsTitle")}
-                  </DialogTitle>
-                  <DialogDescription className="text-sm text-gray-500 dark:text-gray-400">
-                    {t("dashboard.quickMetricsSubtitle")}
-                  </DialogDescription>
-                </div>
-                <DashboardOverview variant="modal" />
-              </motion.div>
-            </DialogContent>
-          </Dialog>
+            <Dialog
+              open={isCreatorActionsOpen}
+              onOpenChange={setIsCreatorActionsOpen}
+            >
+              <DialogContent className="lg:hidden max-w-md w-[calc(100%-1.5rem)] border-none bg-white/95 dark:bg-gray-900/95 p-0 rounded-3xl shadow-[0_25px_60px_-20px_rgba(79,70,229,0.45)]">
+                <CreatorControls
+                  onAddIdea={() => {
+                    setIsCreatorActionsOpen(false);
+                    handleAddIdea();
+                  }}
+                />
+              </DialogContent>
+            </Dialog>
 
-          <Dialog
-            open={isCreatorActionsOpen}
-            onOpenChange={setIsCreatorActionsOpen}
-          >
-            <DialogContent className="lg:hidden max-w-md w-[calc(100%-1.5rem)] border-none bg-white/95 dark:bg-gray-900/95 p-0 rounded-3xl shadow-[0_25px_60px_-20px_rgba(79,70,229,0.45)]">
-              <CreatorControls
-                onAddIdea={() => {
-                  setIsCreatorActionsOpen(false);
-                  handleAddIdea();
-                }}
-              />
-            </DialogContent>
-          </Dialog>
+            {ideasSection}
+          </div>
 
-          {ideasSection}
+          {/* Stats Sidebar - Desktop Only */}
+          {user?.userRole === "creator" && (
+            <aside className="hidden lg:block w-72 flex-shrink-0">
+              <div className="sticky top-24 space-y-4">
+                <h3 className="text-sm font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-4">
+                  {t("dashboard.statsTitle", "Estadísticas")}
+                </h3>
+                <DashboardOverview variant="sidebar" />
+              </div>
+            </aside>
+          )}
         </div>
       </div>
 

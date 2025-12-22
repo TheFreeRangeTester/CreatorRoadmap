@@ -445,8 +445,8 @@ export function DashboardOverview({
       >
         <Card
           className={cn(
-            "bg-white/90 dark:bg-gray-900/90 backdrop-blur-sm border border-gray-200/50 dark:border-gray-700/50 hover:shadow-xl hover:border-gray-300 dark:hover:border-gray-600 transition-all duration-300 flex flex-col",
-            isSidebar ? "rounded-xl" : "rounded-none h-full"
+            "bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 hover:shadow-lg transition-all duration-200 flex flex-col",
+            isSidebar ? "rounded-2xl" : "rounded-none h-full"
           )}
         >
           <CardHeader
@@ -528,8 +528,8 @@ export function DashboardOverview({
       >
         <Card
           className={cn(
-            "bg-white/90 dark:bg-gray-900/90 backdrop-blur-sm border border-gray-200/50 dark:border-gray-700/50 hover:shadow-xl hover:border-gray-300 dark:hover:border-gray-600 transition-all duration-300 flex flex-col",
-            isSidebar ? "rounded-xl" : "rounded-none h-full"
+            "bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 hover:shadow-lg transition-all duration-200 flex flex-col",
+            isSidebar ? "rounded-2xl" : "rounded-none h-full"
           )}
         >
           <CardHeader
