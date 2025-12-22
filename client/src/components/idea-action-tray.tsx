@@ -184,7 +184,7 @@ export function IdeaActionTray({
       {onComplete && (
         <ActionButton
           icon={CheckCircle2}
-          label={t("ideas.complete", "Complete")}
+          label={t("ideas.complete", "Completar")}
           onClick={onComplete}
           color="gray"
           testId={`button-complete-${ideaId}`}

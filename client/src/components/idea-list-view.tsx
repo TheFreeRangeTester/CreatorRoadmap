@@ -137,13 +137,22 @@ export default function IdeaListView({
       transition={{ duration: 0.2, ease: "easeOut" }}
       className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-2xl p-5 hover:shadow-lg transition-all duration-200"
     >
-      {/* Top Row: Position, Niche, Votes, Status */}
+      {/* Top Row: Position, Niche, Votes, Priority, Status */}
       <div className="flex items-center gap-2 flex-wrap mb-3">
         {/* Position Badge */}
         <div className="flex items-center gap-1 text-primary font-bold text-sm">
           <span>⭐</span>
           <span>#{position}</span>
         </div>
+        
+        {/* Position Change Indicator */}
+        <Badge
+          variant="secondary"
+          className={`${positionIndicator.className} flex items-center gap-1 text-xs px-2.5 py-1 font-medium rounded-full border-0`}
+        >
+          {positionIndicator.icon}
+          {positionIndicator.text}
+        </Badge>
         
         {/* Niche Badge */}
         {idea.niche && (
@@ -158,11 +167,30 @@ export default function IdeaListView({
         
         {/* Vote Count */}
         <div className="flex items-center gap-1.5 bg-pink-50 dark:bg-pink-900/20 px-2.5 py-1 rounded-full text-sm">
-          <TrendingUp className="w-3.5 h-3.5 text-pink-500" />
+          <Heart className="w-3.5 h-3.5 text-pink-500" fill="currentColor" />
           <span className="font-semibold text-gray-700 dark:text-gray-300">
-            {idea.votes} {t("badges.votes", "votos")}
+            {idea.votes}
           </span>
         </div>
+        
+        {/* Priority Score Badge (Premium only) */}
+        {priorityScore !== undefined && (
+          <div
+            className={`flex items-center gap-1.5 px-2.5 py-1 rounded-full text-sm ${
+              hasYouTubeData 
+                ? "bg-emerald-50 dark:bg-emerald-900/20"
+                : "bg-gray-50 dark:bg-gray-800/50"
+            }`}
+            title={hasYouTubeData ? t("priority.hybridScore") : t("priority.votesOnly")}
+          >
+            <TrendingUp
+              className={`w-3.5 h-3.5 ${hasYouTubeData ? "text-emerald-500" : "text-gray-400"}`}
+            />
+            <span className="font-semibold text-gray-700 dark:text-gray-300">
+              {priorityScore}
+            </span>
+          </div>
+        )}
         
         {/* Analyzed Badge */}
         {hasYouTubeData && (
@@ -171,8 +199,8 @@ export default function IdeaListView({
             className="bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 border-0 text-xs px-2.5 py-1 font-medium rounded-full"
             data-testid={`youtube-badge-${idea.id}`}
           >
-            <span className="mr-1">👁</span>
-            {t("ideas.analyzed", "Analizada")}
+            <Youtube className="w-3 h-3 mr-1" />
+            {t("ideas.analyzed", "Analizado")}
           </Badge>
         )}
       </div>
