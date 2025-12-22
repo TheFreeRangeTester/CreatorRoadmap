@@ -11,6 +11,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { ResponsiveTooltip } from "@/components/ui/responsive-tooltip";
 import {
   Youtube,
   TrendingUp,
@@ -385,36 +386,33 @@ export default function YouTubeOpportunityPanel({
           </CardTitle>
           <div className="flex items-center gap-2">
             {score.compositeLabel && (
-              <TooltipProvider>
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <span className="cursor-help">
-                      <Badge
-                        className={cn(
-                          "text-xs",
-                          compositeColors[score.compositeLabel]
-                        )}
-                        data-testid="badge-composite-label"
-                      >
-                        {t(`youtubeOpportunity.labels.${getLabelKey(score.compositeLabel)}`)}
-                      </Badge>
-                    </span>
-                  </TooltipTrigger>
-                  <TooltipContent className="max-w-sm">
-                    <div className="space-y-2">
-                      <p className="font-medium">
-                        {t(`youtubeOpportunity.compositeTooltips.${getLabelKey(score.compositeLabel)}`)}
-                      </p>
-                      <div className="text-xs space-y-1 pt-1 border-t border-gray-200 dark:border-gray-700">
-                        <p><span className="text-green-500 font-semibold">{t("youtubeOpportunity.labels.balanced")}:</span> {t("youtubeOpportunity.compositeLegend.balanced")}</p>
-                        <p><span className="text-purple-500 font-semibold">{t("youtubeOpportunity.labels.audienceLed")}:</span> {t("youtubeOpportunity.compositeLegend.audienceLed")}</p>
-                        <p><span className="text-blue-500 font-semibold">{t("youtubeOpportunity.labels.marketLed")}:</span> {t("youtubeOpportunity.compositeLegend.marketLed")}</p>
-                        <p><span className="text-gray-400 font-semibold">{t("youtubeOpportunity.labels.lowPriority")}:</span> {t("youtubeOpportunity.compositeLegend.lowPriority")}</p>
-                      </div>
+              <ResponsiveTooltip
+                side="bottom"
+                align="end"
+                content={
+                  <div className="space-y-2">
+                    <p className="font-medium">
+                      {t(`youtubeOpportunity.compositeTooltips.${getLabelKey(score.compositeLabel)}`)}
+                    </p>
+                    <div className="text-xs space-y-1 pt-1 border-t border-gray-200 dark:border-gray-700">
+                      <p><span className="text-green-500 font-semibold">{t("youtubeOpportunity.labels.balanced")}:</span> {t("youtubeOpportunity.compositeLegend.balanced")}</p>
+                      <p><span className="text-purple-500 font-semibold">{t("youtubeOpportunity.labels.audienceLed")}:</span> {t("youtubeOpportunity.compositeLegend.audienceLed")}</p>
+                      <p><span className="text-blue-500 font-semibold">{t("youtubeOpportunity.labels.marketLed")}:</span> {t("youtubeOpportunity.compositeLegend.marketLed")}</p>
+                      <p><span className="text-gray-400 font-semibold">{t("youtubeOpportunity.labels.lowPriority")}:</span> {t("youtubeOpportunity.compositeLegend.lowPriority")}</p>
                     </div>
-                  </TooltipContent>
-                </Tooltip>
-              </TooltipProvider>
+                  </div>
+                }
+              >
+                <Badge
+                  className={cn(
+                    "text-xs",
+                    compositeColors[score.compositeLabel]
+                  )}
+                  data-testid="badge-composite-label"
+                >
+                  {t(`youtubeOpportunity.labels.${getLabelKey(score.compositeLabel)}`)}
+                </Badge>
+              </ResponsiveTooltip>
             )}
             <TooltipProvider>
               <Tooltip>
@@ -501,43 +499,42 @@ export default function YouTubeOpportunityPanel({
             </Tooltip>
           </TooltipProvider>
 
-          <TooltipProvider>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <div
-                  className="bg-gradient-to-br from-purple-50 to-indigo-50 dark:from-purple-900/20 dark:to-indigo-900/20 rounded-lg p-3 cursor-help border border-purple-100 dark:border-purple-800/30"
-                  data-testid="score-opportunity"
-                >
-                  <div className="flex items-center gap-1.5 text-xs text-purple-600 dark:text-purple-400 mb-1">
-                    <Target className="h-3.5 w-3.5" />
-                    {t("youtubeOpportunity.opportunity")}
-                  </div>
-                  <Badge
-                    className={cn(
-                      "text-sm font-medium",
-                      score.opportunityLabel === "strong"
-                        ? "bg-gradient-to-r from-green-500 to-emerald-500 text-white"
-                        : score.opportunityLabel === "good"
-                        ? "bg-gradient-to-r from-yellow-500 to-amber-500 text-white"
-                        : "bg-gradient-to-r from-gray-400 to-gray-500 text-white"
-                    )}
-                  >
-                    {t(`youtubeOpportunity.labels.${getLabelKey(score.opportunityLabel)}`)}
-                  </Badge>
+          <ResponsiveTooltip
+            side="bottom"
+            align="center"
+            content={
+              <div className="space-y-2">
+                <p className="font-medium">{parseExplanation(score.explanation?.opportunityReason, "youtubeOpportunity.dataInfo")}</p>
+                <div className="text-xs space-y-1 pt-1 border-t border-gray-200 dark:border-gray-700">
+                  <p><span className="text-green-500 font-semibold">{t("youtubeOpportunity.labels.strong")}:</span> {t("youtubeOpportunity.opportunityLegend.strong")}</p>
+                  <p><span className="text-yellow-500 font-semibold">{t("youtubeOpportunity.labels.good")}:</span> {t("youtubeOpportunity.opportunityLegend.good")}</p>
+                  <p><span className="text-gray-400 font-semibold">{t("youtubeOpportunity.labels.weak")}:</span> {t("youtubeOpportunity.opportunityLegend.weak")}</p>
                 </div>
-              </TooltipTrigger>
-              <TooltipContent className="max-w-sm">
-                <div className="space-y-2">
-                  <p className="font-medium">{parseExplanation(score.explanation?.opportunityReason, "youtubeOpportunity.dataInfo")}</p>
-                  <div className="text-xs space-y-1 pt-1 border-t border-gray-200 dark:border-gray-700">
-                    <p><span className="text-green-500 font-semibold">{t("youtubeOpportunity.labels.strong")}:</span> {t("youtubeOpportunity.opportunityLegend.strong")}</p>
-                    <p><span className="text-yellow-500 font-semibold">{t("youtubeOpportunity.labels.good")}:</span> {t("youtubeOpportunity.opportunityLegend.good")}</p>
-                    <p><span className="text-gray-400 font-semibold">{t("youtubeOpportunity.labels.weak")}:</span> {t("youtubeOpportunity.opportunityLegend.weak")}</p>
-                  </div>
-                </div>
-              </TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
+              </div>
+            }
+          >
+            <div
+              className="bg-gradient-to-br from-purple-50 to-indigo-50 dark:from-purple-900/20 dark:to-indigo-900/20 rounded-lg p-3 cursor-help border border-purple-100 dark:border-purple-800/30"
+              data-testid="score-opportunity"
+            >
+              <div className="flex items-center gap-1.5 text-xs text-purple-600 dark:text-purple-400 mb-1">
+                <Target className="h-3.5 w-3.5" />
+                {t("youtubeOpportunity.opportunity")}
+              </div>
+              <Badge
+                className={cn(
+                  "text-sm font-medium",
+                  score.opportunityLabel === "strong"
+                    ? "bg-gradient-to-r from-green-500 to-emerald-500 text-white"
+                    : score.opportunityLabel === "good"
+                    ? "bg-gradient-to-r from-yellow-500 to-amber-500 text-white"
+                    : "bg-gradient-to-r from-gray-400 to-gray-500 text-white"
+                )}
+              >
+                {t(`youtubeOpportunity.labels.${getLabelKey(score.opportunityLabel)}`)}
+              </Badge>
+            </div>
+          </ResponsiveTooltip>
         </div>
 
         <div className="flex items-center justify-between pt-2 border-t border-gray-100 dark:border-gray-800">
