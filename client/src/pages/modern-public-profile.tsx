@@ -265,7 +265,7 @@ export default function ModernPublicProfile() {
             >
               <Avatar className="w-24 h-24 border-4 border-white shadow-xl">
                 <AvatarImage src={creator.logoUrl || ""} alt={creator.username} />
-                <AvatarFallback className="text-2xl font-bold bg-gradient-to-br from-blue-500 to-purple-500 text-white">
+                <AvatarFallback className="text-2xl font-bold bg-primary text-white">
                   {creator.username.charAt(0).toUpperCase()}
                 </AvatarFallback>
               </Avatar>

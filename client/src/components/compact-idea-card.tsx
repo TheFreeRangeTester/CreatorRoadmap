@@ -64,7 +64,7 @@ export function CompactIdeaCard({
       case 3:
         return "bg-gradient-to-r from-amber-600 to-orange-500 text-orange-900";
       default:
-        return "bg-gradient-to-r from-blue-500 to-purple-500 text-white";
+        return "bg-primary text-white";
     }
   };
 
@@ -92,7 +92,7 @@ export function CompactIdeaCard({
       default:
         return {
           container: "",
-          gradient: "from-blue-500/5 to-purple-500/5",
+          gradient: "from-primary/5 to-primary/10",
         };
     }
   };
@@ -136,7 +136,7 @@ export function CompactIdeaCard({
               ? "from-gray-300/10 to-gray-400/10"
               : rank === 3
                 ? "from-amber-600/10 to-orange-500/10"
-                : "from-blue-500/5 to-purple-500/5"
+                : "from-primary/5 to-primary/10"
         )}
         animate={{ opacity: isHovered ? 1 : 0 }}
         transition={{ duration: 0.2 }}
@@ -205,7 +205,7 @@ export function CompactIdeaCard({
                   "w-full h-8 text-xs font-medium transition-all duration-200",
                   isVoted
                     ? "bg-green-100 dark:bg-green-900/20 text-green-700 dark:text-green-400 border-green-200 dark:border-green-700"
-                    : "bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white shadow-md hover:shadow-lg"
+                    : "bg-primary hover:bg-primary/90 text-white shadow-md hover:shadow-lg"
                 )}
               >
                 {isVoting ? (
@@ -229,7 +229,7 @@ export function CompactIdeaCard({
                   localStorage.setItem("redirectAfterAuth", window.location.pathname);
                   window.location.href = "/auth";
                 }}
-                className="w-full h-8 text-xs font-medium bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white shadow-md hover:shadow-lg transition-all duration-200"
+                className="w-full h-8 text-xs font-medium bg-primary hover:bg-primary/90 text-white shadow-md hover:shadow-lg transition-all duration-200"
               >
                 <ThumbsUp className="h-3 w-3 mr-1" />
                 {t("common.loginToVote", "Inicia sesión para votar")}
@@ -244,7 +244,7 @@ export function CompactIdeaCard({
         <motion.div
           className="absolute inset-0 rounded-md border-2 border-transparent pointer-events-none"
           animate={{
-            borderColor: isHovered ? "rgba(59, 130, 246, 0.3)" : "transparent",
+            borderColor: isHovered ? "rgba(124, 58, 237, 0.3)" : "transparent",
           }}
           transition={{ duration: 0.2 }}
         />
