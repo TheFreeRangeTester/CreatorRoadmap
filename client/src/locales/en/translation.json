@@ -397,7 +397,9 @@
     "sortByVotes": "Votes",
     "sortByPriority": "Priority",
     "loadError": "Failed to load ideas",
-    "analyzed": "Analyzed"
+    "analyzed": "Analyzed",
+    "activeIdeas": "Active Ideas",
+    "totalVotes": "Total Votes"
   },
   "priority": {
     "hybridScore": "Priority score (combines votes + YouTube opportunity)",
