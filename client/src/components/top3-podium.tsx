@@ -43,12 +43,12 @@ export function Top3Podium({
       {/* Section Header */}
       <div className="text-center mb-8">
         <motion.h2 
-          className="text-3xl md:text-4xl font-bold mb-2 bg-gradient-to-r from-yellow-500 via-amber-500 to-orange-500 bg-clip-text text-transparent"
+          className="text-3xl md:text-4xl font-bold mb-2 text-gray-900 dark:text-white"
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.6, delay: 0.3 }}
         >
-          <Trophy className="inline-block w-8 h-8 mr-2 text-yellow-500" />
+          <Trophy className="inline-block w-8 h-8 mr-2 text-primary" />
           {t('podium.title', 'Top Ideas')}
         </motion.h2>
         <motion.p 
@@ -385,8 +385,8 @@ function PodiumCard({
                 "relative overflow-hidden transition-all duration-300",
                 isMobile ? "text-xs px-3" : "w-full",
                 hasVoted 
-                  ? "bg-green-500 hover:bg-green-600" 
-                  : "bg-primary hover:bg-primary/90 hover:scale-105"
+                  ? "bg-green-500 hover:bg-green-600 text-white" 
+                  : "bg-white dark:bg-gray-900 border-2 border-primary text-primary hover:bg-primary/10 hover:scale-105"
               )}
             >
               {isVoting ? (

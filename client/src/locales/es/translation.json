@@ -399,7 +399,9 @@
     "sortByVotes": "Votos",
     "sortByPriority": "Prioridad",
     "loadError": "Error al cargar ideas",
-    "analyzed": "Analizado"
+    "analyzed": "Analizado",
+    "activeIdeas": "Ideas Activas",
+    "totalVotes": "Votos Totales"
   },
   "priority": {
     "hybridScore": "Puntuación de prioridad (combina votos + oportunidad YouTube)",
@@ -710,7 +712,10 @@
     "becomeCreatorSuccess": "¡Rol Actualizado!",
     "becomeCreatorSuccessDesc": "Tu cuenta ha sido actualizada a creador. Serás redirigido al dashboard.",
     "shareProfile": "Compartir Perfil",
-    "shareProfileDesc": "Comparte tu perfil público para que otros puedan sugerir ideas"
+    "shareProfileDesc": "Comparte tu perfil público para que otros puedan sugerir ideas",
+    "subscription": "Suscripción",
+    "subscriptionDesc": "Gestiona tu plan y facturación",
+    "manageSubscription": "Gestionar Suscripción"
   },
   "audienceStats": {
     "title": "Tu Actividad",

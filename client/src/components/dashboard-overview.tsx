@@ -260,24 +260,8 @@ export function DashboardOverview({
     console.log("[DASHBOARD-OVERVIEW] Creator stats being used:", stats);
 
     // Split metrics into regular cards and the Top Niche card
-    // Order: Total Ideas, Total Votes, Pending Redemptions, Pending Suggestions
+    // Only show pending cards in sidebar (Total Ideas and Total Votes moved to stats badges)
     const regularMetrics = [
-      {
-        icon: Lightbulb,
-        title: t("dashboard.overview.totalIdeas", "Total Ideas"),
-        value: stats.totalIdeas,
-        description: t("dashboard.overview.totalIdeasDesc", "Ideas publicadas"),
-        color: "text-blue-600",
-        bgColor: "bg-blue-50 dark:bg-blue-900/20",
-      },
-      {
-        icon: ThumbsUp,
-        title: t("dashboard.overview.totalVotes", "Total Votes"),
-        value: stats.totalVotes,
-        description: t("dashboard.overview.totalVotesDesc", "Votos recibidos"),
-        color: "text-green-600",
-        bgColor: "bg-green-50 dark:bg-green-900/20",
-      },
       {
         icon: Gift,
         title: t(
@@ -445,8 +429,8 @@ export function DashboardOverview({
       >
         <Card
           className={cn(
-            "bg-white/90 dark:bg-gray-900/90 backdrop-blur-sm border border-gray-200/50 dark:border-gray-700/50 hover:shadow-xl hover:border-gray-300 dark:hover:border-gray-600 transition-all duration-300 flex flex-col",
-            isSidebar ? "rounded-xl" : "rounded-none h-full"
+            "bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 hover:shadow-lg transition-all duration-200 flex flex-col",
+            isSidebar ? "rounded-2xl" : "rounded-none h-full"
           )}
         >
           <CardHeader
@@ -528,8 +512,8 @@ export function DashboardOverview({
       >
         <Card
           className={cn(
-            "bg-white/90 dark:bg-gray-900/90 backdrop-blur-sm border border-gray-200/50 dark:border-gray-700/50 hover:shadow-xl hover:border-gray-300 dark:hover:border-gray-600 transition-all duration-300 flex flex-col",
-            isSidebar ? "rounded-xl" : "rounded-none h-full"
+            "bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 hover:shadow-lg transition-all duration-200 flex flex-col",
+            isSidebar ? "rounded-2xl" : "rounded-none h-full"
           )}
         >
           <CardHeader
@@ -695,12 +679,12 @@ export function DashboardOverview({
             animate="visible"
             className="hidden lg:flex lg:flex-col gap-4"
           >
+            {renderTopNichesCard()}
             <div className="flex flex-col gap-4">
               {regularMetrics.map((metric, index) =>
                 renderDesktopMetricCard(metric, index)
               )}
             </div>
-            {renderTopNichesCard()}
           </motion.div>
         ) : (
           <motion.div

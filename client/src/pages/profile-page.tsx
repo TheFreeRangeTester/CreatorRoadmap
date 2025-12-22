@@ -1,13 +1,17 @@
 import { useTranslation } from "react-i18next";
 import { useAuth } from "@/hooks/use-auth";
-import { Loader2, ArrowLeft, User } from "lucide-react";
-import { useLocation } from "wouter";
+import { Loader2, ArrowLeft, User, Crown, CreditCard } from "lucide-react";
+import { useLocation, Link } from "wouter";
 import { useEffect } from "react";
 import ProfileEditor from "@/components/profile-editor";
 import { Button } from "@/components/ui/button";
 import { LanguageToggle } from "@/components/language-toggle";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { useToast } from "@/hooks/use-toast";
+import { useQuery } from "@tanstack/react-query";
+import { Badge } from "@/components/ui/badge";
+import type { UserResponse } from "@shared/schema";
+import { hasActivePremiumAccess, getPremiumAccessStatus, getTrialDaysRemaining } from "@shared/premium-utils";
 
 export default function ProfilePage() {
   const { t } = useTranslation();
@@ -80,6 +84,36 @@ export default function ProfilePage() {
               </div>
 
               <ProfileEditor />
+
+              {/* Sección de suscripción (solo para creators) */}
+              {user?.userRole === "creator" && (
+                <div className="mt-8 bg-white dark:bg-gray-900 rounded-md shadow-sm border border-gray-200 dark:border-gray-800 p-6">
+                  <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
+                        <Crown className="h-5 w-5 text-primary" />
+                      </div>
+                      <div>
+                        <h2 className="text-lg font-semibold text-gray-900 dark:text-white">
+                          {t("profile.subscription", "Suscripción")}
+                        </h2>
+                        <p className="text-sm text-muted-foreground">
+                          {t("profile.subscriptionDesc", "Gestiona tu plan y facturación")}
+                        </p>
+                      </div>
+                    </div>
+                    <Link href="/subscription">
+                      <Button
+                        variant="outline"
+                        className="border-primary text-primary hover:bg-primary/10"
+                      >
+                        <CreditCard className="h-4 w-4 mr-2" />
+                        {t("profile.manageSubscription", "Gestionar Suscripción")}
+                      </Button>
+                    </Link>
+                  </div>
+                </div>
+              )}
 
               {/* Sección para convertirse en creator (solo si es audience) */}
               {user?.userRole === "audience" && (

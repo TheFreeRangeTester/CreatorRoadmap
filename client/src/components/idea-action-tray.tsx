@@ -30,33 +30,28 @@ interface IdeaActionTrayProps {
   className?: string;
 }
 
-type ColorKey = "blue" | "gray" | "green" | "red" | "youtube";
+type ColorKey = "pink" | "gray" | "green" | "red";
 
 const colorStyles: Record<ColorKey, { base: string; hover: string; border: string }> = {
-  blue: {
-    base: "text-blue-600 dark:text-blue-400",
-    hover: "hover:bg-blue-50 dark:hover:bg-blue-900/20 hover:text-blue-700 dark:hover:text-blue-300",
-    border: "border-blue-300 dark:border-blue-600",
+  pink: {
+    base: "bg-white dark:bg-gray-900 text-primary dark:text-primary",
+    hover: "hover:bg-pink-50 dark:hover:bg-primary/10",
+    border: "border-primary dark:border-primary",
   },
   gray: {
-    base: "text-gray-500 dark:text-gray-400",
-    hover: "hover:bg-gray-50 dark:hover:bg-gray-800 hover:text-gray-700 dark:hover:text-gray-300",
-    border: "border-gray-300 dark:border-gray-600",
+    base: "bg-white dark:bg-gray-900 text-gray-600 dark:text-gray-400",
+    hover: "hover:bg-gray-50 dark:hover:bg-gray-800",
+    border: "border-gray-400 dark:border-gray-500",
   },
   green: {
-    base: "text-green-600 dark:text-green-400",
-    hover: "hover:bg-green-50 dark:hover:bg-green-900/20 hover:text-green-700 dark:hover:text-green-300",
-    border: "border-green-300 dark:border-green-600",
+    base: "bg-white dark:bg-gray-900 text-emerald-600 dark:text-emerald-400",
+    hover: "hover:bg-emerald-50 dark:hover:bg-emerald-900/20",
+    border: "border-emerald-500 dark:border-emerald-500",
   },
   red: {
-    base: "text-red-500 dark:text-red-400",
-    hover: "hover:bg-red-50 dark:hover:bg-red-900/20 hover:text-red-600 dark:hover:text-red-300",
-    border: "border-red-300 dark:border-red-600",
-  },
-  youtube: {
-    base: "text-red-600 dark:text-red-400",
-    hover: "hover:bg-red-50 dark:hover:bg-red-900/20 hover:text-red-700 dark:hover:text-red-300",
-    border: "border-red-300 dark:border-red-600",
+    base: "bg-white dark:bg-gray-900 text-red-500 dark:text-red-400",
+    hover: "hover:bg-red-50 dark:hover:bg-red-900/20",
+    border: "border-red-400 dark:border-red-500",
   },
 };
 
@@ -105,31 +100,25 @@ function ActionButton({ icon: Icon, label, onClick, color, badge, testId, varian
   }
 
   return (
-    <motion.div
-      whileHover={{ scale: 1.02 }}
-      whileTap={{ scale: 0.98 }}
-      transition={{ type: "spring", stiffness: 400, damping: 17 }}
+    <Button
+      onClick={onClick}
+      variant="outline"
+      size="sm"
+      className={cn(
+        "relative rounded-full font-medium transition-all duration-200",
+        styles.base,
+        styles.border,
+        styles.hover
+      )}
+      data-testid={testId}
+      aria-label={label}
     >
-      <Button
-        onClick={onClick}
-        variant="outline"
-        size="sm"
-        className={cn(
-          "relative border-2 font-semibold shadow-sm hover:shadow-md transition-all duration-200",
-          styles.base,
-          styles.border,
-          styles.hover
-        )}
-        data-testid={testId}
-        aria-label={label}
-      >
-        <Icon className="h-4 w-4" />
-        <span className="hidden sm:inline ml-1.5">{label}</span>
-        {badge && (
-          <span className="absolute -top-1 -right-1 w-2 h-2 bg-green-500 rounded-full" />
-        )}
-      </Button>
-    </motion.div>
+      <Icon className="h-4 w-4" />
+      <span className="ml-1.5">{label}</span>
+      {badge && (
+        <span className="absolute -top-1 -right-1 w-2 h-2 bg-green-500 rounded-full" />
+      )}
+    </Button>
   );
 }
 
@@ -160,7 +149,7 @@ export function IdeaActionTray({
           icon={Youtube}
           label={t("ideas.analyze", "Analizar")}
           onClick={onAnalyzeYouTube}
-          color="youtube"
+          color="pink"
           badge={hasYouTubeData}
           testId={`button-youtube-${ideaId}`}
           variant={variant}
@@ -169,9 +158,9 @@ export function IdeaActionTray({
       {onOpenScript && (
         <ActionButton
           icon={FileText}
-          label={t("ideas.script", "Guión")}
+          label={t("ideas.script", "Script")}
           onClick={onOpenScript}
-          color="blue"
+          color="pink"
           badge={hasScript}
           testId={`button-script-${ideaId}`}
           variant={variant}

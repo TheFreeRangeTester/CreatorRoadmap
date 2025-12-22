@@ -52,7 +52,7 @@ export function MobileBottomNav({ activeSection, onSectionChange, className }: M
               className={cn(
                 "flex flex-col items-center justify-center p-3 rounded-2xl transition-all duration-200 min-w-0 flex-1 mx-1 relative",
                 isActive
-                  ? "text-blue-600 dark:text-blue-400"
+                  ? "text-primary"
                   : "text-gray-500 dark:text-gray-400"
               )}
               whileTap={{ scale: 0.95 }}
@@ -61,7 +61,7 @@ export function MobileBottomNav({ activeSection, onSectionChange, className }: M
               {isActive && (
                 <motion.div
                   layoutId="mobileActiveTab"
-                  className="absolute inset-0 bg-gradient-to-r from-blue-500/10 to-purple-500/10 rounded-2xl"
+                  className="absolute inset-0 bg-primary/10 rounded-2xl"
                   initial={false}
                   transition={{ type: "spring", stiffness: 500, damping: 30 }}
                 />
@@ -72,7 +72,7 @@ export function MobileBottomNav({ activeSection, onSectionChange, className }: M
                 className={cn(
                   "p-2.5 rounded-xl transition-all duration-200 relative z-10",
                   isActive 
-                    ? "bg-gradient-to-r from-blue-500 to-purple-500 text-white shadow-lg shadow-blue-500/25" 
+                    ? "bg-primary text-white shadow-lg shadow-primary/25" 
                     : "bg-gray-100 dark:bg-gray-800"
                 )}
                 animate={isActive ? { scale: 1.1 } : { scale: 1 }}
@@ -85,7 +85,7 @@ export function MobileBottomNav({ activeSection, onSectionChange, className }: M
               <motion.span
                 className={cn(
                   "text-xs font-medium mt-1 transition-all duration-200 relative z-10",
-                  isActive ? "text-blue-600 dark:text-blue-400" : "text-gray-600 dark:text-gray-400"
+                  isActive ? "text-primary" : "text-gray-600 dark:text-gray-400"
                 )}
                 animate={isActive ? { scale: 1.05 } : { scale: 1 }}
               >
@@ -97,7 +97,7 @@ export function MobileBottomNav({ activeSection, onSectionChange, className }: M
                 <motion.div
                   initial={{ scale: 0 }}
                   animate={{ scale: 1 }}
-                  className="absolute -top-1 left-1/2 transform -translate-x-1/2 w-1.5 h-1.5 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full"
+                  className="absolute -top-1 left-1/2 transform -translate-x-1/2 w-1.5 h-1.5 bg-primary rounded-full"
                 />
               )}
             </motion.button>

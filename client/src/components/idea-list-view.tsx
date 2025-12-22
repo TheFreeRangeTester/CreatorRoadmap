@@ -132,205 +132,120 @@ export default function IdeaListView({
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 20 }}
+      initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.3, ease: "easeOut" }}
-      className="group bg-white/90 dark:bg-gray-900/90 backdrop-blur-sm border border-gray-200/60 dark:border-gray-700/60 rounded-xl p-5 hover:bg-white dark:hover:bg-gray-900 hover:shadow-xl hover:border-gray-300 dark:hover:border-gray-600 transition-all duration-300 ease-out hover:-translate-y-0.5"
+      transition={{ duration: 0.2, ease: "easeOut" }}
+      className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-2xl p-5 hover:shadow-lg transition-all duration-200"
     >
-      <div className="flex items-start gap-5">
-        {/* Position Ranking - Enhanced Visual */}
-        <div className="flex-shrink-0 flex flex-col items-center justify-center">
-          <motion.div
-            className={`text-2xl font-extrabold ${getRankingStyle(position)} min-w-[3rem] text-center px-2 py-1 rounded-lg bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-800 dark:to-gray-900 border-2 border-gray-200 dark:border-gray-700`}
-            whileHover={{ scale: 1.05 }}
-            transition={{ type: "spring", stiffness: 400, damping: 17 }}
+      {/* Top Row: Position, Niche, Votes, Priority, Status */}
+      <div className="flex items-center gap-2 flex-wrap mb-3">
+        {/* Position Badge */}
+        <div className="flex items-center gap-1 text-primary font-bold text-sm">
+          <span>⭐</span>
+          <span>#{position}</span>
+        </div>
+        
+        {/* Niche Badge */}
+        {idea.niche && (
+          <Badge
+            variant="secondary"
+            className="bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 border-0 text-xs px-2.5 py-1 font-medium rounded-full"
+            data-testid={`niche-badge-list-${idea.id}`}
           >
-            #{position}
-          </motion.div>
-          {position <= 3 && (
-            <motion.div
-              initial={{ opacity: 0, scale: 0 }}
-              animate={{ opacity: 1, scale: 1 }}
-              className="text-xs mt-1 text-yellow-500 dark:text-yellow-400 font-semibold"
-            >
-              {position === 1 && "🏆"}
-              {position === 2 && "🥈"}
-              {position === 3 && "🥉"}
-            </motion.div>
-          )}
+            {t(`ideaForm.niches.${idea.niche}`, idea.niche)}
+          </Badge>
+        )}
+        
+        {/* Vote Count */}
+        <div className="flex items-center gap-1.5 bg-pink-50 dark:bg-pink-900/20 px-2.5 py-1 rounded-full text-sm">
+          <TrendingUp className="w-3.5 h-3.5 text-pink-500" />
+          <span className="font-semibold text-gray-700 dark:text-gray-300">
+            {idea.votes} {t("badges.votes", "votos")}
+          </span>
         </div>
-
-        {/* Main Content */}
-        <div className="flex-1 min-w-0">
-          <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
-            {/* Title and Description */}
-            <div className="flex-1 min-w-0 space-y-2">
-              <h3 className="text-lg font-bold text-gray-900 dark:text-white leading-tight line-clamp-2 group-hover:text-primary dark:group-hover:text-primary-400 transition-colors duration-200">
-                {idea.title}
-              </h3>
-              {idea.description && (
-                <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed line-clamp-2">
-                  {idea.description}
-                </p>
-              )}
-
-              {/* Badges Row - Visual List Style with UX improvements */}
-              <div className="flex items-center gap-2.5 flex-wrap mt-3">
-                {/* Niche Badge - Enhanced Visual with interaction */}
-                {idea.niche && (
-                  <motion.div
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                    transition={{ type: "spring", stiffness: 400, damping: 17 }}
-                  >
-                    <Badge
-                      variant="secondary"
-                      className="bg-primary/15 dark:bg-primary/25 text-primary dark:text-primary-200 border-2 border-primary/30 dark:border-primary/40 text-xs px-3 py-1.5 font-semibold shadow-sm hover:shadow-md hover:bg-primary/20 dark:hover:bg-primary/35 transition-all duration-200 cursor-default"
-                      data-testid={`niche-badge-list-${idea.id}`}
-                    >
-                      {t(`ideaForm.niches.${idea.niche}`, idea.niche)}
-                    </Badge>
-                  </motion.div>
-                )}
-                {/* Position Change Badge - Enhanced Visual with interaction */}
-                <motion.div
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  transition={{ type: "spring", stiffness: 400, damping: 17 }}
-                >
-                  <Badge
-                    variant="secondary"
-                    className={`${positionIndicator.className} flex items-center gap-1.5 text-xs px-3 py-1.5 font-semibold border-2 shadow-sm hover:shadow-md transition-all duration-200 cursor-default`}
-                  >
-                    {positionIndicator.icon}
-                    {positionIndicator.text}
-                  </Badge>
-                </motion.div>
-                {/* Vote Count - More Prominent with better UX */}
-                <motion.div
-                  className="flex items-center gap-2 bg-gradient-to-r from-pink-100 via-purple-100 to-pink-100 dark:from-pink-900/30 dark:via-purple-900/30 dark:to-pink-900/30 px-3 py-1.5 rounded-none border-2 border-pink-300/60 dark:border-pink-700/60 shadow-sm hover:shadow-md hover:from-pink-200 hover:via-purple-200 hover:to-pink-200 dark:hover:from-pink-900/40 dark:hover:via-purple-900/40 dark:hover:to-pink-900/40 transition-all duration-200 cursor-default"
-                  whileHover={{ scale: 1.05, x: 2 }}
-                  whileTap={{ scale: 0.95 }}
-                  transition={{ type: "spring", stiffness: 400, damping: 17 }}
-                >
-                  <Heart
-                    className="w-4 h-4 text-pink-600 dark:text-pink-400"
-                    fill="currentColor"
-                  />
-                  <span className="font-bold text-base text-gray-900 dark:text-white">
-                    {idea.votes}
-                  </span>
-                </motion.div>
-                {/* Priority Score Badge (Premium only) */}
-                {priorityScore !== undefined && (
-                  <motion.div
-                    className={`flex items-center gap-2 px-3 py-1.5 rounded-none border-2 shadow-sm transition-all duration-200 cursor-default ${
-                      hasYouTubeData 
-                        ? "bg-gradient-to-r from-emerald-100 via-teal-100 to-emerald-100 dark:from-emerald-900/30 dark:via-teal-900/30 dark:to-emerald-900/30 border-emerald-300/60 dark:border-emerald-700/60"
-                        : "bg-gradient-to-r from-gray-100 via-slate-100 to-gray-100 dark:from-gray-800/30 dark:via-slate-800/30 dark:to-gray-800/30 border-gray-300/60 dark:border-gray-600/60"
-                    }`}
-                    whileHover={{ scale: 1.05, x: 2 }}
-                    whileTap={{ scale: 0.95 }}
-                    transition={{ type: "spring", stiffness: 400, damping: 17 }}
-                    title={hasYouTubeData ? t("priority.hybridScore") : t("priority.votesOnly")}
-                  >
-                    <TrendingUp
-                      className={`w-4 h-4 ${hasYouTubeData ? "text-emerald-600 dark:text-emerald-400" : "text-gray-500 dark:text-gray-400"}`}
-                    />
-                    <span className="font-bold text-base text-gray-900 dark:text-white">
-                      {priorityScore}
-                    </span>
-                  </motion.div>
-                )}
-                {/* YouTube Analyzed Badge */}
-                {hasYouTubeData && (
-                  <motion.div
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                    transition={{ type: "spring", stiffness: 400, damping: 17 }}
-                  >
-                    <Badge
-                      variant="secondary"
-                      className="bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-300 border-2 border-red-300/60 dark:border-red-700/60 text-xs px-2.5 py-1 font-semibold shadow-sm"
-                      data-testid={`youtube-badge-${idea.id}`}
-                    >
-                      <Youtube className="w-3 h-3 mr-1" />
-                      {t("ideas.analyzed", "Analizado")}
-                    </Badge>
-                  </motion.div>
-                )}
-              </div>
-
-              {/* Creator indicator for audience users */}
-              {!isCreator && (
-                <Badge
-                  variant="outline"
-                  className="text-xs mt-2 w-fit border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-800/50"
-                >
-                  <User className="w-3 h-3 mr-1.5" />
-                  {t("ideas.byCreator", "Por creador")}
-                </Badge>
-              )}
-            </div>
-
-            {/* Actions - Enhanced UX */}
-            <div className="flex-shrink-0 flex flex-row items-center gap-2 mt-4 sm:mt-0">
-              {/* Vote Button - Enhanced */}
-              {!isCreator && (
-                <motion.div
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
-                  transition={{ type: "spring", stiffness: 400, damping: 17 }}
-                >
-                  <Button
-                    onClick={handleVote}
-                    disabled={hasVoted || isVoting}
-                    variant={hasVoted ? "secondary" : "default"}
-                    size="sm"
-                    className={`transition-all duration-300 font-semibold shadow-sm hover:shadow-md ${
-                      hasVoted
-                        ? "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-300 border-2 border-green-300 dark:border-green-700 hover:bg-green-200 dark:hover:bg-green-900/40 cursor-not-allowed"
-                        : "bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white border-0 hover:shadow-lg"
-                    } ${isVoteAnimating ? "scale-110 ring-2 ring-green-400" : ""}`}
-                    aria-label={
-                      hasVoted
-                        ? t("ideas.alreadyVoted", "Ya votaste")
-                        : t("ideas.vote", "Votar")
-                    }
-                  >
-                    {isVoting ? (
-                      <Loader2 className="h-4 w-4 animate-spin" />
-                    ) : (
-                      <>
-                        <ThumbsUp
-                          className={`h-4 w-4 mr-1.5 ${hasVoted ? "fill-current" : ""}`}
-                        />
-                        <span className="hidden xs:inline">
-                          {hasVoted
-                            ? t("ideas.voted", "Votado")
-                            : t("ideas.vote", "Votar")}
-                        </span>
-                      </>
-                    )}
-                  </Button>
-                </motion.div>
-              )}
-
-              {/* Creator Actions - Unified Action Tray */}
-              {isCreator && (
-                <IdeaActionTray
-                  ideaId={idea.id}
-                  onOpenScript={onOpenTemplate ? () => onOpenTemplate(idea) : undefined}
-                  onEdit={onEdit ? () => onEdit(idea) : undefined}
-                  onComplete={onComplete ? () => onComplete(idea.id) : undefined}
-                  onDelete={onDelete ? () => onDelete(idea.id) : undefined}
-                  hasYouTubeData={hasYouTubeData}
-                  variant="list"
-                />
-              )}
-            </div>
+        
+        {/* Priority Score Badge (Premium only) */}
+        {priorityScore !== undefined && (
+          <div
+            className={`flex items-center gap-1.5 px-2.5 py-1 rounded-full text-sm ${
+              hasYouTubeData 
+                ? "bg-emerald-50 dark:bg-emerald-900/20"
+                : "bg-gray-50 dark:bg-gray-800/50"
+            }`}
+            title={hasYouTubeData ? t("priority.hybridScore") : t("priority.votesOnly")}
+          >
+            <TrendingUp
+              className={`w-3.5 h-3.5 ${hasYouTubeData ? "text-emerald-500" : "text-gray-400"}`}
+            />
+            <span className="font-semibold text-gray-700 dark:text-gray-300">
+              {priorityScore}
+            </span>
           </div>
-        </div>
+        )}
+        
+        {/* Analyzed Badge */}
+        {hasYouTubeData && (
+          <Badge
+            variant="secondary"
+            className="bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 border-0 text-xs px-2.5 py-1 font-medium rounded-full"
+            data-testid={`youtube-badge-${idea.id}`}
+          >
+            <Youtube className="w-3 h-3 mr-1" />
+            {t("ideas.analyzed", "Analizado")}
+          </Badge>
+        )}
+      </div>
+
+      {/* Title */}
+      <h3 className="text-base font-bold text-gray-900 dark:text-white leading-tight mb-1.5">
+        {idea.title}
+      </h3>
+      
+      {/* Description */}
+      {idea.description && (
+        <p className="text-sm text-gray-500 dark:text-gray-400 leading-relaxed mb-4 line-clamp-2">
+          {idea.description}
+        </p>
+      )}
+
+      {/* Actions Row */}
+      <div className="flex items-center gap-2 flex-wrap">
+        {/* Creator Actions */}
+        {isCreator && (
+          <IdeaActionTray
+            ideaId={idea.id}
+            onOpenScript={onOpenTemplate ? () => onOpenTemplate(idea) : undefined}
+            onEdit={onEdit ? () => onEdit(idea) : undefined}
+            onComplete={onComplete ? () => onComplete(idea.id) : undefined}
+            onDelete={onDelete ? () => onDelete(idea.id) : undefined}
+            hasYouTubeData={hasYouTubeData}
+            variant="list"
+          />
+        )}
+        
+        {/* Vote Button for non-creators */}
+        {!isCreator && (
+          <Button
+            onClick={handleVote}
+            disabled={hasVoted || isVoting}
+            variant="outline"
+            size="sm"
+            className={`rounded-full font-medium transition-all ${
+              hasVoted
+                ? "bg-green-50 text-green-600 border-green-200 dark:bg-green-900/20 dark:text-green-400 dark:border-green-800"
+                : "border-primary text-primary hover:bg-primary/10"
+            }`}
+          >
+            {isVoting ? (
+              <Loader2 className="h-4 w-4 animate-spin" />
+            ) : (
+              <>
+                <ThumbsUp className={`h-4 w-4 mr-1.5 ${hasVoted ? "fill-current" : ""}`} />
+                {hasVoted ? t("ideas.voted", "Votado") : t("ideas.vote", "Votar")}
+              </>
+            )}
+          </Button>
+        )}
       </div>
     </motion.div>
   );

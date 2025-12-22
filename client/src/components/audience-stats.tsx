@@ -38,11 +38,11 @@ export default function AudienceStats({ isVisible, creatorId }: AudienceStatsPro
       color: "bg-purple-50 dark:bg-purple-900/20",
     },
     {
-      icon: <ThumbsUp className="h-5 w-5 text-blue-500" />,
+      icon: <ThumbsUp className="h-5 w-5 text-primary" />,
       label: t("audienceStats.votesGiven", "Votes Given"),
       value: stats?.votesGiven || 0,
       description: t("audienceStats.votesGivenDesc", "Ideas you've voted for"),
-      color: "bg-blue-50 dark:bg-blue-900/20",
+      color: "bg-primary/10 dark:bg-primary/20",
     },
     {
       icon: <Send className="h-5 w-5 text-yellow-500" />,

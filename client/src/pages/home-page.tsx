@@ -10,6 +10,7 @@ import {
   X,
   BarChart3,
   Plus,
+  Sparkles,
 } from "lucide-react";
 import { useAuth } from "@/hooks/use-auth";
 import { useToast } from "@/hooks/use-toast";
@@ -41,6 +42,7 @@ import {
   DialogDescription,
   DialogTitle,
 } from "@/components/ui/dialog";
+import logoSvg from "@/assets/fanlistlogo.svg";
 
 export default function HomePage() {
   const { user, logoutMutation } = useAuth();
@@ -73,6 +75,7 @@ export default function HomePage() {
     queryKey: ["/api/pending-ideas"],
     enabled: user?.userRole === "creator",
   });
+
 
   // State to track which ideas are being voted on
   const [votingIdeaIds, setVotingIdeaIds] = useState<Set<number>>(new Set());
@@ -166,132 +169,131 @@ export default function HomePage() {
     logoutMutation.mutate();
   };
 
+  const activeIdeasCount = ideas?.filter(i => i.status !== 'completed').length || 0;
+  const totalVotesCount = ideas?.reduce((sum, idea) => sum + idea.votes, 0) || 0;
+
   const ideasSection = (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: 0.1 }}
-      className="bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-700 shadow-sm"
     >
-      <div className="p-6">
-        <div className="flex flex-wrap items-center justify-between gap-3 mb-6">
-          <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
-            {t("dashboard.topIdeas")}
-          </h2>
-          <div className="flex items-center gap-2">
-            <Button
-              variant="outline"
-              size="sm"
-              className="lg:hidden gap-2 border-dashed"
-              onClick={() => setIsMetricsDialogOpen(true)}
+      {user?.userRole === "creator" ? (
+        <Tabs
+          value={activeTab}
+          onValueChange={setActiveTab}
+          className="w-full"
+        >
+          {/* Clean Navigation Tabs */}
+          <nav className="hidden md:flex items-center gap-6 mb-6">
+            <button
+              onClick={() => setActiveTab("published")}
+              className={`text-sm font-medium pb-2 border-b-2 transition-colors ${
+                activeTab === "published"
+                  ? "text-primary border-primary"
+                  : "text-gray-500 dark:text-gray-400 border-transparent hover:text-gray-700 dark:hover:text-gray-300"
+              }`}
+              data-testid="nav-ideas"
             >
-              <BarChart3 className="h-4 w-4" />
-              <span className="text-sm font-medium">
-                {t("dashboard.viewDetails")}
-              </span>
-            </Button>
-            {user?.userRole === "creator" && (
-              <Button
-                variant="default"
-                size="icon"
-                className="lg:hidden h-10 w-10 rounded-full shadow-lg"
-                onClick={() => setIsCreatorActionsOpen(true)}
-                aria-label={t("ideas.addIdea")}
-              >
-                <Plus className="h-5 w-5" />
-              </Button>
-            )}
+              {t("ideas.published", "Ideas")}
+            </button>
+            <button
+              onClick={() => setActiveTab("suggested")}
+              className={`text-sm font-medium pb-2 border-b-2 transition-colors relative ${
+                activeTab === "suggested"
+                  ? "text-primary border-primary"
+                  : "text-gray-500 dark:text-gray-400 border-transparent hover:text-gray-700 dark:hover:text-gray-300"
+              }`}
+              data-testid="nav-suggested"
+            >
+              {t("ideas.suggested", "Suggested")}
+              {pendingIdeas && pendingIdeas.length > 0 && (
+                <span className="absolute -top-1 -right-4 bg-red-500 text-white text-xs rounded-full h-4 w-4 flex items-center justify-center">
+                  {pendingIdeas.length}
+                </span>
+              )}
+            </button>
+            <button
+              onClick={() => setActiveTab("store")}
+              className={`text-sm font-medium pb-2 border-b-2 transition-colors ${
+                activeTab === "store"
+                  ? "text-primary border-primary"
+                  : "text-gray-500 dark:text-gray-400 border-transparent hover:text-gray-700 dark:hover:text-gray-300"
+              }`}
+              data-testid="nav-store"
+            >
+              {t("store.title", "Store")}
+            </button>
+            <button
+              onClick={() => setActiveTab("redemptions")}
+              className={`text-sm font-medium pb-2 border-b-2 transition-colors ${
+                activeTab === "redemptions"
+                  ? "text-primary border-primary"
+                  : "text-gray-500 dark:text-gray-400 border-transparent hover:text-gray-700 dark:hover:text-gray-300"
+              }`}
+              data-testid="nav-redemptions"
+            >
+              {t("redemptions.title", "Redemptions")}
+            </button>
+          </nav>
+
+          {/* Stats Badges - Only show on Ideas tab */}
+          {activeTab === "published" && (
+            <div className="flex items-center gap-3 mb-6">
+              <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-gray-100 dark:bg-gray-800 rounded-full text-sm">
+                <span className="text-primary">📈</span>
+                <span className="font-medium text-gray-700 dark:text-gray-300">
+                  {activeIdeasCount} {t("ideas.activeIdeas", "Ideas Activas")}
+                </span>
+              </div>
+              <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-gray-100 dark:bg-gray-800 rounded-full text-sm">
+                <span className="text-pink-500">❤️</span>
+                <span className="font-medium text-gray-700 dark:text-gray-300">
+                  {totalVotesCount} {t("ideas.totalVotes", "Votos Totales")}
+                </span>
+              </div>
+            </div>
+          )}
+
+          <TabsContent value="published" className="mt-0">
+            <IdeasTabView
+              mode="published"
+              onOpenTemplate={handleOpenTemplate}
+            />
+          </TabsContent>
+
+          <TabsContent value="suggested" className="mt-0">
+            <IdeasTabView mode="suggested" />
+          </TabsContent>
+
+          <TabsContent value="store" className="mt-0">
+            <StoreManagement />
+          </TabsContent>
+
+          <TabsContent value="redemptions" className="mt-0">
+            <RedemptionManagement />
+          </TabsContent>
+        </Tabs>
+      ) : (
+        // Audience view - just show published ideas and their stats
+        <div className="space-y-6">
+          <IdeasTabView mode="published" />
+          <div className="border-t border-gray-200/50 dark:border-gray-700/50 pt-6">
+            <AudienceStats isVisible={true} />
           </div>
         </div>
-
-        {user?.userRole === "creator" ? (
-          <Tabs
-            value={activeTab}
-            onValueChange={setActiveTab}
-            className="w-full"
-          >
-            <TabsList className="hidden md:grid w-full grid-cols-4 bg-gray-100 dark:bg-gray-800 rounded-lg">
-              <TabsTrigger
-                value="published"
-                className="data-[state=active]:bg-white dark:data-[state=active]:bg-gray-700 rounded-md transition-all"
-              >
-                <Grid3x3 className="h-4 w-4 mr-2" />
-                <span className="hidden sm:inline">{t("ideas.published")}</span>
-                <span className="sm:hidden">{t("ideas.short")}</span>
-              </TabsTrigger>
-              <TabsTrigger
-                value="suggested"
-                className="data-[state=active]:bg-white dark:data-[state=active]:bg-gray-700 rounded-xl transition-all relative"
-              >
-                <User className="h-4 w-4 mr-2" />
-                <span className="hidden sm:inline">{t("ideas.suggested")}</span>
-                <span className="sm:hidden">{t("ideas.suggestedShort")}</span>
-                {pendingIdeas && pendingIdeas.length > 0 && (
-                  <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
-                    {pendingIdeas.length}
-                  </span>
-                )}
-              </TabsTrigger>
-              <TabsTrigger
-                value="store"
-                className="data-[state=active]:bg-white dark:data-[state=active]:bg-gray-700 rounded-md transition-all"
-              >
-                <Store className="h-4 w-4 mr-2" />
-                <span className="hidden sm:inline">{t("store.title")}</span>
-                <span className="sm:hidden">{t("store.short")}</span>
-              </TabsTrigger>
-              <TabsTrigger
-                value="redemptions"
-                className="data-[state=active]:bg-white dark:data-[state=active]:bg-gray-700 rounded-md transition-all"
-              >
-                <Package className="h-4 w-4 mr-2" />
-                <span className="hidden sm:inline">
-                  {t("redemptions.title")}
-                </span>
-                <span className="sm:hidden">{t("redemptions.short")}</span>
-              </TabsTrigger>
-            </TabsList>
-
-            <TabsContent value="published" className="mt-6">
-              <IdeasTabView
-                mode="published"
-                onOpenTemplate={handleOpenTemplate}
-              />
-            </TabsContent>
-
-            <TabsContent value="suggested" className="mt-6">
-              <IdeasTabView mode="suggested" />
-            </TabsContent>
-
-            <TabsContent value="store" className="mt-6">
-              <StoreManagement />
-            </TabsContent>
-
-            <TabsContent value="redemptions" className="mt-6">
-              <RedemptionManagement />
-            </TabsContent>
-          </Tabs>
-        ) : (
-          // Audience view - just show published ideas and their stats
-          <div className="space-y-6">
-            <IdeasTabView mode="published" />
-            <div className="border-t border-gray-200/50 dark:border-gray-700/50 pt-6">
-              <AudienceStats isVisible={true} />
-            </div>
-          </div>
-        )}
-      </div>
+      )}
     </motion.div>
   );
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+    <div className="min-h-screen">
       {/* Header */}
       <motion.header
         initial={{ opacity: 0, y: -10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
-        className="bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700 shadow-sm sticky top-0 z-10"
+        className="bg-white dark:bg-gray-900 border-b border-gray-200/50 dark:border-gray-700 sticky top-0 z-10"
       >
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
@@ -301,35 +303,37 @@ export default function HomePage() {
               whileHover={{ scale: 1.02 }}
               transition={{ type: "spring", stiffness: 400, damping: 10 }}
             >
-              <h1 className="text-xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-                Fanlist
-              </h1>
+              <img src={logoSvg} alt="Fanlist" className="h-10 w-auto" />
+              <span className="text-lg font-semibold text-gray-900 dark:text-white">
+                Fanlist <span className="text-primary">for Creators</span>
+              </span>
             </motion.div>
 
             {/* Desktop Navigation */}
-            <div className="hidden lg:flex items-center gap-4">
+            <div className="hidden lg:flex items-center gap-3">
               <ThemeToggle />
               <LanguageToggle />
               {user?.userRole === "audience" && <PointsDisplay />}
               <Link href="/profile">
                 <Button
-                  variant="outline"
+                  variant="ghost"
                   size="sm"
-                  className="border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-800"
+                  className="text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white"
                 >
                   <User className="h-4 w-4 mr-2" />
                   {t("navigation.profile")}
                 </Button>
               </Link>
               <UserIndicator user={user} variant="desktop" />
-              <Button
-                onClick={handleLogout}
-                variant="ghost"
-                size="sm"
-                className="text-red-600 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300 hover:bg-red-50 dark:hover:bg-red-900/20"
-              >
-                {t("common.logout")}
-              </Button>
+              {user?.userRole === "creator" && (
+                <Button
+                  onClick={handleAddIdea}
+                  className="bg-primary hover:bg-primary/90 text-white font-semibold rounded-full px-5"
+                  data-testid="header-create-idea"
+                >
+                  {t("ideas.newIdea", "Nueva Idea")}
+                </Button>
+              )}
             </div>
 
             {/* Mobile Menu Button */}
@@ -398,94 +402,62 @@ export default function HomePage() {
         </div>
       </motion.header>
 
-      {/* Main Content */}
+      {/* Main Content - Two Column Layout */}
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6">
-        <div className="max-w-7xl mx-auto">
-          {/* Welcome Header */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="mb-6"
-          >
-            <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 dark:text-white mb-2">
-              {t("dashboard.welcome")}
-            </h1>
-            <p className="text-gray-600 dark:text-gray-400 text-lg">
-              {user?.userRole === "creator"
-                ? t("dashboard.creatorDescription")
-                : t("dashboard.audienceDescription")}
-            </p>
-          </motion.div>
-
-          <Dialog
-            open={isMetricsDialogOpen}
-            onOpenChange={setIsMetricsDialogOpen}
-          >
-            <DialogContent className="lg:hidden max-w-md w-[calc(100%-2rem)] border-none bg-white/95 dark:bg-gray-900/95 p-6 pb-7 rounded-3xl shadow-[0_25px_60px_-20px_rgba(79,70,229,0.45)]">
-              <motion.div
-                initial={{ opacity: 0, scale: 0.92 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.25, ease: "easeOut" }}
-                className="space-y-6"
-              >
-                <div className="space-y-1 text-left">
-                  <DialogTitle className="text-2xl font-bold text-gray-900 dark:text-white">
-                    {t("dashboard.quickMetricsTitle")}
-                  </DialogTitle>
-                  <DialogDescription className="text-sm text-gray-500 dark:text-gray-400">
-                    {t("dashboard.quickMetricsSubtitle")}
-                  </DialogDescription>
-                </div>
-                <DashboardOverview variant="modal" />
-              </motion.div>
-            </DialogContent>
-          </Dialog>
-
-          <Dialog
-            open={isCreatorActionsOpen}
-            onOpenChange={setIsCreatorActionsOpen}
-          >
-            <DialogContent className="lg:hidden max-w-md w-[calc(100%-1.5rem)] border-none bg-white/95 dark:bg-gray-900/95 p-0 rounded-3xl shadow-[0_25px_60px_-20px_rgba(79,70,229,0.45)]">
-              <CreatorControls
-                onAddIdea={() => {
-                  setIsCreatorActionsOpen(false);
-                  handleAddIdea();
-                }}
-              />
-            </DialogContent>
-          </Dialog>
-
-          {user?.userRole === "creator" ? (
-            <div className="lg:grid lg:grid-cols-[minmax(0,1fr)_320px] lg:gap-8 lg:items-start">
-              <div className="space-y-6 lg:space-y-8">
-                {ideasSection}
+        <div className="flex gap-8 max-w-6xl mx-auto">
+          {/* Main Content Area */}
+          <div className="flex-1 min-w-0">
+            <Dialog
+              open={isMetricsDialogOpen}
+              onOpenChange={setIsMetricsDialogOpen}
+            >
+              <DialogContent className="lg:hidden max-w-md w-[calc(100%-2rem)] border-none bg-white/95 dark:bg-gray-900/95 p-6 pb-7 rounded-3xl shadow-[0_25px_60px_-20px_rgba(79,70,229,0.45)]">
                 <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  className="hidden lg:block bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-700 shadow-sm"
+                  initial={{ opacity: 0, scale: 0.92 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ duration: 0.25, ease: "easeOut" }}
+                  className="space-y-6"
                 >
-                  <CreatorControls onAddIdea={handleAddIdea} />
+                  <div className="space-y-1 text-left">
+                    <DialogTitle className="text-2xl font-bold text-gray-900 dark:text-white">
+                      {t("dashboard.quickMetricsTitle")}
+                    </DialogTitle>
+                    <DialogDescription className="text-sm text-gray-500 dark:text-gray-400">
+                      {t("dashboard.quickMetricsSubtitle")}
+                    </DialogDescription>
+                  </div>
+                  <DashboardOverview variant="modal" />
                 </motion.div>
-              </div>
-              <aside className="hidden lg:block">
-                <DashboardOverview
-                  variant="sidebar"
-                  className="sticky top-28"
+              </DialogContent>
+            </Dialog>
+
+            <Dialog
+              open={isCreatorActionsOpen}
+              onOpenChange={setIsCreatorActionsOpen}
+            >
+              <DialogContent className="lg:hidden max-w-md w-[calc(100%-1.5rem)] border-none bg-white/95 dark:bg-gray-900/95 p-0 rounded-3xl shadow-[0_25px_60px_-20px_rgba(79,70,229,0.45)]">
+                <CreatorControls
+                  onAddIdea={() => {
+                    setIsCreatorActionsOpen(false);
+                    handleAddIdea();
+                  }}
                 />
-              </aside>
-            </div>
-          ) : (
-            <>
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.1 }}
-                className="hidden lg:block mb-8"
-              >
-                <DashboardOverview />
-              </motion.div>
-              {ideasSection}
-            </>
+              </DialogContent>
+            </Dialog>
+
+            {ideasSection}
+          </div>
+
+          {/* Stats Sidebar - Desktop Only */}
+          {user?.userRole === "creator" && (
+            <aside className="hidden lg:block w-72 flex-shrink-0">
+              <div className="sticky top-24 space-y-4">
+                <h3 className="text-sm font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-4">
+                  {t("dashboard.statsTitle", "Estadísticas")}
+                </h3>
+                <DashboardOverview variant="sidebar" />
+              </div>
+            </aside>
           )}
         </div>
       </div>
