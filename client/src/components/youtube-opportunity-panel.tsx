@@ -64,6 +64,14 @@ interface YouTubeScoreResponse {
   snapshot: YouTubeSnapshot | null;
   isFresh: boolean;
   message?: string;
+  rateLimitInfo?: { remaining: number; limit: number };
+}
+
+interface RateLimitStatus {
+  remaining: number;
+  used: number;
+  limit: number;
+  resetsAt: string;
 }
 
 interface YouTubeOpportunityPanelProps {
@@ -114,10 +122,17 @@ export default function YouTubeOpportunityPanel({
   const { t } = useTranslation();
   const queryClient = useQueryClient();
   const [isRefreshing, setIsRefreshing] = useState(false);
+  const [rateLimitError, setRateLimitError] = useState<{ remaining: number; limit: number } | null>(null);
 
   const { data: scoreData, isLoading, error } = useQuery<YouTubeScoreResponse>({
     queryKey: [`/api/youtube/score/${ideaId}`],
     enabled: isPremium,
+  });
+
+  const { data: rateLimitData } = useQuery<RateLimitStatus>({
+    queryKey: ['/api/youtube/rate-limit'],
+    enabled: isPremium,
+    refetchOnWindowFocus: true,
   });
 
   const fetchMutation = useMutation({
@@ -126,14 +141,24 @@ export default function YouTubeOpportunityPanel({
         method: "POST",
         body: JSON.stringify({ forceRefresh }),
       });
+      if (!res.ok) {
+        const errorData = await res.json();
+        throw { message: errorData.message, rateLimitInfo: errorData.rateLimitInfo };
+      }
       return res.json();
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [`/api/youtube/score/${ideaId}`] });
+      queryClient.invalidateQueries({ queryKey: ['/api/youtube/rate-limit'] });
       setIsRefreshing(false);
+      setRateLimitError(null);
     },
-    onError: () => {
+    onError: (err: { message?: string; rateLimitInfo?: { remaining: number; limit: number } }) => {
       setIsRefreshing(false);
+      if (err.rateLimitInfo) {
+        setRateLimitError(err.rateLimitInfo);
+        queryClient.invalidateQueries({ queryKey: ['/api/youtube/rate-limit'] });
+      }
     },
   });
 
@@ -293,6 +318,8 @@ export default function YouTubeOpportunityPanel({
   }
 
   if (!scoreData.score || !scoreData.snapshot) {
+    const isRateLimited = rateLimitError || (rateLimitData && rateLimitData.remaining === 0);
+    
     return (
       <Card>
         <CardHeader className="pb-2">
@@ -303,24 +330,43 @@ export default function YouTubeOpportunityPanel({
         </CardHeader>
         <CardContent>
           <div className="flex flex-col items-center justify-center py-4 text-center">
-            <BarChart3 className="h-8 w-8 text-purple-500 mb-2" />
-            <p className="text-sm text-gray-600 dark:text-gray-400 mb-3">
-              {t("youtubeOpportunity.premiumRequired.benefit1")}
-            </p>
-            <Button
-              size="sm"
-              className="bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700"
-              onClick={() => handleFetch(false)}
-              disabled={fetchMutation.isPending}
-              data-testid="button-analyze-youtube"
-            >
-              {fetchMutation.isPending ? (
-                <RefreshCw className="h-4 w-4 mr-2 animate-spin" />
-              ) : (
-                <Youtube className="h-4 w-4 mr-2" />
-              )}
-              {t("youtubeOpportunity.analyze")}
-            </Button>
+            {isRateLimited ? (
+              <>
+                <AlertCircle className="h-8 w-8 text-amber-500 mb-2" />
+                <p className="text-sm text-gray-600 dark:text-gray-400 mb-1">
+                  {t("youtubeOpportunity.rateLimit.limitReached")}
+                </p>
+                <p className="text-xs text-gray-500 dark:text-gray-500">
+                  {t("youtubeOpportunity.rateLimit.resetsAt")}
+                </p>
+              </>
+            ) : (
+              <>
+                <BarChart3 className="h-8 w-8 text-purple-500 mb-2" />
+                <p className="text-sm text-gray-600 dark:text-gray-400 mb-3">
+                  {t("youtubeOpportunity.premiumRequired.benefit1")}
+                </p>
+                <Button
+                  size="sm"
+                  className="bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700"
+                  onClick={() => handleFetch(false)}
+                  disabled={fetchMutation.isPending}
+                  data-testid="button-analyze-youtube"
+                >
+                  {fetchMutation.isPending ? (
+                    <RefreshCw className="h-4 w-4 mr-2 animate-spin" />
+                  ) : (
+                    <Youtube className="h-4 w-4 mr-2" />
+                  )}
+                  {t("youtubeOpportunity.analyze")}
+                </Button>
+                {rateLimitData && (
+                  <p className="text-xs text-gray-500 dark:text-gray-500 mt-2" data-testid="text-rate-limit-status">
+                    {t("youtubeOpportunity.rateLimit.remaining", { remaining: rateLimitData.remaining })}
+                  </p>
+                )}
+              </>
+            )}
           </div>
         </CardContent>
       </Card>

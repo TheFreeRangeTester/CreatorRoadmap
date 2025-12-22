@@ -1006,7 +1006,14 @@
     },
     "errors": {
       "quotaExceeded": "Cuota diaria de YouTube API excedida",
-      "fetchFailed": "Error al obtener datos de YouTube"
+      "fetchFailed": "Error al obtener datos de YouTube",
+      "rateLimitReached": "Límite diario de análisis alcanzado. Intenta mañana."
+    },
+    "rateLimit": {
+      "remaining": "{{remaining}} análisis restantes hoy",
+      "used": "{{used}} de {{limit}} análisis usados hoy",
+      "limitReached": "Límite diario alcanzado",
+      "resetsAt": "Se reinicia mañana"
     },
     "timeAgo": {
       "justNow": "Hace menos de 1 hora",

@@ -997,7 +997,14 @@
     },
     "errors": {
       "quotaExceeded": "Daily YouTube API quota exceeded",
-      "fetchFailed": "Failed to fetch YouTube data"
+      "fetchFailed": "Failed to fetch YouTube data",
+      "rateLimitReached": "Daily analysis limit reached. Try again tomorrow."
+    },
+    "rateLimit": {
+      "remaining": "{{remaining}} analyses remaining today",
+      "used": "{{used}} of {{limit}} analyses used today",
+      "limitReached": "Daily limit reached",
+      "resetsAt": "Resets tomorrow"
     },
     "timeAgo": {
       "justNow": "Less than 1 hour ago",
