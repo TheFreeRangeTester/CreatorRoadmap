@@ -34,6 +34,7 @@ import { Link } from "wouter";
 import AudienceStats from "@/components/audience-stats";
 import { DashboardOverview } from "@/components/dashboard-overview";
 import { MobileBottomNavigation } from "@/components/mobile-bottom-navigation";
+import { SimpleFAB } from "@/components/floating-action-button";
 import {
   Dialog,
   DialogContent,
@@ -491,11 +492,21 @@ export default function HomePage() {
 
       {/* Mobile Bottom Navigation */}
       {user?.userRole === "creator" && (
-        <MobileBottomNavigation
-          activeTab={activeTab}
-          onTabChange={setActiveTab}
-          pendingCount={pendingIdeas?.length || 0}
-        />
+        <>
+          <MobileBottomNavigation
+            activeTab={activeTab}
+            onTabChange={setActiveTab}
+            pendingCount={pendingIdeas?.length || 0}
+          />
+          {/* Mobile FAB for creating ideas */}
+          <SimpleFAB
+            onClick={handleAddIdea}
+            icon={<Plus className="w-6 h-6" />}
+            label={t("ideas.addIdea")}
+            testId="fab-create-idea"
+            className="bottom-20"
+          />
+        </>
       )}
 
       {/* Modals */}

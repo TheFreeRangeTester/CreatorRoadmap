@@ -363,6 +363,8 @@
     "deleteError": "Error deleting",
     "noPublishedIdeas": "No published ideas yet",
     "createFirstIdea": "Create your first idea to get started",
+    "createIdea": "Create Idea",
+    "noSuggestedIdeas": "No suggestions yet",
     "suggestedIdeasWillAppear": "Suggested ideas from your audience will appear here",
     "suggestedBy": "Suggested by",
     "pending": "Pending",
@@ -394,7 +396,8 @@
     "sortBy": "Sort by",
     "sortByVotes": "Votes",
     "sortByPriority": "Priority",
-    "loadError": "Failed to load ideas"
+    "loadError": "Failed to load ideas",
+    "analyzed": "Analyzed"
   },
   "priority": {
     "hybridScore": "Priority score (combines votes + YouTube opportunity)",

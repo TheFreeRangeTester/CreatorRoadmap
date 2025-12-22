@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useQuery, useMutation } from "@tanstack/react-query";
-import { Loader2, CheckCircle, XCircle, User, Clock, ArrowUpDown, TrendingUp, Heart } from "lucide-react";
+import { Loader2, CheckCircle, XCircle, User, Clock, ArrowUpDown, TrendingUp, Heart, Lightbulb, Plus, MessageSquare } from "lucide-react";
 import { useAuth } from "@/hooks/use-auth";
 import { useToast } from "@/hooks/use-toast";
 import { queryClient, apiRequest } from "@/lib/queryClient";
@@ -377,17 +377,37 @@ export function IdeasTabView({ mode = "published", onOpenTemplate }: IdeasTabVie
   // Render truly empty state (no ideas at all)
   if (!allIdeas || allIdeas.length === 0) {
     return (
-      <div className="text-center py-8 px-4">
-        <p className="text-lg font-medium text-gray-700 dark:text-gray-300 mb-2">
+      <div className="flex flex-col items-center justify-center py-12 px-4">
+        <div className="w-16 h-16 rounded-full bg-primary/10 dark:bg-primary/20 flex items-center justify-center mb-4">
+          {mode === "published" ? (
+            <Lightbulb className="w-8 h-8 text-primary" />
+          ) : (
+            <MessageSquare className="w-8 h-8 text-primary" />
+          )}
+        </div>
+        <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
           {mode === "published"
             ? t("ideas.noPublishedIdeas")
             : t("ideas.noSuggestedIdeas")}
-        </p>
-        <p className="text-muted-foreground text-sm mb-6">
+        </h3>
+        <p className="text-muted-foreground text-sm text-center max-w-md mb-6">
           {mode === "published"
             ? t("ideas.createFirstIdea")
             : t("ideas.suggestedIdeasWillAppear")}
         </p>
+        {mode === "published" && user?.userRole === "creator" && (
+          <Button
+            onClick={() => {
+              setCurrentIdea(null);
+              setIsIdeaFormOpen(true);
+            }}
+            className="bg-gradient-to-r from-primary to-purple-600 hover:from-primary/90 hover:to-purple-700 text-white font-semibold shadow-md hover:shadow-lg transition-all"
+            data-testid="empty-state-create-idea"
+          >
+            <Plus className="w-4 h-4 mr-2" />
+            {t("ideas.createIdea")}
+          </Button>
+        )}
       </div>
     );
   }
@@ -491,17 +511,39 @@ export function IdeasTabView({ mode = "published", onOpenTemplate }: IdeasTabVie
             })}
           </div>
         ) : (
-          <div className="text-center py-8 px-4">
-            <p className="text-lg font-medium text-gray-700 dark:text-gray-300 mb-2">
+          <div className="flex flex-col items-center justify-center py-12 px-4">
+            <div className="w-14 h-14 rounded-full bg-gray-100 dark:bg-gray-800 flex items-center justify-center mb-4">
+              {showCompleted ? (
+                <CheckCircle className="w-7 h-7 text-gray-400 dark:text-gray-500" />
+              ) : (
+                <Lightbulb className="w-7 h-7 text-gray-400 dark:text-gray-500" />
+              )}
+            </div>
+            <h3 className="text-lg font-semibold text-gray-700 dark:text-gray-300 mb-2">
               {showCompleted
                 ? t("ideas.noCompletedIdeas")
                 : t("ideas.noActiveIdeas")}
-            </p>
-            <p className="text-muted-foreground text-sm">
+            </h3>
+            <p className="text-muted-foreground text-sm text-center max-w-md mb-4">
               {showCompleted
                 ? t("ideas.noCompletedIdeasDesc")
                 : t("ideas.noActiveIdeasDesc")}
             </p>
+            {!showCompleted && user?.userRole === "creator" && (
+              <Button
+                onClick={() => {
+                  setCurrentIdea(null);
+                  setIsIdeaFormOpen(true);
+                }}
+                variant="outline"
+                size="sm"
+                className="font-semibold"
+                data-testid="filtered-empty-create-idea"
+              >
+                <Plus className="w-4 h-4 mr-2" />
+                {t("ideas.createIdea")}
+              </Button>
+            )}
           </div>
         )}
 

@@ -365,6 +365,8 @@
     "deleteError": "Error al eliminar",
     "noPublishedIdeas": "Aún no hay ideas publicadas",
     "createFirstIdea": "Crea tu primera idea para comenzar",
+    "createIdea": "Crear Idea",
+    "noSuggestedIdeas": "Aún no hay sugerencias",
     "suggestedIdeasWillAppear": "Las ideas sugeridas por tu audiencia aparecerán aquí",
     "suggestedBy": "Sugerida por",
     "pending": "Pendiente",
@@ -396,7 +398,8 @@
     "sortBy": "Ordenar por",
     "sortByVotes": "Votos",
     "sortByPriority": "Prioridad",
-    "loadError": "Error al cargar ideas"
+    "loadError": "Error al cargar ideas",
+    "analyzed": "Analizado"
   },
   "priority": {
     "hybridScore": "Puntuación de prioridad (combina votos + oportunidad YouTube)",

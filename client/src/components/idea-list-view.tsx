@@ -4,21 +4,19 @@ import {
   ArrowUp,
   ArrowDown,
   Plus,
-  Pencil,
-  Trash2,
   ThumbsUp,
   Loader2,
   User,
   TrendingUp,
   Heart,
-  FileText,
-  CheckCircle2,
+  Youtube,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { IdeaResponse } from "@shared/schema";
 import { useTranslation } from "react-i18next";
 import { useAuth } from "@/hooks/use-auth";
+import { IdeaActionTray } from "@/components/idea-action-tray";
 
 interface IdeaListViewProps {
   idea: IdeaResponse;
@@ -244,6 +242,23 @@ export default function IdeaListView({
                     </span>
                   </motion.div>
                 )}
+                {/* YouTube Analyzed Badge */}
+                {hasYouTubeData && (
+                  <motion.div
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    transition={{ type: "spring", stiffness: 400, damping: 17 }}
+                  >
+                    <Badge
+                      variant="secondary"
+                      className="bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-300 border-2 border-red-300/60 dark:border-red-700/60 text-xs px-2.5 py-1 font-semibold shadow-sm"
+                      data-testid={`youtube-badge-${idea.id}`}
+                    >
+                      <Youtube className="w-3 h-3 mr-1" />
+                      {t("ideas.analyzed", "Analizado")}
+                    </Badge>
+                  </motion.div>
+                )}
               </div>
 
               {/* Creator indicator for audience users */}
@@ -301,95 +316,17 @@ export default function IdeaListView({
                 </motion.div>
               )}
 
-              {/* Script Button (for creators) - Enhanced */}
-              {isCreator && onOpenTemplate && (
-                <motion.div
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
-                  transition={{ type: "spring", stiffness: 400, damping: 17 }}
-                >
-                  <Button
-                    onClick={() => onOpenTemplate(idea)}
-                    variant="outline"
-                    size="sm"
-                    className="border-2 border-blue-400 dark:border-blue-500 text-blue-600 dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/20 hover:border-blue-500 dark:hover:border-blue-400 font-semibold shadow-sm hover:shadow-md transition-all duration-200"
-                    data-testid={`button-template-list-${idea.id}`}
-                    aria-label={t("ideas.openScript")}
-                  >
-                    <FileText className="h-4 w-4" />
-                    <span className="hidden sm:inline ml-1.5">
-                      {t("ideas.script")}
-                    </span>
-                  </Button>
-                </motion.div>
-              )}
-
-              {/* Edit Button (for creators) - Enhanced */}
-              {isCreator && onEdit && (
-                <motion.div
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
-                  transition={{ type: "spring", stiffness: 400, damping: 17 }}
-                >
-                  <Button
-                    onClick={() => onEdit(idea)}
-                    variant="outline"
-                    size="sm"
-                    className="border-2 border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-800 hover:border-gray-400 dark:hover:border-gray-500 font-semibold shadow-sm hover:shadow-md transition-all duration-200"
-                    aria-label={t("ideas.edit", "Editar")}
-                  >
-                    <Pencil className="h-4 w-4" />
-                    <span className="hidden sm:inline ml-1.5">
-                      {t("ideas.edit", "Editar")}
-                    </span>
-                  </Button>
-                </motion.div>
-              )}
-
-              {/* Complete Button (for creators) - Enhanced */}
-              {isCreator && onComplete && (
-                <motion.div
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
-                  transition={{ type: "spring", stiffness: 400, damping: 17 }}
-                >
-                  <Button
-                    onClick={() => onComplete(idea.id)}
-                    variant="outline"
-                    size="sm"
-                    className="border-2 border-green-400 dark:border-green-500 text-green-600 dark:text-green-400 hover:bg-green-50 dark:hover:bg-green-900/20 hover:border-green-500 dark:hover:border-green-400 font-semibold shadow-sm hover:shadow-md transition-all duration-200"
-                    data-testid={`button-complete-${idea.id}`}
-                    aria-label={t("ideas.complete", "Completar")}
-                  >
-                    <CheckCircle2 className="h-4 w-4" />
-                    <span className="hidden sm:inline ml-1.5">
-                      {t("ideas.complete", "Completar")}
-                    </span>
-                  </Button>
-                </motion.div>
-              )}
-
-              {/* Delete Button (for creators) - Enhanced */}
-              {isCreator && onDelete && (
-                <motion.div
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
-                  transition={{ type: "spring", stiffness: 400, damping: 17 }}
-                >
-                  <Button
-                    onClick={() => onDelete(idea.id)}
-                    variant="outline"
-                    size="sm"
-                    className="border-2 border-red-300 dark:border-red-700 text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 dark:text-red-400 hover:border-red-400 dark:hover:border-red-600 font-semibold shadow-sm hover:shadow-md transition-all duration-200"
-                    data-testid={`button-delete-${idea.id}`}
-                    aria-label={t("ideas.delete", "Eliminar")}
-                  >
-                    <Trash2 className="h-4 w-4" />
-                    <span className="hidden sm:inline ml-1.5">
-                      {t("ideas.delete", "Eliminar")}
-                    </span>
-                  </Button>
-                </motion.div>
+              {/* Creator Actions - Unified Action Tray */}
+              {isCreator && (
+                <IdeaActionTray
+                  ideaId={idea.id}
+                  onOpenScript={onOpenTemplate ? () => onOpenTemplate(idea) : undefined}
+                  onEdit={onEdit ? () => onEdit(idea) : undefined}
+                  onComplete={onComplete ? () => onComplete(idea.id) : undefined}
+                  onDelete={onDelete ? () => onDelete(idea.id) : undefined}
+                  hasYouTubeData={hasYouTubeData}
+                  variant="list"
+                />
               )}
             </div>
           </div>
