@@ -303,12 +303,7 @@ export default function HomePage() {
               whileHover={{ scale: 1.02 }}
               transition={{ type: "spring", stiffness: 400, damping: 10 }}
             >
-              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary to-pink-400 flex items-center justify-center">
-                <Sparkles className="w-5 h-5 text-white" />
-              </div>
-              <h1 className="text-xl font-bold text-gray-900 dark:text-white">
-                Fanlist
-              </h1>
+              <img src={logoSvg} alt="Fanlist" className="h-10 w-auto" />
             </motion.div>
 
             {/* Desktop Navigation */}
