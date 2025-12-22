@@ -145,15 +145,6 @@ export default function IdeaListView({
           <span>#{position}</span>
         </div>
         
-        {/* Position Change Indicator */}
-        <Badge
-          variant="secondary"
-          className={`${positionIndicator.className} flex items-center gap-1 text-xs px-2.5 py-1 font-medium rounded-full border-0`}
-        >
-          {positionIndicator.icon}
-          {positionIndicator.text}
-        </Badge>
-        
         {/* Niche Badge */}
         {idea.niche && (
           <Badge
@@ -167,9 +158,9 @@ export default function IdeaListView({
         
         {/* Vote Count */}
         <div className="flex items-center gap-1.5 bg-pink-50 dark:bg-pink-900/20 px-2.5 py-1 rounded-full text-sm">
-          <Heart className="w-3.5 h-3.5 text-pink-500" fill="currentColor" />
+          <TrendingUp className="w-3.5 h-3.5 text-pink-500" />
           <span className="font-semibold text-gray-700 dark:text-gray-300">
-            {idea.votes}
+            {idea.votes} {t("badges.votes", "votos")}
           </span>
         </div>
         

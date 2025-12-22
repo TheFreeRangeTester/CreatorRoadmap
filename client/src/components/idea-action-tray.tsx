@@ -30,33 +30,23 @@ interface IdeaActionTrayProps {
   className?: string;
 }
 
-type ColorKey = "pink" | "gray" | "green" | "red" | "youtube";
+type ColorKey = "pink" | "gray" | "red";
 
 const colorStyles: Record<ColorKey, { base: string; hover: string; border: string }> = {
   pink: {
-    base: "text-primary dark:text-primary",
-    hover: "hover:bg-primary/10 dark:hover:bg-primary/20",
-    border: "border-primary/50 dark:border-primary/40",
+    base: "bg-white dark:bg-gray-900 text-primary dark:text-primary",
+    hover: "hover:bg-pink-50 dark:hover:bg-primary/10",
+    border: "border-primary dark:border-primary",
   },
   gray: {
-    base: "text-gray-700 dark:text-gray-300",
-    hover: "hover:bg-gray-100 dark:hover:bg-gray-800",
-    border: "border-gray-300 dark:border-gray-600",
-  },
-  green: {
-    base: "text-gray-700 dark:text-gray-300",
-    hover: "hover:bg-gray-100 dark:hover:bg-gray-800",
-    border: "border-gray-300 dark:border-gray-600",
+    base: "bg-white dark:bg-gray-900 text-gray-700 dark:text-gray-300",
+    hover: "hover:bg-gray-50 dark:hover:bg-gray-800",
+    border: "border-gray-400 dark:border-gray-500",
   },
   red: {
-    base: "text-red-500 dark:text-red-400",
+    base: "bg-white dark:bg-gray-900 text-red-500 dark:text-red-400",
     hover: "hover:bg-red-50 dark:hover:bg-red-900/20",
-    border: "border-red-300 dark:border-red-500",
-  },
-  youtube: {
-    base: "text-primary dark:text-primary",
-    hover: "hover:bg-primary/10 dark:hover:bg-primary/20",
-    border: "border-primary/50 dark:border-primary/40",
+    border: "border-red-400 dark:border-red-500",
   },
 };
 
