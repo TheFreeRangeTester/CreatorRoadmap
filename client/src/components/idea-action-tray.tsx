@@ -30,7 +30,7 @@ interface IdeaActionTrayProps {
   className?: string;
 }
 
-type ColorKey = "pink" | "gray" | "red";
+type ColorKey = "pink" | "gray" | "green" | "red";
 
 const colorStyles: Record<ColorKey, { base: string; hover: string; border: string }> = {
   pink: {
@@ -39,9 +39,14 @@ const colorStyles: Record<ColorKey, { base: string; hover: string; border: strin
     border: "border-primary dark:border-primary",
   },
   gray: {
-    base: "bg-white dark:bg-gray-900 text-gray-700 dark:text-gray-300",
+    base: "bg-white dark:bg-gray-900 text-gray-600 dark:text-gray-400",
     hover: "hover:bg-gray-50 dark:hover:bg-gray-800",
     border: "border-gray-400 dark:border-gray-500",
+  },
+  green: {
+    base: "bg-white dark:bg-gray-900 text-emerald-600 dark:text-emerald-400",
+    hover: "hover:bg-emerald-50 dark:hover:bg-emerald-900/20",
+    border: "border-emerald-500 dark:border-emerald-500",
   },
   red: {
     base: "bg-white dark:bg-gray-900 text-red-500 dark:text-red-400",
@@ -166,7 +171,7 @@ export function IdeaActionTray({
           icon={Pencil}
           label={t("ideas.edit", "Editar")}
           onClick={onEdit}
-          color="pink"
+          color="gray"
           testId={`button-edit-${ideaId}`}
           variant={variant}
         />
@@ -176,7 +181,7 @@ export function IdeaActionTray({
           icon={CheckCircle2}
           label={t("ideas.complete", "Completar")}
           onClick={onComplete}
-          color="gray"
+          color="green"
           testId={`button-complete-${ideaId}`}
           variant={variant}
         />
