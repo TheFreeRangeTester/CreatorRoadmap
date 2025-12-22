@@ -205,7 +205,7 @@ export function CompactIdeaCard({
                   "w-full h-8 text-xs font-medium transition-all duration-200",
                   isVoted
                     ? "bg-green-100 dark:bg-green-900/20 text-green-700 dark:text-green-400 border-green-200 dark:border-green-700"
-                    : "bg-primary hover:bg-primary/90 text-white shadow-md hover:shadow-lg"
+                    : "bg-white dark:bg-gray-900 border-2 border-primary text-primary hover:bg-primary/10 shadow-sm hover:shadow-md"
                 )}
               >
                 {isVoting ? (
@@ -229,7 +229,7 @@ export function CompactIdeaCard({
                   localStorage.setItem("redirectAfterAuth", window.location.pathname);
                   window.location.href = "/auth";
                 }}
-                className="w-full h-8 text-xs font-medium bg-primary hover:bg-primary/90 text-white shadow-md hover:shadow-lg transition-all duration-200"
+                className="w-full h-8 text-xs font-medium bg-white dark:bg-gray-900 border-2 border-primary text-primary hover:bg-primary/10 shadow-sm hover:shadow-md transition-all duration-200"
               >
                 <ThumbsUp className="h-3 w-3 mr-1" />
                 {t("common.loginToVote", "Inicia sesión para votar")}

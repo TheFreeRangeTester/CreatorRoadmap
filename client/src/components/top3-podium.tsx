@@ -385,8 +385,8 @@ function PodiumCard({
                 "relative overflow-hidden transition-all duration-300",
                 isMobile ? "text-xs px-3" : "w-full",
                 hasVoted 
-                  ? "bg-green-500 hover:bg-green-600" 
-                  : "bg-primary hover:bg-primary/90 hover:scale-105"
+                  ? "bg-green-500 hover:bg-green-600 text-white" 
+                  : "bg-white dark:bg-gray-900 border-2 border-primary text-primary hover:bg-primary/10 hover:scale-105"
               )}
             >
               {isVoting ? (
