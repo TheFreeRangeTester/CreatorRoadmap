@@ -97,7 +97,7 @@ export function PublicStore({ creatorUsername, isAuthenticated }: PublicStorePro
       <Card>
         <CardContent className="p-6">
           <div className="flex items-center justify-center">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900"></div>
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
           </div>
         </CardContent>
       </Card>
@@ -224,7 +224,7 @@ export function PublicStore({ creatorUsername, isAuthenticated }: PublicStorePro
                 </div>
                 
                 {userPoints && (
-                  <div className="flex items-center justify-between p-4 bg-blue-50 rounded-lg">
+                  <div className="flex items-center justify-between p-4 bg-primary/10 dark:bg-primary/20 rounded-lg">
                     <div>
                       <p className="font-medium">{t('points.currentPoints', { points: userPoints.totalPoints })}</p>
                       <p className="text-sm text-muted-foreground">
