@@ -299,11 +299,14 @@ export default function HomePage() {
           <div className="flex justify-between items-center h-16">
             {/* Logo and title */}
             <motion.div
-              className="flex items-center gap-2"
+              className="flex items-center gap-3"
               whileHover={{ scale: 1.02 }}
               transition={{ type: "spring", stiffness: 400, damping: 10 }}
             >
               <img src={logoSvg} alt="Fanlist" className="h-10 w-auto" />
+              <span className="text-lg font-semibold text-gray-900 dark:text-white">
+                Fanlist <span className="text-primary">for Creators</span>
+              </span>
             </motion.div>
 
             {/* Desktop Navigation */}
