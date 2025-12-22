@@ -469,6 +469,7 @@ export default function HomePage() {
             activeTab={activeTab}
             onTabChange={setActiveTab}
             pendingCount={pendingIdeas?.length || 0}
+            onStatsClick={() => setIsMetricsDialogOpen(true)}
           />
           {/* Mobile FAB for creating ideas */}
           <SimpleFAB

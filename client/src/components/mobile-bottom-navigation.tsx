@@ -6,6 +6,7 @@ import {
   Gift,
   Package,
   Badge as BadgeIcon,
+  BarChart3,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
@@ -15,6 +16,7 @@ interface MobileBottomNavigationProps {
   onTabChange: (tab: string) => void;
   pendingCount?: number;
   className?: string;
+  onStatsClick?: () => void;
 }
 
 export function MobileBottomNavigation({
@@ -22,6 +24,7 @@ export function MobileBottomNavigation({
   onTabChange,
   pendingCount = 0,
   className,
+  onStatsClick,
 }: MobileBottomNavigationProps) {
   const { t } = useTranslation();
 
@@ -30,26 +33,33 @@ export function MobileBottomNavigation({
       id: "published",
       icon: Lightbulb,
       label: t("dashboard.published"),
-      color: "text-blue-600",
+      color: "text-primary",
     },
     {
       id: "suggested",
       icon: ListFilter,
       label: t("dashboard.suggested"),
-      color: "text-purple-600",
+      color: "text-primary",
       badge: pendingCount > 0 ? pendingCount : undefined,
+    },
+    {
+      id: "stats",
+      icon: BarChart3,
+      label: t("dashboard.stats", "Stats"),
+      color: "text-primary",
+      isAction: true,
     },
     {
       id: "store",
       icon: Gift,
       label: t("dashboard.store"),
-      color: "text-green-600",
+      color: "text-primary",
     },
     {
       id: "redemptions",
       icon: Package,
       label: t("redemptions.short"),
-      color: "text-orange-600",
+      color: "text-primary",
     },
   ];
 
@@ -69,11 +79,17 @@ export function MobileBottomNavigation({
           return (
             <button
               key={tab.id}
-              onClick={() => onTabChange(tab.id)}
+              onClick={() => {
+                if (tab.isAction && tab.id === "stats" && onStatsClick) {
+                  onStatsClick();
+                } else {
+                  onTabChange(tab.id);
+                }
+              }}
               className={cn(
                 "relative flex flex-col items-center justify-center p-2 rounded-lg transition-all duration-200 min-w-0 flex-1",
                 "hover:bg-accent/50 active:scale-95",
-                isActive && "bg-accent"
+                isActive && !tab.isAction && "bg-accent"
               )}
             >
               {/* Badge for notifications */}
