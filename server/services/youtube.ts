@@ -1,10 +1,11 @@
 import { db } from "../db";
-import { youtubeSnapshots, youtubeScores, youtubeApiUsage, ideas } from "@shared/schema";
+import { youtubeSnapshots, youtubeScores, youtubeApiUsage, youtubeUserUsage, ideas } from "@shared/schema";
 import { eq, and, gte, desc } from "drizzle-orm";
 
 const YOUTUBE_API_BASE = "https://www.googleapis.com/youtube/v3";
-const CACHE_TTL_HOURS = 24;
+const CACHE_TTL_HOURS = 48; // Extended cache duration
 const DAILY_QUOTA_LIMIT = 9000; // Leave buffer from 10,000
+const USER_DAILY_LIMIT = 10; // Max YouTube analyses per user per day
 
 interface YouTubeSearchResult {
   items: Array<{
@@ -75,6 +76,63 @@ export class YouTubeService {
     return usedToday + unitsNeeded <= DAILY_QUOTA_LIMIT;
   }
 
+  // User rate limiting methods
+  private getTodayDateString(): string {
+    return new Date().toISOString().split('T')[0]; // YYYY-MM-DD
+  }
+
+  async getUserDailyUsage(userId: number): Promise<number> {
+    const today = this.getTodayDateString();
+    const usage = await db
+      .select()
+      .from(youtubeUserUsage)
+      .where(and(
+        eq(youtubeUserUsage.userId, userId),
+        eq(youtubeUserUsage.date, today)
+      ))
+      .limit(1);
+    
+    return usage[0]?.requestCount || 0;
+  }
+
+  async canUserMakeRequest(userId: number): Promise<boolean> {
+    const usedToday = await this.getUserDailyUsage(userId);
+    return usedToday < USER_DAILY_LIMIT;
+  }
+
+  async getUserRemainingRequests(userId: number): Promise<number> {
+    const usedToday = await this.getUserDailyUsage(userId);
+    return Math.max(0, USER_DAILY_LIMIT - usedToday);
+  }
+
+  private async trackUserUsage(userId: number): Promise<void> {
+    const today = this.getTodayDateString();
+    const existing = await db
+      .select()
+      .from(youtubeUserUsage)
+      .where(and(
+        eq(youtubeUserUsage.userId, userId),
+        eq(youtubeUserUsage.date, today)
+      ))
+      .limit(1);
+
+    if (existing.length > 0) {
+      await db
+        .update(youtubeUserUsage)
+        .set({ 
+          requestCount: existing[0].requestCount + 1,
+          updatedAt: new Date()
+        })
+        .where(eq(youtubeUserUsage.id, existing[0].id));
+    } else {
+      await db.insert(youtubeUserUsage).values({
+        userId,
+        date: today,
+        requestCount: 1,
+      });
+    }
+  }
+
   async getCachedScore(ideaId: number): Promise<{
     score: typeof youtubeScores.$inferSelect | null;
     snapshot: typeof youtubeSnapshots.$inferSelect | null;
@@ -117,11 +175,12 @@ export class YouTubeService {
     return hoursSinceFetch < CACHE_TTL_HOURS;
   }
 
-  async fetchAndScore(ideaId: number, forceRefresh = false): Promise<{
+  async fetchAndScore(ideaId: number, forceRefresh = false, userId?: number): Promise<{
     success: boolean;
     score?: typeof youtubeScores.$inferSelect;
     snapshot?: typeof youtubeSnapshots.$inferSelect;
     error?: string;
+    rateLimitInfo?: { remaining: number; limit: number };
   }> {
     if (!this.isConfigured()) {
       return { success: false, error: "YouTube API key not configured" };
@@ -135,6 +194,19 @@ export class YouTubeService {
           success: true,
           score: cached.score,
           snapshot: cached.snapshot,
+        };
+      }
+    }
+
+    // Check user rate limit if userId provided
+    if (userId) {
+      const canRequest = await this.canUserMakeRequest(userId);
+      if (!canRequest) {
+        const remaining = await this.getUserRemainingRequests(userId);
+        return { 
+          success: false, 
+          error: "Daily analysis limit reached. Try again tomorrow.",
+          rateLimitInfo: { remaining, limit: USER_DAILY_LIMIT }
         };
       }
     }
@@ -156,6 +228,11 @@ export class YouTubeService {
     const quotaNeeded = 101; // 100 for search + ~1 for video details
     if (!(await this.canMakeRequest(quotaNeeded))) {
       return { success: false, error: "Daily YouTube API quota exceeded" };
+    }
+
+    // Track user usage before making request
+    if (userId) {
+      await this.trackUserUsage(userId);
     }
 
     try {

@@ -2549,14 +2549,19 @@ export async function registerRoutes(app: Express): Promise<Server> {
         });
       }
 
-      // Fetch and score
-      const result = await youtubeService.fetchAndScore(ideaId, forceRefresh);
+      // Fetch and score with user rate limiting
+      const result = await youtubeService.fetchAndScore(ideaId, forceRefresh, req.user!.id);
 
       if (!result.success) {
-        return res.status(400).json({ 
-          message: result.error || "Failed to fetch YouTube data" 
+        const statusCode = result.rateLimitInfo ? 429 : 400;
+        return res.status(statusCode).json({ 
+          message: result.error || "Failed to fetch YouTube data",
+          rateLimitInfo: result.rateLimitInfo
         });
       }
+
+      // Get remaining requests for the response
+      const remaining = await youtubeService.getUserRemainingRequests(req.user!.id);
 
       res.json({
         score: {
@@ -2587,10 +2592,33 @@ export async function registerRoutes(app: Express): Promise<Server> {
           fetchedAt: result.snapshot!.fetchedAt,
         },
         isFresh: true,
+        rateLimitInfo: { remaining, limit: 10 },
       });
     } catch (error) {
       console.error("Error fetching YouTube score:", error);
       res.status(500).json({ message: "Failed to fetch YouTube score" });
+    }
+  });
+
+  // Get user's YouTube rate limit status
+  app.get("/api/youtube/rate-limit", async (req: Request, res: Response) => {
+    try {
+      if (!req.isAuthenticated()) {
+        return res.status(401).json({ message: "Authentication required" });
+      }
+
+      const remaining = await youtubeService.getUserRemainingRequests(req.user!.id);
+      const used = 10 - remaining;
+
+      res.json({
+        remaining,
+        used,
+        limit: 10,
+        resetsAt: new Date(new Date().setHours(24, 0, 0, 0)).toISOString(),
+      });
+    } catch (error) {
+      console.error("Error getting rate limit status:", error);
+      res.status(500).json({ message: "Failed to get rate limit status" });
     }
   });
 

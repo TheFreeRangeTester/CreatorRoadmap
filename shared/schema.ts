@@ -539,13 +539,25 @@ export const youtubeScores = pgTable("youtube_scores", {
   updatedAt: timestamp("updated_at").notNull().defaultNow(),
 });
 
-// YouTube API usage tracking
+// YouTube API usage tracking (global quota)
 export const youtubeApiUsage = pgTable("youtube_api_usage", {
   id: serial("id").primaryKey(),
   date: timestamp("date").notNull().defaultNow(),
   unitsUsed: integer("units_used").notNull().default(0),
   requestCount: integer("request_count").notNull().default(0),
 });
+
+// YouTube user rate limiting - tracks daily analysis requests per user
+export const youtubeUserUsage = pgTable("youtube_user_usage", {
+  id: serial("id").primaryKey(),
+  userId: integer("user_id").notNull().references(() => users.id),
+  date: text("date").notNull(), // YYYY-MM-DD format for easy daily grouping
+  requestCount: integer("request_count").notNull().default(0),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+  updatedAt: timestamp("updated_at").notNull().defaultNow(),
+}, (table) => ({
+  userDateUnique: unique().on(table.userId, table.date),
+}));
 
 // YouTube schemas
 export const youtubeSnapshotResponseSchema = z.object({
@@ -585,4 +597,5 @@ export const youtubeScoreResponseSchema = z.object({
 export type YoutubeSnapshot = typeof youtubeSnapshots.$inferSelect;
 export type YoutubeScore = typeof youtubeScores.$inferSelect;
 export type YoutubeApiUsage = typeof youtubeApiUsage.$inferSelect;
+export type YoutubeUserUsage = typeof youtubeUserUsage.$inferSelect;
 export type YoutubeScoreResponse = z.infer<typeof youtubeScoreResponseSchema>;
