@@ -76,18 +76,6 @@ export default function HomePage() {
     enabled: user?.userRole === "creator",
   });
 
-  // Fetch priority data to count analyzed ideas
-  interface PriorityItem {
-    ideaId: number;
-    priority: { hasYouTubeData: boolean };
-  }
-  interface PriorityResponse {
-    priorities: PriorityItem[];
-  }
-  const { data: priorityData } = useQuery<PriorityResponse>({
-    queryKey: ["/api/ideas/priority", { status: "approved" }],
-    enabled: user?.userRole === "creator",
-  });
 
   // State to track which ideas are being voted on
   const [votingIdeaIds, setVotingIdeaIds] = useState<Set<number>>(new Set());
@@ -182,7 +170,7 @@ export default function HomePage() {
   };
 
   const activeIdeasCount = ideas?.filter(i => i.status !== 'completed').length || 0;
-  const analyzedIdeasCount = priorityData?.priorities?.filter(p => p.priority.hasYouTubeData).length || 0;
+  const totalVotesCount = ideas?.reduce((sum, idea) => sum + idea.votes, 0) || 0;
 
   const ideasSection = (
     <motion.div
@@ -259,9 +247,9 @@ export default function HomePage() {
                 </span>
               </div>
               <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-gray-100 dark:bg-gray-800 rounded-full text-sm">
-                <span className="text-green-500">👁</span>
+                <span className="text-pink-500">❤️</span>
                 <span className="font-medium text-gray-700 dark:text-gray-300">
-                  {analyzedIdeasCount} {t("ideas.analyzed", "Analizadas")}
+                  {totalVotesCount} {t("ideas.totalVotes", "Votos Totales")}
                 </span>
               </div>
             </div>

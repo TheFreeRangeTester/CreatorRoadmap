@@ -260,24 +260,8 @@ export function DashboardOverview({
     console.log("[DASHBOARD-OVERVIEW] Creator stats being used:", stats);
 
     // Split metrics into regular cards and the Top Niche card
-    // Order: Total Ideas, Total Votes, Pending Redemptions, Pending Suggestions
+    // Only show pending cards in sidebar (Total Ideas and Total Votes moved to stats badges)
     const regularMetrics = [
-      {
-        icon: Lightbulb,
-        title: t("dashboard.overview.totalIdeas", "Total Ideas"),
-        value: stats.totalIdeas,
-        description: t("dashboard.overview.totalIdeasDesc", "Ideas publicadas"),
-        color: "text-blue-600",
-        bgColor: "bg-blue-50 dark:bg-blue-900/20",
-      },
-      {
-        icon: ThumbsUp,
-        title: t("dashboard.overview.totalVotes", "Total Votes"),
-        value: stats.totalVotes,
-        description: t("dashboard.overview.totalVotesDesc", "Votos recibidos"),
-        color: "text-green-600",
-        bgColor: "bg-green-50 dark:bg-green-900/20",
-      },
       {
         icon: Gift,
         title: t(
