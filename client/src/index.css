@@ -72,8 +72,13 @@
     background-color: #FFF9F5;
   }
 
-  .dark body {
-    background-color: hsl(var(--background));
+  .dark body,
+  body.dark {
+    background-color: #111827 !important;
+  }
+
+  html.dark body {
+    background-color: #111827 !important;
   }
 
   h1,

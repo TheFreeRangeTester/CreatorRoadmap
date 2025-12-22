@@ -401,7 +401,7 @@ export function IdeasTabView({ mode = "published", onOpenTemplate }: IdeasTabVie
               setCurrentIdea(null);
               setIsIdeaFormOpen(true);
             }}
-            className="bg-gradient-to-r from-primary to-purple-600 hover:from-primary/90 hover:to-purple-700 text-white font-semibold shadow-md hover:shadow-lg transition-all"
+            className="bg-primary hover:bg-primary/90 text-white font-semibold rounded-full px-5"
             data-testid="empty-state-create-idea"
           >
             <Plus className="w-4 h-4 mr-2" />
@@ -426,74 +426,55 @@ export function IdeasTabView({ mode = "published", onOpenTemplate }: IdeasTabVie
     
     return (
       <>
-        {/* Top Controls: Create Button + Filters */}
-        <div className="flex flex-wrap gap-3 mb-4 items-center justify-between">
-          {/* Left side: Create button for creators */}
-          {user?.userRole === "creator" && (
-            <Button
-              onClick={() => {
-                setCurrentIdea(null);
-                setIsIdeaFormOpen(true);
-              }}
-              className="bg-gradient-to-r from-primary to-purple-600 hover:from-primary/90 hover:to-purple-700 text-white font-semibold shadow-md hover:shadow-lg transition-all"
-              data-testid="create-idea-button"
-            >
-              <Plus className="w-4 h-4 mr-2" />
-              {t("ideas.createIdea")}
-            </Button>
-          )}
-          
-          {/* Right side: Filter and Sort Controls */}
-          {allIdeas && allIdeas.length > 0 && (
-            <div className="flex flex-wrap gap-2 items-center ml-auto">
-              <div className="flex gap-2">
+        {/* Filter Controls - Simplified */}
+        {allIdeas && allIdeas.length > 0 && user?.userRole === "creator" && (
+          <div className="flex flex-wrap gap-2 items-center mb-4">
+            <div className="flex gap-2">
+              <Button
+                onClick={() => setShowCompleted(false)}
+                variant={!showCompleted ? "default" : "outline"}
+                size="sm"
+                className="rounded-full font-medium"
+              >
+                {t("ideas.showActive")}
+              </Button>
+              <Button
+                onClick={() => setShowCompleted(true)}
+                variant={showCompleted ? "default" : "outline"}
+                size="sm"
+                className="rounded-full font-medium"
+              >
+                {t("ideas.showCompleted")}
+              </Button>
+            </div>
+            
+            {/* Priority Sort Toggle (Premium Only) */}
+            {isPremium && (
+              <div className="flex gap-2 items-center ml-auto">
                 <Button
-                  onClick={() => setShowCompleted(false)}
-                  variant={!showCompleted ? "default" : "outline"}
+                  onClick={() => setSortMode("votes")}
+                  variant={sortMode === "votes" ? "default" : "outline"}
                   size="sm"
-                  className="font-semibold"
+                  className="rounded-full font-medium"
+                  data-testid="sort-by-votes"
                 >
-                  {t("ideas.showActive")}
+                  <Heart className="h-3.5 w-3.5 mr-1.5" />
+                  {t("ideas.sortByVotes")}
                 </Button>
                 <Button
-                  onClick={() => setShowCompleted(true)}
-                  variant={showCompleted ? "default" : "outline"}
+                  onClick={() => setSortMode("priority")}
+                  variant={sortMode === "priority" ? "default" : "outline"}
                   size="sm"
-                  className="font-semibold"
+                  className="rounded-full font-medium"
+                  data-testid="sort-by-priority"
                 >
-                  {t("ideas.showCompleted")}
+                  <TrendingUp className="h-3.5 w-3.5 mr-1.5" />
+                  {t("ideas.sortByPriority")}
                 </Button>
               </div>
-              
-              {/* Priority Sort Toggle (Premium Only) */}
-              {isPremium && user?.userRole === "creator" && (
-                <div className="flex gap-2 items-center">
-                  <span className="text-sm text-muted-foreground">{t("ideas.sortBy")}:</span>
-                  <Button
-                    onClick={() => setSortMode("votes")}
-                    variant={sortMode === "votes" ? "default" : "outline"}
-                    size="sm"
-                    className="font-semibold"
-                    data-testid="sort-by-votes"
-                  >
-                    <Heart className="h-3.5 w-3.5 mr-1.5" />
-                    {t("ideas.sortByVotes")}
-                  </Button>
-                  <Button
-                    onClick={() => setSortMode("priority")}
-                    variant={sortMode === "priority" ? "default" : "outline"}
-                    size="sm"
-                    className="font-semibold"
-                    data-testid="sort-by-priority"
-                  >
-                    <TrendingUp className="h-3.5 w-3.5 mr-1.5" />
-                    {t("ideas.sortByPriority")}
-                  </Button>
-                </div>
-              )}
-            </div>
-          )}
-        </div>
+            )}
+          </div>
+        )}
 
         {sortedIdeas.length > 0 ? (
           <div className="space-y-4">
@@ -553,9 +534,7 @@ export function IdeasTabView({ mode = "published", onOpenTemplate }: IdeasTabVie
                   setCurrentIdea(null);
                   setIsIdeaFormOpen(true);
                 }}
-                variant="outline"
-                size="sm"
-                className="font-semibold"
+                className="bg-primary hover:bg-primary/90 text-white font-semibold rounded-full px-5"
                 data-testid="filtered-empty-create-idea"
               >
                 <Plus className="w-4 h-4 mr-2" />
