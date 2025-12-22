@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useQuery, useMutation } from "@tanstack/react-query";
-import { Loader2, CheckCircle, XCircle, User, Clock } from "lucide-react";
+import { Loader2, CheckCircle, XCircle, User, Clock, ArrowUpDown, TrendingUp, Heart, Lightbulb, Plus, MessageSquare } from "lucide-react";
 import { useAuth } from "@/hooks/use-auth";
 import { useToast } from "@/hooks/use-toast";
 import { queryClient, apiRequest } from "@/lib/queryClient";
@@ -11,6 +11,25 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { IdeaResponse } from "@shared/schema";
 import { useTranslation } from "react-i18next";
+import { hasActivePremiumAccess } from "@shared/premium-utils";
+
+interface PriorityData {
+  voteScore: number;
+  opportunityScore: number | null;
+  effectiveOpportunityScore: number | null;
+  priorityScore: number;
+  hasYouTubeData: boolean;
+  isStale: boolean;
+}
+
+interface IdeaWithPriority extends IdeaResponse {
+  priority?: PriorityData;
+}
+
+interface PriorityResponse {
+  ideas: IdeaWithPriority[];
+  priorityWeight: number;
+}
 
 interface IdeasTabViewProps {
   mode: "published" | "suggested";
@@ -21,10 +40,12 @@ export function IdeasTabView({ mode = "published", onOpenTemplate }: IdeasTabVie
   const { user } = useAuth();
   const { toast } = useToast();
   const { t } = useTranslation();
+  const isPremium = user ? hasActivePremiumAccess(user as any) : false;
   const [processingIdea, setProcessingIdea] = useState<number | null>(null);
   const [isIdeaFormOpen, setIsIdeaFormOpen] = useState(false);
   const [currentIdea, setCurrentIdea] = useState<IdeaResponse | null>(null);
   const [showCompleted, setShowCompleted] = useState(false);
+  const [sortMode, setSortMode] = useState<"votes" | "priority">("votes");
 
   // Fetch published ideas with forced refresh
   const {
@@ -52,6 +73,25 @@ export function IdeasTabView({ mode = "published", onOpenTemplate }: IdeasTabVie
     queryKey: ["/api/pending-ideas"],
     enabled: mode === "suggested" && !!user,
   });
+
+  // Fetch priority-ranked ideas (premium only)
+  const {
+    data: priorityData,
+    isLoading: isLoadingPriority,
+  } = useQuery<PriorityResponse>({
+    queryKey: ["/api/ideas/priority", { status: showCompleted ? "completed" : "approved" }],
+    enabled: mode === "published" && isPremium && user?.userRole === "creator",
+  });
+
+  // Create priority lookup map
+  const priorityMap = new Map<number, PriorityData>();
+  if (priorityData?.ideas) {
+    priorityData.ideas.forEach((idea) => {
+      if (idea.priority) {
+        priorityMap.set(idea.id, idea.priority);
+      }
+    });
+  }
 
   // Debug logging for pending ideas
   useEffect(() => {
@@ -337,90 +377,191 @@ export function IdeasTabView({ mode = "published", onOpenTemplate }: IdeasTabVie
   // Render truly empty state (no ideas at all)
   if (!allIdeas || allIdeas.length === 0) {
     return (
-      <div className="text-center py-8 px-4">
-        <p className="text-lg font-medium text-gray-700 dark:text-gray-300 mb-2">
+      <div className="flex flex-col items-center justify-center py-12 px-4">
+        <div className="w-16 h-16 rounded-full bg-primary/10 dark:bg-primary/20 flex items-center justify-center mb-4">
+          {mode === "published" ? (
+            <Lightbulb className="w-8 h-8 text-primary" />
+          ) : (
+            <MessageSquare className="w-8 h-8 text-primary" />
+          )}
+        </div>
+        <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
           {mode === "published"
             ? t("ideas.noPublishedIdeas")
             : t("ideas.noSuggestedIdeas")}
-        </p>
-        <p className="text-muted-foreground text-sm mb-6">
+        </h3>
+        <p className="text-muted-foreground text-sm text-center max-w-md mb-6">
           {mode === "published"
             ? t("ideas.createFirstIdea")
             : t("ideas.suggestedIdeasWillAppear")}
         </p>
+        {mode === "published" && user?.userRole === "creator" && (
+          <Button
+            onClick={() => {
+              setCurrentIdea(null);
+              setIsIdeaFormOpen(true);
+            }}
+            className="bg-gradient-to-r from-primary to-purple-600 hover:from-primary/90 hover:to-purple-700 text-white font-semibold shadow-md hover:shadow-lg transition-all"
+            data-testid="empty-state-create-idea"
+          >
+            <Plus className="w-4 h-4 mr-2" />
+            {t("ideas.createIdea")}
+          </Button>
+        )}
       </div>
     );
   }
 
   // Render published ideas
   if (mode === "published") {
-    // Sort ideas by vote count (descending) - most voted first
-    const sortedIdeas = displayedIdeas ? [...displayedIdeas].sort((a, b) => b.votes - a.votes) : [];
+    // Sort ideas based on selected mode
+    const sortedIdeas = displayedIdeas ? [...displayedIdeas].sort((a, b) => {
+      if (sortMode === "priority" && isPremium) {
+        const priorityA = priorityMap.get(a.id)?.priorityScore ?? 0;
+        const priorityB = priorityMap.get(b.id)?.priorityScore ?? 0;
+        return priorityB - priorityA;
+      }
+      return b.votes - a.votes;
+    }) : [];
     
     return (
       <>
-        {/* Filter Toggle - Show when there are ideas */}
-        {allIdeas && allIdeas.length > 0 && (
-          <div className="flex gap-2 mb-4">
+        {/* Top Controls: Create Button + Filters */}
+        <div className="flex flex-wrap gap-3 mb-4 items-center justify-between">
+          {/* Left side: Create button for creators */}
+          {user?.userRole === "creator" && (
             <Button
-              onClick={() => setShowCompleted(false)}
-              variant={!showCompleted ? "default" : "outline"}
-              size="sm"
-              className="font-semibold"
+              onClick={() => {
+                setCurrentIdea(null);
+                setIsIdeaFormOpen(true);
+              }}
+              className="bg-gradient-to-r from-primary to-purple-600 hover:from-primary/90 hover:to-purple-700 text-white font-semibold shadow-md hover:shadow-lg transition-all"
+              data-testid="create-idea-button"
             >
-              {t("ideas.showActive")}
+              <Plus className="w-4 h-4 mr-2" />
+              {t("ideas.createIdea")}
             </Button>
-            <Button
-              onClick={() => setShowCompleted(true)}
-              variant={showCompleted ? "default" : "outline"}
-              size="sm"
-              className="font-semibold"
-            >
-              {t("ideas.showCompleted")}
-            </Button>
-          </div>
-        )}
+          )}
+          
+          {/* Right side: Filter and Sort Controls */}
+          {allIdeas && allIdeas.length > 0 && (
+            <div className="flex flex-wrap gap-2 items-center ml-auto">
+              <div className="flex gap-2">
+                <Button
+                  onClick={() => setShowCompleted(false)}
+                  variant={!showCompleted ? "default" : "outline"}
+                  size="sm"
+                  className="font-semibold"
+                >
+                  {t("ideas.showActive")}
+                </Button>
+                <Button
+                  onClick={() => setShowCompleted(true)}
+                  variant={showCompleted ? "default" : "outline"}
+                  size="sm"
+                  className="font-semibold"
+                >
+                  {t("ideas.showCompleted")}
+                </Button>
+              </div>
+              
+              {/* Priority Sort Toggle (Premium Only) */}
+              {isPremium && user?.userRole === "creator" && (
+                <div className="flex gap-2 items-center">
+                  <span className="text-sm text-muted-foreground">{t("ideas.sortBy")}:</span>
+                  <Button
+                    onClick={() => setSortMode("votes")}
+                    variant={sortMode === "votes" ? "default" : "outline"}
+                    size="sm"
+                    className="font-semibold"
+                    data-testid="sort-by-votes"
+                  >
+                    <Heart className="h-3.5 w-3.5 mr-1.5" />
+                    {t("ideas.sortByVotes")}
+                  </Button>
+                  <Button
+                    onClick={() => setSortMode("priority")}
+                    variant={sortMode === "priority" ? "default" : "outline"}
+                    size="sm"
+                    className="font-semibold"
+                    data-testid="sort-by-priority"
+                  >
+                    <TrendingUp className="h-3.5 w-3.5 mr-1.5" />
+                    {t("ideas.sortByPriority")}
+                  </Button>
+                </div>
+              )}
+            </div>
+          )}
+        </div>
 
         {sortedIdeas.length > 0 ? (
           <div className="space-y-4">
-            {sortedIdeas.map((idea, index) => (
-              <IdeaListView
-                key={idea.id}
-                idea={idea}
-                position={index + 1} // 1-based position
-                onVote={handleVote}
-                onEdit={
-                  user && idea.creatorId === user.id ? handleEditIdea : undefined
-                }
-                onComplete={
-                  user && idea.creatorId === user.id
-                    ? handleCompleteIdea
-                    : undefined
-                }
-                onDelete={
-                  user && idea.creatorId === user.id
-                    ? handleDeleteIdea
-                    : undefined
-                }
-                onOpenTemplate={
-                  user && idea.creatorId === user.id ? onOpenTemplate : undefined
-                }
-                isVoting={votingIdeaIds.has(idea.id)}
-              />
-            ))}
+            {sortedIdeas.map((idea, index) => {
+              const priority = priorityMap.get(idea.id);
+              return (
+                <IdeaListView
+                  key={idea.id}
+                  idea={idea}
+                  position={index + 1}
+                  onVote={handleVote}
+                  onEdit={
+                    user && idea.creatorId === user.id ? handleEditIdea : undefined
+                  }
+                  onComplete={
+                    user && idea.creatorId === user.id
+                      ? handleCompleteIdea
+                      : undefined
+                  }
+                  onDelete={
+                    user && idea.creatorId === user.id
+                      ? handleDeleteIdea
+                      : undefined
+                  }
+                  onOpenTemplate={
+                    user && idea.creatorId === user.id ? onOpenTemplate : undefined
+                  }
+                  isVoting={votingIdeaIds.has(idea.id)}
+                  priorityScore={isPremium && sortMode === "priority" ? priority?.priorityScore : undefined}
+                  hasYouTubeData={priority?.hasYouTubeData}
+                />
+              );
+            })}
           </div>
         ) : (
-          <div className="text-center py-8 px-4">
-            <p className="text-lg font-medium text-gray-700 dark:text-gray-300 mb-2">
+          <div className="flex flex-col items-center justify-center py-12 px-4">
+            <div className="w-14 h-14 rounded-full bg-gray-100 dark:bg-gray-800 flex items-center justify-center mb-4">
+              {showCompleted ? (
+                <CheckCircle className="w-7 h-7 text-gray-400 dark:text-gray-500" />
+              ) : (
+                <Lightbulb className="w-7 h-7 text-gray-400 dark:text-gray-500" />
+              )}
+            </div>
+            <h3 className="text-lg font-semibold text-gray-700 dark:text-gray-300 mb-2">
               {showCompleted
                 ? t("ideas.noCompletedIdeas")
                 : t("ideas.noActiveIdeas")}
-            </p>
-            <p className="text-muted-foreground text-sm">
+            </h3>
+            <p className="text-muted-foreground text-sm text-center max-w-md mb-4">
               {showCompleted
                 ? t("ideas.noCompletedIdeasDesc")
                 : t("ideas.noActiveIdeasDesc")}
             </p>
+            {!showCompleted && user?.userRole === "creator" && (
+              <Button
+                onClick={() => {
+                  setCurrentIdea(null);
+                  setIsIdeaFormOpen(true);
+                }}
+                variant="outline"
+                size="sm"
+                className="font-semibold"
+                data-testid="filtered-empty-create-idea"
+              >
+                <Plus className="w-4 h-4 mr-2" />
+                {t("ideas.createIdea")}
+              </Button>
+            )}
           </div>
         )}
 

@@ -365,6 +365,8 @@
     "deleteError": "Error al eliminar",
     "noPublishedIdeas": "Aún no hay ideas publicadas",
     "createFirstIdea": "Crea tu primera idea para comenzar",
+    "createIdea": "Crear Idea",
+    "noSuggestedIdeas": "Aún no hay sugerencias",
     "suggestedIdeasWillAppear": "Las ideas sugeridas por tu audiencia aparecerán aquí",
     "suggestedBy": "Sugerida por",
     "pending": "Pendiente",
@@ -392,7 +394,16 @@
     "noActiveIdeas": "No hay ideas activas",
     "noActiveIdeasDesc": "Todas tus ideas están finalizadas. Cambia a la pestaña de finalizadas para verlas.",
     "noCompletedIdeas": "Aún no hay ideas finalizadas",
-    "noCompletedIdeasDesc": "Las ideas que marques como finalizadas aparecerán aquí."
+    "noCompletedIdeasDesc": "Las ideas que marques como finalizadas aparecerán aquí.",
+    "sortBy": "Ordenar por",
+    "sortByVotes": "Votos",
+    "sortByPriority": "Prioridad",
+    "loadError": "Error al cargar ideas",
+    "analyzed": "Analizado"
+  },
+  "priority": {
+    "hybridScore": "Puntuación de prioridad (combina votos + oportunidad YouTube)",
+    "votesOnly": "Puntuación de prioridad (solo votos - sin datos de YouTube)"
   },
   "dashboard": {
     "welcome": "Hola",
@@ -917,5 +928,100 @@
     },
     "loadingRedemptions": "Cargando canjes...",
     "loadError": "Error al cargar canjes"
+  },
+  "youtubeOpportunity": {
+    "title": "YouTube Opportunity",
+    "search": "Búsqueda",
+    "analyze": "Analizar en YouTube",
+    "refresh": "Actualizar análisis",
+    "demand": "Demanda",
+    "competition": "Competencia",
+    "opportunity": "Oportunidad",
+    "videos": "videos",
+    "avgViews": "views prom.",
+    "channels": "canales",
+    "dataInfo": "Datos basados en videos publicados en los últimos 6 meses en YouTube. La oportunidad combina demanda (cuánto se busca) y competencia (cuántos lo cubren).",
+    "labels": {
+      "low": "Baja",
+      "medium": "Media",
+      "high": "Alta",
+      "weak": "Débil",
+      "good": "Buena",
+      "strong": "Alta",
+      "unknown": "Desconocida",
+      "balanced": "Equilibrada",
+      "audienceLed": "Liderada por Audiencia",
+      "marketLed": "Liderada por Mercado",
+      "lowPriority": "Baja Prioridad"
+    },
+    "compositeTooltips": {
+      "balanced": "Tu audiencia lo pide y el mercado lo valida. Prioridad máxima.",
+      "audienceLed": "Tu audiencia lo quiere pero el mercado de YouTube es incierto. Confía en tu comunidad.",
+      "marketLed": "Hay oportunidad en YouTube pero tu audiencia aún no lo pide. Considera educar sobre el tema.",
+      "lowPriority": "Poca demanda de tu audiencia y baja oportunidad en YouTube. Considera otros temas."
+    },
+    "compositeLegend": {
+      "balanced": "Votos de audiencia + buena oportunidad YouTube.",
+      "audienceLed": "Muchos votos, oportunidad YouTube moderada.",
+      "marketLed": "Buena oportunidad YouTube, pocos votos.",
+      "lowPriority": "Pocos votos y baja oportunidad."
+    },
+    "opportunityLegend": {
+      "strong": "Hay audiencia buscando y poca competencia. Momento ideal para publicar.",
+      "good": "Competencia manejable o nicho pequeño sin explotar. Vale la pena con buen contenido.",
+      "weak": "Alta competencia o baja demanda. Necesitarás un ángulo muy diferenciador."
+    },
+    "premiumRequired": {
+      "title": "Función Premium",
+      "description": "El análisis de YouTube Opportunity te ayuda a tomar decisiones basadas en datos sobre qué contenido crear.",
+      "benefit1": "Analiza demanda y competencia en YouTube",
+      "benefit2": "Identifica oportunidades de contenido",
+      "benefit3": "Toma decisiones más inteligentes",
+      "cta": "Actualizar a Premium"
+    },
+    "noApiKey": {
+      "title": "Configuración de API Requerida",
+      "description": "Agrega YOUTUBE_API_KEY a tus secretos para habilitar el análisis de YouTube."
+    },
+    "tooltips": {
+      "demandDefault": "Indica el interés actual en este tema en YouTube.",
+      "competitionDefault": "Indica cuántos canales están cubriendo este tema."
+    },
+    "explanations": {
+      "demand": {
+        "high": "{{videoCount}} videos en los últimos 6 meses con {{avgViews}} views promedio. Tema con alta tracción.",
+        "medium": "{{videoCount}} videos recientes con {{avgViews}} views promedio. Demanda moderada.",
+        "low": "Pocos videos ({{videoCount}}) o bajo rendimiento ({{avgViews}} views). Nicho pequeño o tema poco buscado."
+      },
+      "competition": {
+        "high": "{{channels}} canales compitiendo activamente. Mercado saturado.",
+        "medium": "{{channels}} canales cubriendo el tema. Competencia manejable.",
+        "low": "Solo {{channels}} canales. Oportunidad de posicionarse primero."
+      },
+      "opportunity": {
+        "strongIdeal": "Alta demanda con poca competencia. Excelente momento para publicar.",
+        "strongGood": "Buena demanda con competencia manejable. Oportunidad favorable.",
+        "goodCompetitive": "Alta demanda pero también alta competencia. Mercado activo pero competido.",
+        "goodBalanced": "Balance razonable entre demanda y competencia. Vale la pena intentar.",
+        "lowDemand": "Baja demanda en YouTube. Considera si tu audiencia busca este contenido en otras plataformas.",
+        "highCompetition": "Alta competencia reduce la oportunidad. Considera un ángulo único o diferenciador."
+      }
+    },
+    "errors": {
+      "quotaExceeded": "Cuota diaria de YouTube API excedida",
+      "fetchFailed": "Error al obtener datos de YouTube",
+      "rateLimitReached": "Límite diario de análisis alcanzado. Intenta mañana."
+    },
+    "rateLimit": {
+      "remaining": "{{remaining}} análisis restantes hoy",
+      "used": "{{used}} de {{limit}} análisis usados hoy",
+      "limitReached": "Límite diario alcanzado",
+      "resetsAt": "Se reinicia mañana"
+    },
+    "timeAgo": {
+      "justNow": "Hace menos de 1 hora",
+      "hoursAgo": "Hace {{hours}} horas",
+      "daysAgo": "Hace {{days}} días"
+    }
   }
 }

@@ -5,20 +5,18 @@ import {
   ArrowDown,
   Minus,
   Plus,
-  Pencil,
-  Trash2,
   ThumbsUp,
   Loader2,
   User,
   Heart,
   TrendingUp,
-  FileText,
 } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { IdeaResponse } from "@shared/schema";
 import { useTranslation } from "react-i18next";
 import { useAuth } from "@/hooks/use-auth";
 import { ModernIcon, IconBadge } from "@/components/modern-icon";
+import { IdeaActionTray } from "@/components/idea-action-tray";
 
 interface IdeaCardProps {
   idea: IdeaResponse;
@@ -369,42 +367,13 @@ export default function IdeaCard({
 
             {/* Edit, Delete, and Script actions for creators */}
             {(onEdit || onDelete || onOpenTemplate) && (
-              <div className="flex space-x-2 justify-center">
-                {onOpenTemplate && (
-                  <motion.button
-                    whileHover={{ scale: 1.1, rotate: 5 }}
-                    whileTap={{ scale: 0.9 }}
-                    onClick={() => onOpenTemplate(idea)}
-                    className="p-2 text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 rounded-md hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-all duration-200"
-                    aria-label={t("ideas.openScript")}
-                    data-testid={`button-template-${idea.id}`}
-                  >
-                    <FileText className="w-4 h-4 sm:w-5 sm:h-5" />
-                  </motion.button>
-                )}
-                {onEdit && (
-                  <motion.button
-                    whileHover={{ scale: 1.1, rotate: 5 }}
-                    whileTap={{ scale: 0.9 }}
-                    onClick={() => onEdit(idea)}
-                    className="p-2 text-neutral-400 hover:text-neutral-500 dark:text-neutral-400 dark:hover:text-neutral-300 rounded-md hover:bg-neutral-100 dark:hover:bg-gray-700 transition-all duration-200"
-                    aria-label="Edit idea"
-                  >
-                    <Pencil className="w-4 h-4 sm:w-5 sm:h-5" />
-                  </motion.button>
-                )}
-                {onDelete && (
-                  <motion.button
-                    whileHover={{ scale: 1.1, rotate: 5 }}
-                    whileTap={{ scale: 0.9 }}
-                    onClick={() => onDelete(idea.id)}
-                    className="p-2 text-neutral-400 hover:text-red-500 dark:text-neutral-400 dark:hover:text-red-400 rounded-md hover:bg-neutral-100 dark:hover:bg-gray-700 transition-all duration-200"
-                    aria-label="Delete idea"
-                  >
-                    <Trash2 className="w-4 h-4 sm:w-5 sm:h-5" />
-                  </motion.button>
-                )}
-              </div>
+              <IdeaActionTray
+                ideaId={idea.id}
+                onOpenScript={onOpenTemplate ? () => onOpenTemplate(idea) : undefined}
+                onEdit={onEdit ? () => onEdit(idea) : undefined}
+                onDelete={onDelete ? () => onDelete(idea.id) : undefined}
+                variant="card"
+              />
             )}
           </div>
 
