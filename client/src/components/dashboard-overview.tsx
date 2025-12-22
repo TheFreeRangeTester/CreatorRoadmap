@@ -695,12 +695,12 @@ export function DashboardOverview({
             animate="visible"
             className="hidden lg:flex lg:flex-col gap-4"
           >
+            {renderTopNichesCard()}
             <div className="flex flex-col gap-4">
               {regularMetrics.map((metric, index) =>
                 renderDesktopMetricCard(metric, index)
               )}
             </div>
-            {renderTopNichesCard()}
           </motion.div>
         ) : (
           <motion.div
