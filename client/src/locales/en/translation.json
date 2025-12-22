@@ -713,7 +713,10 @@
     "becomeCreatorSuccessDesc": "Your account has been updated to creator. You'll be redirected to the dashboard.",
     "shareProfile": "Share Profile",
     "shareProfileDesc": "Share your public profile so others can suggest ideas",
-    "notFound": "Profile not found"
+    "notFound": "Profile not found",
+    "subscription": "Subscription",
+    "subscriptionDesc": "Manage your plan and billing",
+    "manageSubscription": "Manage Subscription"
   },
   "ideaLimit": {
     "title": "Idea limit reached",
