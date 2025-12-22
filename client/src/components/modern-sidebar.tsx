@@ -70,7 +70,7 @@ export function ModernSidebar({
             <motion.h2
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              className="text-lg font-semibold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent"
+              className="text-lg font-semibold text-primary"
             >
               {user ? 
                 t("common.hello", "Hola") + ", " + user.username : 
@@ -105,7 +105,7 @@ export function ModernSidebar({
               className={cn(
                 "w-full flex items-center gap-3 p-3 rounded-xl transition-all duration-200 group relative overflow-hidden",
                 isActive
-                  ? "bg-gradient-to-r from-blue-500/10 to-purple-500/10 text-blue-600 dark:text-blue-400 shadow-lg shadow-blue-500/10"
+                  ? "bg-primary/10 text-primary shadow-lg shadow-primary/10"
                   : "text-gray-600 dark:text-gray-400 hover:bg-gray-100/80 dark:hover:bg-gray-800/80 hover:text-gray-900 dark:hover:text-gray-100"
               )}
               whileHover={{ scale: 1.02 }}
@@ -115,7 +115,7 @@ export function ModernSidebar({
               {isActive && (
                 <motion.div
                   layoutId="activeIndicator"
-                  className="absolute left-0 top-0 w-1 h-full bg-gradient-to-b from-blue-500 to-purple-500 rounded-r-full"
+                  className="absolute left-0 top-0 w-1 h-full bg-primary rounded-r-full"
                   initial={false}
                   transition={{ type: "spring", stiffness: 500, damping: 30 }}
                 />
@@ -125,7 +125,7 @@ export function ModernSidebar({
               <div className={cn(
                 "flex-shrink-0 p-2 rounded-lg transition-all duration-200",
                 isActive 
-                  ? "bg-gradient-to-r from-blue-500 to-purple-500 text-white shadow-lg shadow-blue-500/25"
+                  ? "bg-primary text-white shadow-lg shadow-primary/25"
                   : "bg-gray-100 dark:bg-gray-800 group-hover:bg-gray-200 dark:group-hover:bg-gray-700"
               )}>
                 <Icon className="h-4 w-4" />
@@ -148,7 +148,7 @@ export function ModernSidebar({
               )}
 
               {/* Hover effect */}
-              <div className="absolute inset-0 bg-gradient-to-r from-blue-500/5 to-purple-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-200 rounded-xl" />
+              <div className="absolute inset-0 bg-primary/5 opacity-0 group-hover:opacity-100 transition-opacity duration-200 rounded-xl" />
             </motion.button>
           );
         })}
@@ -164,7 +164,7 @@ export function ModernSidebar({
           <Button
             onClick={onSuggestClick}
             disabled={!userPoints || userPoints < 3}
-            className="w-full bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white shadow-lg border-0 rounded-xl h-11"
+            className="w-full bg-primary hover:bg-primary/90 text-white shadow-lg border-0 rounded-xl h-11"
           >
             <UserPlus className="h-4 w-4 mr-2" />
             <span className="text-sm font-medium">{t("suggest.idea", "Sugerir Idea")}</span>
@@ -182,7 +182,7 @@ export function ModernSidebar({
                   localStorage.setItem("redirectAfterAuth", window.location.pathname);
                   window.location.href = "/auth";
                 }}
-                className="w-full bg-gradient-to-r from-blue-500 to-purple-500 text-white hover:from-blue-600 hover:to-purple-600 shadow-lg border-0 rounded-xl h-11"
+                className="w-full bg-primary text-white hover:bg-primary/90 shadow-lg border-0 rounded-xl h-11"
               >
                 <User className="h-4 w-4 mr-2" />
                 <span className="text-sm font-medium">{t("common.login", "Iniciar sesión")}</span>
@@ -207,7 +207,7 @@ export function ModernSidebar({
                   window.location.href = "/auth";
                 }}
                 size="icon"
-                className="w-full bg-gradient-to-r from-blue-500 to-purple-500 text-white hover:from-blue-600 hover:to-purple-600 shadow-lg border-0 rounded-lg h-10"
+                className="w-full bg-primary text-white hover:bg-primary/90 shadow-lg border-0 rounded-lg h-10"
                 title={t("common.login", "Iniciar sesión")}
               >
                 <User className="h-4 w-4" />

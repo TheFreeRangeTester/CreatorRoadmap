@@ -216,7 +216,7 @@ export default function ModernPublicProfile() {
 
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-gray-50 via-blue-50 to-indigo-100 dark:from-gray-900 dark:via-blue-900/20 dark:to-indigo-900/30">
+      <div className="flex items-center justify-center min-h-screen bg-[#FFF9F5] dark:bg-gray-900">
         <Loader2 className="h-8 w-8 animate-spin text-primary" />
       </div>
     );
@@ -313,7 +313,7 @@ export default function ModernPublicProfile() {
                 <Button
                   onClick={() => setSuggestDialogOpen(true)}
                   disabled={!userPoints || userPoints.totalPoints < 3}
-                  className="bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white shadow-lg"
+                  className="bg-primary hover:bg-primary/90 text-white shadow-lg"
                 >
                   <UserPlus className="h-4 w-4 mr-2" />
                   {t("suggest.idea")}
@@ -346,9 +346,9 @@ export default function ModernPublicProfile() {
               whileHover={{ scale: 1.05 }}
               className="flex-shrink-0"
             >
-              <Avatar className="w-16 h-16 border-4 border-white shadow-lg">
+              <Avatar className="w-16 h-16 border-2 border-gray-100 shadow-lg">
                 <AvatarImage src={creator.logoUrl || ""} alt={creator.username} />
-                <AvatarFallback className="text-xl font-bold bg-gradient-to-br from-blue-500 to-purple-500 text-white">
+                <AvatarFallback className="text-xl font-bold bg-primary text-white">
                   {creator.username.charAt(0).toUpperCase()}
                 </AvatarFallback>
               </Avatar>
@@ -356,7 +356,7 @@ export default function ModernPublicProfile() {
 
             {/* Info */}
             <div className="flex-1 min-w-0">
-              <h1 className="text-2xl font-bold bg-gradient-to-r from-gray-900 to-gray-600 dark:from-white dark:to-gray-300 bg-clip-text text-transparent mb-2">
+              <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
                 {creator.username}
               </h1>
               {creator.profileDescription && (
@@ -392,10 +392,10 @@ export default function ModernPublicProfile() {
 
       {/* Ideas Section Header */}
       <div className="flex items-center justify-between">
-        <h2 className="text-2xl font-bold bg-gradient-to-r from-gray-900 to-gray-600 dark:from-white dark:to-gray-300 bg-clip-text text-transparent">
+        <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
           {t("ideas.title")}
         </h2>
-        <Badge variant="secondary" className="bg-blue-100 dark:bg-blue-900/20 text-blue-700 dark:text-blue-300">
+        <Badge variant="secondary" className="bg-primary/10 text-primary">
           {ideas.length} {t("ideas.total")}
         </Badge>
       </div>
@@ -491,7 +491,7 @@ export default function ModernPublicProfile() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50 to-indigo-100 dark:from-gray-900 dark:via-blue-900/20 dark:to-indigo-900/30">
+    <div className="min-h-screen bg-[#FFF9F5] dark:from-gray-900 dark:via-gray-900 dark:to-gray-900">
       {/* Desktop User Indicator */}
       <div className="hidden lg:block fixed top-4 right-4 z-50">
         <UserIndicator user={user} variant="desktop" />
@@ -501,7 +501,7 @@ export default function ModernPublicProfile() {
       <div className="lg:hidden fixed top-0 left-0 right-0 z-40 bg-white/90 dark:bg-gray-900/90 backdrop-blur-xl border-b border-gray-200/50 dark:border-gray-700/50">
         <div className="flex items-center justify-between h-16 px-4">
           <div className="flex items-center gap-3">
-            <h1 className="text-lg font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+            <h1 className="text-lg font-bold text-gray-900 dark:text-white">
               Fanlist
             </h1>
           </div>

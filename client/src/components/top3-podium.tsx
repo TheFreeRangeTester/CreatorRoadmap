@@ -43,12 +43,12 @@ export function Top3Podium({
       {/* Section Header */}
       <div className="text-center mb-8">
         <motion.h2 
-          className="text-3xl md:text-4xl font-bold mb-2 bg-gradient-to-r from-yellow-500 via-amber-500 to-orange-500 bg-clip-text text-transparent"
+          className="text-3xl md:text-4xl font-bold mb-2 text-gray-900 dark:text-white"
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.6, delay: 0.3 }}
         >
-          <Trophy className="inline-block w-8 h-8 mr-2 text-yellow-500" />
+          <Trophy className="inline-block w-8 h-8 mr-2 text-primary" />
           {t('podium.title', 'Top Ideas')}
         </motion.h2>
         <motion.p 
