@@ -60,7 +60,7 @@ export default function ModernPublicProfile() {
   const [suggestDialogOpen, setSuggestDialogOpen] = useState(false);
   const { toast } = useToast();
   const { user } = useAuth();
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
 
   const { data, isLoading, error, refetch } =
     useQuery<CreatorPublicPageResponse>({
@@ -204,12 +204,6 @@ export default function ModernPublicProfile() {
     }
   };
 
-  const getGreeting = () => {
-    const lang = i18n.language;
-    if (lang?.startsWith("es")) return "Hola";
-    return "Hello";
-  };
-
   if (isLoading) {
     return (
       <div className="flex items-center justify-center min-h-screen bg-gray-50 dark:bg-gray-950">
@@ -256,23 +250,10 @@ export default function ModernPublicProfile() {
         className="space-y-8"
       >
         <div className="mb-8">
-          <motion.h1 
-            className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-6"
-            initial={{ opacity: 0, y: -10 }}
-            animate={{ opacity: 1, y: 0 }}
-            data-testid="text-greeting"
-          >
-            {getGreeting()}{" "}
-            <span className="bg-gradient-to-r from-primary to-blue-600 dark:from-primary dark:to-blue-400 bg-clip-text text-transparent">
-              {creator.username}
-            </span>
-          </motion.h1>
-
           <motion.div 
             className="bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-800 p-6 shadow-sm"
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.1 }}
           >
             <div className="flex flex-col sm:flex-row sm:items-start gap-4">
               <motion.div
