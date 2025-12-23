@@ -401,7 +401,10 @@
     "loadError": "Error al cargar ideas",
     "analyzed": "Analizado",
     "activeIdeas": "Ideas Activas",
-    "totalVotes": "Votos Totales"
+    "totalVotes": "Votos Totales",
+    "allIdeas": "Todas las Ideas",
+    "by": "Por",
+    "empty": "Aún no hay ideas"
   },
   "priority": {
     "hybridScore": "Puntuación de prioridad (combina votos + oportunidad YouTube)",

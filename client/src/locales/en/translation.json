@@ -399,7 +399,10 @@
     "loadError": "Failed to load ideas",
     "analyzed": "Analyzed",
     "activeIdeas": "Active Ideas",
-    "totalVotes": "Total Votes"
+    "totalVotes": "Total Votes",
+    "allIdeas": "All Ideas",
+    "by": "By",
+    "empty": "No ideas yet"
   },
   "priority": {
     "hybridScore": "Priority score (combines votes + YouTube opportunity)",
