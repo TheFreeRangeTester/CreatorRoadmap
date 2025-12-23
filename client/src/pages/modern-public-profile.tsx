@@ -441,6 +441,23 @@ export default function ModernPublicProfile() {
         />
       </div>
 
+      {/* Floating Action Button for mobile - Suggest Idea */}
+      {user && !isOwnProfile && (
+        <motion.button
+          initial={{ scale: 0, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          transition={{ delay: 0.3, type: "spring", stiffness: 260, damping: 20 }}
+          onClick={() => setSuggestDialogOpen(true)}
+          disabled={!userPoints || userPoints.totalPoints < 3}
+          className="lg:hidden fixed right-4 bottom-24 z-50 w-14 h-14 rounded-full bg-primary hover:bg-primary/90 text-white shadow-lg shadow-primary/30 flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed"
+          data-testid="button-suggest-mobile-fab"
+          whileHover={{ scale: 1.1 }}
+          whileTap={{ scale: 0.95 }}
+        >
+          <UserPlus className="w-6 h-6" />
+        </motion.button>
+      )}
+
       <SuggestIdeaModal
         username={creator.username}
         open={suggestDialogOpen}
