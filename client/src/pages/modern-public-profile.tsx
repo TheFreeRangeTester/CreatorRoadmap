@@ -330,6 +330,36 @@ export default function ModernPublicProfile() {
                 startRank={4}
               />
             )}
+
+            {/* CTA to suggest idea at the end of the list */}
+            {user && !isOwnProfile && (
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.2 }}
+                className="mt-8 text-center py-8 px-4 bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-800"
+              >
+                <Lightbulb className="h-10 w-10 mx-auto text-primary mb-3" />
+                <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
+                  {t("suggest.notFound", "¿No encontraste lo que buscabas?")}
+                </h3>
+                <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">
+                  {t("suggest.helpCreator", "Ayuda a {{creator}} sugiriendo una idea", { creator: creator.username })}
+                </p>
+                <Button
+                  onClick={() => setSuggestDialogOpen(true)}
+                  disabled={!userPoints || userPoints.totalPoints < 3}
+                  className="bg-primary hover:bg-primary/90 text-white"
+                  data-testid="button-suggest-bottom"
+                >
+                  <UserPlus className="h-4 w-4 mr-2" />
+                  {t("suggest.idea", "Sugerir Idea")}
+                  <span className="ml-2 text-xs opacity-80">
+                    (3 {t("common.points", "puntos")})
+                  </span>
+                </Button>
+              </motion.div>
+            )}
           </>
         )}
       </motion.div>
@@ -441,23 +471,6 @@ export default function ModernPublicProfile() {
           onSectionChange={setActiveSection}
         />
       </div>
-
-      {/* Floating Action Button for mobile - Suggest Idea */}
-      {user && !isOwnProfile && (
-        <motion.button
-          initial={{ scale: 0, opacity: 0 }}
-          animate={{ scale: 1, opacity: 1 }}
-          transition={{ delay: 0.3, type: "spring", stiffness: 260, damping: 20 }}
-          onClick={() => setSuggestDialogOpen(true)}
-          disabled={!userPoints || userPoints.totalPoints < 3}
-          className="lg:hidden fixed right-4 bottom-24 z-50 w-14 h-14 rounded-full bg-primary hover:bg-primary/90 text-white shadow-lg shadow-primary/30 flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed"
-          data-testid="button-suggest-mobile-fab"
-          whileHover={{ scale: 1.1 }}
-          whileTap={{ scale: 0.95 }}
-        >
-          <UserPlus className="w-6 h-6" />
-        </motion.button>
-      )}
 
       <SuggestIdeaModal
         username={creator.username}

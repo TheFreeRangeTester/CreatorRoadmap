@@ -899,7 +899,9 @@
     "watchDemo": "▶ Ver Demo"
   },
   "suggest": {
-    "idea": "Sugerir Idea"
+    "idea": "Sugerir Idea",
+    "notFound": "¿No encontraste lo que buscabas?",
+    "helpCreator": "Ayuda a {{creator}} sugiriendo una idea"
   },
   "errors": {
     "notEnoughPoints": "No tienes suficientes puntos para enviar una sugerencia",

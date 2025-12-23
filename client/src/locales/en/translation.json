@@ -900,7 +900,9 @@
     "watchDemo": "▶ Watch Demo"
   },
   "suggest": {
-    "idea": "Suggest Idea"
+    "idea": "Suggest Idea",
+    "notFound": "Didn't find what you were looking for?",
+    "helpCreator": "Help {{creator}} by suggesting an idea"
   },
   "redemptions": {
     "short": "Redemptions",
