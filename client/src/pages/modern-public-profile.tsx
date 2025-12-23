@@ -16,6 +16,7 @@ import {
   Globe,
   ArrowLeft,
   Lightbulb,
+  Coins,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -25,7 +26,6 @@ import { MobileBottomNav } from "@/components/mobile-bottom-nav";
 import SuggestIdeaModal from "@/components/suggest-idea-modal";
 import AudienceStats from "@/components/audience-stats";
 import { PublicStore } from "@/components/public-store";
-import { UserIndicator } from "@/components/user-indicator";
 import { MobileMenu } from "@/components/mobile-menu";
 import { Top3Cards } from "@/components/top3-cards";
 import { IdeasList } from "@/components/ideas-list";
@@ -317,25 +317,6 @@ export default function ModernPublicProfile() {
                   </div>
                 )}
               </div>
-
-              {!isOwnProfile && user && (
-                <motion.div
-                  initial={{ opacity: 0, x: 20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  className="flex-shrink-0"
-                >
-                  <Button
-                    onClick={() => setSuggestDialogOpen(true)}
-                    disabled={!userPoints || userPoints.totalPoints < 3}
-                    variant="outline"
-                    className="border-2 border-primary text-primary hover:bg-primary/10"
-                    data-testid="button-suggest-idea"
-                  >
-                    <Lightbulb className="h-4 w-4 mr-2" />
-                    {t("suggest.idea")}
-                  </Button>
-                </motion.div>
-              )}
             </div>
           </motion.div>
         </div>
@@ -405,9 +386,14 @@ export default function ModernPublicProfile() {
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-950">
-      <div className="hidden lg:block fixed top-4 right-4 z-50">
-        <UserIndicator user={user} variant="desktop" />
-      </div>
+      {user && !isOwnProfile && (
+        <div className="hidden lg:flex fixed top-4 right-4 z-50 items-center gap-2 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-full px-4 py-2 shadow-md">
+          <Coins className="w-5 h-5 text-primary" />
+          <span className="font-semibold text-gray-900 dark:text-white" data-testid="text-points-desktop">
+            {userPoints?.totalPoints ?? 0}
+          </span>
+        </div>
+      )}
 
       <div className="lg:hidden fixed top-0 left-0 right-0 z-40 bg-white/95 dark:bg-gray-900/95 backdrop-blur-lg border-b border-gray-200 dark:border-gray-800">
         <div className="flex items-center justify-between h-14 px-4">
@@ -416,8 +402,15 @@ export default function ModernPublicProfile() {
               Fanlist
             </h1>
           </div>
-          <div className="flex items-center gap-2">
-            {user && <UserIndicator user={user} variant="mobile" />}
+          <div className="flex items-center gap-3">
+            {user && !isOwnProfile && (
+              <div className="flex items-center gap-1.5 bg-gray-100 dark:bg-gray-800 rounded-full px-3 py-1.5">
+                <Coins className="w-4 h-4 text-primary" />
+                <span className="font-semibold text-sm text-gray-900 dark:text-white" data-testid="text-points-mobile">
+                  {userPoints?.totalPoints ?? 0}
+                </span>
+              </div>
+            )}
             <MobileMenu 
               username={user?.username}
               isCreatorProfile={false}
