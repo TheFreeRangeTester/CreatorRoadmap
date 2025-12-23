@@ -17,6 +17,7 @@ import {
   ArrowLeft,
   Lightbulb,
   Coins,
+  UserPlus,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
