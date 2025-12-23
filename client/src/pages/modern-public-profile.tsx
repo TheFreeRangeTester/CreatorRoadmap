@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import { useParams, useLocation } from "wouter";
 import { useQuery } from "@tanstack/react-query";
 import { motion, AnimatePresence } from "framer-motion";
@@ -9,30 +9,27 @@ import { IdeaResponse } from "@shared/schema";
 import { apiRequest, queryClient } from "@/lib/queryClient";
 import {
   Loader2,
-  Share2,
   ExternalLink,
   Twitter,
   Instagram,
   Youtube,
   Globe,
-  UserPlus,
   ArrowLeft,
+  Lightbulb,
+  Coins,
+  UserPlus,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { ThemeToggle } from "@/components/theme-toggle";
-import { LanguageToggle } from "@/components/language-toggle";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import { ModernSidebar } from "@/components/modern-sidebar";
 import { MobileBottomNav } from "@/components/mobile-bottom-nav";
-import { CompactIdeaCard } from "@/components/compact-idea-card";
 import SuggestIdeaModal from "@/components/suggest-idea-modal";
 import AudienceStats from "@/components/audience-stats";
 import { PublicStore } from "@/components/public-store";
-import { UserIndicator } from "@/components/user-indicator";
 import { MobileMenu } from "@/components/mobile-menu";
-import { Top3Podium } from "@/components/top3-podium";
+import { Top3Cards } from "@/components/top3-cards";
+import { IdeasList } from "@/components/ideas-list";
 import { LeaderboardSkeleton } from "@/components/leaderboard-skeleton";
 import { FaTiktok } from "react-icons/fa";
 import { FaThreads } from "react-icons/fa6";
@@ -72,10 +69,8 @@ export default function ModernPublicProfile() {
       enabled: !!username,
     });
 
-  // Check if current user is the profile owner
   const isOwnProfile = user?.username === username;
 
-  // Query user points for this specific creator
   const { data: userPoints } = useQuery<{ totalPoints: number }>({
     queryKey: [`/api/user/points/${data?.creator?.id}`],
     enabled: !!user && !isOwnProfile && !!data?.creator?.id,
@@ -93,7 +88,6 @@ export default function ModernPublicProfile() {
     }
   }, [error, navigate, toast]);
 
-  // Load voted ideas from localStorage only for authenticated users
   useEffect(() => {
     if (user) {
       const userKey = `votedIdeas_${user.id}`;
@@ -106,7 +100,6 @@ export default function ModernPublicProfile() {
     }
   }, [user]);
 
-  // Check vote status for all ideas when data loads
   useEffect(() => {
     if (!data?.ideas || !user) {
       setVotedIdeas(new Set());
@@ -155,7 +148,6 @@ export default function ModernPublicProfile() {
         method: "POST",
       });
 
-      // Update localStorage using the fresh state to avoid race condition
       const userKey = `votedIdeas_${user.id}`;
       const updatedVotedIdeas = Array.from(new Set([...Array.from(votedIdeas), ideaId]));
       localStorage.setItem(userKey, JSON.stringify(updatedVotedIdeas));
@@ -167,7 +159,6 @@ export default function ModernPublicProfile() {
         description: t("vote.successDesc"),
       });
 
-      // Invalidate points for this specific creator
       if (data?.creator?.id) {
         queryClient.invalidateQueries({ queryKey: [`/api/user/points/${data.creator.id}`] });
       }
@@ -216,7 +207,7 @@ export default function ModernPublicProfile() {
 
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center min-h-screen bg-[#FFF9F5] dark:bg-gray-900">
+      <div className="flex items-center justify-center min-h-screen bg-gray-50 dark:bg-gray-950">
         <Loader2 className="h-8 w-8 animate-spin text-primary" />
       </div>
     );
@@ -224,7 +215,7 @@ export default function ModernPublicProfile() {
 
   if (!data) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
+      <div className="flex items-center justify-center min-h-screen bg-gray-50 dark:bg-gray-950">
         <div className="text-center">
           <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
             {t("profile.notFound")}
@@ -248,215 +239,130 @@ export default function ModernPublicProfile() {
     { platform: "website", url: creator.websiteUrl },
   ].filter(link => link.url);
 
-  const renderProfileSection = () => (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      className="space-y-6"
-    >
-      {/* Creator Info Card */}
-      <div className="bg-white/90 dark:bg-gray-900/90 backdrop-blur-xl rounded-md border border-gray-200/50 dark:border-gray-700/50 overflow-hidden shadow-xl shadow-gray-200/50 dark:shadow-gray-800/50">
-        <div className="p-8">
-          <div className="flex flex-col lg:flex-row lg:items-center gap-6">
-            {/* Avatar */}
-            <motion.div
-              whileHover={{ scale: 1.05 }}
-              className="flex-shrink-0"
-            >
-              <Avatar className="w-24 h-24 border-4 border-white shadow-xl">
-                <AvatarImage src={creator.logoUrl || ""} alt={creator.username} />
-                <AvatarFallback className="text-2xl font-bold bg-primary text-white">
-                  {creator.username.charAt(0).toUpperCase()}
-                </AvatarFallback>
-              </Avatar>
-            </motion.div>
-
-            {/* Info */}
-            <div className="flex-1 min-w-0">
-              <h1 className="text-3xl font-bold bg-gradient-to-r from-gray-900 to-gray-600 dark:from-white dark:to-gray-300 bg-clip-text text-transparent mb-2">
-                {creator.username}
-              </h1>
-              {creator.profileDescription && (
-                <p className="text-gray-600 dark:text-gray-400 leading-relaxed mb-4">
-                  {creator.profileDescription}
-                </p>
-              )}
-
-              {/* Social Links */}
-              {socialLinks.length > 0 && (
-                <div className="flex flex-wrap gap-2">
-                  {socialLinks.map((link) => (
-                    <motion.a
-                      key={link.platform}
-                      href={formatSocialUrl(link.url!, link.platform)}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex items-center gap-2 px-3 py-1.5 bg-gray-100 dark:bg-gray-800 rounded-md text-sm text-gray-600 dark:text-gray-400 hover:bg-primary/10 hover:text-primary dark:hover:bg-primary/20 dark:hover:text-primary transition-colors"
-                      whileHover={{ scale: 1.05 }}
-                      whileTap={{ scale: 0.95 }}
-                    >
-                      {getSocialIcon(link.platform)}
-                      <span className="capitalize">{link.platform}</span>
-                    </motion.a>
-                  ))}
-                </div>
-              )}
-            </div>
-
-            {/* Action Button */}
-            {!isOwnProfile && user && (
-              <motion.div
-                initial={{ opacity: 0, x: 20 }}
-                animate={{ opacity: 1, x: 0 }}
-                className="flex-shrink-0"
-              >
-                <Button
-                  onClick={() => setSuggestDialogOpen(true)}
-                  disabled={!userPoints || userPoints.totalPoints < 3}
-                  className="bg-primary hover:bg-primary/90 text-white shadow-lg"
-                >
-                  <UserPlus className="h-4 w-4 mr-2" />
-                  {t("suggest.idea")}
-                </Button>
-              </motion.div>
-            )}
-          </div>
-        </div>
-      </div>
-    </motion.div>
-  );
-
   const renderIdeasSection = () => {
     if (isLoading) {
       return <LeaderboardSkeleton />;
     }
 
     return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      className="space-y-6"
-    >
-      {/* Creator Profile Info */}
-      <div className="bg-white/90 dark:bg-gray-900/90 backdrop-blur-xl rounded-md border border-gray-200/50 dark:border-gray-700/50 overflow-hidden shadow-xl shadow-gray-200/50 dark:shadow-gray-800/50">
-        <div className="p-6">
-          <div className="flex flex-col sm:flex-row sm:items-center gap-4">
-            {/* Avatar */}
-            <motion.div
-              whileHover={{ scale: 1.05 }}
-              className="flex-shrink-0"
-            >
-              <Avatar className="w-16 h-16 border-2 border-gray-100 shadow-lg">
-                <AvatarImage src={creator.logoUrl || ""} alt={creator.username} />
-                <AvatarFallback className="text-xl font-bold bg-primary text-white">
-                  {creator.username.charAt(0).toUpperCase()}
-                </AvatarFallback>
-              </Avatar>
-            </motion.div>
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="space-y-8"
+      >
+        <div className="mb-8">
+          <motion.div 
+            className="bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-800 p-6 shadow-sm"
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+          >
+            <div className="flex flex-col sm:flex-row sm:items-start gap-4">
+              <motion.div
+                whileHover={{ scale: 1.05 }}
+                className="flex-shrink-0"
+              >
+                <Avatar className="w-16 h-16 border-2 border-gray-100 dark:border-gray-800 shadow-md">
+                  <AvatarImage src={creator.logoUrl || ""} alt={creator.username} />
+                  <AvatarFallback className="text-xl font-bold bg-primary text-white">
+                    {creator.username.charAt(0).toUpperCase()}
+                  </AvatarFallback>
+                </Avatar>
+              </motion.div>
 
-            {/* Info */}
-            <div className="flex-1 min-w-0">
-              <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
-                {creator.username}
-              </h1>
-              {creator.profileDescription && (
-                <p className="text-gray-600 dark:text-gray-400 text-sm leading-relaxed mb-3">
-                  {creator.profileDescription}
-                </p>
-              )}
+              <div className="flex-1 min-w-0">
+                <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-2">
+                  {creator.username}
+                </h2>
+                {creator.profileDescription && (
+                  <p className="text-gray-600 dark:text-gray-400 text-sm leading-relaxed mb-4">
+                    {creator.profileDescription}
+                  </p>
+                )}
 
-              {/* Social Links */}
-              {socialLinks.length > 0 && (
-                <div className="flex flex-wrap gap-2">
-                  {socialLinks.map((link) => (
-                    <motion.a
-                      key={link.platform}
-                      href={formatSocialUrl(link.url!, link.platform)}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex items-center gap-1.5 px-2.5 py-1 bg-gray-100 dark:bg-gray-800 rounded-md text-xs text-gray-600 dark:text-gray-400 hover:bg-primary/10 hover:text-primary dark:hover:bg-primary/20 dark:hover:text-primary transition-colors"
-                      whileHover={{ scale: 1.05 }}
-                      whileTap={{ scale: 0.95 }}
-                    >
-                      {getSocialIcon(link.platform)}
-                      <span className="capitalize">{link.platform}</span>
-                    </motion.a>
-                  ))}
-                </div>
-              )}
+                {socialLinks.length > 0 && (
+                  <div className="flex flex-wrap gap-2">
+                    {socialLinks.map((link) => (
+                      <motion.a
+                        key={link.platform}
+                        href={formatSocialUrl(link.url!, link.platform)}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center gap-1.5 px-3 py-1.5 bg-gray-100 dark:bg-gray-800 rounded-full text-xs font-medium text-gray-600 dark:text-gray-400 hover:bg-primary/10 hover:text-primary dark:hover:bg-primary/20 dark:hover:text-primary transition-colors"
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.95 }}
+                        data-testid={`link-social-${link.platform}`}
+                      >
+                        {getSocialIcon(link.platform)}
+                        <span className="capitalize">{link.platform}</span>
+                      </motion.a>
+                    ))}
+                  </div>
+                )}
+              </div>
             </div>
+          </motion.div>
+        </div>
 
+        {ideas.length === 0 ? (
+          <div className="text-center py-16">
+            <Lightbulb className="h-12 w-12 mx-auto text-gray-300 dark:text-gray-600 mb-4" />
+            <p className="text-gray-500 dark:text-gray-400 text-lg">
+              {t("ideas.empty")}
+            </p>
           </div>
-        </div>
-      </div>
+        ) : (
+          <>
+            <Top3Cards
+              ideas={ideas.slice(0, 3)}
+              onVote={handleVote}
+              isVoting={isVoting}
+              votedIdeas={votedIdeas}
+              user={user && !isOwnProfile ? user : null}
+            />
 
-      {/* Ideas Section Header */}
-      <div className="flex items-center justify-between">
-        <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
-          {t("ideas.title")}
-        </h2>
-        <Badge variant="secondary" className="bg-primary/10 text-primary">
-          {ideas.length} {t("ideas.total")}
-        </Badge>
-      </div>
-
-      {ideas.length === 0 ? (
-        <div className="text-center py-12">
-          <p className="text-gray-500 dark:text-gray-400">
-            {t("ideas.empty")}
-          </p>
-        </div>
-      ) : (
-        <>
-          {/* Top 3 Podium */}
-          {ideas.length > 0 && (
-            <div className="mb-8">
-              <Top3Podium
-                ideas={ideas.slice(0, 3)}
+            {ideas.length > 3 && (
+              <IdeasList
+                ideas={ideas.slice(3)}
                 onVote={handleVote}
-                user={user && !isOwnProfile ? user : null}
-                votedIdeas={votedIdeas}
                 isVoting={isVoting}
-                successVote={null}
+                votedIdeas={votedIdeas}
+                user={user && !isOwnProfile ? user : null}
+                startRank={4}
               />
-            </div>
-          )}
+            )}
 
-          {/* Other Ideas */}
-          {ideas.length > 3 && (
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.3 }}
-              className="space-y-4"
-            >
-              <div className="text-center mb-6">
-                <h3 className="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-2">
-                  {t("leaderboard.otherIdeas")}
+            {/* CTA to suggest idea at the end of the list */}
+            {user && !isOwnProfile && (
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.2 }}
+                className="mt-8 text-center py-8 px-4 bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-800"
+              >
+                <Lightbulb className="h-10 w-10 mx-auto text-primary mb-3" />
+                <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
+                  {t("suggest.notFound", "¿No encontraste lo que buscabas?")}
                 </h3>
-                <p className="text-gray-600 dark:text-gray-400 text-sm">
-                  {t("leaderboard.otherIdeasDesc")}
+                <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">
+                  {t("suggest.helpCreator", "Ayuda a {{creator}} sugiriendo una idea", { creator: creator.username })}
                 </p>
-              </div>
-              
-              <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
-                {ideas.slice(3).map((idea, index) => (
-                  <CompactIdeaCard
-                    key={idea.id}
-                    rank={index + 4}
-                    idea={idea}
-                    isVoting={isVoting[idea.id]}
-                    isVoted={votedIdeas.has(idea.id)}
-                    onVote={handleVote}
-                    isLoggedIn={!!user && !isOwnProfile}
-                  />
-                ))}
-              </div>
-            </motion.div>
-          )}
-        </>
-      )}
-    </motion.div>
+                <Button
+                  onClick={() => setSuggestDialogOpen(true)}
+                  disabled={!userPoints || userPoints.totalPoints < 3}
+                  className="bg-primary hover:bg-primary/90 text-white"
+                  data-testid="button-suggest-bottom"
+                >
+                  <UserPlus className="h-4 w-4 mr-2" />
+                  {t("suggest.idea", "Sugerir Idea")}
+                  <span className="ml-2 text-xs opacity-80">
+                    (3 {t("common.points", "puntos")})
+                  </span>
+                </Button>
+              </motion.div>
+            )}
+          </>
+        )}
+      </motion.div>
     );
   };
 
@@ -491,22 +397,32 @@ export default function ModernPublicProfile() {
   };
 
   return (
-    <div className="min-h-screen bg-[#FFF9F5] dark:from-gray-900 dark:via-gray-900 dark:to-gray-900">
-      {/* Desktop User Indicator */}
-      <div className="hidden lg:block fixed top-4 right-4 z-50">
-        <UserIndicator user={user} variant="desktop" />
-      </div>
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-950">
+      {user && !isOwnProfile && (
+        <div className="hidden lg:flex fixed top-4 right-4 z-50 items-center gap-2 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-full px-4 py-2 shadow-md">
+          <Coins className="w-5 h-5 text-primary" />
+          <span className="font-semibold text-gray-900 dark:text-white" data-testid="text-points-desktop">
+            {userPoints?.totalPoints ?? 0}
+          </span>
+        </div>
+      )}
 
-      {/* Mobile Header */}
-      <div className="lg:hidden fixed top-0 left-0 right-0 z-40 bg-white/90 dark:bg-gray-900/90 backdrop-blur-xl border-b border-gray-200/50 dark:border-gray-700/50">
-        <div className="flex items-center justify-between h-16 px-4">
-          <div className="flex items-center gap-3">
+      <div className="lg:hidden fixed top-0 left-0 right-0 z-40 bg-white/95 dark:bg-gray-900/95 backdrop-blur-lg border-b border-gray-200 dark:border-gray-800">
+        <div className="flex items-center justify-between h-14 px-4">
+          <div className="flex items-center gap-2">
             <h1 className="text-lg font-bold text-gray-900 dark:text-white">
               Fanlist
             </h1>
           </div>
-          <div className="flex items-center gap-2">
-            {user && <UserIndicator user={user} variant="mobile" />}
+          <div className="flex items-center gap-3">
+            {user && !isOwnProfile && (
+              <div className="flex items-center gap-1.5 bg-gray-100 dark:bg-gray-800 rounded-full px-3 py-1.5">
+                <Coins className="w-4 h-4 text-primary" />
+                <span className="font-semibold text-sm text-gray-900 dark:text-white" data-testid="text-points-mobile">
+                  {userPoints?.totalPoints ?? 0}
+                </span>
+              </div>
+            )}
             <MobileMenu 
               username={user?.username}
               isCreatorProfile={false}
@@ -515,11 +431,8 @@ export default function ModernPublicProfile() {
           </div>
         </div>
       </div>
-      
 
-      {/* Main Layout */}
-      <div className="flex lg:pt-0 pt-16">
-        {/* Desktop Sidebar */}
+      <div className="flex lg:pt-0 pt-14">
         <div className="hidden lg:block">
           <ModernSidebar
             activeSection={activeSection}
@@ -532,12 +445,11 @@ export default function ModernPublicProfile() {
           />
         </div>
 
-        {/* Main Content */}
         <main className={cn(
-          "flex-1 p-6 transition-all duration-300",
+          "flex-1 p-4 md:p-6 transition-all duration-300",
           "lg:ml-64 mb-20 lg:mb-0"
         )}>
-          <div className="max-w-6xl mx-auto">
+          <div className="max-w-5xl mx-auto">
             <AnimatePresence mode="wait">
               <motion.div
                 key={activeSection}
@@ -553,7 +465,6 @@ export default function ModernPublicProfile() {
         </main>
       </div>
 
-      {/* Mobile Bottom Navigation */}
       <div className="lg:hidden">
         <MobileBottomNav
           activeSection={activeSection}
@@ -561,7 +472,6 @@ export default function ModernPublicProfile() {
         />
       </div>
 
-      {/* Suggest Idea Modal */}
       <SuggestIdeaModal
         username={creator.username}
         open={suggestDialogOpen}

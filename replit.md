@@ -5,6 +5,17 @@ Fanlist is a web application designed to empower content creators by enabling th
 
 ## Recent Changes
 
+### December 23, 2025 - Public Profile Redesign
+- **New Layout**: Redesigned public profile page with modern card-based layout inspired by reference design.
+- **Greeting Header**: Added personalized "Hello/Hola USERNAME" greeting at the top of the page.
+- **Top3Cards Component**: New component displaying top 3 ideas with gradient borders (gold for #1, blue for #2, orange for #3).
+- **IdeasList Component**: Clean list view for remaining ideas with left border accent and minimal styling.
+- **Outline Vote Buttons**: Vote buttons now use outline style with dark borders instead of filled backgrounds.
+- **Creator Info Card**: Reorganized creator section with avatar, name, description, and social links in a clean card.
+- **Theme Support**: Full dark/light theme support with bg-gray-50/bg-gray-950 backgrounds.
+- **Internationalization**: Added translations for "allIdeas", "by", and "empty" in both English and Spanish.
+- **Responsive Design**: Layout adapts well to mobile and desktop with consistent styling.
+
 ### November 7, 2025 - Idea Completion and Archival System
 - **Dual-Action Management**: Implemented both "Complete" and "Delete" actions for ideas, allowing creators to archive finished ideas separately from permanent deletion.
 - **Schema Enhancement**: Added 'completed' status to ideas alongside existing 'approved' and 'pending' statuses.

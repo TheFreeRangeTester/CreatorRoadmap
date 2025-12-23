@@ -399,7 +399,10 @@
     "loadError": "Failed to load ideas",
     "analyzed": "Analyzed",
     "activeIdeas": "Active Ideas",
-    "totalVotes": "Total Votes"
+    "totalVotes": "Total Votes",
+    "allIdeas": "All Ideas",
+    "by": "By",
+    "empty": "No ideas yet"
   },
   "priority": {
     "hybridScore": "Priority score (combines votes + YouTube opportunity)",
@@ -897,7 +900,9 @@
     "watchDemo": "▶ Watch Demo"
   },
   "suggest": {
-    "idea": "Suggest Idea"
+    "idea": "Suggest Idea",
+    "notFound": "Didn't find what you were looking for?",
+    "helpCreator": "Help {{creator}} by suggesting an idea"
   },
   "redemptions": {
     "short": "Redemptions",
