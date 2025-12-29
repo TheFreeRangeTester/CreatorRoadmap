@@ -252,7 +252,8 @@ export default function IdeaForm({ isOpen, idea, onClose }: IdeaFormProps) {
               name="title"
               render={({ field }) => (
                 <FormItem className="space-y-3">
-                  <FormLabel className="text-sm font-semibold text-gray-900 dark:text-white">
+                  <FormLabel className="text-sm font-semibold text-gray-900 dark:text-white flex items-center gap-2">
+                    <span>💡</span>
                     {t("ideaForm.title", "Title")}
                   </FormLabel>
                   <FormControl>
@@ -274,7 +275,8 @@ export default function IdeaForm({ isOpen, idea, onClose }: IdeaFormProps) {
               name="description"
               render={({ field }) => (
                 <FormItem className="space-y-3">
-                  <FormLabel className="text-sm font-semibold text-gray-900 dark:text-white">
+                  <FormLabel className="text-sm font-semibold text-gray-900 dark:text-white flex items-center gap-2">
+                    <span>📝</span>
                     {t("ideaForm.description", "Description")}
                   </FormLabel>
                   <FormControl>
@@ -302,7 +304,8 @@ export default function IdeaForm({ isOpen, idea, onClose }: IdeaFormProps) {
               name="niche"
               render={({ field }) => (
                 <FormItem className="space-y-3">
-                  <FormLabel className="text-sm font-semibold text-gray-900 dark:text-white">
+                  <FormLabel className="text-sm font-semibold text-gray-900 dark:text-white flex items-center gap-2">
+                    <span>🎯</span>
                     {t("ideaForm.niche", "Niche")}
                   </FormLabel>
                   <FormControl>
@@ -403,7 +406,7 @@ export default function IdeaForm({ isOpen, idea, onClose }: IdeaFormProps) {
                   disabled={
                     createMutation.isPending || updateMutation.isPending
                   }
-                  className="flex-1 sm:flex-none h-12 rounded-md bg-gradient-to-r from-primary to-primary/90 hover:from-primary/90 hover:to-primary text-white font-semibold shadow-lg hover:shadow-xl transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="flex-1 sm:flex-none h-12 rounded-md border-2 border-primary/30 bg-primary/10 hover:bg-primary/20 text-primary font-semibold transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   {createMutation.isPending || updateMutation.isPending ? (
                     <span className="flex items-center justify-center">
