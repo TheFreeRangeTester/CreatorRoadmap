@@ -249,13 +249,12 @@ export default function IdeaCard({
             </div>
           )}
 
-          {/* Mostrar badge si la idea fue sugerida por otro usuario */}
+          {/* Mostrar badge si la idea fue sugerida por otro usuario - anonimizado */}
           {idea.suggestedByUsername && (
             <div className="text-xs text-gray-500 dark:text-gray-400 mb-3 flex justify-center">
               <div className="inline-flex items-center gap-1 bg-gray-100 dark:bg-gray-700 px-2 py-1 rounded-none">
                 <User className="h-3 w-3" />
-                {t("ideas.suggestedBy")}:{" "}
-                <span className="font-medium">{idea.suggestedByUsername}</span>
+                {t("ideas.suggestedByAudience")}
               </div>
             </div>
           )}
