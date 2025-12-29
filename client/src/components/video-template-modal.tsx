@@ -57,6 +57,7 @@ interface Section {
   labelKey: string;
   placeholderKey: string;
   icon: typeof Eye;
+  emoji?: string;
 }
 
 export default function VideoTemplateModal({
@@ -70,15 +71,15 @@ export default function VideoTemplateModal({
   const { user } = useAuth();
   const isPremium = user ? hasActivePremiumAccess(user) : false;
 
-  // Define sections with translation keys
+  // Define sections with translation keys and emojis
   const sections: Section[] = [
-    { key: "hook", labelKey: "videoScript.sections.hook", placeholderKey: "videoScript.sections.hookPlaceholder", icon: Eye },
-    { key: "teaser", labelKey: "videoScript.sections.teaser", placeholderKey: "videoScript.sections.teaserPlaceholder", icon: Eye },
-    { key: "valorAudiencia", labelKey: "videoScript.sections.valueForAudience", placeholderKey: "videoScript.sections.valueForAudiencePlaceholder", icon: Eye },
-    { key: "pointsToCover", labelKey: "videoScript.sections.pointsToCover", placeholderKey: "videoScript.sections.pointsToCoverPlaceholder", icon: Eye },
-    { key: "visualsNeeded", labelKey: "videoScript.sections.visualsNeeded", placeholderKey: "videoScript.sections.visualsNeededPlaceholder", icon: Eye },
-    { key: "bonus", labelKey: "videoScript.sections.bonus", placeholderKey: "videoScript.sections.bonusPlaceholder", icon: Eye },
-    { key: "outro", labelKey: "videoScript.sections.outro", placeholderKey: "videoScript.sections.outroPlaceholder", icon: Eye },
+    { key: "hook", labelKey: "videoScript.sections.hook", placeholderKey: "videoScript.sections.hookPlaceholder", icon: Eye, emoji: "🎣" },
+    { key: "teaser", labelKey: "videoScript.sections.teaser", placeholderKey: "videoScript.sections.teaserPlaceholder", icon: Eye, emoji: "✨" },
+    { key: "valorAudiencia", labelKey: "videoScript.sections.valueForAudience", placeholderKey: "videoScript.sections.valueForAudiencePlaceholder", icon: Eye, emoji: "💎" },
+    { key: "pointsToCover", labelKey: "videoScript.sections.pointsToCover", placeholderKey: "videoScript.sections.pointsToCoverPlaceholder", icon: Eye, emoji: "📋" },
+    { key: "visualsNeeded", labelKey: "videoScript.sections.visualsNeeded", placeholderKey: "videoScript.sections.visualsNeededPlaceholder", icon: Eye, emoji: "🎬" },
+    { key: "bonus", labelKey: "videoScript.sections.bonus", placeholderKey: "videoScript.sections.bonusPlaceholder", icon: Eye, emoji: "🎁" },
+    { key: "outro", labelKey: "videoScript.sections.outro", placeholderKey: "videoScript.sections.outroPlaceholder", icon: Eye, emoji: "👋" },
   ];
 
   // Text fields
@@ -288,17 +289,17 @@ ${outro.length > 0 ? `## OUTRO / CTA\n${formatItems(outro)}\n` : ''}
         <CollapsibleTrigger asChild>
           <Button
             variant="outline"
-            className="w-full flex items-center justify-between p-4 hover:bg-gray-50 dark:hover:bg-gray-800"
+            className="w-full flex items-center justify-between p-4 border-2 border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 text-gray-900 dark:text-white"
             data-testid={`toggle-${section.key}`}
           >
             <span className="font-semibold flex items-center gap-2">
-              <Icon className="w-4 h-4" />
+              {section.emoji && <span>{section.emoji}</span>}
               {t(section.labelKey)} ({items.length})
             </span>
             {isOpen ? (
-              <ChevronUp className="w-4 h-4" />
+              <ChevronUp className="w-4 h-4 text-gray-500" />
             ) : (
-              <ChevronDown className="w-4 h-4" />
+              <ChevronDown className="w-4 h-4 text-gray-500" />
             )}
           </Button>
         </CollapsibleTrigger>
@@ -345,13 +346,14 @@ ${outro.length > 0 ? `## OUTRO / CTA\n${formatItems(outro)}\n` : ''}
               onChange={(e) => setNewInputs({ ...newInputs, [section.key]: e.target.value })}
               placeholder={t(section.placeholderKey)}
               onKeyPress={(e) => e.key === "Enter" && handleAddItem(section.key)}
-              className="flex-1"
+              className="flex-1 border-2 border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 focus:border-primary/50 text-gray-900 dark:text-white"
               data-testid={`input-new-${section.key}`}
             />
             <Button
               onClick={() => handleAddItem(section.key)}
               size="sm"
               variant="outline"
+              className="border-2 border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300"
               data-testid={`button-add-${section.key}`}
             >
               <Plus className="w-4 h-4 mr-1" />
@@ -365,7 +367,7 @@ ${outro.length > 0 ? `## OUTRO / CTA\n${formatItems(outro)}\n` : ''}
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+      <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2 text-2xl">
             <FileText className="w-6 h-6 text-primary" />
@@ -450,7 +452,7 @@ ${outro.length > 0 ? `## OUTRO / CTA\n${formatItems(outro)}\n` : ''}
               <Button
                 onClick={handleSave}
                 disabled={saveMutation.isPending}
-                className="flex-1"
+                className="flex-1 border-2 border-primary/30 bg-primary/10 hover:bg-primary/20 text-primary font-semibold transition-all duration-200 disabled:opacity-50"
                 data-testid="button-save-template"
               >
                 {saveMutation.isPending ? (
@@ -468,6 +470,7 @@ ${outro.length > 0 ? `## OUTRO / CTA\n${formatItems(outro)}\n` : ''}
               <Button
                 onClick={handleExportMarkdown}
                 variant="outline"
+                className="border-2 border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300"
                 data-testid="button-export-template"
               >
                 <Download className="w-4 h-4 mr-2" />
@@ -476,6 +479,7 @@ ${outro.length > 0 ? `## OUTRO / CTA\n${formatItems(outro)}\n` : ''}
               <Button
                 onClick={onClose}
                 variant="outline"
+                className="border-2 border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300"
                 data-testid="button-close-template"
               >
                 {t("videoScript.close")}
