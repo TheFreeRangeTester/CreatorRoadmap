@@ -194,6 +194,21 @@ export default function IdeaListView({
             {t("ideas.analyzed", "Analizado")}
           </Badge>
         )}
+        
+        {/* Suggested by badge - show username for creator, anonymous for public */}
+        {idea.suggestedByUsername && (
+          <Badge
+            variant="outline"
+            className="bg-gray-50 dark:bg-gray-800 text-gray-600 dark:text-gray-400 border-gray-200 dark:border-gray-700 text-xs px-2.5 py-1 font-medium rounded-full"
+            data-testid={`suggested-by-${idea.id}`}
+          >
+            <User className="w-3 h-3 mr-1" />
+            {isCreator 
+              ? `${t("ideas.suggestedBy")}: ${idea.suggestedByUsername}`
+              : t("ideas.suggestedByAudience")
+            }
+          </Badge>
+        )}
       </div>
 
       {/* Title */}
