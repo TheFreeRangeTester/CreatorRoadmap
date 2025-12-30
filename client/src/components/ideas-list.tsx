@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
-import { TrendingUp, Loader2 } from "lucide-react";
+import { TrendingUp, Loader2, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 import { IdeaResponse } from "@shared/schema";
 import { useTranslation } from "react-i18next";
 import { cn } from "@/lib/utils";
@@ -88,6 +89,16 @@ export function IdeasList({
                   <p className="text-xs text-gray-600 dark:text-gray-400 line-clamp-2 leading-relaxed">
                     {idea.description}
                   </p>
+                  {idea.suggestedByUsername && (
+                    <Badge
+                      variant="outline"
+                      className="mt-2 text-xs bg-blue-50 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300 border-blue-200 dark:border-blue-800"
+                      data-testid={`suggested-badge-list-${idea.id}`}
+                    >
+                      <User className="w-3 h-3 mr-1" />
+                      {t("ideas.suggestedByAudience")}
+                    </Badge>
+                  )}
                 </div>
 
                 <div className="flex-shrink-0 flex items-center gap-3">

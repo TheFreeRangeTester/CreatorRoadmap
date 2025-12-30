@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { Trophy, Medal, Award, Sparkles } from "lucide-react";
+import { Trophy, Medal, Award, Sparkles, User } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -373,6 +373,21 @@ function PodiumCard({
             )}>
               {idea.description}
             </p>
+            
+            {/* Suggested by audience badge */}
+            {idea.suggestedByUsername && (
+              <Badge
+                variant="outline"
+                className={cn(
+                  "mt-2 text-xs bg-blue-50 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300 border-blue-200 dark:border-blue-800 w-fit",
+                  isMobile ? "text-[10px] px-1.5 py-0.5" : ""
+                )}
+                data-testid={`suggested-badge-podium-${idea.id}`}
+              >
+                <User className={cn("mr-1", isMobile ? "w-2.5 h-2.5" : "w-3 h-3")} />
+                {t("ideas.suggestedByAudience")}
+              </Badge>
+            )}
           </div>
 
           {/* Vote Section */}

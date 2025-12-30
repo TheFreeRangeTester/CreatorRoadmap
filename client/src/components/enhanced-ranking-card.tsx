@@ -9,6 +9,7 @@ import {
   TrendingUp,
   TrendingDown,
   Minus,
+  User,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -22,6 +23,7 @@ interface EnhancedRankingCardProps {
     description: string;
     votes: number;
     niche?: string | null;
+    suggestedByUsername?: string;
     position?: {
       current: number | null;
       previous: number | null;
@@ -330,6 +332,18 @@ export default function EnhancedRankingCard({
                   {t("common.recentVotesToday", "+{{count}} hoy", {
                     count: recentVotes24h,
                   })}
+                </Badge>
+              )}
+              
+              {/* Suggested by audience badge */}
+              {idea.suggestedByUsername && (
+                <Badge
+                  variant="outline"
+                  className="text-xs bg-blue-50 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300 border-blue-200 dark:border-blue-800"
+                  data-testid={`suggested-badge-${idea.id}`}
+                >
+                  <User className="w-3 h-3 mr-1" />
+                  {t("ideas.suggestedByAudience")}
                 </Badge>
               )}
 

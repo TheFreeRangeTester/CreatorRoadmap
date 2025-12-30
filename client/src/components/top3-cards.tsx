@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
-import { Trophy, TrendingUp } from "lucide-react";
+import { Trophy, TrendingUp, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 import { IdeaResponse } from "@shared/schema";
 import { useTranslation } from "react-i18next";
 import { cn } from "@/lib/utils";
@@ -121,10 +122,15 @@ export function Top3Cards({
                 </div>
 
                 <div className="flex items-center justify-between mt-auto">
-                  {idea.suggestedBy && (
-                    <span className="text-xs text-gray-500 dark:text-gray-400">
-                      {t("ideas.by", "Por")} {idea.suggestedBy}
-                    </span>
+                  {idea.suggestedByUsername && (
+                    <Badge
+                      variant="outline"
+                      className="text-xs bg-blue-50 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300 border-blue-200 dark:border-blue-800"
+                      data-testid={`suggested-badge-top3-${idea.id}`}
+                    >
+                      <User className="w-3 h-3 mr-1" />
+                      {t("ideas.suggestedByAudience")}
+                    </Badge>
                   )}
                   <Button
                     onClick={() => handleVoteClick(idea.id)}

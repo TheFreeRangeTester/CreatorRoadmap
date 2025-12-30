@@ -563,15 +563,15 @@ export function IdeasTabView({ mode = "published", onOpenTemplate }: IdeasTabVie
             key={idea.id}
             className="group bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm border border-gray-200/50 dark:border-gray-700/50 rounded-2xl p-4 hover:bg-white/90 dark:hover:bg-gray-900/90 hover:shadow-lg transition-all duration-300 hover:border-gray-300/60 dark:hover:border-gray-600/60"
           >
-            <div className="flex items-start gap-4">
-              {/* Position */}
-              <div className="flex-shrink-0 flex flex-col items-center">
-                <div className="text-xl font-bold text-amber-600 dark:text-amber-400 min-w-[2rem] text-center">
+            <div className="flex flex-col sm:flex-row sm:items-start gap-3 sm:gap-4">
+              {/* Position - horizontal on mobile, vertical on desktop */}
+              <div className="flex-shrink-0 flex flex-row sm:flex-col items-center gap-2 sm:gap-0">
+                <div className="text-lg sm:text-xl font-bold text-amber-600 dark:text-amber-400 min-w-[2rem] text-center">
                   #{index + 1}
                 </div>
                 <Badge
                   variant="outline"
-                  className="bg-amber-100 text-amber-700 border-amber-200 dark:bg-amber-900/30 dark:text-amber-300 dark:border-amber-800 text-xs mt-1"
+                  className="bg-amber-100 text-amber-700 border-amber-200 dark:bg-amber-900/30 dark:text-amber-300 dark:border-amber-800 text-xs sm:mt-1"
                 >
                   <Clock className="h-3 w-3 mr-1" /> {t("ideas.pending", "Pendiente")}
                 </Badge>
@@ -579,9 +579,9 @@ export function IdeasTabView({ mode = "published", onOpenTemplate }: IdeasTabVie
 
               {/* Content */}
               <div className="flex-1 min-w-0">
-                <div className="flex items-start justify-between gap-3">
+                <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3">
                   <div className="flex-1 min-w-0">
-                    <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2 line-clamp-2">
+                    <h3 className="text-base sm:text-lg font-semibold text-gray-900 dark:text-white mb-2 line-clamp-2">
                       {idea.title}
                     </h3>
                     {idea.description && (
@@ -615,7 +615,8 @@ export function IdeasTabView({ mode = "published", onOpenTemplate }: IdeasTabVie
                       ) : (
                         <>
                           <XCircle className="h-4 w-4 mr-1" />
-                          {t("ideas.reject", "Rechazar")}
+                          <span className="hidden sm:inline">{t("ideas.reject", "Rechazar")}</span>
+                          <span className="sm:hidden">{t("ideas.reject", "Rechazar")}</span>
                         </>
                       )}
                     </Button>
@@ -631,7 +632,8 @@ export function IdeasTabView({ mode = "published", onOpenTemplate }: IdeasTabVie
                       ) : (
                         <>
                           <CheckCircle className="h-4 w-4 mr-1" />
-                          {t("ideas.approve", "Aprobar")}
+                          <span className="hidden sm:inline">{t("ideas.approve", "Aprobar")}</span>
+                          <span className="sm:hidden">{t("ideas.approve", "Aprobar")}</span>
                         </>
                       )}
                     </Button>
