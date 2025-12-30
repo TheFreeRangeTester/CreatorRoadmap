@@ -351,6 +351,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
         ideas = [];
       }
 
+      // Debug log for suggested ideas
+      const suggestedIdeas = ideas.filter(i => i.suggestedByUsername);
+      if (suggestedIdeas.length > 0) {
+        console.log(`[DEBUG-IDEAS] Found ${suggestedIdeas.length} ideas with suggestedByUsername:`, suggestedIdeas.map(i => ({ id: i.id, title: i.title, suggestedByUsername: i.suggestedByUsername })));
+      }
+
       // Prevent HTTP caching
       res.set({
         'Cache-Control': 'no-store, no-cache, must-revalidate, private',
