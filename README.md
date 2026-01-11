@@ -54,6 +54,11 @@ Visit us at [fanlist.live](https://fanlist.live)
   - Firebase
   - Passport.js
 
+- **Testing:**
+  - Jest
+  - Pact (Contract Testing)
+  - PactFlow (Contract Management)
+
 ## 🆘 Support
 
 Need help? We're here to assist you!

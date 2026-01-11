@@ -12,7 +12,13 @@
     "test": "jest",
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",
-    "test:verbose": "jest --verbose"
+    "test:verbose": "jest --verbose",
+    "test:pact:consumer": "jest --config jest.pact.config.cjs --testPathPatterns=consumer-tests --runInBand",
+    "test:pact:provider": "jest --config jest.pact.config.cjs pacts/provider-tests/verify.contracts.test.ts",
+    "test:pact:all": "npm run test:pact:consumer && npm run test:pact:provider",
+    "test:pact:consumer:publish": "npm run test:pact:consumer && npm run pact:publish",
+    "pact:publish": "node pacts/publish-contracts.cjs",
+    "pact:can-i-deploy": "pact-broker can-i-deploy --pacticipant CreatorRoadmap-Frontend --pacticipant CreatorRoadmap-Backend --broker-base-url $PACT_BROKER_BASE_URL --broker-token $PACT_BROKER_TOKEN"
   },
   "dependencies": {
     "@gsap/react": "^2.1.2",
@@ -110,6 +116,8 @@
     "zod-validation-error": "^3.4.0"
   },
   "devDependencies": {
+    "@pact-foundation/pact": "^16.0.4",
+    "@pact-foundation/pact-node": "^10.18.0",
     "@replit/vite-plugin-cartographer": "^0.4.1",
     "@replit/vite-plugin-runtime-error-modal": "^0.0.3",
     "@tailwindcss/typography": "^0.5.19",

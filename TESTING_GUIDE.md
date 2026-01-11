@@ -405,6 +405,61 @@ npx tsx test-runner.mjs --filter="TokenService" --verbose
 
 ---
 
+## 📜 Contract Testing con Pact y PactFlow
+
+### ¿Qué es Contract Testing?
+
+Contract Testing valida que las interacciones entre el frontend (consumer) y backend (provider) cumplen con un "contrato" acordado. A diferencia de los tests de integración:
+
+- ✅ Se ejecutan de forma aislada (no requieren ambos servicios corriendo)
+- ✅ Validan la estructura de requests/responses
+- ✅ Detectan cambios que rompen compatibilidad antes de desplegar
+- ✅ Permiten desarrollo independiente de frontend y backend
+
+### Configuración
+
+1. **Configurar PactFlow**:
+   - Crear cuenta en [PactFlow](https://pactflow.io/)
+   - Obtener API token
+   - Configurar variables de entorno (ver `pacts/README.md`)
+
+2. **Ejecutar Tests**:
+   ```bash
+   # Tests del consumer (generan contratos)
+   npm run test:pact:consumer
+   
+   # Verificación del provider (verifica contratos)
+   npm run test:pact:provider
+   
+   # Ejecutar todo
+   npm run test:pact:all
+   ```
+
+3. **Ver Reportes**:
+   - Accede a tu dashboard de PactFlow
+   - Revisa el estado de verificación de contratos
+   - Identifica cambios que rompen compatibilidad
+
+### Documentación Completa
+
+Ver `pacts/README.md` para:
+- Configuración detallada de PactFlow
+- Cómo agregar nuevos contratos
+- Interpretación de reportes
+- Troubleshooting
+- Mejores prácticas
+
+### Diferencia con Otros Tests
+
+| Tipo de Test | Propósito | Ejecución |
+|-------------|-----------|-----------|
+| **Unit Tests** | Validar lógica individual | Aislado, rápido |
+| **Integration Tests** | Validar interacción entre módulos | Requiere servicios |
+| **Contract Tests** | Validar API contracts | Aislado, valida estructura |
+| **E2E Tests** | Validar flujos completos | Requiere todo el sistema |
+
+---
+
 ## 🎯 Próximos Pasos Recomendados
 
 ### Expansión del Testing
