@@ -31,7 +31,7 @@ const createMockUser = (overrides: any = {}) => ({
   ...overrides
 });
 
-describe.skip('Premium Middleware', () => {
+describe('Premium Middleware', () => {
   let mockRequest: Partial<Request>;
   let mockResponse: Partial<Response>;
   let mockNext: NextFunction;
@@ -93,18 +93,95 @@ describe.skip('Premium Middleware', () => {
 
       expect(mockResponse.status).toHaveBeenCalledWith(403);
       expect(mockResponse.json).toHaveBeenCalledWith({
-        error: 'Esta característica requiere una suscripción premium',
-        requiresPremium: true,
+        message: 'Premium access required',
+        premiumRequired: true,
+        userStatus: 'free',
       });
       expect(mockNext).not.toHaveBeenCalled();
     });
 
-    it('should reject access for canceled subscriptions', () => {
+    it('should reject access for canceled subscriptions without end date', () => {
       mockRequest.user = {
         id: 1,
         subscriptionStatus: 'canceled',
         username: 'canceled-user',
         userRole: 'creator',
+        subscriptionEndDate: null,
+      } as any;
+
+      requirePremiumAccess(mockRequest as Request, mockResponse as Response, mockNext);
+
+      expect(mockResponse.status).toHaveBeenCalledWith(403);
+      expect(mockNext).not.toHaveBeenCalled();
+    });
+
+    it('should allow access for canceled subscriptions still active', () => {
+      mockRequest.user = {
+        id: 1,
+        subscriptionStatus: 'canceled',
+        username: 'canceled-user',
+        userRole: 'creator',
+        subscriptionEndDate: new Date(Date.now() + 24 * 60 * 60 * 1000), // Tomorrow
+      } as any;
+
+      requirePremiumAccess(mockRequest as Request, mockResponse as Response, mockNext);
+
+      expect(mockNext).toHaveBeenCalled();
+      expect(mockResponse.status).not.toHaveBeenCalled();
+    });
+
+    it('should reject access for expired canceled subscriptions', () => {
+      mockRequest.user = {
+        id: 1,
+        subscriptionStatus: 'canceled',
+        username: 'canceled-user',
+        userRole: 'creator',
+        subscriptionEndDate: new Date(Date.now() - 24 * 60 * 60 * 1000), // Yesterday
+      } as any;
+
+      requirePremiumAccess(mockRequest as Request, mockResponse as Response, mockNext);
+
+      expect(mockResponse.status).toHaveBeenCalledWith(403);
+      expect(mockNext).not.toHaveBeenCalled();
+    });
+
+    it('should allow access for premium users without expiration date', () => {
+      mockRequest.user = {
+        id: 1,
+        subscriptionStatus: 'premium',
+        username: 'premium-user',
+        userRole: 'creator',
+        subscriptionEndDate: null,
+      } as any;
+
+      requirePremiumAccess(mockRequest as Request, mockResponse as Response, mockNext);
+
+      expect(mockNext).toHaveBeenCalled();
+      expect(mockResponse.status).not.toHaveBeenCalled();
+    });
+
+    it('should allow access for premium users with future expiration date', () => {
+      mockRequest.user = {
+        id: 1,
+        subscriptionStatus: 'premium',
+        username: 'premium-user',
+        userRole: 'creator',
+        subscriptionEndDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000), // 30 days from now
+      } as any;
+
+      requirePremiumAccess(mockRequest as Request, mockResponse as Response, mockNext);
+
+      expect(mockNext).toHaveBeenCalled();
+      expect(mockResponse.status).not.toHaveBeenCalled();
+    });
+
+    it('should reject access for expired premium users', () => {
+      mockRequest.user = {
+        id: 1,
+        subscriptionStatus: 'premium',
+        username: 'premium-user',
+        userRole: 'creator',
+        subscriptionEndDate: new Date(Date.now() - 24 * 60 * 60 * 1000), // Yesterday
       } as any;
 
       requirePremiumAccess(mockRequest as Request, mockResponse as Response, mockNext);
@@ -121,7 +198,8 @@ describe.skip('Premium Middleware', () => {
 
       expect(mockResponse.status).toHaveBeenCalledWith(401);
       expect(mockResponse.json).toHaveBeenCalledWith({
-        error: 'Debes iniciar sesión para acceder a esta característica',
+        message: 'Authentication required',
+        premiumRequired: true,
       });
       expect(mockNext).not.toHaveBeenCalled();
     });
@@ -143,31 +221,22 @@ describe.skip('Premium Middleware', () => {
   });
 
   describe('isPremiumOperation', () => {
-    it('should return true for premium operation headers', () => {
+    it('should return true for CSV import header', () => {
       mockRequest.headers = {
-        'x-premium-operation': 'true',
+        'x-csv-import': 'true',
       };
 
       const result = isPremiumOperation(mockRequest as Request);
       expect(result).toBe(true);
     });
 
-    it('should return true for bulk operations', () => {
+    it('should return false when CSV import header is not true', () => {
       mockRequest.headers = {
-        'x-bulk-operation': 'true',
+        'x-csv-import': 'false',
       };
 
       const result = isPremiumOperation(mockRequest as Request);
-      expect(result).toBe(true);
-    });
-
-    it('should return true for advanced features', () => {
-      mockRequest.headers = {
-        'x-advanced-feature': 'csv-import',
-      };
-
-      const result = isPremiumOperation(mockRequest as Request);
-      expect(result).toBe(true);
+      expect(result).toBe(false);
     });
 
     it('should return false for regular operations', () => {
@@ -177,9 +246,9 @@ describe.skip('Premium Middleware', () => {
       expect(result).toBe(false);
     });
 
-    it('should return false when premium headers are false', () => {
+    it('should return false when CSV import header is missing', () => {
       mockRequest.headers = {
-        'x-premium-operation': 'false',
+        'x-other-header': 'true',
       };
 
       const result = isPremiumOperation(mockRequest as Request);
@@ -188,9 +257,9 @@ describe.skip('Premium Middleware', () => {
   });
 
   describe('conditionalPremiumAccess', () => {
-    it('should apply premium validation when operation requires it', () => {
+    it('should apply premium validation when CSV import operation requires it', () => {
       mockRequest.headers = {
-        'x-premium-operation': 'true',
+        'x-csv-import': 'true',
       };
       const mockUser = createMockUser({
         subscriptionStatus: 'free',
@@ -218,13 +287,30 @@ describe.skip('Premium Middleware', () => {
       expect(mockResponse.status).not.toHaveBeenCalled();
     });
 
-    it('should allow premium operations for premium users', () => {
+    it('should allow CSV import operations for premium users', () => {
       mockRequest.headers = {
-        'x-premium-operation': 'true',
+        'x-csv-import': 'true',
       };
       const mockUser = createMockUser({
         subscriptionStatus: 'premium',
         username: 'premium-user',
+      });
+      mockRequest.user = mockUser;
+
+      conditionalPremiumAccess(mockRequest as Request, mockResponse as Response, mockNext);
+
+      expect(mockNext).toHaveBeenCalled();
+      expect(mockResponse.status).not.toHaveBeenCalled();
+    });
+
+    it('should allow CSV import operations for trial users', () => {
+      mockRequest.headers = {
+        'x-csv-import': 'true',
+      };
+      const mockUser = createMockUser({
+        subscriptionStatus: 'trial',
+        username: 'trial-user',
+        trialEndDate: new Date(Date.now() + 24 * 60 * 60 * 1000),
       });
       mockRequest.user = mockUser;
 
@@ -266,21 +352,19 @@ describe.skip('Premium Middleware', () => {
       expect(mockNext).not.toHaveBeenCalled();
     });
 
-    it('should handle case-insensitive headers', () => {
+    it('should handle case-insensitive CSV import header', () => {
       mockRequest.headers = {
-        'X-Premium-Operation': 'TRUE',
+        'X-CSV-Import': 'true',
       };
 
-      // Note: Express headers are case-insensitive by default
+      // Note: Express headers are case-insensitive by default, but we check lowercase
       const result = isPremiumOperation(mockRequest as Request);
-      expect(result).toBe(false); // Should be false since we check lowercase
+      expect(result).toBe(false); // Should be false since we check lowercase 'x-csv-import'
     });
 
-    it('should handle multiple premium operation indicators', () => {
+    it('should return true only when x-csv-import is exactly "true"', () => {
       mockRequest.headers = {
-        'x-premium-operation': 'true',
-        'x-bulk-operation': 'true',
-        'x-advanced-feature': 'analytics',
+        'x-csv-import': 'true',
       };
 
       const result = isPremiumOperation(mockRequest as Request);

@@ -69,17 +69,59 @@ export default function VideoTemplateModal({
   const queryClient = useQueryClient();
   const { t } = useTranslation();
   const { user } = useAuth();
-  const isPremium = user ? hasActivePremiumAccess(user) : false;
+  const isPremium = user ? hasActivePremiumAccess(user as any) : false;
 
   // Define sections with translation keys and emojis
   const sections: Section[] = [
-    { key: "hook", labelKey: "videoScript.sections.hook", placeholderKey: "videoScript.sections.hookPlaceholder", icon: Eye, emoji: "🎣" },
-    { key: "teaser", labelKey: "videoScript.sections.teaser", placeholderKey: "videoScript.sections.teaserPlaceholder", icon: Eye, emoji: "✨" },
-    { key: "valorAudiencia", labelKey: "videoScript.sections.valueForAudience", placeholderKey: "videoScript.sections.valueForAudiencePlaceholder", icon: Eye, emoji: "💎" },
-    { key: "pointsToCover", labelKey: "videoScript.sections.pointsToCover", placeholderKey: "videoScript.sections.pointsToCoverPlaceholder", icon: Eye, emoji: "📋" },
-    { key: "visualsNeeded", labelKey: "videoScript.sections.visualsNeeded", placeholderKey: "videoScript.sections.visualsNeededPlaceholder", icon: Eye, emoji: "🎬" },
-    { key: "bonus", labelKey: "videoScript.sections.bonus", placeholderKey: "videoScript.sections.bonusPlaceholder", icon: Eye, emoji: "🎁" },
-    { key: "outro", labelKey: "videoScript.sections.outro", placeholderKey: "videoScript.sections.outroPlaceholder", icon: Eye, emoji: "👋" },
+    {
+      key: "hook",
+      labelKey: "videoScript.sections.hook",
+      placeholderKey: "videoScript.sections.hookPlaceholder",
+      icon: Eye,
+      emoji: "🎣",
+    },
+    {
+      key: "teaser",
+      labelKey: "videoScript.sections.teaser",
+      placeholderKey: "videoScript.sections.teaserPlaceholder",
+      icon: Eye,
+      emoji: "✨",
+    },
+    {
+      key: "valorAudiencia",
+      labelKey: "videoScript.sections.valueForAudience",
+      placeholderKey: "videoScript.sections.valueForAudiencePlaceholder",
+      icon: Eye,
+      emoji: "💎",
+    },
+    {
+      key: "pointsToCover",
+      labelKey: "videoScript.sections.pointsToCover",
+      placeholderKey: "videoScript.sections.pointsToCoverPlaceholder",
+      icon: Eye,
+      emoji: "📋",
+    },
+    {
+      key: "visualsNeeded",
+      labelKey: "videoScript.sections.visualsNeeded",
+      placeholderKey: "videoScript.sections.visualsNeededPlaceholder",
+      icon: Eye,
+      emoji: "🎬",
+    },
+    {
+      key: "bonus",
+      labelKey: "videoScript.sections.bonus",
+      placeholderKey: "videoScript.sections.bonusPlaceholder",
+      icon: Eye,
+      emoji: "🎁",
+    },
+    {
+      key: "outro",
+      labelKey: "videoScript.sections.outro",
+      placeholderKey: "videoScript.sections.outroPlaceholder",
+      icon: Eye,
+      emoji: "👋",
+    },
   ];
 
   // Text fields
@@ -149,8 +191,13 @@ export default function VideoTemplateModal({
   }, [template]);
 
   // Map section keys to their state and setters
-  const getSectionData = (key: string): [TemplateItem[], (items: TemplateItem[]) => void] => {
-    const map: Record<string, [TemplateItem[], (items: TemplateItem[]) => void]> = {
+  const getSectionData = (
+    key: string
+  ): [TemplateItem[], (items: TemplateItem[]) => void] => {
+    const map: Record<
+      string,
+      [TemplateItem[], (items: TemplateItem[]) => void]
+    > = {
       hook: [hook, setHook],
       teaser: [teaser, setTeaser],
       valorAudiencia: [valorAudiencia, setValorAudiencia],
@@ -198,8 +245,12 @@ export default function VideoTemplateModal({
         description: t("videoScript.saveSuccessDesc"),
       });
       // Invalidate and refetch the query to ensure fresh data
-      await queryClient.invalidateQueries({ queryKey: [`/api/video-templates/${idea.id}`] });
-      await queryClient.refetchQueries({ queryKey: [`/api/video-templates/${idea.id}`] });
+      await queryClient.invalidateQueries({
+        queryKey: [`/api/video-templates/${idea.id}`],
+      });
+      await queryClient.refetchQueries({
+        queryKey: [`/api/video-templates/${idea.id}`],
+      });
     },
     onError: (error: Error) => {
       toast({
@@ -226,9 +277,11 @@ export default function VideoTemplateModal({
 
   const handleToggleItem = (sectionKey: string, index: number) => {
     const [items, setItems] = getSectionData(sectionKey);
-    setItems(items.map((item, i) => 
-      i === index ? { ...item, completed: !item.completed } : item
-    ));
+    setItems(
+      items.map((item, i) =>
+        i === index ? { ...item, completed: !item.completed } : item
+      )
+    );
   };
 
   const handleSave = () => {
@@ -237,9 +290,12 @@ export default function VideoTemplateModal({
 
   const handleExportMarkdown = () => {
     const formatItems = (items: TemplateItem[], prefix: string = "-") => {
-      return items.map((item, i) => 
-        `${prefix} ${item.completed ? '~~' + item.text + '~~' : item.text} ${item.completed ? '✓' : ''}`
-      ).join("\n");
+      return items
+        .map(
+          (item, i) =>
+            `${prefix} ${item.completed ? "~~" + item.text + "~~" : item.text} ${item.completed ? "✓" : ""}`
+        )
+        .join("\n");
     };
 
     const markdown = `# ${videoTitle || idea.title}
@@ -248,15 +304,15 @@ export default function VideoTemplateModal({
 ${idea.title}
 ${idea.description}
 
-${videoTitle ? `## Título del video\n${videoTitle}\n` : ''}
-${thumbnailNotes ? `## Miniatura\n${thumbnailNotes}\n` : ''}
-${hook.length > 0 ? `## HOOK\n${formatItems(hook)}\n` : ''}
-${teaser.length > 0 ? `## TEASER\n${formatItems(teaser)}\n` : ''}
-${valorAudiencia.length > 0 ? `## VALOR PARA AUDIENCIA\n${formatItems(valorAudiencia)}\n` : ''}
-${pointsToCover.length > 0 ? `## PUNTOS A CUBRIR\n${formatItems(pointsToCover.map((p, i) => ({ ...p, text: `${i + 1}. ${p.text}` })))}\n` : ''}
-${visualsNeeded.length > 0 ? `## VISUALES NECESARIOS\n${formatItems(visualsNeeded)}\n` : ''}
-${bonus.length > 0 ? `## BONUS / EXTRA\n${formatItems(bonus)}\n` : ''}
-${outro.length > 0 ? `## OUTRO / CTA\n${formatItems(outro)}\n` : ''}
+${videoTitle ? `## Título del video\n${videoTitle}\n` : ""}
+${thumbnailNotes ? `## Miniatura\n${thumbnailNotes}\n` : ""}
+${hook.length > 0 ? `## HOOK\n${formatItems(hook)}\n` : ""}
+${teaser.length > 0 ? `## TEASER\n${formatItems(teaser)}\n` : ""}
+${valorAudiencia.length > 0 ? `## VALOR PARA AUDIENCIA\n${formatItems(valorAudiencia)}\n` : ""}
+${pointsToCover.length > 0 ? `## PUNTOS A CUBRIR\n${formatItems(pointsToCover.map((p, i) => ({ ...p, text: `${i + 1}. ${p.text}` })))}\n` : ""}
+${visualsNeeded.length > 0 ? `## VISUALES NECESARIOS\n${formatItems(visualsNeeded)}\n` : ""}
+${bonus.length > 0 ? `## BONUS / EXTRA\n${formatItems(bonus)}\n` : ""}
+${outro.length > 0 ? `## OUTRO / CTA\n${formatItems(outro)}\n` : ""}
 `;
 
     const blob = new Blob([markdown], { type: "text/markdown" });
@@ -281,10 +337,12 @@ ${outro.length > 0 ? `## OUTRO / CTA\n${formatItems(outro)}\n` : ''}
     const Icon = section.icon;
 
     return (
-      <Collapsible 
+      <Collapsible
         key={section.key}
-        open={isOpen} 
-        onOpenChange={(open) => setOpenSections({ ...openSections, [section.key]: open })}
+        open={isOpen}
+        onOpenChange={(open) =>
+          setOpenSections({ ...openSections, [section.key]: open })
+        }
       >
         <CollapsibleTrigger asChild>
           <Button
@@ -320,12 +378,15 @@ ${outro.length > 0 ? `## OUTRO / CTA\n${formatItems(outro)}\n` : ''}
                   className="mt-0.5"
                   data-testid={`checkbox-${section.key}-${index}`}
                 />
-                <span className={`flex-1 text-sm ${
-                  item.completed 
-                    ? 'line-through text-gray-400 dark:text-gray-500' 
-                    : 'text-gray-700 dark:text-gray-300'
-                }`}>
-                  {section.key === 'pointsToCover' ? `${index + 1}. ` : '• '}{item.text}
+                <span
+                  className={`flex-1 text-sm ${
+                    item.completed
+                      ? "line-through text-gray-400 dark:text-gray-500"
+                      : "text-gray-700 dark:text-gray-300"
+                  }`}
+                >
+                  {section.key === "pointsToCover" ? `${index + 1}. ` : "• "}
+                  {item.text}
                 </span>
                 <Button
                   variant="ghost"
@@ -343,9 +404,13 @@ ${outro.length > 0 ? `## OUTRO / CTA\n${formatItems(outro)}\n` : ''}
           <div className="flex gap-2">
             <Input
               value={newInputs[section.key]}
-              onChange={(e) => setNewInputs({ ...newInputs, [section.key]: e.target.value })}
+              onChange={(e) =>
+                setNewInputs({ ...newInputs, [section.key]: e.target.value })
+              }
               placeholder={t(section.placeholderKey)}
-              onKeyPress={(e) => e.key === "Enter" && handleAddItem(section.key)}
+              onKeyPress={(e) =>
+                e.key === "Enter" && handleAddItem(section.key)
+              }
               className="flex-1 border-2 border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 focus:border-primary/50 text-gray-900 dark:text-white"
               data-testid={`input-new-${section.key}`}
             />
@@ -373,9 +438,7 @@ ${outro.length > 0 ? `## OUTRO / CTA\n${formatItems(outro)}\n` : ''}
             <FileText className="w-6 h-6 text-primary" />
             {t("videoScript.title")}
           </DialogTitle>
-          <DialogDescription>
-            {t("videoScript.description")}
-          </DialogDescription>
+          <DialogDescription>{t("videoScript.description")}</DialogDescription>
         </DialogHeader>
 
         {isLoading ? (
@@ -403,12 +466,15 @@ ${outro.length > 0 ? `## OUTRO / CTA\n${formatItems(outro)}\n` : ''}
             <YouTubeOpportunityPanel
               ideaId={idea.id}
               isPremium={isPremium}
-              audienceVotes={idea.voteCount ?? 0}
+              audienceVotes={(idea as any).voteCount ?? idea.votes ?? 0}
             />
 
             {/* Video Title */}
             <div className="space-y-2">
-              <Label htmlFor="video-title" className="text-sm font-semibold text-gray-700 dark:text-gray-300 flex items-center gap-2">
+              <Label
+                htmlFor="video-title"
+                className="text-sm font-semibold text-gray-700 dark:text-gray-300 flex items-center gap-2"
+              >
                 <Video className="w-4 h-4" />
                 {t("videoScript.videoTitle")}
               </Label>
@@ -424,7 +490,10 @@ ${outro.length > 0 ? `## OUTRO / CTA\n${formatItems(outro)}\n` : ''}
 
             {/* Thumbnail Notes */}
             <div className="space-y-2">
-              <Label htmlFor="thumbnail-notes" className="text-sm font-semibold text-gray-700 dark:text-gray-300 flex items-center gap-2">
+              <Label
+                htmlFor="thumbnail-notes"
+                className="text-sm font-semibold text-gray-700 dark:text-gray-300 flex items-center gap-2"
+              >
                 <Image className="w-4 h-4" />
                 {t("videoScript.thumbnailNotes")}
               </Label>
@@ -442,9 +511,7 @@ ${outro.length > 0 ? `## OUTRO / CTA\n${formatItems(outro)}\n` : ''}
               <h3 className="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-4">
                 {t("videoScript.scriptStructure")}
               </h3>
-              <div className="space-y-4">
-                {sections.map(renderSection)}
-              </div>
+              <div className="space-y-4">{sections.map(renderSection)}</div>
             </div>
 
             {/* Action buttons */}

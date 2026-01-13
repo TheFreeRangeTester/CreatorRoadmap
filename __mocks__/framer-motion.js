@@ -1,9 +1,12 @@
 const React = require('react');
 
 const motion = new Proxy({}, {
-    get: () => React.forwardRef(({ children, ...props }, ref) => {
-        return React.createElement('div', { ref, ...props }, children);
-    }),
+    get: (target, prop) => {
+        const tagName = typeof prop === 'string' ? prop : 'div';
+        return React.forwardRef(({ children, ...props }, ref) => {
+            return React.createElement(tagName, { ref, ...props }, children);
+        });
+    },
 });
 
 module.exports = {
