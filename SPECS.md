@@ -38,8 +38,8 @@
 
 4. **✅ Creators can delete their own ideas**
 
-   - **Backend - Orchestration**: `server/routes.ts` - DELETE `/api/ideas/:id` handler (lines 531-572) validates ownership before deletion
-   - **Backend - Persistence**: `server/database-storage.ts` - `deleteIdea()` method (lines 237-257) removes idea from database
+   - **Backend - Orchestration**: `server/routes.ts` - DELETE `/api/ideas/:id` handler (lines 581-622) validates ownership before deletion
+   - **Backend - Persistence**: `server/database-storage.ts` - `deleteIdea()` method (lines 208-217) removes idea from database
 
 5. **✅ Predefined niches system (unboxing, review, tutorial, vlog, behindTheScenes, qna)**
    - **Backend - Schema**: `shared/schema.ts` - `ideas` table has `niche` field (line 45)
@@ -70,7 +70,7 @@
 
 2. **✅ Each vote awards 1 point to the voter**
 
-   - **Backend - Points Award**: `server/routes.ts` - POST `/api/ideas/:id/vote` handler awards 1 point via `updateUserPoints()` (line 1072)
+   - **Backend - Points Award**: `server/routes.ts` - POST `/api/ideas/:id/vote` handler awards 1 point via `updateUserPoints()` (line 674)
    - **Backend - Points**: `server/database-storage.ts` - `updateUserPoints()` method (lines 556-596) adds +1 point with reason 'vote_given'
    - **Backend - Transaction**: `server/database-storage.ts` - records transaction in `pointTransactions` table (lines 581-591)
 
@@ -189,7 +189,7 @@
    - **Backend - Schema**: `shared/schema.ts` - `pointTransactions` table (lines 93-102) stores all point transactions
 
 5. **✅ Limit of 5 items per creator in store**
-   - **Backend - Item Limit**: `server/routes.ts` - POST `/api/store/items` handler validates 5-item limit (lines 1988-1992)
+   - **Backend - Item Limit**: `server/routes.ts` - POST `/api/store/items` handler validates 5-item limit (lines 2039-2043)
    - **Backend - Persistence**: `server/database-storage.ts` - `getStoreItems()` method (lines 622-633) retrieves items for limit check
 
 ---
@@ -229,9 +229,9 @@
 
 4. **✅ Webhooks for state synchronization**
 
-   - **Backend - Webhooks**: `server/routes.ts` - POST `/api/stripe/webhook` handler (lines 1750-1875) processes Stripe webhook events
-   - **Backend - Persistence**: `server/database-storage.ts` - `updateUserSubscription()` method updates subscription state
-   - **Backend - Persistence**: `server/database-storage.ts` - `getUserByStripeCustomerId()` method retrieves user by Stripe ID
+   - **Backend - Webhooks**: `server/routes.ts` - POST `/api/stripe/webhook` handler (lines 1865-1989) processes Stripe webhook events
+   - **Backend - Persistence**: `server/database-storage.ts` - `updateUserSubscription()` method (lines 410-418) updates subscription state
+   - **Backend - Persistence**: `server/database-storage.ts` - `getUserByStripeCustomerId()` method (lines 438-445) retrieves user by Stripe ID
 
 5. **✅ Premium features: unlimited ideas, points store, analytics**
    - **Backend - Validation**: `shared/premium-utils.ts` - `hasActivePremiumAccess()` function (lines 13-46) validates premium/trial/canceled status
@@ -388,9 +388,10 @@
 
 5. **✅ Top niches analysis per creator**
 
-   - **Backend - Niche Statistics**: `server/database-storage.ts` - `getTopNiche()` method (lines 931-947) returns top performing niche
-   - **Backend - Niche Statistics**: `server/database-storage.ts` - `getTopNiches()` method (lines 949-963) returns top N niches
-   - **Frontend - Dashboard**: `client/src/components/dashboard-overview.tsx` - displays top niches
+   - **Backend - Niche Statistics**: `server/database-storage.ts` - `getTopNiche()` method (lines 931-947) returns top performing niche ordered by total votes from audience
+   - **Backend - Niche Statistics**: `server/database-storage.ts` - `getTopNiches()` method (lines 949-963) returns top 2 niches (default limit) ordered by total votes from audience (`orderBy(desc(nicheStats.totalVotes))`)
+   - **Backend - API**: `server/routes.ts` - GET `/api/stats` handler (line 300) calls `getTopNiches(creatorId, 2)` to fetch top 2 niches
+   - **Frontend - Dashboard**: `client/src/components/dashboard-overview.tsx` - displays top 2 niches based on audience votes (lines 507-580)
 
 6. **✅ Per-creator audience statistics**
    - **Backend - Persistence**: `server/database-storage.ts` - `getUserPoints()` method retrieves points per creator
