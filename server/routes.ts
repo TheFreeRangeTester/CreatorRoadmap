@@ -656,6 +656,15 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(404).json({ message: "Idea not found" });
       }
 
+      // Prevent creator from voting their own ideas
+      if (idea.creatorId === userId) {
+        console.log(`[OLD-VOTE] User ${userId} tried to vote their own idea ${ideaId}`);
+        return res.status(403).json({
+          message: "Cannot vote on your own ideas",
+          error: "self_vote_attempt"
+        });
+      }
+
       // Check if this user has already voted for this idea
       const existingVote = await storage.getVoteByUserOrSession(ideaId, userId);
       if (existingVote) {

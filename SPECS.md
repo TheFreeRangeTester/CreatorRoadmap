@@ -76,8 +76,8 @@
 
 3. ** Creators cannot vote on their own ideas**
 
-   - **Backend - Self-Vote Prevention**: `server/routes.ts` - POST `/api/ideas/:id/vote` handler validates creatorId !== userId (lines 1037-1043)
-   - **Backend - Self-Vote Prevention**: `server/routes.ts` - POST `/api/creators/:username/ideas/:ideaId/vote` handler (lines 1112-1235) also prevents self-votes (lines 1157-1163)
+   - **Backend - Self-Vote Prevention**: `server/routes.ts` - POST `/api/ideas/:id/vote` handler (line 626) validates creatorId !== userId before creating vote (lines 659-666)
+   - **Backend - Self-Vote Prevention**: `server/routes.ts` - POST `/api/creators/:username/ideas/:ideaId/vote` handler (lines 1172-1295) also prevents self-votes (lines 1216-1223)
 
 4. ** Votes update in real-time**
 
