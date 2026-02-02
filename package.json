@@ -80,7 +80,7 @@
     "i18next-browser-languagedetector": "^8.0.5",
     "input-otp": "^1.2.4",
     "jest": "^30.0.3",
-    "jest-environment-jsdom": "^30.0.2",
+    "jest-environment-jsdom": "^30.2.0",
     "lucide-react": "^0.548.0",
     "memoizee": "^0.4.17",
     "memorystore": "^1.6.7",
