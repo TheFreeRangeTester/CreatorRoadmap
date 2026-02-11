@@ -10,8 +10,17 @@ import { conditionalPremiumAccess, requirePremiumAccess } from "./premium-middle
 import { youtubeService } from "./services/youtube";
 import { priorityService } from "./services/priority";
 
-// Initialize Stripe
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
+const isTestingEnv = process.env.NODE_ENV === 'development' || process.env.STRIPE_TEST_MODE === 'true';
+const stripeKey = isTestingEnv
+  ? (process.env.STRIPE_TEST_SECRET_KEY || process.env.STRIPE_SECRET_KEY!)
+  : process.env.STRIPE_SECRET_KEY!;
+const stripe = new Stripe(stripeKey);
+
+if (isTestingEnv) {
+  console.log('[STRIPE] Using TEST keys (sandbox environment)');
+} else {
+  console.log('[STRIPE] Using PRODUCTION keys');
+}
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // Set up authentication routes

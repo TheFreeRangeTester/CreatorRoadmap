@@ -21,9 +21,11 @@ export class DatabaseStorage implements IStorage {
   sessionStore: any;
 
   constructor() {
+    const isTestingEnv = process.env.NODE_ENV === 'development' || process.env.STRIPE_TEST_MODE === 'true';
     this.sessionStore = new PostgresSessionStore({
       pool,
-      createTableIfMissing: true
+      createTableIfMissing: true,
+      ...(isTestingEnv ? { schemaName: 'testing' } : {}),
     });
   }
 

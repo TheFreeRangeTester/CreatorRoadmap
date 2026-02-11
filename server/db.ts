@@ -11,5 +11,17 @@ if (!process.env.DATABASE_URL) {
   );
 }
 
+const isTestingEnv = process.env.NODE_ENV === 'development' || process.env.STRIPE_TEST_MODE === 'true';
+
 export const pool = new Pool({ connectionString: process.env.DATABASE_URL });
+
+if (isTestingEnv) {
+  pool.on('connect', (client) => {
+    client.query('SET search_path TO testing, public');
+  });
+  console.log('[DB] Using TESTING schema (isolated test environment)');
+} else {
+  console.log('[DB] Using PRODUCTION schema');
+}
+
 export const db = drizzle(pool, { schema });
