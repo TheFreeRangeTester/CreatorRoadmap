@@ -3,124 +3,6 @@
 ## Overview
 Fanlist is a web application designed to empower content creators by enabling them to gather ideas, suggestions, and votes directly from their audience. It features a community-driven leaderboard system where content ideas are ranked by audience votes, allowing creators to identify and prioritize the most desired content. The platform aims to streamline content planning, increase audience engagement, and foster a strong creator-community relationship.
 
-## Testing Environment
-
-### Configuration
-- **Database isolation**: Development uses PostgreSQL schema `testing` (isolated from production `public` schema)
-- **Stripe sandbox**: Development uses `STRIPE_TEST_SECRET_KEY` and `STRIPE_TEST_PUBLISHABLE_KEY` (Stripe test environment keys)
-- **Detection**: Environment is determined by `NODE_ENV=development` or `STRIPE_TEST_MODE=true`
-- **Testing URL**: The workspace development URL (available while the workspace is open and server is running)
-
-### How it works
-- `server/db.ts`: Sets `search_path` to `testing` schema in development, ensuring all queries go to isolated test tables
-- `server/routes.ts`: Uses `STRIPE_TEST_SECRET_KEY` in development mode for Stripe API calls
-- `server/database-storage.ts`: Session store uses `testing` schema in development
-- Production deployment continues using `public` schema and live Stripe keys unchanged
-
-### Important Notes
-- Test database tables mirror production structure but are completely empty
-- Testers must register new accounts on the test environment
-- Stripe test cards (e.g., 4242 4242 4242 4242) work for subscription testing
-- If `STRIPE_TEST_SECRET_KEY` is not set in development, a warning is logged and it falls back to the production key
-
-## Recent Changes
-
-### February 11, 2026 - Testing Environment Setup
-- **Separate DB schema**: Created `testing` PostgreSQL schema with all tables mirrored from production (empty)
-- **Stripe sandbox keys**: Development environment now uses `STRIPE_TEST_SECRET_KEY` and `STRIPE_TEST_PUBLISHABLE_KEY`
-- **Environment isolation**: `server/db.ts` sets `search_path` to `testing` in dev mode
-- **Session isolation**: Session store configured with `schemaName: 'testing'` in development
-- **Environment variable**: `STRIPE_TEST_MODE=true` set for development environment
-
-### December 23, 2025 - Public Profile Redesign
-- **New Layout**: Redesigned public profile page with modern card-based layout inspired by reference design.
-- **Greeting Header**: Added personalized "Hello/Hola USERNAME" greeting at the top of the page.
-- **Top3Cards Component**: New component displaying top 3 ideas with gradient borders (gold for #1, blue for #2, orange for #3).
-- **IdeasList Component**: Clean list view for remaining ideas with left border accent and minimal styling.
-- **Outline Vote Buttons**: Vote buttons now use outline style with dark borders instead of filled backgrounds.
-- **Creator Info Card**: Reorganized creator section with avatar, name, description, and social links in a clean card.
-- **Theme Support**: Full dark/light theme support with bg-gray-50/bg-gray-950 backgrounds.
-- **Internationalization**: Added translations for "allIdeas", "by", and "empty" in both English and Spanish.
-- **Responsive Design**: Layout adapts well to mobile and desktop with consistent styling.
-
-### November 7, 2025 - Idea Completion and Archival System
-- **Dual-Action Management**: Implemented both "Complete" and "Delete" actions for ideas, allowing creators to archive finished ideas separately from permanent deletion.
-- **Schema Enhancement**: Added 'completed' status to ideas alongside existing 'approved' and 'pending' statuses.
-- **API Endpoint**: Created PATCH `/api/ideas/:id/complete` to mark ideas as completed, with authentication ensuring only idea owners can complete their ideas.
-- **Filter Toggle**: Added active/completed filter toggle in dashboard, accessible to all users (authenticated and unauthenticated) to view archived ideas.
-- **Empty State Handling**: Improved UX with contextual messages for "no active ideas" vs "no completed ideas", ensuring toggle remains visible when ideas exist in either state.
-- **Internationalization**: Added comprehensive i18n support with English and Spanish translations for showActive, showCompleted, complete, completed, confirmComplete, noActiveIdeas, noCompletedIdeas.
-- **Universal Access**: Toggle visibility not gated by authentication, allowing audience members to explore creator's completed ideas archive.
-
-### November 7, 2025 - TypeScript Video Template Type Safety
-- **Type Safety Fix**: Enhanced video template methods (getVideoTemplate, createVideoTemplate, updateVideoTemplate) to properly transform database responses.
-- **Null Handling**: Added normalization to convert null values from database to empty strings for videoTitle and thumbnailNotes fields.
-- **JSONB Type Casting**: Added proper type assertions for JSONB fields (hook, teaser, valorAudiencia, pointsToCover, visualsNeeded, bonus, outro) to match VideoTemplateResponse type.
-- **Database Consistency**: All three methods now consistently return VideoTemplateResponse with properly typed fields instead of raw database types with potential null values.
-
-### November 4, 2025 - Video Script Persistence and i18n
-- **Critical Bug Fix**: Fixed `updateVideoTemplate` in database-storage.ts to persist ALL video script fields. Previously only saved pointsToCover and visualsNeeded, causing data loss for videoTitle, thumbnailNotes, hook, teaser, valorAudiencia, bonus, and outro.
-- **Internationalization**: Added comprehensive i18n support for video script modal in English and Spanish.
-- **Terminology Update**: Changed all references from "template" to "script" (English) and "guión" (Spanish) throughout the UI for clearer user communication.
-- **UX Improvement**: Video script modal no longer auto-closes after saving, allowing creators to continue editing.
-
-### November 3, 2025 - UI Consistency and Border Radius Updates
-- **Top Niches Display**: Changed "Top Niche" to "Top Niches" (plural) with top 2 niches shown in dashboard.
-- **Multi-Niche Display**: Dashboard shows both top niches in mobile carousel and desktop grid layouts.
-- **Translations**: Updated English and Spanish to reflect plural form ("Top Niches" / "Nichos Principales").
-- **Border Radius Consistency**: Standardized all UI elements to use rounded-md (6px):
-  - Fixed theme.json radius from 8 to 0.375 (which controls global --radius CSS variable)
-  - Updated modals from rounded-sm to rounded-md
-  - Updated profile pages (profile-page.tsx, dashboard-settings-page.tsx, modern-public-profile.tsx) from rounded-xl/lg to rounded-md
-  - Updated idea cards in public profile (idea-card.tsx) from rounded-lg to rounded-md for internal buttons
-  - Updated compact idea cards (compact-idea-card.tsx) trend indicator from rounded-lg to rounded-md
-  - Buttons already use rounded-md by default
-  - Note: theme.json radius value propagates to all rounded-md classes via CSS variable --radius
-- **Modal Overflow**: Added max-h-[90vh] overflow-y-auto to all major modals for proper scrolling.
-- **Vote Display**: Vote counts already visible in IdeaListView for all ideas in creator dashboard.
-
-### November 2, 2025 - Persistent Top Niche Statistics
-- **Database**: Created `niche_stats` table to track historical vote counts by niche and creator.
-- **Persistent Tracking**: Top Niche metric now shows all-time statistics instead of only current published ideas.
-- **Vote Integration**: All voting endpoints now increment niche statistics automatically.
-- **Dashboard Update**: Dashboard stats endpoint uses persistent niche data from `niche_stats` table.
-- **Data Migration**: Populated initial niche stats from existing ideas during deployment.
-- **Behavior Change**: Deleting ideas no longer affects Top Niche display - historical vote data is preserved.
-
-### November 3, 2025 - Extended Video Planning Templates
-- **Extended Structure**: Enhanced video template system with comprehensive script planning sections.
-- **New Fields**: Added text fields for video title and thumbnail notes.
-- **New Sections**: Added structured collapsible sections for complete script planning:
-  - HOOK: Opening elements to capture attention
-  - TEASER: Content preview and anticipation building
-  - VALOR PARA AUDIENCIA: Explicit value proposition for viewers
-  - PUNTOS A CUBRIR: Main content points (existing, maintained)
-  - VISUALES NECESARIOS: Required visual assets (existing, maintained)
-  - BONUS / EXTRA: Additional content or downloadable resources
-  - OUTRO / CTA: Closing and call-to-action elements
-- **Database**: Extended `video_templates` table with new JSONB columns (hook, teaser, valorAudiencia, bonus, outro) and text columns (videoTitle, thumbnailNotes).
-- **Component Update**: VideoTemplateModal now shows all sections in organized, collapsible format with consistent UI.
-- **Export Enhancement**: Markdown export includes all new sections with proper formatting.
-
-### November 2, 2025 - Video Planning Templates
-- **New Feature**: Added video planning template system for creators to plan content before production.
-- **Database**: Created `video_templates` table with JSONB fields storing items with completion status {text, completed}.
-- **VideoTemplateModal Component**: Modal UI with collapsible sections for organizing video planning (points to cover, visuals needed).
-- **Completion Tracking**: Each point and visual has a checkbox to mark as done. Completed items shown with strikethrough styling.
-- **API Routes**: Full CRUD endpoints (`/api/video-templates`) with authentication ensuring only idea owners can manage their templates.
-- **UI Integration**: Template button (FileText icon) added to IdeaCard and IdeaListView, visible only to creators.
-- **Export Feature**: Markdown export functionality with completed items marked with strikethrough and checkmarks.
-- **Styling**: Blue-themed buttons with improved contrast for better visibility.
-
-### October 12, 2025
-#### Database Fixes
-- Fixed `user_points` table constraint from `UNIQUE(user_id)` to `UNIQUE(user_id, creator_id)` to allow users to accumulate points for multiple creators separately.
-
-#### Authentication & Redirect Fixes
-- **Top3Podium Component**: Added redirect logic for unauthenticated users - now saves current URL to localStorage as `redirectAfterAuth` and redirects to `/auth` when attempting to vote.
-- **use-auth.tsx Hook**: Enhanced login/register success handlers to check for `redirectAfterAuth` and redirect users back to the originating page (usually public profile) instead of dashboard.
-- **auth-page.tsx**: Fixed race condition where auth-page was interfering with use-auth redirection. Added early return if `redirectAfterAuth` exists, allowing use-auth.tsx to handle the redirect without interference.
-
 ## User Preferences
 Preferred communication style: Simple, everyday language.
 
@@ -145,17 +27,20 @@ Preferred communication style: Simple, everyday language.
 - **Monorepo Structure**: Shared TypeScript types between client and server for full-stack type safety.
 
 ### Feature Specifications
-- **Idea Management**: CRUD operations, community suggestion system with approval workflow, dynamic leaderboards, vote tracking, and anti-spam measures.
-- **Video Planning Templates**: Creators can create planning templates for each idea with points to cover and visuals needed. Features include completion tracking with checkboxes, collapsible sections, markdown export, and template persistence per idea.
+- **Idea Management**: CRUD operations, community suggestion system with approval workflow, dynamic leaderboards, vote tracking, and anti-spam measures. Includes "Complete" and "Delete" actions for ideas, allowing creators to archive finished ideas separately from permanent deletion, with an 'active'/'completed' filter toggle in the dashboard.
+- **Video Planning Templates**: Creators can create planning templates for each idea with points to cover and visuals needed. Features include completion tracking with checkboxes, collapsible sections, markdown export, and template persistence per idea. Enhanced structure with fields for video title, thumbnail notes, and sections like HOOK, TEASER, VALOR PARA AUDIENCIA, PUNTOS A CUBRIR, VISUALES NECESARIOS, BONUS / EXTRA, and OUTRO / CTA.
 - **Subscription Management**: Freemium model, Stripe integration, premium feature access control.
 - **User Authentication**: Session-based auth, role-based access (creator/audience), password reset.
 - **Points System**: Users earn points by voting, spend points on suggestions, and receive rewards for approved suggestions. Real-time UI updates for point transactions.
 - **Points Store**: Creators can manage and users can redeem items from a points store.
+- **Public Profile**: Redesigned with a modern card-based layout, personalized greeting, 'Top3Cards' component for top ideas, and a clean list view for other ideas.
+- **Test Mode**: Per-request test mode for published app using dual DB pools, AsyncLocalStorage for context switching, and a proxy-based storage system for transparent routing to test or production instances.
 
 ### System Design Choices
 - **Development Environment**: Vite for fast development, npm as package manager, Replit for deployment.
 - **Testing**: Custom TypeScript testing framework covering schema validation, storage operations, service classes, premium business logic, and middleware.
 - **Deployment**: Replit with autoscale deployment target; ESBuild for backend bundling, static assets served by Express.
+- **Database Isolation**: PostgreSQL schema `testing` for test mode, isolated from production `public` schema. `niche_stats` table for persistent top niche statistics.
 
 ## External Dependencies
 
