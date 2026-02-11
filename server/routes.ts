@@ -11,6 +11,11 @@ import { youtubeService } from "./services/youtube";
 import { priorityService } from "./services/priority";
 
 const isTestingEnv = process.env.NODE_ENV === 'development' || process.env.STRIPE_TEST_MODE === 'true';
+
+if (isTestingEnv && !process.env.STRIPE_TEST_SECRET_KEY) {
+  console.warn('[STRIPE] WARNING: STRIPE_TEST_SECRET_KEY not set in test mode. Falling back to STRIPE_SECRET_KEY.');
+}
+
 const stripeKey = isTestingEnv
   ? (process.env.STRIPE_TEST_SECRET_KEY || process.env.STRIPE_SECRET_KEY!)
   : process.env.STRIPE_SECRET_KEY!;

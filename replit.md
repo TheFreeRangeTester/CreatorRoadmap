@@ -3,7 +3,34 @@
 ## Overview
 Fanlist is a web application designed to empower content creators by enabling them to gather ideas, suggestions, and votes directly from their audience. It features a community-driven leaderboard system where content ideas are ranked by audience votes, allowing creators to identify and prioritize the most desired content. The platform aims to streamline content planning, increase audience engagement, and foster a strong creator-community relationship.
 
+## Testing Environment
+
+### Configuration
+- **Database isolation**: Development uses PostgreSQL schema `testing` (isolated from production `public` schema)
+- **Stripe sandbox**: Development uses `STRIPE_TEST_SECRET_KEY` and `STRIPE_TEST_PUBLISHABLE_KEY` (Stripe test environment keys)
+- **Detection**: Environment is determined by `NODE_ENV=development` or `STRIPE_TEST_MODE=true`
+- **Testing URL**: The workspace development URL (available while the workspace is open and server is running)
+
+### How it works
+- `server/db.ts`: Sets `search_path` to `testing` schema in development, ensuring all queries go to isolated test tables
+- `server/routes.ts`: Uses `STRIPE_TEST_SECRET_KEY` in development mode for Stripe API calls
+- `server/database-storage.ts`: Session store uses `testing` schema in development
+- Production deployment continues using `public` schema and live Stripe keys unchanged
+
+### Important Notes
+- Test database tables mirror production structure but are completely empty
+- Testers must register new accounts on the test environment
+- Stripe test cards (e.g., 4242 4242 4242 4242) work for subscription testing
+- If `STRIPE_TEST_SECRET_KEY` is not set in development, a warning is logged and it falls back to the production key
+
 ## Recent Changes
+
+### February 11, 2026 - Testing Environment Setup
+- **Separate DB schema**: Created `testing` PostgreSQL schema with all tables mirrored from production (empty)
+- **Stripe sandbox keys**: Development environment now uses `STRIPE_TEST_SECRET_KEY` and `STRIPE_TEST_PUBLISHABLE_KEY`
+- **Environment isolation**: `server/db.ts` sets `search_path` to `testing` in dev mode
+- **Session isolation**: Session store configured with `schemaName: 'testing'` in development
+- **Environment variable**: `STRIPE_TEST_MODE=true` set for development environment
 
 ### December 23, 2025 - Public Profile Redesign
 - **New Layout**: Redesigned public profile page with modern card-based layout inspired by reference design.
