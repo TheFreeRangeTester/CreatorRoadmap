@@ -23,7 +23,10 @@ function generateTestToken(): string {
 
 function verifyTestToken(token: string): boolean {
   const expected = generateTestToken();
-  return crypto.timingSafeEqual(Buffer.from(token), Buffer.from(expected));
+  const tokenBuf = Buffer.from(token);
+  const expectedBuf = Buffer.from(expected);
+  if (tokenBuf.length !== expectedBuf.length) return false;
+  return crypto.timingSafeEqual(tokenBuf, expectedBuf);
 }
 
 export function testModeMiddleware(req: Request, res: Response, next: NextFunction) {
@@ -75,5 +78,10 @@ export function setupTestModeRoutes(app: Express) {
   
   app.get('/api/test-mode/status', (req: Request, res: Response) => {
     res.json({ isTestMode: isTestMode() });
+  });
+
+  app.get('/api/test-mode/exit', (req: Request, res: Response) => {
+    res.clearCookie(TEST_MODE_COOKIE, { path: '/' });
+    res.redirect('/');
   });
 }
