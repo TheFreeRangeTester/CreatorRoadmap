@@ -96,7 +96,7 @@
 
 - **Description**: Allows audience to suggest ideas to specific creators with approval system
 - **Priority**: High
-- **Status**: Completed (Note: Awards 2 points instead of 5 for approved suggestions)
+- **Status**: Completed
 - **Related Components**:
   - `server/routes.ts`
   - `server/database-storage.ts`
@@ -128,9 +128,9 @@
    - **Backend - Orchestration**: `server/routes.ts` - GET `/api/pending-ideas` handler (lines 857-901) returns pending ideas
    - **Frontend - UI**: `client/src/components/ideas-tab-view.tsx` - displays pending list and approval controls (lines 144-221)
 
-4. ** Approved ideas award 5 points to suggester (Note: Currently awards 2 points)**
+4. ** Approved ideas award 5 points to suggester**
 
-   - **Backend - Points Award**: `server/routes.ts` - PATCH `/api/ideas/:id/approve` handler awards 2 points (lines 958-962)
+   - **Backend - Points Award**: `server/routes.ts` - PATCH `/api/ideas/:id/approve` handler awards 5 points to suggester (lines 1028-1032)
    - **Backend - Points**: `server/database-storage.ts` - `updateUserPoints()` awards points with reason 'idea_approved'
 
 5. ** Creators can approve/reject suggestions**
@@ -163,9 +163,9 @@
    - **Backend - Points Management**: `server/database-storage.ts` - `updateUserPoints()` method (lines 556-596) handles point transactions with reason 'vote_given'
    - **Backend - Schema**: `shared/schema.ts` - `userPoints` table (lines 77-90) stores points per user-creator pair
 
-2. ** Users earn points for approved suggestions (Note: Currently awards 2 points)**
+2. ** Users earn points for approved suggestions (5 points)**
 
-   - **Backend - Suggestion Points**: `server/routes.ts` - PATCH `/api/ideas/:id/approve` handler awards 2 points to suggester (lines 1018-1021)
+   - **Backend - Suggestion Points**: `server/routes.ts` - PATCH `/api/ideas/:id/approve` handler awards 5 points to suggester (lines 1028-1032)
    - **Backend - Points**: `server/database-storage.ts` - `updateUserPoints()` awards points with reason 'idea_approved'
 
 3. ** Creators can create store items (premium)**

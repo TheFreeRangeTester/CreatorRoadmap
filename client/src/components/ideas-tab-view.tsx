@@ -248,7 +248,7 @@ export function IdeasTabView({ mode = "published", onOpenTemplate }: IdeasTabVie
       refetchPending();
       await refetchIdeas();
       
-      // Invalidate all points-related queries (user who suggested gets 2 points reward)
+      // Invalidate all points-related queries (user who suggested gets 5 points reward)
       queryClient.invalidateQueries({ queryKey: ["/api/user/points"] });
       queryClient.invalidateQueries({ queryKey: ["/api/user/point-transactions"] });
       queryClient.invalidateQueries({ queryKey: ["/api/user/audience-stats"] });

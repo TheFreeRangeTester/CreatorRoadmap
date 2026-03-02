@@ -1025,10 +1025,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const approvedIdea = await storage.approveIdea(id);
       console.log(`[APPROVE] Idea ${id} approved successfully`);
 
-      // Award 2 points to the suggester for approved idea
+      // Award 5 points to the suggester for approved idea
       if (idea.suggestedBy) {
         const creatorId = idea.creatorId;
-        await storage.updateUserPoints(idea.suggestedBy, creatorId, 2, 'earned', 'idea_approved', id);
+        await storage.updateUserPoints(idea.suggestedBy, creatorId, 5, 'earned', 'idea_approved', id);
       }
 
       // Get the approved idea with updated position 

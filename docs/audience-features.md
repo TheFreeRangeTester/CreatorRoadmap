@@ -51,7 +51,7 @@ As an audience member on Fanlist, you can actively participate in shaping the co
 ### Earning Points for Suggestions
 - **Cost**: 3 points per suggestion
 - **Reward**: 5 points if your idea gets approved
-- **Net Gain**: +2 points for approved suggestions
+- **Net Gain**: +5 points for approved suggestions
 - **Recognition**: Approved ideas show you as the suggester
 
 ## 🏆 Points System
