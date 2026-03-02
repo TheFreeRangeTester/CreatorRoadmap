@@ -242,7 +242,7 @@
    - **Backend - Persistence**: `server/database-storage.ts` - `updateUserSubscription()` method (lines 410-418) updates subscription state
    - **Backend - Persistence**: `server/database-storage.ts` - `getUserByStripeCustomerId()` method (lines 438-445) retrieves user by Stripe ID
 
-5. ** Premium features: unlimited ideas, points store, analytics**
+5. ** Premium features: unlimited ideas and points store for creators, with advanced analytics (basic dashboards available to all creators)**
    - **Backend - Validation**: `shared/premium-utils.ts` - `hasActivePremiumAccess()` function (lines 13-46) validates premium/trial/canceled status
    - **Backend - Middleware**: `server/premium-middleware.ts` - `requirePremiumAccess()`, `conditionalPremiumAccess()` protect premium routes
    - **Backend - Idea Limit**: `server/routes.ts` - POST `/api/ideas` handler checks quota with `conditionalPremiumAccess` (line 387)
