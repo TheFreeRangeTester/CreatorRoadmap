@@ -157,14 +157,18 @@
 
 #### Acceptance Criteria
 
-1. ** Users earn points for voting (+1) and approved suggestions (+5)**
+1. ** Users earn +1 point for voting**
 
-   - **Backend - Voting Points**: `server/routes.ts` - POST `/api/ideas/:id/vote` awards +1 point (line 1072)
-   - **Backend - Suggestion Points**: `server/routes.ts` - PATCH `/api/ideas/:id/approve` awards 2 points (currently, line 961)
-   - **Backend - Points Management**: `server/database-storage.ts` - `updateUserPoints()` method (lines 556-596) handles point transactions
+   - **Backend - Voting Points**: `server/routes.ts` - POST `/api/ideas/:id/vote` awards +1 point via `updateUserPoints()` (line 674)
+   - **Backend - Points Management**: `server/database-storage.ts` - `updateUserPoints()` method (lines 556-596) handles point transactions with reason 'vote_given'
    - **Backend - Schema**: `shared/schema.ts` - `userPoints` table (lines 77-90) stores points per user-creator pair
 
-2. ** Creators can create store items (premium)**
+2. ** Users earn points for approved suggestions (Note: Currently awards 2 points)**
+
+   - **Backend - Suggestion Points**: `server/routes.ts` - PATCH `/api/ideas/:id/approve` handler awards 2 points to suggester (lines 1018-1021)
+   - **Backend - Points**: `server/database-storage.ts` - `updateUserPoints()` awards points with reason 'idea_approved'
+
+3. ** Creators can create store items (premium)**
 
    - **Backend - Premium Check**: `server/routes.ts` - POST `/api/store/items` handler validates premium access (lines 1976-1986)
    - **Backend - Orchestration**: `server/routes.ts` - POST `/api/store/items` handler (lines 1963-2006) creates store item
@@ -173,7 +177,7 @@
    - **Frontend - Management**: `client/src/components/store-management.tsx` - store items CRUD interface
    - **Frontend - Form**: `client/src/components/store-item-form.tsx` - create/edit item form
 
-3. ** Users can redeem items with points**
+4. ** Users can redeem items with points**
 
    - **Backend - Orchestration**: `server/routes.ts` - POST `/api/creators/:username/store/:itemId/redeem` handler (lines 2180-2229) processes redemption
    - **Backend - Points Check**: `server/routes.ts` - redemption endpoint checks points balance (lines 2211-2216)
@@ -182,13 +186,14 @@
    - **Frontend - Redemptions**: `client/src/components/public-store.tsx` - redemption UI for audience
    - **Frontend - Redemptions**: `client/src/pages/modern-public-profile.tsx` - store display and redemption
 
-4. ** Transaction system with complete history**
+5. ** Transaction system with complete history**
 
    - **Backend - Persistence**: `server/database-storage.ts` - `getUserPointTransactions()` method (lines 598-619) retrieves transaction history
    - **Backend - Transaction Recording**: `server/database-storage.ts` - `updateUserPoints()` records transactions in `pointTransactions` table (lines 581-591)
    - **Backend - Schema**: `shared/schema.ts` - `pointTransactions` table (lines 93-102) stores all point transactions
 
-5. ** Limit of 5 items per creator in store**
+6. ** Limit of 5 items per creator in store**
+
    - **Backend - Item Limit**: `server/routes.ts` - POST `/api/store/items` handler validates 5-item limit (lines 2039-2043)
    - **Backend - Persistence**: `server/database-storage.ts` - `getStoreItems()` method (lines 622-633) retrieves items for limit check
 
