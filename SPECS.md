@@ -454,7 +454,7 @@
    - **Backend - WebSocket**: `server/websocket.ts` - real-time comment broadcasting service
    - **Frontend - WebSocket Hook**: `client/src/hooks/use-comments-websocket.tsx` - real-time comment updates hook
 
-5. ** Comment reactions (like/dislike) with points integration**
+5. ** Like/dislike reaction buttons on individual comments with points awarded per reaction**
 
    - **Backend - Orchestration**: `server/routes.ts` - POST `/api/comments/:id/reactions` (add reaction)
    - **Backend - Points**: Integration with points system for reaction rewards
