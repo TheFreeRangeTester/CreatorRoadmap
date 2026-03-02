@@ -121,7 +121,7 @@
    - **Backend - Points Deduction**: `server/routes.ts` - deducts 3 points when suggesting (line 818)
    - **Backend - Points**: `server/database-storage.ts` - `updateUserPoints()` deducts 3 points with reason 'idea_suggestion'
 
-3. ** Suggestions require creator approval**
+3. ** Suggested ideas are only displayed on the public profile after creator approval**
 
    - **Backend - Persistence**: `server/database-storage.ts` - `suggestIdea()` creates idea with status='pending' (line 150)
    - **Backend - Persistence**: `server/database-storage.ts` - `getPendingIdeas()` method (lines 180-189) retrieves pending suggestions
@@ -133,11 +133,15 @@
    - **Backend - Points Award**: `server/routes.ts` - PATCH `/api/ideas/:id/approve` handler awards 5 points to suggester (lines 1028-1032)
    - **Backend - Points**: `server/database-storage.ts` - `updateUserPoints()` awards points with reason 'idea_approved'
 
-5. ** Creators can approve/reject suggestions**
-   - **Backend - Orchestration**: `server/routes.ts` - PATCH `/api/ideas/:id/approve` handler (lines 904-978) approves pending idea
-   - **Backend - Persistence**: `server/database-storage.ts` - `approveIdea()` method (lines 160-178) updates status to 'approved'
-   - **Backend - Rejection**: `server/routes.ts` - DELETE `/api/ideas/:id` handler (lines 531-572) allows creators to delete (reject) pending ideas
-   - **Frontend - UI**: `client/src/components/ideas-tab-view.tsx` - approval mutation and pending list (lines 144-221)
+5. ** Creators can approve or remove/reject suggestions**
+
+   - **Approve**: Creators can approve suggestions (changes status to approved)
+     - **Backend - Orchestration**: `server/routes.ts` - PATCH `/api/ideas/:id/approve` handler (lines 974-1046) approves pending idea
+     - **Backend - Persistence**: `server/database-storage.ts` - `approveIdea()` method (lines 165-182) updates status to 'approved'
+   - **Remove/Reject**: Creators can remove/reject pending suggestions
+     - **Backend - Orchestration**: `server/routes.ts` - DELETE `/api/ideas/:id` handler (lines 581-622) allows creators to delete (reject) pending ideas
+     - **Backend - Persistence**: `server/database-storage.ts` - `deleteIdea()` method removes the idea
+   - **Frontend - UI**: `client/src/components/ideas-tab-view.tsx` - approval and reject mutations, pending list (lines 144-221, 210-345)
 
 ---
 
