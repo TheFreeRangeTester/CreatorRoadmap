@@ -10,7 +10,7 @@ import {
 } from "@shared/schema";
 import session from "express-session";
 import connectPg from "connect-pg-simple";
-import { db, pool } from "./db";
+import { pool as defaultPool, db as defaultDb } from "./db";
 import { randomBytes } from "crypto";
 import { eq, desc, and, asc, sql, or } from "drizzle-orm";
 import { IStorage, IdeaWithPosition } from "./storage";
@@ -19,38 +19,43 @@ const PostgresSessionStore = connectPg(session);
 
 export class DatabaseStorage implements IStorage {
   sessionStore: any;
+  private db: typeof defaultDb;
+  private pool: typeof defaultPool;
 
-  constructor() {
+  constructor(dbInstance?: typeof defaultDb, poolInstance?: typeof defaultPool, schemaName?: string) {
+    this.db = dbInstance || defaultDb;
+    this.pool = poolInstance || defaultPool;
     this.sessionStore = new PostgresSessionStore({
-      pool,
-      createTableIfMissing: true
+      pool: this.pool,
+      createTableIfMissing: true,
+      ...(schemaName ? { schemaName } : {}),
     });
   }
 
   // User methods
   async getUser(id: number): Promise<User | undefined> {
-    const [user] = await db.select().from(users).where(eq(users.id, id));
+    const [user] = await this.db.select().from(users).where(eq(users.id, id));
     return user;
   }
 
   async getUserByUsername(username: string): Promise<User | undefined> {
-    const [user] = await db.select().from(users).where(eq(sql`LOWER(${users.username})`, username.toLowerCase()));
+    const [user] = await this.db.select().from(users).where(eq(sql`LOWER(${users.username})`, username.toLowerCase()));
     return user;
   }
 
   async getUserByEmail(email: string): Promise<User | undefined> {
-    const [user] = await db.select().from(users).where(eq(users.email, email));
+    const [user] = await this.db.select().from(users).where(eq(users.email, email));
     return user;
   }
 
   async createUser(insertUser: InsertUser): Promise<User> {
-    const [user] = await db.insert(users).values(insertUser).returning();
+    const [user] = await this.db.insert(users).values(insertUser).returning();
     return user;
   }
 
   async updateUserProfile(id: number, profileData: UpdateProfile): Promise<User | undefined> {
     // Obtener el usuario actual
-    const [currentUser] = await db.select().from(users).where(eq(users.id, id));
+    const [currentUser] = await this.db.select().from(users).where(eq(users.id, id));
     if (!currentUser) return undefined;
 
     // Actualizar sólo los campos proporcionados
@@ -94,16 +99,16 @@ export class DatabaseStorage implements IStorage {
 
   // Idea methods
   async getIdeas(): Promise<Idea[]> {
-    return db.select().from(ideas).orderBy(desc(ideas.votes));
+    return this.db.select().from(ideas).orderBy(desc(ideas.votes));
   }
 
   async getIdea(id: number): Promise<Idea | undefined> {
-    const [idea] = await db.select().from(ideas).where(eq(ideas.id, id));
+    const [idea] = await this.db.select().from(ideas).where(eq(ideas.id, id));
     return idea;
   }
 
   async getIdeasByCreator(creatorId: number): Promise<Idea[]> {
-    return db.select().from(ideas).where(eq(ideas.creatorId, creatorId)).orderBy(desc(ideas.votes));
+    return this.db.select().from(ideas).where(eq(ideas.creatorId, creatorId)).orderBy(desc(ideas.votes));
   }
 
   async createIdea(insertIdea: InsertIdea, creatorId: number): Promise<Idea> {
@@ -123,13 +128,13 @@ export class DatabaseStorage implements IStorage {
     };
 
     // Insertar la idea con posiciones en null
-    const [idea] = await db.insert(ideas).values(ideaToInsert).returning();
+    const [idea] = await this.db.insert(ideas).values(ideaToInsert).returning();
 
     // Actualizar posiciones de todas las ideas, incluida la nueva
     await this.updatePositions();
 
     // Obtener la idea actualizada para devolverla
-    const [updatedIdea] = await db.select().from(ideas).where(eq(ideas.id, idea.id));
+    const [updatedIdea] = await this.db.select().from(ideas).where(eq(ideas.id, idea.id));
 
     return updatedIdea;
   }
@@ -152,7 +157,7 @@ export class DatabaseStorage implements IStorage {
     };
 
     // Insertar la idea sugerida
-    const [idea] = await db.insert(ideas).values(ideaToInsert).returning();
+    const [idea] = await this.db.insert(ideas).values(ideaToInsert).returning();
 
     return idea;
   }
@@ -170,7 +175,7 @@ export class DatabaseStorage implements IStorage {
       await this.updatePositions();
 
       // Obtener la idea actualizada
-      const [updatedIdea] = await db.select().from(ideas).where(eq(ideas.id, id));
+      const [updatedIdea] = await this.db.select().from(ideas).where(eq(ideas.id, id));
       return updatedIdea;
     }
 
@@ -207,10 +212,10 @@ export class DatabaseStorage implements IStorage {
 
   async deleteIdea(id: number): Promise<void> {
     // First, delete any votes for this idea
-    await db.delete(votes).where(eq(votes.ideaId, id));
+    await this.db.delete(votes).where(eq(votes.ideaId, id));
 
     // Then delete the idea itself
-    await db.delete(ideas).where(eq(ideas.id, id));
+    await this.db.delete(ideas).where(eq(ideas.id, id));
 
     // Update positions after deleting an idea
     await this.updatePositions();
@@ -403,7 +408,7 @@ export class DatabaseStorage implements IStorage {
   }
 
   async deletePublicLink(id: number): Promise<void> {
-    await db.delete(publicLinks).where(eq(publicLinks.id, id));
+    await this.db.delete(publicLinks).where(eq(publicLinks.id, id));
   }
 
   // Subscription methods
@@ -446,7 +451,7 @@ export class DatabaseStorage implements IStorage {
 
   async getUserAudienceStats(userId: number): Promise<{ votesGiven: number; ideasSuggested: number; ideasApproved: number; }> {
     // Count votes given by user from point_transactions (persistent even after idea deletion)
-    const votesResult = await db.select({ count: sql<number>`count(*)` })
+    const votesResult = await this.db.select({ count: sql<number>`count(*)` })
       .from(pointTransactions)
       .where(and(
         eq(pointTransactions.userId, userId),
@@ -454,12 +459,12 @@ export class DatabaseStorage implements IStorage {
       ));
 
     // Count ideas suggested by user
-    const suggestedResult = await db.select({ count: sql<number>`count(*)` })
+    const suggestedResult = await this.db.select({ count: sql<number>`count(*)` })
       .from(ideas)
       .where(eq(ideas.suggestedBy, userId));
 
     // Count approved ideas suggested by user
-    const approvedResult = await db.select({ count: sql<number>`count(*)` })
+    const approvedResult = await this.db.select({ count: sql<number>`count(*)` })
       .from(ideas)
       .where(and(eq(ideas.suggestedBy, userId), eq(ideas.status, 'approved')));
 
@@ -568,7 +573,7 @@ export class DatabaseStorage implements IStorage {
     }
 
     // Update points in transaction
-    await db.transaction(async (tx) => {
+    await this.db.transaction(async (tx) => {
       // Update user points
       await tx
         .update(userPoints)
@@ -676,7 +681,7 @@ export class DatabaseStorage implements IStorage {
   }
 
   async deleteStoreItem(id: number): Promise<void> {
-    await db.transaction(async (tx) => {
+    await this.db.transaction(async (tx) => {
       // Delete all redemptions for this item first
       await tx.delete(storeRedemptions).where(eq(storeRedemptions.storeItemId, id));
       // Then delete the item
@@ -733,7 +738,7 @@ export class DatabaseStorage implements IStorage {
   }
 
   async createStoreRedemption(redemption: InsertStoreRedemption, userId: number): Promise<StoreRedemptionResponse> {
-    const result = await db.transaction(async (tx) => {
+    const result = await this.db.transaction(async (tx) => {
       // Get store item
       const [storeItem] = await tx
         .select()
@@ -902,7 +907,7 @@ export class DatabaseStorage implements IStorage {
   }
 
   async deleteVideoTemplate(ideaId: number): Promise<void> {
-    await db.delete(videoTemplates).where(eq(videoTemplates.ideaId, ideaId));
+    await this.db.delete(videoTemplates).where(eq(videoTemplates.ideaId, ideaId));
   }
 
   async incrementNicheStats(creatorId: number, niche: string, votes: number = 1): Promise<void> {
@@ -920,7 +925,7 @@ export class DatabaseStorage implements IStorage {
         })
         .where(eq(nicheStats.id, existing.id));
     } else {
-      await db.insert(nicheStats).values({
+      await this.db.insert(nicheStats).values({
         creatorId,
         niche,
         totalVotes: votes,

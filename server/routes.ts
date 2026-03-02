@@ -9,9 +9,19 @@ import Stripe from "stripe";
 import { conditionalPremiumAccess, requirePremiumAccess } from "./premium-middleware";
 import { youtubeService } from "./services/youtube";
 import { priorityService } from "./services/priority";
+import { isTestMode } from "./test-mode";
 
-// Initialize Stripe
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
+const productionStripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
+const testStripe = process.env.STRIPE_TEST_SECRET_KEY
+  ? new Stripe(process.env.STRIPE_TEST_SECRET_KEY)
+  : null;
+
+function getStripe(): Stripe {
+  if (isTestMode() && testStripe) {
+    return testStripe;
+  }
+  return productionStripe;
+}
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // Set up authentication routes
@@ -1512,7 +1522,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Ensure we have a Stripe customer
       let customerId = user.stripeCustomerId;
       if (!customerId) {
-        const customer = await stripe.customers.create({
+        const customer = await getStripe().customers.create({
           email: user.email,
           name: user.username,
           metadata: {
@@ -1536,11 +1546,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Create or get product and prices
       let product;
       try {
-        const products = await stripe.products.list({ limit: 1 });
+        const products = await getStripe().products.list({ limit: 1 });
         product = products.data.find(p => p.name === 'Fanlist Premium');
 
         if (!product) {
-          product = await stripe.products.create({
+          product = await getStripe().products.create({
             name: 'Fanlist Premium',
             description: 'Access to premium features including unlimited ideas, advanced analytics, and priority support',
           });
@@ -1553,7 +1563,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Create or get prices
       let priceId;
       try {
-        const prices = await stripe.prices.list({
+        const prices = await getStripe().prices.list({
           product: product.id,
           limit: 10
         });
@@ -1567,7 +1577,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         );
 
         if (!price) {
-          price = await stripe.prices.create({
+          price = await getStripe().prices.create({
             product: product.id,
             unit_amount: targetAmount,
             currency: 'usd',
@@ -1584,7 +1594,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
 
       // Create checkout session
-      const session = await stripe.checkout.sessions.create({
+      const session = await getStripe().checkout.sessions.create({
         customer: customerId,
         payment_method_types: ['card'],
         line_items: [
@@ -1651,7 +1661,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
 
       // Cancel the subscription in Stripe
-      await stripe.subscriptions.cancel(user.stripeSubscriptionId);
+      await getStripe().subscriptions.cancel(user.stripeSubscriptionId);
 
       // Update user subscription status
       const updatedUser = await storage.updateUserSubscription(userId, {
@@ -1877,7 +1887,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     let event: Stripe.Event;
 
     try {
-      event = stripe.webhooks.constructEvent(req.body, sig, process.env.STRIPE_WEBHOOK_SECRET!);
+      event = getStripe().webhooks.constructEvent(req.body, sig, process.env.STRIPE_WEBHOOK_SECRET!);
     } catch (err: any) {
       console.error(`Webhook signature verification failed:`, err.message);
       return res.status(400).send(`Webhook Error: ${err.message}`);

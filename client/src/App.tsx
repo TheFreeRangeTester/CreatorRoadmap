@@ -50,10 +50,13 @@ import PaymentSuccessPage from "@/pages/payment-success-page";
 import PaymentCancelPage from "@/pages/payment-cancel-page";
 import PaymentFailurePage from "@/pages/payment-failure-page";
 
+import TestLoginPage from "@/pages/test-login-page";
+import { TestModeBanner } from "@/components/test-mode-banner";
+
 function App() {
   return (
     <>
-      {/* Espacio para modales */}
+      <TestModeBanner />
 
       {/* Router principal */}
       <Switch>
@@ -102,6 +105,9 @@ function App() {
         <Route path="/payment/success" component={PaymentSuccessPage} />
         <Route path="/payment/cancel" component={PaymentCancelPage} />
         <Route path="/payment/failure" component={PaymentFailurePage} />
+
+        {/* Test mode login */}
+        <Route path="/test" component={TestLoginPage} />
 
         {/* Rutas unificadas del creador */}
         <Route path="/creators/:username" component={ModernPublicProfile} />

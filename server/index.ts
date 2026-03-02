@@ -1,7 +1,9 @@
 import express, { type Request, Response, NextFunction } from "express";
 import cors from "cors";
+import cookieParser from "cookie-parser";
 import { registerRoutes } from "./routes";
 import { setupVite, serveStatic, log } from "./vite";
+import { testModeMiddleware, setupTestModeRoutes } from "./test-mode";
 import dotenv from "dotenv";
 
 // Load environment variables from .env file
@@ -22,6 +24,8 @@ app.use('/api/stripe/webhook', express.raw({ type: 'application/json' }));
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
+app.use(cookieParser());
+app.use(testModeMiddleware);
 
 app.use((req, res, next) => {
   const start = Date.now();
@@ -54,6 +58,7 @@ app.use((req, res, next) => {
 });
 
 (async () => {
+  setupTestModeRoutes(app);
   const server = await registerRoutes(app);
 
   app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {

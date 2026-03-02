@@ -1209,6 +1209,19 @@ export class MemStorage implements IStorage {
 }
 
 import { DatabaseStorage } from "./database-storage";
+import { pool, testPool, db, testDb } from "./db";
+import { isTestMode } from "./test-mode";
 
-// Use DatabaseStorage for persistent data
-export const storage = new DatabaseStorage();
+const productionStorage = new DatabaseStorage(db, pool);
+const testingStorage = new DatabaseStorage(testDb, testPool, 'testing');
+
+export const storage: IStorage = new Proxy({} as IStorage, {
+  get(_target, prop: string | symbol) {
+    const activeStorage = isTestMode() ? testingStorage : productionStorage;
+    const value = (activeStorage as any)[prop];
+    if (typeof value === 'function') {
+      return value.bind(activeStorage);
+    }
+    return value;
+  }
+});

@@ -13,3 +13,11 @@ if (!process.env.DATABASE_URL) {
 
 export const pool = new Pool({ connectionString: process.env.DATABASE_URL });
 export const db = drizzle(pool, { schema });
+
+export const testPool = new Pool({ connectionString: process.env.DATABASE_URL });
+testPool.on('connect', (client) => {
+  client.query('SET search_path TO testing, public');
+});
+export const testDb = drizzle(testPool, { schema });
+
+console.log('[DB] Dual pool setup: production (public) + testing (testing schema)');
